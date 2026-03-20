@@ -1,4 +1,4 @@
-![[Fire Rope.webp]]
+![[fire rope.webp]]
 
 **The Scenario:** You have two ropes and a lighter. Each rope takes exactly 60 minutes to burn completely, but they burn at inconsistent rates. One section might burn quickly while another burns slowly. You cannot cut the ropes or mark them in any way.
 

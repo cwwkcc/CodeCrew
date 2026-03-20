@@ -1,4 +1,4 @@
-![[Three Horses.jpg]]
+![[three horses.jpg]]
 **The Scenario:** ඔයා ළඟ අශ්වයෝ 25 දෙනෙක් ඉන්නවා. හැම අශ්වයෙක්ටම ආවේණික වූ සහ එක සමාන වේගයක් (Constant speed) තියෙනවා. ඔයාට ඕන කරන්නේ මේ 25 දෙනාගෙන් **වේගවත්ම තුන්දෙනා** (Top 3 Fastest Horses) කවුද කියලා හොයාගන්නයි.
 
 **The Rules:**

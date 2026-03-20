@@ -1,4 +1,4 @@
-![[Gold Bars.webp]]
+![[gold bars.webp]]
 
 **The Scenario:** You hire a worker for 7 days and must pay them one gold bar per day. You have a gold bar that can be divided into exactly 7 equal segments. However, you can only make 2 cuts total in the gold bar.
 
