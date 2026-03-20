@@ -5,7 +5,6 @@ competitive-programming-ready proficiency. All 27 modules are numbered `00–26`
 read them in order.
 
 > **Location:** `resources/curriculum/c++/`  
-> **Source material moved from:** `wiki/c++/`
 
 ---
 
