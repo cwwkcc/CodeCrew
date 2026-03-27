@@ -1,0 +1,1177 @@
+<!--
+  ============================================================
+  Student Name : [Your Name]
+  Assignment   : Student Portal Dashboard
+  Date         : 27 March 2026
+  ============================================================
+
+  HOW TO READ THIS FILE
+  ─────────────────────
+  Every section has a block comment above it that explains:
+    • WHY the tag is used (not just what it does)
+    • Rules you must follow (e.g. "charset must be first")
+    • Common mistakes to avoid
+
+  Work through the file top to bottom.
+  Open it in a browser after each section to check your work.
+  ============================================================
+-->
+
+<!-- ══════════════════════════════════════════════════════════
+  SECTION 1 — DOCUMENT SHELL
+  ══════════════════════════════════════════════════════════
+
+  Every HTML file must start with exactly these three lines.
+
+  <!DOCTYPE html>
+    Tells the browser "this is a modern HTML5 document".
+    Without it the browser switches to an old quirks mode
+    where things render differently and break unexpectedly.
+
+  <html lang="en-LK">
+    The root element that wraps EVERYTHING on the page.
+    lang="en-LK" tells browsers, screen readers, and search
+    engines that the page is written in English as used in
+    Sri Lanka. The LK part matters for spell-checkers and
+    hyphenation rules.
+
+  <head> and <body>
+    <head>  — invisible metadata the browser needs to set up
+              the page (encoding, title, search preview, etc.)
+    <body>  — the visible content users actually see and read
+══════════════════════════════════════════════════════════ -->
+<!doctype html>
+<html lang="en-LK">
+  <head>
+    <!-- ────────────────────────────────────────────────────
+    META CHARSET — must be the VERY FIRST line inside <head>
+    ────────────────────────────────────────────────────────
+    The browser reads the file character by character.
+    If it hits any letter before knowing the encoding it
+    may misread every character after it.
+
+    UTF-8 covers every language, emoji, and symbol on earth
+    (Sinhala ශ්‍රී, Tamil தமிழ், Arabic عربي, emoji 🚀 …).
+    Always use UTF-8. Never use "ISO-8859-1" or anything else.
+
+    ❌ WRONG — charset must come before <title>:
+        <title>My Page</title>
+        <meta charset="UTF-8">
+
+    ✅ CORRECT — charset is always the very first line:
+        <meta charset="UTF-8">
+        <title>My Page</title>
+  ──────────────────────────────────────────────────────── -->
+    <meta charset="UTF-8" />
+
+    <!-- ────────────────────────────────────────────────────
+    VIEWPORT — makes the page work on phones and tablets
+    ────────────────────────────────────────────────────────
+    Without this tag, a phone shows the full desktop page
+    shrunken down so it is unreadable.
+
+    width=device-width  → use the screen's actual pixel width
+    initial-scale=1.0   → no zoom — show at 100%
+  ──────────────────────────────────────────────────────── -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ────────────────────────────────────────────────────
+    TITLE — the text shown in the browser tab
+    ────────────────────────────────────────────────────────
+    Format: Page Name — Site Name
+    This is also the default bookmark name and the clickable
+    blue headline Google shows in search results.
+  ──────────────────────────────────────────────────────── -->
+    <title>Dashboard — CodeCrew Student Portal</title>
+
+    <!-- ────────────────────────────────────────────────────
+    META DESCRIPTION
+    ────────────────────────────────────────────────────────
+    The grey line of text Google shows below the title in
+    search results. Keep it under 160 characters.
+    It does NOT help your ranking — it helps people decide
+    whether to click your link.
+  ──────────────────────────────────────────────────────── -->
+    <meta
+      name="description"
+      content="Your student dashboard — view assignments, results, and resources at CodeCrew, C.W.W. Kannangara Central College."
+    />
+
+    <!-- Author: the person or team who wrote the page -->
+    <meta name="author" content="[Your Name]" />
+
+    <!-- ────────────────────────────────────────────────────
+    CANONICAL LINK
+    ────────────────────────────────────────────────────────
+    If the same page can be reached via multiple URLs
+    (with/without www, with/without trailing slash, etc.)
+    the canonical URL tells search engines which one is
+    the "real" address to index and rank.
+  ──────────────────────────────────────────────────────── -->
+    <link rel="canonical" href="https://portal.codecrew.lk/dashboard" />
+
+    <!-- ────────────────────────────────────────────────────
+    OPEN GRAPH TAGS (og:)
+    ────────────────────────────────────────────────────────
+    When someone shares your link on WhatsApp, Facebook,
+    LinkedIn, or Slack, these tags control the preview card
+    that appears — the title, image, and description.
+
+    og:title       → headline on the preview card
+    og:type        → "website" for regular pages
+    og:image       → the preview thumbnail image
+    og:description → text shown below the title
+    og:url         → the canonical URL again, for social sites
+  ──────────────────────────────────────────────────────── -->
+    <meta property="og:title" content="Dashboard — CodeCrew Student Portal" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:image"
+      content="https://portal.codecrew.lk/og-image.jpg"
+    />
+    <meta
+      property="og:description"
+      content="Your student dashboard for CodeCrew — manage assignments, results, and resources."
+    />
+    <meta property="og:url" content="https://portal.codecrew.lk/dashboard" />
+
+    <!-- ────────────────────────────────────────────────────
+    FAVICON — the small icon in the browser tab
+    ────────────────────────────────────────────────────────
+    href="/favicon.ico" points to a 16×16 or 32×32 icon
+    file at the root of your website.
+  ──────────────────────────────────────────────────────── -->
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- ──────────────────────────────────────────────────────
+    BONUS: theme-color and web app manifest
+    (Bonus challenge items from the assignment)
+    theme-color  → colours the browser chrome bar on Android
+    manifest     → lets the page be "installed" as a PWA app
+  ──────────────────────────────────────────────────────── -->
+    <meta name="theme-color" content="#3a86ff" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+  </head>
+  <body>
+    <!-- ══════════════════════════════════════════════════════════
+  SECTION 2 — NAVIGATION
+  ══════════════════════════════════════════════════════════
+
+  This section contains three things:
+    A) Skip link
+    B) <header> with logo + main nav
+    C) Breadcrumb nav
+
+  ── A) SKIP LINK ──────────────────────────────────────────
+  A plain <a> tag that MUST be the very first thing inside
+  <body>, before the <header>.
+
+  WHY: Keyboard-only users (and screen reader users) tab
+  through every link one by one. Without a skip link they
+  must tab through all 5 nav links on every page just to
+  reach the actual content. With the skip link they press
+  Enter and jump straight to <main id="main-content">.
+
+  The href="#main-content" must match the id on <main>.
+══════════════════════════════════════════════════════════ -->
+    <a href="#main-content">Skip to main content</a>
+
+    <!-- ── B) HEADER + MAIN NAVIGATION ──────────────────────────
+  <header> is the introductory banner at the top of the page.
+  It typically holds the site logo and the main navigation.
+
+  <nav> groups navigation links. Always give it an aria-label
+  so screen readers can announce which nav it is when there
+  are multiple <nav> elements on the same page.
+
+  aria-current="page" marks the link whose page the user is
+  currently on. Screen readers announce "current page" so
+  the user knows where they are in the site.
+
+  ❌ WRONG — no aria-label means screen readers cannot
+             tell this nav from the breadcrumb nav below:
+      <nav>
+        <ul>...</ul>
+      </nav>
+
+  ✅ CORRECT:
+      <nav aria-label="Main navigation">
+────────────────────────────────────────────────────────── -->
+    <header>
+      <!-- Alt text describes the image for screen reader users
+       and shows as text if the image fails to load.
+       width and height prevent layout shift while loading. -->
+      <img
+        src="/logo.png"
+        alt="CodeCrew — Kannangara ICT Society"
+        width="120"
+        height="40"
+      />
+
+      <nav aria-label="Main navigation">
+        <ul>
+          <!-- aria-current="page" on the link for the page you are on -->
+          <li><a href="/dashboard" aria-current="page">Dashboard</a></li>
+          <li><a href="/assignments">Assignments</a></li>
+          <li><a href="/results">Results</a></li>
+          <li><a href="/resources">Resources</a></li>
+          <li><a href="/profile">Profile</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- ── C) BREADCRUMB NAVIGATION ──────────────────────────────
+  A second <nav> showing where you are in the site hierarchy:
+      Home → Dashboard
+
+  Use <ol> (ordered list) because the order matters —
+  Home always comes before Dashboard.
+
+  The CURRENT page (Dashboard) must be plain text, NOT a link.
+  You are already here — clicking it would do nothing.
+
+  ❌ WRONG — current page as a link:
+      <li><a href="/dashboard">Dashboard</a></li>
+
+  ✅ CORRECT — current page as plain text:
+      <li>Dashboard</li>
+
+  The aria-label here is different from the main nav's label.
+  This lets screen readers say "Breadcrumb navigation" vs
+  "Main navigation" so the user can tell them apart.
+────────────────────────────────────────────────────────── -->
+    <nav aria-label="Breadcrumb navigation">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li>Dashboard</li>
+      </ol>
+    </nav>
+
+    <!-- ══════════════════════════════════════════════════════════
+  SECTION 3 — MAIN CONTENT
+  ══════════════════════════════════════════════════════════
+
+  <main> wraps the page's primary content.
+  id="main-content" is the target of the skip link above.
+
+  There should be only ONE <main> per page.
+  Everything that changes from page to page goes here.
+  (The header and footer stay the same on every page.)
+══════════════════════════════════════════════════════════ -->
+    <main id="main-content">
+      <!-- <h1> is the page's main heading — there should be only
+       one <h1> per page. It tells users and search engines
+       what this page is about. -->
+      <h1>Welcome back, Roshana</h1>
+
+      <!-- ──────────────────────────────────────────────────────
+    3A — UPCOMING DEADLINES
+    ────────────────────────────────────────────────────────
+    <section> groups related content with a heading.
+
+    Use <ol> (ordered list) because the deadlines have a
+    specific order — earliest deadline first.
+    Use <ul> when order doesn't matter (e.g., a list of
+    features that are all equally important).
+
+    <strong> → important/serious content (bold by default)
+    <time>   → a machine-readable date or time
+        datetime="2026-04-10" is the ISO format (YYYY-MM-DD)
+        that browsers and assistive tech can understand.
+        The text inside <time> is what humans read.
+    <small>  → secondary/fine print — here it's the subject.
+  ──────────────────────────────────────────────────────── -->
+      <section>
+        <h2>Upcoming Deadlines</h2>
+        <ol>
+          <li>
+            <strong>Data Structures Assignment 3</strong>
+            — due <time datetime="2026-04-10">10 April 2026</time>
+            <small>Computer Science</small>
+          </li>
+          <li>
+            <strong>Essay: The Industrial Revolution</strong>
+            — due <time datetime="2026-04-14">14 April 2026</time>
+            <small>History</small>
+          </li>
+          <li>
+            <strong>Mathematics Problem Set 7</strong>
+            — due <time datetime="2026-04-18">18 April 2026</time>
+            <small>Mathematics</small>
+          </li>
+          <li>
+            <strong>Combined Maths — Past Paper Practice</strong>
+            — due <time datetime="2026-04-22">22 April 2026</time>
+            <small>Combined Mathematics</small>
+          </li>
+        </ol>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────────
+    3B — ANNOUNCEMENTS
+    ────────────────────────────────────────────────────────
+    Each announcement is its own <article> because each one
+    is a standalone piece of content — it makes sense on its
+    own, outside the page (like a news article or blog post).
+
+    <mark>  → highlights text like a yellow highlighter pen.
+              Use it for content the reader must not miss.
+    <abbr>  → abbreviation. The title attribute shows the
+              full meaning when the user hovers over it.
+              Screen readers can also read the full meaning.
+    <cite>  → the name of a creative work or its author.
+              Here it names the person who posted the notice.
+
+    BONUS CHALLENGE — <ins> and <del>:
+      <del datetime="..."> marks text that was removed.
+      <ins datetime="..."> marks text that was added.
+      Together they show a visible correction/edit history.
+  ──────────────────────────────────────────────────────── -->
+      <section>
+        <h2>Announcements</h2>
+
+        <article>
+          <h3>Term Test Timetable Released</h3>
+          <p>
+            The <mark>Term 1 test timetable</mark> is now on the notice board
+            outside the staff room. All students must check their scheduled
+            dates before Friday.
+          </p>
+          <!-- <footer> inside an <article> holds metadata about
+           that article — who posted it and when. -->
+          <footer>
+            Posted by <cite>Mrs. Tharindrie Perera</cite> on
+            <time datetime="2026-03-15">15 March 2026</time>
+          </footer>
+        </article>
+
+        <article>
+          <h3>ICT Society Meeting</h3>
+          <p>
+            The <abbr title="Kannangara ICT Society">KITS</abbr>
+            meeting is this Friday at 3 PM in the ICT lab. Attendance is
+            compulsory for all active members.
+          </p>
+          <footer>
+            Posted by <cite>Mr. Bandara</cite> on
+            <time datetime="2026-03-18">18 March 2026</time>
+          </footer>
+        </article>
+
+        <!-- BONUS: ins and del showing an edited announcement -->
+        <article>
+          <h3>Library Hours Update</h3>
+          <p>
+            The library will now close at
+            <!-- <del> = old text that was removed (shown with strikethrough) -->
+            <del datetime="2026-03-20">4:30 PM</del>
+            <!-- <ins> = new text that replaced it (shown underlined) -->
+            <ins datetime="2026-03-20">5:00 PM</ins>
+            on weekdays. The Saturday schedule remains unchanged.
+          </p>
+          <footer>
+            Posted by <cite>Mr. Jayawardena</cite> on
+            <time datetime="2026-03-20">20 March 2026</time>
+          </footer>
+        </article>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────────
+    3C — QUICK STATS
+    ────────────────────────────────────────────────────────
+    A description list (<dl>) is the right element for a
+    list of label–value pairs, like a glossary or a stats
+    panel.
+
+    <dt> = definition term   → the label (e.g. "Rank")
+    <dd> = definition data   → the value (e.g. "5th")
+
+    One <dt> can have multiple <dd> values below it.
+    Multiple <dt> elements can share one <dd>.
+  ──────────────────────────────────────────────────────── -->
+      <section>
+        <h2>Quick Stats</h2>
+        <dl>
+          <dt>Active Assignments</dt>
+          <dd>4</dd>
+
+          <dt>Completed This Term</dt>
+          <dd>12</dd>
+
+          <dt>Average Score</dt>
+          <dd>78%</dd>
+
+          <dt>Rank in Class</dt>
+          <dd>5th</dd>
+
+          <dt>Attendance</dt>
+          <dd>94%</dd>
+
+          <dt>Books Borrowed</dt>
+          <dd>3</dd>
+        </dl>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════════
+    SECTION 4 — RESULTS TABLE
+    ════════════════════════════════════════════════════════
+
+    TABLE ANATOMY
+    ─────────────
+    <table>   → the whole table
+    <caption> → title for the table (like a heading for it)
+    <thead>   → header rows (the column labels)
+    <tbody>   → the data rows
+    <tfoot>   → footer rows (totals, averages, summaries)
+    <tr>      → table row
+    <th>      → table header cell (bold, centred by default)
+    <td>      → table data cell
+
+    SCOPE ATTRIBUTE (required on EVERY <th>)
+    ─────────────────────────────────────────
+    scope tells the browser whether this heading applies to
+    a column, a row, or a group of columns/rows.
+
+    scope="col"      → heading for a single column
+    scope="row"      → heading for a single row
+    scope="colgroup" → heading for a group of columns (colspan)
+    scope="rowgroup" → heading for a group of rows (rowspan)
+
+    ❌ WRONG — no scope:
+        <th>Subject</th>
+
+    ✅ CORRECT:
+        <th scope="col">Subject</th>
+
+    COLSPAN AND ROWSPAN
+    ────────────────────
+    colspan="2" → this cell stretches across 2 columns.
+    rowspan="6" → this cell stretches down over 6 rows.
+
+    When a cell uses rowspan, the rows it covers must NOT
+    have a cell in that column — the rowspan cell already
+    fills that space.
+  ════════════════════════════════════════════════════════ -->
+      <section>
+        <h2>Exam Results</h2>
+
+        <table>
+          <!-- caption is like a <h> for the table.
+           It is announced by screen readers before the data. -->
+          <caption>
+            Term Examination Results — 2026
+          </caption>
+
+          <thead>
+            <!-- First header row: Term | Subject | Grade (spans 2 cols) -->
+            <tr>
+              <th scope="col">Term</th>
+              <th scope="col">Subject</th>
+              <!-- colspan="2" makes this one cell span the
+               "Score" and "Letter" columns below it.
+               scope="colgroup" because it labels a group. -->
+              <th scope="colgroup" colspan="2">Grade</th>
+            </tr>
+            <!-- Second header row: fills in the two grade sub-columns.
+             The Term and Subject columns have placeholder cells
+             because the headers above already label them. -->
+            <tr>
+              <th scope="col">—</th>
+              <th scope="col">—</th>
+              <th scope="col">Score</th>
+              <th scope="col">Letter</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- ── TERM 1 ─────────────────────────────────────
+          rowspan="6" means the "Term 1" cell covers this
+          row AND the 5 rows that follow it (6 rows total).
+          Those 5 rows must not have a cell in column 1.
+          scope="rowgroup" because it labels a group of rows.
+        ──────────────────────────────────────────────────── -->
+            <tr>
+              <th scope="rowgroup" rowspan="6">Term 1</th>
+              <th scope="row">Mathematics</th>
+              <td>88</td>
+              <td>A</td>
+            </tr>
+            <tr>
+              <!-- No "Term 1" cell here — the rowspan covers it -->
+              <th scope="row">Science</th>
+              <td>74</td>
+              <td>B</td>
+            </tr>
+            <tr>
+              <th scope="row">Computer Science</th>
+              <td>91</td>
+              <td>A+</td>
+            </tr>
+            <tr>
+              <th scope="row">English</th>
+              <td>82</td>
+              <td>A</td>
+            </tr>
+            <tr>
+              <th scope="row">History</th>
+              <td>68</td>
+              <td>B</td>
+            </tr>
+            <tr>
+              <th scope="row">Commerce</th>
+              <td>79</td>
+              <td>B+</td>
+            </tr>
+
+            <!-- ── TERM 2 ─────────────────────────────────────
+          A new rowspan="6" starts here for Term 2.
+        ──────────────────────────────────────────────────── -->
+            <tr>
+              <th scope="rowgroup" rowspan="6">Term 2</th>
+              <th scope="row">Mathematics</th>
+              <td>91</td>
+              <td>A+</td>
+            </tr>
+            <tr>
+              <th scope="row">Science</th>
+              <td>78</td>
+              <td>B+</td>
+            </tr>
+            <tr>
+              <th scope="row">Computer Science</th>
+              <td>95</td>
+              <td>A+</td>
+            </tr>
+            <tr>
+              <th scope="row">English</th>
+              <td>85</td>
+              <td>A</td>
+            </tr>
+            <tr>
+              <th scope="row">History</th>
+              <td>72</td>
+              <td>B</td>
+            </tr>
+            <tr>
+              <th scope="row">Commerce</th>
+              <td>83</td>
+              <td>A</td>
+            </tr>
+          </tbody>
+
+          <!-- <tfoot> holds summary rows — averages, totals, etc.
+           colspan="2" makes the label span the Term and
+           Subject columns so the average aligns with the
+           Score and Letter columns. -->
+          <tfoot>
+            <tr>
+              <th scope="row" colspan="2">Term 1 Average</th>
+              <td>80</td>
+              <td>A</td>
+            </tr>
+            <tr>
+              <th scope="row" colspan="2">Term 2 Average</th>
+              <td>84</td>
+              <td>A</td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════════
+    SECTION 5 — ASSIGNMENT SUBMISSION FORM
+    ════════════════════════════════════════════════════════
+
+    FORM BASICS
+    ────────────
+    action="/submit"   → where to send the data (server URL)
+    method="post"      → how to send it (POST hides data in
+                         the request body; GET puts it in URL)
+
+    FIELDSET + LEGEND
+    ──────────────────
+    <fieldset> groups related inputs inside a visible box.
+    <legend>   is the title for that group — it must be the
+               FIRST child inside <fieldset>, nothing before it.
+
+    ❌ WRONG — legend not first:
+        <fieldset>
+          <p>Fill in your details</p>
+          <legend>Student Info</legend>  ← wrong position
+
+    ✅ CORRECT:
+        <fieldset>
+          <legend>Student Info</legend>  ← must be first
+          <p>Fill in your details</p>
+
+    LABEL + INPUT CONNECTION
+    ─────────────────────────
+    Every input must have a <label>.
+    Connect them using matching for="" and id="" values.
+    When they are connected, clicking the label focuses the
+    input — this makes forms much easier to use.
+
+    ❌ WRONG — label and input are NOT connected:
+        <label>Full Name</label>
+        <input type="text" name="name">
+
+    ✅ CORRECT — for="X" matches id="X":
+        <label for="full-name">Full Name</label>
+        <input type="text" id="full-name" name="name">
+  ════════════════════════════════════════════════════════ -->
+      <section>
+        <h2>Submit Assignment</h2>
+
+        <form action="/submit" method="post">
+          <!-- ── FIELDSET 1: STUDENT INFORMATION ──────────────
+        autocomplete="name" / "email" tells the browser to
+        offer saved values from previous form submissions.
+
+        pattern="[0-9]{4,6}" is a regular expression that
+        only allows 4 to 6 digits. The title attribute shows
+        the error message if the user types something invalid.
+
+        required → the form will not submit if this is empty.
+
+        <select> + <optgroup>:
+          <select> is a dropdown list.
+          <optgroup label="..."> groups options with a bold
+          heading inside the dropdown (like a category label).
+      ──────────────────────────────────────────────────────
+      -->
+          <fieldset>
+            <legend>Student Information</legend>
+
+            <label for="full-name">Full Name</label>
+            <input
+              type="text"
+              id="full-name"
+              name="full_name"
+              autocomplete="name"
+              required
+            />
+
+            <label for="index-no">Index Number</label>
+            <input
+              type="text"
+              id="index-no"
+              name="index_number"
+              pattern="[0-9]{4,6}"
+              title="Must be a 4 to 6 digit number"
+              required
+            />
+
+            <label for="email">School Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autocomplete="email"
+              required
+            />
+
+            <!-- <select> = a dropdown list
+             <optgroup> = a labelled group of options inside the list
+             <option value=""> with empty value = the default
+             "please choose" placeholder -->
+            <label for="grade">Grade</label>
+            <select id="grade" name="grade" required>
+              <option value="">-- Select your grade --</option>
+              <optgroup label="Junior (8–10)">
+                <option value="8">Grade 8</option>
+                <option value="9">Grade 9</option>
+                <option value="10">Grade 10</option>
+              </optgroup>
+              <optgroup label="Senior (11–13)">
+                <option value="11">Grade 11</option>
+                <option value="12">Grade 12</option>
+                <option value="13">Grade 13</option>
+              </optgroup>
+            </select>
+          </fieldset>
+
+          <!-- ── FIELDSET 2: ASSIGNMENT DETAILS ────────────────
+        <datalist> — gives the user suggested options while
+        still letting them type anything they want freely.
+        It is NOT the same as <select>:
+          <select>   → the user must pick from the list
+          <datalist> → suggestions only, free typing allowed
+
+        How it works:
+          1. Give <datalist> an id.
+          2. Add list="same-id" to the <input>.
+          3. The browser shows the suggestions as a dropdown
+             while the user types, but does not force a choice.
+
+        ❌ WRONG — id and list values don't match:
+            <input list="subjects">
+            <datalist id="subject-options">
+
+        ✅ CORRECT — they must be identical:
+            <input list="subject-options">
+            <datalist id="subject-options">
+
+        <textarea>
+          rows="4" → start height (4 lines visible)
+          maxlength="500" → cap at 500 characters
+
+        <input type="file">
+          accept=".pdf,.docx" → filters the file picker
+          so only PDF and DOCX files are shown by default.
+          The user can override this and pick other types,
+          so validate on the server too.
+      ──────────────────────────────────────────────────────
+      -->
+          <fieldset>
+            <legend>Assignment Details</legend>
+
+            <label for="subject">Subject</label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              list="subject-options"
+              required
+            />
+            <!-- datalist id must match input's list attribute exactly -->
+            <datalist id="subject-options">
+              <option value="Mathematics"></option>
+              <option value="Science"></option>
+              <option value="Computer Science"></option>
+              <option value="English"></option>
+              <option value="History"></option>
+              <option value="Commerce"></option>
+              <option value="Combined Mathematics"></option>
+            </datalist>
+
+            <label for="term">Term</label>
+            <select id="term" name="term" required>
+              <option value="">-- Select term --</option>
+              <option value="1">First Term</option>
+              <option value="2">Second Term</option>
+              <option value="3">Third Term</option>
+            </select>
+
+            <label for="comments">Comments or Notes</label>
+            <textarea
+              id="comments"
+              name="comments"
+              rows="4"
+              maxlength="500"
+              placeholder="Describe your submission or any issues..."
+            ></textarea>
+
+            <label for="file">Submission File (PDF or DOCX only)</label>
+            <input type="file" id="file" name="file" accept=".pdf,.docx" />
+          </fieldset>
+
+          <!-- ── FIELDSET 3: SUBMISSION OPTIONS ─────────────────
+        RADIO BUTTONS
+          All three radios share name="submission_type".
+          Sharing the same name groups them — the browser
+          allows only ONE selection from the group at a time.
+          If they had different names they would be independent
+          and all three could be checked at once (wrong).
+
+          checked → pre-selects this option by default
+
+          The label wraps the input here (instead of using
+          for/id). This is an alternative connection method
+          that also works. Both approaches are valid:
+            Option A: <label for="x">...</label> <input id="x">
+            Option B: <label><input ...> Text</label>
+
+        CHECKBOXES
+          Unlike radios, checkboxes are independent —
+          each one can be checked or unchecked on its own.
+          required on a checkbox means it must be checked
+          before the form can be submitted.
+      ──────────────────────────────────────────────────────
+      -->
+          <fieldset>
+            <legend>Submission Options</legend>
+
+            <!-- Radio buttons — one name, three choices, only one allowed -->
+            <label>
+              <input
+                type="radio"
+                name="submission_type"
+                value="original"
+                checked
+              />
+              Original Work
+            </label>
+            <label>
+              <input type="radio" name="submission_type" value="revision" />
+              Revision
+            </label>
+            <label>
+              <input type="radio" name="submission_type" value="late" />
+              Late Submission
+            </label>
+
+            <!-- Checkboxes — independent, each can be ticked separately -->
+            <label>
+              <input type="checkbox" name="own_work" value="yes" required />
+              I confirm this is my own work
+            </label>
+            <label>
+              <input type="checkbox" name="notify" value="yes" />
+              Notify me by email when marked
+            </label>
+          </fieldset>
+
+          <!-- Form control buttons:
+           type="submit" → sends the form data to the server
+           type="reset"  → clears all fields back to defaults -->
+          <button type="submit">Submit Assignment</button>
+          <button type="reset">Clear Form</button>
+        </form>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════════
+    SECTION 6 — LEARNING RESOURCES ACCORDION
+    ════════════════════════════════════════════════════════
+
+    <details> is a collapsible panel — the browser builds
+    the open/close toggle for you with no JavaScript needed.
+
+    <summary> is the clickable heading that toggles it.
+    Everything else inside <details> is the content that
+    shows or hides.
+
+    open attribute → starts the panel EXPANDED when the page
+    loads. Without "open", it starts collapsed.
+
+    ❌ WRONG — open is missing so C++ Books starts collapsed:
+        <details>
+          <summary>C++ Books</summary>
+
+    ✅ CORRECT — panel starts expanded:
+        <details open>
+          <summary>C++ Books</summary>
+
+    target="_blank" opens the link in a new tab.
+    rel="noopener noreferrer" is REQUIRED whenever you use
+    target="_blank" — without it, the opened page can
+    access your page's window object (a security risk).
+
+    download attribute → clicking the link downloads the
+    file instead of navigating to it.
+  ════════════════════════════════════════════════════════ -->
+      <section>
+        <h2>Learning Resources</h2>
+
+        <!-- open → this panel is expanded when the page loads -->
+        <details open>
+          <summary>C++ Books</summary>
+          <ul>
+            <li>
+              <a href="/resources/cpp-primer.pdf" download
+                >C++ Primer — Download PDF</a
+              >
+            </li>
+            <li>
+              <!-- target="_blank" + rel="noopener noreferrer" for external links -->
+              <a
+                href="https://isocpp.org"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ISO C++ — <q>The home of Standard C++</q>
+              </a>
+            </li>
+            <li>
+              <a href="/resources/stroustrup.pdf" download
+                >The C++ Programming Language — Stroustrup</a
+              >
+            </li>
+          </ul>
+        </details>
+
+        <!-- No "open" → these start collapsed -->
+        <details>
+          <summary>Competition Archives</summary>
+          <ul>
+            <li>
+              <a
+                href="https://codeforces.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Codeforces — Past Contests</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://atcoder.jp"
+                target="_blank"
+                rel="noopener noreferrer"
+                >AtCoder — Problem Archive</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://dmoj.ca"
+                target="_blank"
+                rel="noopener noreferrer"
+                >DMOJ — Canadian OI Archive</a
+              >
+            </li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Video Tutorials</summary>
+          <ul>
+            <li>
+              <a
+                href="https://www.youtube.com/playlist?list=PLAE85DE8440AA6B83"
+                target="_blank"
+                rel="noopener noreferrer"
+                >The Cherno — C++ Tutorial Series</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.youtube.com/c/NeetCode"
+                target="_blank"
+                rel="noopener noreferrer"
+                >NeetCode — Data Structures and Algorithms</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.youtube.com/c/CSDojo"
+                target="_blank"
+                rel="noopener noreferrer"
+                >CS Dojo — Programming for Beginners</a
+              >
+            </li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Practice Sites</summary>
+          <ul>
+            <li>
+              <a
+                href="https://leetcode.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                >LeetCode</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.hackerrank.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                >HackerRank</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.codechef.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                >CodeChef</a
+              >
+            </li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>Past Papers</summary>
+          <ul>
+            <li>
+              <a href="/resources/al-ict-2023.pdf" download
+                >A/L ICT 2023 Past Paper</a
+              >
+            </li>
+            <li>
+              <a href="/resources/al-ict-2022.pdf" download
+                >A/L ICT 2022 Past Paper</a
+              >
+            </li>
+            <li>
+              <a href="/resources/ol-ict-2023.pdf" download
+                >O/L ICT 2023 Past Paper</a
+              >
+            </li>
+          </ul>
+        </details>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════════
+    SECTION 7 — EMBEDDED CONTENT (Picture, Video, iFrame)
+    ════════════════════════════════════════════════════════
+
+    <figure> wraps self-contained content (image, video,
+    diagram, code snippet) that is referenced from the
+    main text. It can be moved without breaking the page.
+
+    <figcaption> is the visible caption for the figure.
+    It must be the first or last child of <figure>.
+  ════════════════════════════════════════════════════════ -->
+      <section>
+        <h2>Media</h2>
+
+        <!-- ── A) PICTURE ELEMENT ─────────────────────────────
+      <picture> lets the browser choose the best image to
+      load based on screen size or format support.
+
+      List MODERN formats first (WebP is smaller/faster).
+      The <img> at the bottom is:
+        1. The fallback for browsers that don't support <picture>
+        2. REQUIRED — it must always be the last child
+
+      <source type="image/webp"> → offer the WebP version
+      <source media="(max-width: 600px)"> → on small screens,
+        use this image instead (e.g. a cropped mobile version)
+
+      loading="lazy" → delays loading until the image is
+      about to scroll into view. Speeds up initial page load.
+    ──────────────────────────────────────────────────────── -->
+        <figure>
+          <picture>
+            <!-- Modern WebP format — smaller file, same quality -->
+            <source type="image/webp" srcset="/images/campus.webp" />
+            <!-- Mobile crop for screens 600px wide or smaller -->
+            <source
+              media="(max-width: 600px)"
+              srcset="/images/campus-mobile.jpg"
+            />
+            <!-- Fallback <img> — always required as last child of <picture> -->
+            <img
+              src="/images/campus.jpg"
+              alt="Aerial view of C.W.W. Kannangara Central College campus, Mathugama"
+              width="800"
+              height="450"
+              loading="lazy"
+            />
+          </picture>
+          <figcaption>
+            Figure 1. C.W.W. Kannangara Central College, Mathugama.
+          </figcaption>
+        </figure>
+
+        <!-- ── B) VIDEO ELEMENT ───────────────────────────────
+      <video> embeds a playable video in the page.
+
+      controls → shows the play/pause/volume bar to the user.
+      poster   → a thumbnail image shown before the user presses play.
+      width, height → the display size on the page.
+
+      List two <source> formats because different browsers
+      support different formats:
+        WebM → smaller, modern (Chrome, Firefox, Edge)
+        MP4  → older, widely supported (all browsers)
+      The browser picks the FIRST one it can play.
+
+      <track> adds a subtitle or caption file:
+        kind="subtitles" → translates spoken words
+        srclang="en"     → the language of the subtitles
+        label="English"  → shown in the track picker menu
+        default          → the subtitle track to use by default
+
+      The <p> inside <video> is the fallback message.
+      It is shown ONLY if the browser cannot play any video
+      format at all (very old browsers). Modern browsers
+      ignore it.
+    ──────────────────────────────────────────────────────── -->
+        <figure>
+          <video
+            controls
+            width="800"
+            height="450"
+            poster="/videos/tutorial-thumb.jpg"
+          >
+            <source src="/videos/tutorial.webm" type="video/webm" />
+            <source src="/videos/tutorial.mp4" type="video/mp4" />
+            <track
+              kind="subtitles"
+              src="/videos/tutorial-en.vtt"
+              srclang="en"
+              label="English"
+              default
+            />
+            <!-- Fallback text — only shown if video cannot play -->
+            <p>
+              Your browser cannot play this video.
+              <a href="/videos/tutorial.mp4">Download it here.</a>
+            </p>
+          </video>
+          <figcaption>
+            Figure 2. Introduction to the CodeCrew student portal.
+          </figcaption>
+        </figure>
+
+        <!-- ── C) IFRAME ELEMENT ──────────────────────────────
+      <iframe> embeds another HTML page inside this one.
+      This is how YouTube embeds, Google Maps, and help
+      pages are inserted into a site.
+
+      title  → REQUIRED for accessibility. Screen readers
+               announce the title so users know what the
+               embedded content is about.
+      loading="lazy" → same as images — delays loading.
+      sandbox → restricts what the embedded page can do:
+        allow-scripts      → the embedded page may run JS
+        allow-same-origin  → the embedded page can access
+                             its own cookies/storage
+        Without sandbox, the embedded page has the same
+        permissions as your page (a security risk).
+    ──────────────────────────────────────────────────────── -->
+        <iframe
+          src="/help/faq"
+          title="Frequently Asked Questions"
+          width="100%"
+          height="400"
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin"
+        >
+          <!-- Fallback text for browsers that block iframes -->
+          <p>
+            Your browser does not support embedded pages.
+            <a href="/help/faq">Open the FAQ page directly.</a>
+          </p>
+        </iframe>
+      </section>
+    </main>
+
+    <!-- ══════════════════════════════════════════════════════════
+  SECTION 8 — FOOTER
+  ══════════════════════════════════════════════════════════
+
+  <footer> holds information about the page or site:
+  contact details, copyright, links to policy pages, etc.
+
+  <address> is the tag for contact information —
+  physical address, phone, email, or social links.
+  It is NOT for postal addresses in general — only for
+  contact info that relates to the nearest <article> or
+  <body> (i.e., the page's own contact details).
+
+  <br> forces a line break within inline content.
+  Use it for addresses and poetry — not for creating space
+  between paragraphs (use <p> for that).
+
+  <small> marks fine-print secondary content — legal text,
+  copyright notices, disclaimers.
+══════════════════════════════════════════════════════════ -->
+    <footer>
+      <address>
+        C.W.W. Kannangara Central College<br />
+        Mathugama, Kalutara District<br />
+        Sri Lanka<br />
+        <a href="tel:+94342247000">+94 34 224 7000</a><br />
+        <a href="mailto:info@kannangara.edu.lk">info@kannangara.edu.lk</a>
+      </address>
+      <p>
+        <small
+          >© 2026 CodeCrew — Kannangara ICT Society. All rights reserved.</small
+        >
+      </p>
+    </footer>
+  </body>
+</html>
