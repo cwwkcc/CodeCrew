@@ -1,655 +1,306 @@
-> **Part 6 of 7.** JavaScript's OOP model — `this` in full depth, factory functions, constructor functions, `Object.create`, the prototype chain, prototypal inheritance, classes, and the four pillars: encapsulation, abstraction, inheritance, polymorphism.
+> Object-Oriented Programming is a way of organising code around objects that combine data (properties) and behaviour (methods). JavaScript supports OOP through its class syntax (introduced in ES6) which sits on top of the prototype system. This file teaches you to model real-world problems with classes — the full prototype story comes in File 09.
 
 ---
 
 ## Table of Contents
 
-1. [OOP Introduction](#1-oop-introduction)
-2. [The `this` Keyword — Full Deep Dive](#2-the-this-keyword--full-deep-dive)
-3. [Factory Functions](#3-factory-functions)
-4. [Constructor Functions](#4-constructor-functions)
-5. [Built-In Constructors](#5-built-in-constructors)
-6. [Object.create Method](#6-objectcreate-method)
-7. [The Prototype Chain](#7-the-prototype-chain)
-8. [Prototypal Inheritance](#8-prototypal-inheritance)
-9. [Introduction to Classes](#9-introduction-to-classes)
-10. [Access Modifiers — Private Fields & Methods](#10-access-modifiers--private-fields--methods)
-11. [Encapsulation](#11-encapsulation)
-12. [Abstraction](#12-abstraction)
-13. [Inheritance](#13-inheritance)
-14. [Polymorphism](#14-polymorphism)
+1. [Why OOP?](#1-why-oop)
+2. [Classes and Constructors](#2-classes-and-constructors)
+3. [Instance Properties and Methods](#3-instance-properties-and-methods)
+4. [Private Fields and Methods](#4-private-fields-and-methods)
+5. [Static Properties and Methods](#5-static-properties-and-methods)
+6. [Getters and Setters](#6-getters-and-setters)
+7. [Inheritance and extends](#7-inheritance-and-extends)
+8. [Mixins — Multiple Behaviours](#8-mixins--multiple-behaviours)
+9. [Design Principles](#9-design-principles)
 
 ---
 
-## 1. OOP Introduction
+## 1. Why OOP?
 
-**Object-Oriented Programming** is a paradigm where you model your application as a collection of objects that have **state (data)** and **behavior (methods)**, and that interact with each other.
+As programs grow, organising code into functions and loose variables becomes difficult. OOP groups related data and behaviour into objects, making code:
 
-### The Four Pillars of OOP
-
-1. **Encapsulation** — bundle related data and behavior, hide internal details
-2. **Abstraction** — expose a clean interface, hide implementation complexity
-3. **Inheritance** — derive new types from existing ones (share and extend behavior)
-4. **Polymorphism** — different objects respond to the same interface differently
-
-### JavaScript's OOP Model
-
-JavaScript uses **prototypal inheritance**, not classical inheritance like Java or C++. Objects inherit directly from other objects — there is no distinction between "class" and "instance" at the engine level.
-
-ES6 **classes** are syntactic sugar over prototypal inheritance — they compile down to constructor functions and prototype chains. Understanding the prototype model is essential for understanding why classes behave the way they do.
+- **Easier to reason about** — a `Student` object knows everything about a student
+- **Reusable** — create many `Student` objects from one class
+- **Maintainable** — change how students work in one place
+- **Encapsulated** — hide internal details, expose only what's needed
 
 ---
 
-## 2. The `this` Keyword — Full Deep Dive
+## 2. Classes and Constructors
 
-`this` is the **execution context** — it refers to the object that "owns" the current call. Unlike most languages, `this` in JavaScript is not determined when a function is defined — it's determined **when the function is called**.
+A **class** is a blueprint. An **instance** is an object created from that blueprint.
 
-### Rule 1: Global Context
-
-```js
-// In a browser, global `this` is `window`
-// In Node.js module, global `this` is `module.exports` (initially {})
-// In Node.js global scope (non-module), `this` is `global`
-console.log(this); // window (browser), {} (Node module)
-
-// In strict mode, global `this` inside a function is undefined
-"use strict";
-function fn() {
-  console.log(this); // undefined
-}
-fn();
-```
-
-### Rule 2: Implicit Binding (Method Calls)
-
-When a function is called as a method of an object, `this` is the object:
-
-```js
-const user = {
-  name: "Alice",
-  greet() {
-    return `Hello, I'm ${this.name}`; // this = user
-  },
-};
-
-user.greet(); // "Hello, I'm Alice" ✓
-
-// The key is HOW you call it, not WHERE the function lives
-const greetFn = user.greet;
-greetFn(); // "Hello, I'm undefined" — this = undefined (strict) or window!
-```
-
-### Rule 3: Explicit Binding (call, apply, bind)
-
-```js
-function introduce(greeting, punctuation) {
-  return `${greeting}, I'm ${this.name}${punctuation}`;
-}
-
-const alice = { name: "Alice" };
-const bob   = { name: "Bob"   };
-
-// .call(thisArg, arg1, arg2, ...)
-introduce.call(alice, "Hello", "!");  // "Hello, I'm Alice!"
-introduce.call(bob, "Hi", ".");       // "Hi, I'm Bob."
-
-// .apply(thisArg, [args]) — useful when args are already in an array
-introduce.apply(alice, ["Hey", "?"]);
-
-// .bind(thisArg, arg1, ...) — returns a new function, doesn't call it
-const introduceAlice = introduce.bind(alice, "Hello");
-introduceAlice("!"); // "Hello, I'm Alice!"
-introduceAlice("."); // "Hello, I'm Alice."
-```
-
-### Rule 4: `new` Binding
-
-When called with `new`, `this` is the newly created object:
-
-```js
-function User(name, email) {
-  // 1. A new empty object is created: {}
-  // 2. this is set to that new object
-  this.name = name;
-  this.email = email;
-  // 3. The new object is returned automatically (if no explicit return)
-}
-
-const alice = new User("Alice", "alice@example.com");
-alice.name; // "Alice"
-```
-
-### Rule 5: Arrow Function — No Own `this`
-
-Arrow functions do not have their own `this`. They inherit `this` from the enclosing lexical scope at definition time:
-
-```js
-const user = {
-  name: "Alice",
-
-  // Regular function: `this` depends on how it's called
-  regularGreet: function() {
-    return `I'm ${this.name}`; // this = user when called as user.regularGreet()
-  },
-
-  // Arrow function: `this` is from lexical scope (not user!)
-  arrowGreet: () => {
-    return `I'm ${this.name}`; // this = global/undefined — NOT user!
-  },
-
-  // Arrow inside a regular method: `this` = user ✓
-  startTimer: function() {
-    setInterval(() => {
-      console.log(`${this.name} is still here`); // this = user ✓
-    }, 1000);
-  },
-};
-```
-
-### `this` Priority (Highest to Lowest)
-
-```
-1. new binding        — new Fn() → this is new object
-2. Explicit binding   — call/apply/bind → this is specified arg
-3. Implicit binding   — obj.method() → this is obj
-4. Default binding    — fn() → this is undefined (strict) or global
-```
-
-Arrow functions do not participate in this hierarchy — they use the enclosing scope's `this`.
-
-### Real-World: Class Context Issues
-
-```js
-class ApiClient {
-  constructor(baseUrl) {
-    this.baseUrl = baseUrl;
-    this.pendingRequests = 0;
-  }
-
-  // Problem: method used as callback loses `this`
-  async fetchUser(id) {
-    this.pendingRequests++;
-    const data = await fetch(`${this.baseUrl}/users/${id}`).then(r => r.json());
-    this.pendingRequests--;
-    return data;
+```javascript
+class Student {
+  constructor(name, grade, scores) {
+    // `this` refers to the new object being created
+    this.name = name;
+    this.grade = grade;
+    this.scores = scores;
   }
 }
 
-const client = new ApiClient("https://api.example.com");
+// Create instances with `new`
+const ashan  = new Student("Ashan",  11, [82, 91, 78]);
+const dineth = new Student("Dineth", 12, [91, 88, 95]);
 
-// ❌ Loses `this` — fetchUser is passed as a value, not called on client
-button.addEventListener("click", client.fetchUser); // this.baseUrl = undefined
+ashan.name;    // "Ashan"
+dineth.grade;  // 12
 
-// ✅ Fixes:
-button.addEventListener("click", () => client.fetchUser(userId)); // Arrow wrapper
-button.addEventListener("click", client.fetchUser.bind(client));  // bind
+// Without new: TypeError
+const bad = Student("Ashan", 11, []);  // TypeError: Class constructor must be called with new
 ```
 
 ---
 
-## 3. Factory Functions
+## 3. Instance Properties and Methods
 
-A **factory function** is a regular function that creates and returns an object. It's one pattern for creating multiple instances of similar objects without `new`.
+**Instance properties** are unique to each object. **Instance methods** are shared by all instances (they live on the prototype).
 
-```js
-function createUser(name, email, role = "user") {
-  // Private via closure
-  let loginAttempts = 0;
-  const createdAt = new Date();
+```javascript
+class Student {
+  // Class fields — defined per-instance (ES2022)
+  // (same as assigning in constructor, but more explicit)
+  school = "CWWKCC";
 
-  return {
-    // Public interface
-    name,
-    email,
-    role,
-
-    login(password) {
-      if (loginAttempts >= 5) throw new Error("Account locked");
-      const success = verifyPassword(email, password);
-      if (!success) loginAttempts++;
-      return success;
-    },
-
-    resetLoginAttempts() {
-      loginAttempts = 0;
-    },
-
-    getInfo() {
-      return {
-        name: this.name,
-        email: this.email,
-        role: this.role,
-        memberSince: createdAt,
-        // loginAttempts is NOT exposed — private via closure
-      };
-    },
-  };
-}
-
-const alice = createUser("Alice", "alice@example.com", "admin");
-const bob   = createUser("Bob",   "bob@example.com");
-
-alice.role;           // "admin"
-alice.loginAttempts;  // undefined — private!
-alice.getInfo();      // { name, email, role, memberSince }
-```
-
-### Pros and Cons of Factory Functions
-
-**Pros:**
-
-- Simple, no `new` required
-- True private state via closures
-- Each instance has its own copy of methods (memory consideration)
-- Works well with destructuring: `const { login, getInfo } = createUser(...)` (no `this` context issues)
-
-**Cons:**
-
-- Each instance gets its own copy of all methods (uses more memory than prototype)
-- Can't use `instanceof`
-- No prototype chain — can't do inheritance as cleanly
-
----
-
-## 4. Constructor Functions
-
-A constructor function is called with `new`. By convention, constructor functions are PascalCase.
-
-```js
-function User(name, email, role = "user") {
-  // `this` is the new object being created
-  this.name = name;
-  this.email = email;
-  this.role = role;
-  this.createdAt = new Date();
-}
-
-// Methods go on the PROTOTYPE — shared by all instances (memory efficient)
-User.prototype.getInfo = function() {
-  return {
-    name: this.name,
-    email: this.email,
-    role: this.role,
-  };
-};
-
-User.prototype.toString = function() {
-  return `User(${this.name}, ${this.email})`;
-};
-
-const alice = new User("Alice", "alice@example.com", "admin");
-const bob   = new User("Bob",   "bob@example.com");
-
-alice.getInfo();             // { name: "Alice", ... }
-alice instanceof User;       // true
-alice.constructor === User;  // true
-
-// alice and bob SHARE the same getInfo function — it's on User.prototype
-alice.getInfo === bob.getInfo; // true
-```
-
-### What `new` Does Step by Step
-
-```js
-// When you write: const alice = new User("Alice", "alice@example.com")
-// JavaScript does:
-
-// 1. Create a new empty object
-const obj = {};
-
-// 2. Set its prototype to Constructor.prototype
-Object.setPrototypeOf(obj, User.prototype);
-// or: obj.__proto__ = User.prototype;
-
-// 3. Call the constructor with `this` = obj
-User.call(obj, "Alice", "alice@example.com");
-
-// 4. Return obj (unless constructor explicitly returns a non-primitive)
-const alice = obj;
-```
-
-### Constructor Without `new` — A Common Bug
-
-```js
-// Without new: `this` is undefined (strict) or global
-const oops = User("Alice", "alice@example.com");
-// In strict mode: TypeError (cannot set property of undefined)
-// In sloppy mode: pollutes the global scope!
-
-// Protection pattern
-function User(name) {
-  if (!(this instanceof User)) {
-    return new User(name); // auto-correct if called without new
+  constructor(name, grade, scores = []) {
+    this.name = name;
+    this.grade = grade;
+    this.scores = scores;
   }
-  this.name = name;
+
+  // Instance method — shared via prototype (one copy for all instances)
+  average() {
+    if (this.scores.length === 0) return 0;
+    return this.scores.reduce((sum, s) => sum + s, 0) / this.scores.length;
+  }
+
+  letterGrade() {
+    const avg = this.average();
+    if (avg >= 75) return "A";
+    if (avg >= 65) return "B";
+    if (avg >= 50) return "C";
+    return "F";
+  }
+
+  addScore(score) {
+    this.scores.push(score);
+    return this;  // return `this` to enable method chaining
+  }
+
+  toString() {
+    return `${this.name} (Grade ${this.grade}): ${this.letterGrade()}`;
+  }
 }
+
+const ashan = new Student("Ashan", 11, [82, 91, 78]);
+ashan.average();     // 83.67
+ashan.letterGrade(); // "A"
+ashan.school;        // "CWWKCC"
+
+// Method chaining
+ashan.addScore(88).addScore(95);
+ashan.average();  // now includes 88 and 95
+
+`${ashan}`;  // "Ashan (Grade 11): A" — toString() is called automatically
 ```
 
 ---
 
-## 5. Built-In Constructors
+## 4. Private Fields and Methods
 
-JavaScript has several built-in constructors. Understanding them clarifies how everything in JS is an object (except primitives).
+Private fields (prefixed with `#`) are only accessible inside the class. They don't appear in `Object.keys()`, JSON, or any external access.
 
-```js
-// These all create wrapper objects — usually just use literals instead
-const str = new String("hello");  // String object (not primitive)
-const num = new Number(42);       // Number object
-const bool = new Boolean(true);   // Boolean object
+```javascript
+class BankAccount {
+  #balance;       // private field
+  #transactions;  // private field
 
-typeof str;          // "object" — not "string"!
-str === "hello";     // false! Object !== primitive
-"hello" === "hello"; // true
-
-// Autoboxing: JS temporarily wraps primitives as objects when you call methods
-"hello".toUpperCase(); // JS temporarily creates a String object for this call
-(42).toString();       // same for Number
-
-// These constructors ARE useful:
-const arr  = new Array(3);     // empty array of length 3 (but use [] instead)
-const obj  = new Object();     // {} is cleaner
-const date = new Date();       // no literal syntax for Date — must use constructor
-const re   = new RegExp("\\d+", "g"); // or use /\d+/g literal
-const map  = new Map();
-const set  = new Set();
-const err  = new Error("Something went wrong");
-```
-
-### Custom Error Classes
-
-A very common real-world use of classes extending built-ins:
-
-```js
-class AppError extends Error {
-  constructor(message, statusCode = 500, code = "INTERNAL_ERROR") {
-    super(message);
-    this.name = this.constructor.name;
-    this.statusCode = statusCode;
-    this.code = code;
-    this.isOperational = true; // vs programming errors
-    Error.captureStackTrace(this, this.constructor);
+  constructor(owner, initialBalance = 0) {
+    this.owner = owner;              // public
+    this.#balance = initialBalance;  // private
+    this.#transactions = [];         // private
   }
-}
 
-class NotFoundError extends AppError {
-  constructor(resource, id) {
-    super(`${resource} with id "${id}" not found`, 404, "NOT_FOUND");
-    this.resource = resource;
-    this.resourceId = id;
-  }
-}
-
-class UnauthorizedError extends AppError {
-  constructor(message = "Authentication required") {
-    super(message, 401, "UNAUTHORIZED");
-  }
-}
-
-class ForbiddenError extends AppError {
-  constructor(action, resource) {
-    super(`You don't have permission to ${action} ${resource}`, 403, "FORBIDDEN");
-  }
-}
-
-class ValidationError extends AppError {
-  constructor(fields) {
-    super("Validation failed", 400, "VALIDATION_ERROR");
-    this.fields = fields; // [{ field: "email", message: "Invalid format" }]
-  }
-}
-
-// Usage in NestJS-like service
-async function getUserById(id) {
-  const user = await db.users.findById(id);
-  if (!user) throw new NotFoundError("User", id);
-  if (!user.isActive) throw new ForbiddenError("access", "inactive account");
-  return user;
-}
-
-// Global error handler
-function handleError(err, req, res) {
-  if (err instanceof AppError && err.isOperational) {
-    return res.status(err.statusCode).json({
-      error: { code: err.code, message: err.message, fields: err.fields },
+  // Private method
+  #recordTransaction(type, amount) {
+    this.#transactions.push({
+      type,
+      amount,
+      balance: this.#balance,
+      date: new Date(),
     });
   }
-  // Programming error — log and return generic message
-  console.error("UNHANDLED ERROR:", err);
-  return res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Server error" } });
+
+  deposit(amount) {
+    if (amount <= 0) throw new Error("Deposit amount must be positive");
+    this.#balance += amount;
+    this.#recordTransaction("deposit", amount);
+    return this;
+  }
+
+  withdraw(amount) {
+    if (amount <= 0) throw new Error("Withdrawal amount must be positive");
+    if (amount > this.#balance) throw new Error("Insufficient funds");
+    this.#balance -= amount;
+    this.#recordTransaction("withdrawal", amount);
+    return this;
+  }
+
+  get balance() {
+    return this.#balance;  // read-only access via getter
+  }
+
+  getStatement() {
+    return this.#transactions.map(t =>
+      `${t.type}: ${t.amount} LKR (Balance: ${t.balance} LKR)`
+    ).join("\n");
+  }
 }
+
+const account = new BankAccount("Ashan", 10000);
+account.deposit(5000).withdraw(2000);
+account.balance;           // 13000
+account.getStatement();    // "deposit: 5000 LKR..."
+
+account.#balance;          // SyntaxError — private, genuinely inaccessible
+account.#recordTransaction; // SyntaxError
 ```
 
 ---
 
-## 6. Object.create Method
+## 5. Static Properties and Methods
 
-`Object.create(proto)` creates a new object with its prototype explicitly set to `proto`.
+**Static** members belong to the class itself, not instances. They're accessed as `ClassName.method()`, not `instance.method()`.
 
-```js
-const animalProto = {
-  breathe() { return `${this.name} is breathing`; },
-  eat(food) { return `${this.name} eats ${food}`; },
-};
+```javascript
+class Student {
+  static #count = 0;       // private static — tracks how many students created
+  static school = "CWWKCC"; // public static
 
-const dog = Object.create(animalProto);
-dog.name = "Rex";
-dog.breed = "Labrador";
-
-dog.breathe(); // "Rex is breathing" — inherited from animalProto
-dog.eat("kibble"); // "Rex eats kibble"
-
-dog.__proto__ === animalProto; // true
-Object.getPrototypeOf(dog) === animalProto; // true (preferred over __proto__)
-
-// Object.create(null) — creates object with NO prototype
-const pureMap = Object.create(null);
-pureMap.key = "value";
-"toString" in pureMap; // false — no inherited methods
-// Useful as a safe hash map — no prototype pollution risk
-```
-
-### Using Object.create for Inheritance
-
-```js
-function Animal(name) {
-  this.name = name;
-}
-Animal.prototype.speak = function() {
-  return `${this.name} makes a sound`;
-};
-
-function Dog(name, breed) {
-  Animal.call(this, name); // call parent constructor
-  this.breed = breed;
-}
-
-// Set up prototype chain: Dog.prototype → Animal.prototype
-Dog.prototype = Object.create(Animal.prototype);
-Dog.prototype.constructor = Dog; // restore constructor
-
-Dog.prototype.speak = function() {
-  return `${this.name} barks`;
-};
-
-const rex = new Dog("Rex", "Labrador");
-rex.speak();           // "Rex barks" — overrides Animal's version
-rex instanceof Dog;    // true
-rex instanceof Animal; // true — prototype chain!
-```
-
----
-
-## 7. The Prototype Chain
-
-Every object in JavaScript has a hidden `[[Prototype]]` reference to another object. This forms a chain that ends at `Object.prototype`, whose `[[Prototype]]` is `null`.
-
-```
-rex
-  .__proto__ → Dog.prototype
-                  .speak()
-                  .__proto__ → Animal.prototype
-                                  .breathe()
-                                  .__proto__ → Object.prototype
-                                                  .toString()
-                                                  .hasOwnProperty()
-                                                  .__proto__ → null
-```
-
-### Property Lookup
-
-When you access a property on an object, JavaScript:
-
-1. Checks the object itself (own properties)
-2. Checks `[[Prototype]]` (one level up)
-3. Continues up the chain until found or `null` is reached (→ `undefined`)
-
-```js
-const alice = new User("Alice", "alice@example.com");
-
-// Own property lookup
-alice.name;         // found on alice directly — done
-
-// Prototype lookup
-alice.getInfo();    // not on alice → look in User.prototype → found!
-
-// Object.prototype lookup
-alice.toString();   // not on alice → User.prototype → Object.prototype → found!
-
-// Not found anywhere
-alice.flyToMoon;    // null chain reached → undefined
-```
-
-### Prototype Performance Note
-
-This lookup happens for EVERY property access on EVERY property that isn't own. Modern JS engines optimize this heavily (hidden classes, inline caches), but avoiding unnecessarily deep prototype chains is good practice.
-
-### `hasOwnProperty` vs `in`
-
-```js
-"name" in alice;             // true — own property
-"getInfo" in alice;          // true — inherited from prototype
-"flyToMoon" in alice;        // false — not anywhere in chain
-
-Object.hasOwn(alice, "name");    // true — only own
-Object.hasOwn(alice, "getInfo"); // false — it's on the prototype
-```
-
----
-
-## 8. Prototypal Inheritance
-
-Building inheritance chains using constructor functions and Object.create.
-
-```js
-// Base "class" — Permission Entity
-function PermissionEntity(id, permissions = []) {
-  this.id = id;
-  this._permissions = new Set(permissions);
-}
-
-PermissionEntity.prototype.can = function(permission) {
-  return this._permissions.has(permission) || this._permissions.has("*");
-};
-
-PermissionEntity.prototype.addPermission = function(perm) {
-  this._permissions.add(perm);
-  return this;
-};
-
-// "Subclass" — User
-function User(id, name, email, permissions) {
-  PermissionEntity.call(this, id, permissions); // super()
-  this.name = name;
-  this.email = email;
-  this.createdAt = new Date();
-}
-User.prototype = Object.create(PermissionEntity.prototype);
-User.prototype.constructor = User;
-
-User.prototype.getProfile = function() {
-  return { id: this.id, name: this.name, email: this.email };
-};
-
-// "Subclass" — AdminUser
-function AdminUser(id, name, email) {
-  User.call(this, id, name, email, ["*"]); // admin gets all permissions
-  this.isAdmin = true;
-}
-AdminUser.prototype = Object.create(User.prototype);
-AdminUser.prototype.constructor = AdminUser;
-
-AdminUser.prototype.deleteUser = function(userId) {
-  if (!this.can("*")) throw new Error("Insufficient permissions");
-  return db.users.delete(userId);
-};
-
-const alice = new AdminUser("u1", "Alice", "alice@example.com");
-alice.can("read");    // true — inherited through PermissionEntity
-alice.getProfile();   // inherited through User
-alice.deleteUser("u2"); // AdminUser's own method
-alice instanceof AdminUser;       // true
-alice instanceof User;            // true
-alice instanceof PermissionEntity; // true
-```
-
----
-
-## 9. Introduction to Classes
-
-ES6 classes are syntactic sugar over prototype-based OOP. They make the pattern cleaner and more readable, but do NOT change how inheritance works under the hood.
-
-```js
-class User {
-  // Class fields (ES2022) — declared at class level
-  role = "user";             // public field, initialized per instance
-  createdAt = new Date();    // same
-
-  constructor(name, email) {
+  constructor(name, grade) {
     this.name = name;
-    this.email = email;
+    this.grade = grade;
+    this.id = ++Student.#count;
   }
 
-  // Instance method — goes on User.prototype
-  getProfile() {
-    return {
-      name: this.name,
-      email: this.email,
-      role: this.role,
-    };
+  // Static factory methods — alternative constructors
+  static fromJSON(json) {
+    const data = JSON.parse(json);
+    return new Student(data.name, data.grade);
   }
 
-  // Static method — called on the class, not instances
-  static create(name, email) {
-    return new User(name, email);
+  static fromObject({ name, grade }) {
+    return new Student(name, grade);
   }
 
-  // Getter
-  get displayName() {
-    return `${this.name} (${this.email})`;
+  // Static utility methods
+  static compareByGrade(a, b) {
+    return a.grade - b.grade;
   }
 
-  // Setter
-  set displayName(value) {
-    const [name, rest] = value.split(" (");
-    this.name = name;
-    // etc.
-  }
-
-  // toString — called by string coercion
-  toString() {
-    return `User(${this.name})`;
+  static getCount() {
+    return Student.#count;
   }
 }
 
-const alice = User.create("Alice", "alice@example.com");
-alice.displayName;    // "Alice (alice@example.com)"
-`${alice}`;           // "User(Alice)"
-alice instanceof User; // true
+const s1 = new Student("Ashan", 11);
+const s2 = new Student("Dineth", 12);
+
+Student.school;       // "CWWKCC"
+Student.getCount();   // 2
+s1.getCount();        // TypeError — static methods aren't on instances
+
+// Factory methods
+const s3 = Student.fromObject({ name: "Kavya", grade: 11 });
+const s4 = Student.fromJSON('{"name":"Saman","grade":12}');
+
+// Using static comparator
+const students = [s2, s1, s3, s4];
+students.sort(Student.compareByGrade);
+// sorted by grade: s1, s3, s2, s4
 ```
 
-### Class Inheritance with `extends` and `super`
+---
 
-```js
+## 6. Getters and Setters
+
+Getters and setters let you define computed properties that look like regular properties.
+
+```javascript
+class Temperature {
+  #celsius;
+
+  constructor(celsius) {
+    this.#celsius = celsius;
+  }
+
+  // Getter — accessed like a property, no ()
+  get fahrenheit() {
+    return (this.#celsius * 9/5) + 32;
+  }
+
+  get kelvin() {
+    return this.#celsius + 273.15;
+  }
+
+  // Setter — validate before setting
+  set celsius(value) {
+    if (value < -273.15) throw new RangeError("Below absolute zero!");
+    this.#celsius = value;
+  }
+
+  get celsius() {
+    return this.#celsius;
+  }
+}
+
+const temp = new Temperature(100);
+temp.fahrenheit;    // 212 — computed on the fly
+temp.kelvin;        // 373.15
+temp.celsius = 0;   // triggers setter
+temp.celsius;       // 0
+temp.celsius = -300;  // RangeError!
+```
+
+```javascript
+// Practical: derived/computed properties
+class Cart {
+  #items = [];
+
+  addItem(item) {
+    this.#items.push(item);
+    return this;
+  }
+
+  get total() {
+    return this.#items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  }
+
+  get isEmpty() {
+    return this.#items.length === 0;
+  }
+
+  get count() {
+    return this.#items.reduce((sum, item) => sum + item.quantity, 0);
+  }
+}
+
+const cart = new Cart();
+cart.addItem({ name: "Book", price: 500, quantity: 2 });
+cart.total;    // 1000
+cart.count;    // 2
+cart.isEmpty;  // false
+```
+
+---
+
+## 7. Inheritance and `extends`
+
+Inheritance lets one class build on another — inheriting all its properties and methods, then extending or overriding them.
+
+```javascript
 class Animal {
   constructor(name, sound) {
     this.name = name;
@@ -666,15 +317,22 @@ class Animal {
 }
 
 class Dog extends Animal {
+  #breed;
+
   constructor(name, breed) {
-    super(name, "woof"); // MUST call super() before using `this`
-    this.breed = breed;
+    super(name, "woof");  // call parent constructor — REQUIRED before `this`
+    this.#breed = breed;
   }
 
   // Override parent method
   speak() {
-    const base = super.speak(); // call parent method
-    return `${base}! (${this.breed})`;
+    return `${this.name} barks: ${this.sound}!`;
+  }
+
+  // Extend parent method
+  describe() {
+    return `${super.speak()} — a ${this.#breed}`;
+    //       ↑ calls Animal.speak() explicitly
   }
 
   fetch(item) {
@@ -682,600 +340,255 @@ class Dog extends Animal {
   }
 }
 
-const rex = new Dog("Rex", "Labrador");
-rex.speak();          // "Rex says woof! (Labrador)"
-rex.fetch("ball");    // "Rex fetches the ball"
-rex instanceof Dog;   // true
-rex instanceof Animal; // true
-```
+class GuideDog extends Dog {
+  #owner;
 
-### Static Members
-
-```js
-class MathUtils {
-  static PI = 3.14159265358979;
-
-  static circleArea(radius) {
-    return MathUtils.PI * radius ** 2;
+  constructor(name, breed, owner) {
+    super(name, breed);  // calls Dog constructor
+    this.#owner = owner;
   }
 
-  static degreesToRadians(degrees) {
-    return (degrees * Math.PI) / 180;
+  guide() {
+    return `${this.name} guides ${this.#owner}`;
   }
 }
 
-MathUtils.circleArea(5); // 78.53...
-// new MathUtils() is pointless — all methods are static
+const rex   = new Dog("Rex", "Labrador");
+const buddy = new GuideDog("Buddy", "Golden Retriever", "Ashan");
 
-// Real-world: Repository pattern
-class UserRepository {
-  static #instance = null;
-  #db;
+rex.speak();          // "Rex barks: woof!"
+rex.describe();       // "Rex says woof — a Labrador"
+buddy.speak();        // "Buddy barks: woof!" (inherited from Dog)
+buddy.guide();        // "Buddy guides Ashan"
 
-  constructor(db) {
-    this.#db = db;
-  }
-
-  // Singleton pattern
-  static getInstance(db) {
-    if (!UserRepository.#instance) {
-      UserRepository.#instance = new UserRepository(db);
-    }
-    return UserRepository.#instance;
-  }
-
-  async findById(id) {
-    return this.#db.query("SELECT * FROM users WHERE id = $1", [id]);
-  }
-
-  async findByEmail(email) {
-    return this.#db.query("SELECT * FROM users WHERE email = $1", [email]);
-  }
-}
+// instanceof checks the prototype chain
+buddy instanceof GuideDog;  // true
+buddy instanceof Dog;       // true
+buddy instanceof Animal;    // true
+buddy instanceof Object;    // always true
 ```
 
----
+### When `super` is required
 
-## 10. Access Modifiers — Private Fields & Methods
-
-ES2022 introduced true private class fields using the `#` prefix.
-
-```js
-class BankAccount {
-  // Private fields — accessible ONLY within the class body
-  #balance;
-  #transactionHistory = [];
-  #pin;
-
-  // Public field
-  owner;
-
-  constructor(owner, initialBalance, pin) {
-    this.owner = owner;
-    this.#balance = initialBalance;
-    this.#pin = pin;
-  }
-
-  // Private method
-  #validatePin(pin) {
-    return pin === this.#pin;
-  }
-
-  #recordTransaction(type, amount) {
-    this.#transactionHistory.push({
-      type,
-      amount,
-      balance: this.#balance,
-      timestamp: new Date(),
-    });
-  }
-
-  // Public methods
-  deposit(amount) {
-    if (amount <= 0) throw new Error("Deposit must be positive");
-    this.#balance += amount;
-    this.#recordTransaction("deposit", amount);
-    return this;
-  }
-
-  withdraw(amount, pin) {
-    if (!this.#validatePin(pin)) throw new Error("Invalid PIN");
-    if (amount > this.#balance) throw new Error("Insufficient funds");
-    this.#balance -= amount;
-    this.#recordTransaction("withdrawal", amount);
-    return this;
-  }
-
-  get balance() {
-    return this.#balance;
-  }
-
-  getStatement() {
-    return [...this.#transactionHistory]; // copy — don't expose mutable internal
+```javascript
+class Base {
+  constructor(value) {
+    this.value = value;
   }
 }
 
-const account = new BankAccount("Alice", 1000, "1234");
-account.balance;               // 1000 (via getter)
-account.#balance;              // SyntaxError — private field!
-account.deposit(500).withdraw(200, "1234");
-account.balance;               // 1300
-```
-
----
-
-## 11. Encapsulation
-
-**Encapsulation** = bundling data + behavior, and restricting direct access to internal state. The outside world interacts only through the public interface.
-
-```js
-class ShoppingCart {
-  #items = new Map(); // productId → { product, quantity }
-  #couponCode = null;
-  #discountPercent = 0;
-
-  addItem(product, quantity = 1) {
-    if (quantity <= 0) throw new Error("Quantity must be positive");
-
-    const existing = this.#items.get(product.id);
-    if (existing) {
-      existing.quantity += quantity;
-    } else {
-      this.#items.set(product.id, { product, quantity });
-    }
-
-    return this; // chainable
-  }
-
-  removeItem(productId) {
-    if (!this.#items.has(productId)) throw new Error("Item not in cart");
-    this.#items.delete(productId);
-    return this;
-  }
-
-  updateQuantity(productId, quantity) {
-    if (quantity <= 0) return this.removeItem(productId);
-    const item = this.#items.get(productId);
-    if (!item) throw new Error("Item not in cart");
-    item.quantity = quantity;
-    return this;
-  }
-
-  applyCoupon(code) {
-    const discounts = { SAVE10: 10, SAVE20: 20, HALFOFF: 50 };
-    if (!discounts[code]) throw new Error("Invalid coupon code");
-    this.#couponCode = code;
-    this.#discountPercent = discounts[code];
-    return this;
-  }
-
-  // Private calculation — implementation detail
-  #calculateSubtotal() {
-    let subtotal = 0;
-    for (const { product, quantity } of this.#items.values()) {
-      subtotal += product.price * quantity;
-    }
-    return subtotal;
-  }
-
-  // Public computed properties
-  get itemCount() {
-    let count = 0;
-    for (const { quantity } of this.#items.values()) count += quantity;
-    return count;
-  }
-
-  get subtotal() { return this.#calculateSubtotal(); }
-
-  get discount() {
-    return this.#calculateSubtotal() * (this.#discountPercent / 100);
-  }
-
-  get total() { return this.subtotal - this.discount; }
-
-  getSummary() {
-    return {
-      items: [...this.#items.values()].map(({ product, quantity }) => ({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        quantity,
-        lineTotal: product.price * quantity,
-      })),
-      couponCode: this.#couponCode,
-      subtotal: this.subtotal,
-      discount: this.discount,
-      total: this.total,
-    };
+class Child extends Base {
+  constructor(value, extra) {
+    // Must call super() BEFORE using `this`
+    super(value);         // sets this.value = value via Base constructor
+    this.extra = extra;   // then you can use `this`
   }
 }
 
-const cart = new ShoppingCart();
-cart
-  .addItem({ id: "p1", name: "Laptop", price: 999 })
-  .addItem({ id: "p2", name: "Mouse",  price: 49 }, 2)
-  .applyCoupon("SAVE10");
-
-cart.total;       // 979.20
-cart.#items;      // SyntaxError — private!
-```
-
----
-
-## 12. Abstraction
-
-**Abstraction** = hide complex implementation, expose a simple interface. Users of your class don't need to know HOW it works — just WHAT it does.
-
-```js
-class AuthService {
-  #tokenStore;
-  #refreshTimer = null;
-
-  constructor(tokenStore) {
-    this.#tokenStore = tokenStore;
-  }
-
-  // Simple public interface — hide all the JWT/crypto complexity
-  async login(email, password) {
-    const tokens = await this.#authenticate(email, password);
-    this.#storeTokens(tokens);
-    this.#scheduleRefresh(tokens.expiresIn);
-    return { success: true, user: tokens.user };
-  }
-
-  async logout() {
-    const token = this.#tokenStore.get("refreshToken");
-    if (token) await this.#revokeToken(token);
-    this.#clearTokens();
-    if (this.#refreshTimer) clearTimeout(this.#refreshTimer);
-  }
-
-  async getAuthHeader() {
-    const token = this.#tokenStore.get("accessToken");
-    const expiry = this.#tokenStore.get("tokenExpiry");
-
-    if (Date.now() > Number(expiry) - 60_000) {
-      await this.#refreshTokens(); // auto-refresh before expiry
-    }
-
-    return `Bearer ${this.#tokenStore.get("accessToken")}`;
-  }
-
-  get isAuthenticated() {
-    const token = this.#tokenStore.get("accessToken");
-    const expiry = this.#tokenStore.get("tokenExpiry");
-    return !!token && Date.now() < Number(expiry);
-  }
-
-  // Private — complex internals hidden from users of this class
-  async #authenticate(email, password) {
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    if (!response.ok) throw new Error("Authentication failed");
-    return response.json();
-  }
-
-  async #refreshTokens() {
-    const refresh = this.#tokenStore.get("refreshToken");
-    const response = await fetch("/api/auth/refresh", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken: refresh }),
-    });
-    if (!response.ok) { await this.logout(); throw new Error("Session expired"); }
-    this.#storeTokens(await response.json());
-  }
-
-  async #revokeToken(token) {
-    await fetch("/api/auth/logout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken: token }),
-    }).catch(() => {}); // best-effort
-  }
-
-  #storeTokens({ accessToken, refreshToken, expiresIn }) {
-    this.#tokenStore.set("accessToken", accessToken);
-    this.#tokenStore.set("refreshToken", refreshToken);
-    this.#tokenStore.set("tokenExpiry", Date.now() + expiresIn * 1000);
-  }
-
-  #clearTokens() {
-    this.#tokenStore.delete("accessToken");
-    this.#tokenStore.delete("refreshToken");
-    this.#tokenStore.delete("tokenExpiry");
-  }
-
-  #scheduleRefresh(expiresIn) {
-    if (this.#refreshTimer) clearTimeout(this.#refreshTimer);
-    const refreshAt = (expiresIn - 60) * 1000;
-    this.#refreshTimer = setTimeout(() => this.#refreshTokens(), refreshAt);
+// If a subclass has no constructor, the parent constructor is used automatically:
+class SimpleChild extends Base {
+  // No constructor needed — Base's constructor is called with the same args
+  double() {
+    return this.value * 2;
   }
 }
 ```
 
 ---
 
-## 13. Inheritance
+## 8. Mixins — Multiple Behaviours
 
-**Inheritance** allows a class to acquire properties and methods from a parent class, and extend or override them.
+JavaScript classes can only extend one parent. Mixins let you compose behaviour from multiple sources.
 
-```js
-// Base entity with common fields for database models
-class BaseEntity {
-  #id;
-  #createdAt;
-  #updatedAt;
+```javascript
+// Mixins are functions that take a class and return an enhanced class
 
-  constructor(id = crypto.randomUUID()) {
-    this.#id = id;
-    this.#createdAt = new Date();
-    this.#updatedAt = new Date();
+const Serializable = (Base) => class extends Base {
+  toJSON() {
+    return JSON.stringify(this);
   }
 
-  get id()        { return this.#id; }
-  get createdAt() { return this.#createdAt; }
-  get updatedAt() { return this.#updatedAt; }
+  static fromJSON(json) {
+    return Object.assign(new this(), JSON.parse(json));
+  }
+};
+
+const Timestamped = (Base) => class extends Base {
+  constructor(...args) {
+    super(...args);
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+  }
 
   touch() {
-    this.#updatedAt = new Date();
+    this.updatedAt = new Date();
     return this;
   }
+};
 
-  toJSON() {
-    return {
-      id: this.#id,
-      createdAt: this.#createdAt.toISOString(),
-      updatedAt: this.#updatedAt.toISOString(),
-    };
+const Validatable = (Base) => class extends Base {
+  validate() {
+    const errors = [];
+    if (!this.name?.trim()) errors.push("Name is required");
+    if (!this.email?.includes("@")) errors.push("Email is invalid");
+    return { valid: errors.length === 0, errors };
   }
-}
+};
 
-class User extends BaseEntity {
-  #passwordHash;
-
-  constructor({ name, email, passwordHash, id }) {
-    super(id);
+// Compose multiple mixins
+class User extends Serializable(Timestamped(Validatable(class {}))) {
+  constructor(name, email) {
+    super();
     this.name = name;
     this.email = email;
-    this.role = "user";
-    this.isActive = true;
-    this.#passwordHash = passwordHash;
-  }
-
-  verifyPassword(hash) {
-    return this.#passwordHash === hash; // simplified
-  }
-
-  deactivate() {
-    this.isActive = false;
-    this.touch();
-    return this;
-  }
-
-  toJSON() {
-    return {
-      ...super.toJSON(), // include base fields
-      name: this.name,
-      email: this.email,
-      role: this.role,
-      isActive: this.isActive,
-      // passwordHash intentionally NOT included
-    };
   }
 }
 
-class AdminUser extends User {
-  #managedDepartments = [];
-
-  constructor(data) {
-    super(data);
-    this.role = "admin";
-  }
-
-  addManagedDepartment(dept) {
-    this.#managedDepartments.push(dept);
-    this.touch();
-    return this;
-  }
-
-  toJSON() {
-    return {
-      ...super.toJSON(),
-      managedDepartments: [...this.#managedDepartments],
-    };
-  }
-}
-
-const admin = new AdminUser({
-  name: "Alice",
-  email: "alice@example.com",
-  passwordHash: "hashed_pw",
-});
-
-admin.id;                    // UUID from BaseEntity
-admin.role;                  // "admin"
-admin.addManagedDepartment("Engineering");
-JSON.stringify(admin.toJSON(), null, 2);
-// Includes base fields + user fields + admin fields, no password
+const user = new User("Ashan", "ashan@cwwkcc.lk");
+user.validate();   // { valid: true, errors: [] }
+user.toJSON();     // JSON string with all properties
+user.createdAt;    // Date when created
+user.touch();      // updates updatedAt
 ```
 
 ---
 
-## 14. Polymorphism
+## 9. Design Principles
 
-**Polymorphism** = many forms. Different classes can implement the same interface differently — code that uses the interface doesn't need to know the specific type.
+### Single Responsibility
 
-### Method Overriding
+Each class should have one reason to change.
 
-```js
-// Payment processor abstraction
-class PaymentProcessor {
-  constructor(config) {
-    if (new.target === PaymentProcessor) {
-      throw new Error("PaymentProcessor is abstract — instantiate a subclass");
+```javascript
+// BAD — Student does too many things
+class Student {
+  constructor(name) { this.name = name; }
+  save() { db.save(this); }           // database concern
+  sendEmail() { emailer.send(this); } // email concern
+  formatReport() { /* ... */ }        // reporting concern
+}
+
+// GOOD — separate concerns
+class Student {
+  constructor(name) { this.name = name; }
+  getDisplayName() { return this.name; }
+}
+
+class StudentRepository {
+  async save(student) { return db.save(student); }
+  async findById(id) { return db.find(id); }
+}
+
+class StudentEmailer {
+  async sendWelcome(student) { /* ... */ }
+}
+```
+
+### Encapsulation
+
+Hide internal details. Expose only what consumers need.
+
+```javascript
+class Timer {
+  #startTime = null;
+  #elapsed = 0;
+  #running = false;
+
+  start() {
+    if (this.#running) return;
+    this.#startTime = Date.now();
+    this.#running = true;
+  }
+
+  stop() {
+    if (!this.#running) return;
+    this.#elapsed += Date.now() - this.#startTime;
+    this.#running = false;
+  }
+
+  reset() {
+    this.#startTime = null;
+    this.#elapsed = 0;
+    this.#running = false;
+  }
+
+  // Read-only computed property — consumers get what they need
+  get elapsed() {
+    if (this.#running) {
+      return this.#elapsed + (Date.now() - this.#startTime);
     }
-    this.config = config;
-  }
-
-  // Template method — defines the algorithm, delegates steps to subclasses
-  async processPayment(order) {
-    await this.validateOrder(order);
-    const paymentData = this.buildPaymentPayload(order); // subclass implements
-    const result = await this.executeCharge(paymentData); // subclass implements
-    return this.normalizeResult(result); // subclass implements
-  }
-
-  async validateOrder(order) {
-    if (!order.amount || order.amount <= 0) throw new Error("Invalid amount");
-    if (!order.currency) throw new Error("Currency required");
-  }
-
-  // "Abstract" methods — must be overridden
-  buildPaymentPayload(order) { throw new Error("buildPaymentPayload() not implemented"); }
-  async executeCharge(payload) { throw new Error("executeCharge() not implemented"); }
-  normalizeResult(result) { throw new Error("normalizeResult() not implemented"); }
-}
-
-class StripeProcessor extends PaymentProcessor {
-  buildPaymentPayload(order) {
-    return {
-      amount: Math.round(order.amount * 100), // Stripe uses cents
-      currency: order.currency.toLowerCase(),
-      payment_method: order.paymentMethodId,
-      description: order.description,
-    };
-  }
-
-  async executeCharge(payload) {
-    const stripe = require("stripe")(this.config.secretKey);
-    return stripe.paymentIntents.create(payload);
-  }
-
-  normalizeResult(result) {
-    return {
-      success: result.status === "succeeded",
-      transactionId: result.id,
-      amount: result.amount / 100,
-      currency: result.currency.toUpperCase(),
-    };
+    return this.#elapsed;
   }
 }
-
-class PayPalProcessor extends PaymentProcessor {
-  buildPaymentPayload(order) {
-    return {
-      intent: "CAPTURE",
-      purchase_units: [{
-        amount: { value: order.amount.toFixed(2), currency_code: order.currency },
-        description: order.description,
-      }],
-    };
-  }
-
-  async executeCharge(payload) {
-    // PayPal API call
-    return paypalClient.orders.create(payload);
-  }
-
-  normalizeResult(result) {
-    return {
-      success: result.status === "COMPLETED",
-      transactionId: result.id,
-      amount: parseFloat(result.purchase_units[0].amount.value),
-      currency: result.purchase_units[0].amount.currency_code,
-    };
-  }
-}
-
-// POLYMORPHISM IN ACTION:
-// This function doesn't care if it's Stripe, PayPal, or any future processor
-// It just calls the same interface and gets the same shape back
-async function checkout(order, processor) {
-  const result = await processor.processPayment(order);
-
-  if (result.success) {
-    await markOrderPaid(order.id, result.transactionId);
-    return { success: true, transactionId: result.transactionId };
-  } else {
-    throw new Error("Payment failed");
-  }
-}
-
-// Works with any PaymentProcessor subclass
-const stripe = new StripeProcessor({ secretKey: process.env.STRIPE_KEY });
-const paypal = new PayPalProcessor({ clientId: process.env.PAYPAL_ID });
-
-await checkout(order, stripe);  // same function
-await checkout(order, paypal);  // same function, different behavior
 ```
 
-### Duck Typing Polymorphism
+### Favour Composition Over Inheritance
 
-JavaScript doesn't require formal inheritance for polymorphism — any object with the right methods will work ("if it quacks like a duck"):
+Deep inheritance hierarchies are fragile. Composing behaviour is more flexible.
 
-```js
-// Different "renderers" with the same interface
-const htmlRenderer = {
-  render(data) { return `<table>${data.map(r => `<tr>${r.join("<td>")}</tr>`).join("")}</table>`; }
-};
+```javascript
+// Inheritance hierarchy (fragile)
+Animal → Mammal → Dog → TrainedDog → GuideDog
 
-const csvRenderer = {
-  render(data) { return data.map(row => row.join(",")).join("\n"); }
-};
+// Composition — attach behaviours as needed
+function createDog({ name, breed }) {
+  const base = { name, breed };
+  const speak = { speak: () => `${name} barks!` };
+  const fetch = { fetch: (item) => `${name} fetches ${item}` };
 
-const jsonRenderer = {
-  render(data) { return JSON.stringify(data, null, 2); }
-};
-
-// Works with any object that has a .render() method
-function exportReport(data, renderer) {
-  return renderer.render(data);
+  return { ...base, ...speak, ...fetch };
 }
 
-exportReport(reportData, htmlRenderer);
-exportReport(reportData, csvRenderer);
-exportReport(reportData, jsonRenderer);
+function withGuiding(dog, owner) {
+  return { ...dog, guide: () => `${dog.name} guides ${owner}` };
+}
+
+const rex   = createDog({ name: "Rex",   breed: "Labrador" });
+const buddy = withGuiding(createDog({ name: "Buddy", breed: "Golden" }), "Ashan");
 ```
 
 ---
 
-## Summary Cheat Sheet
+## Summary
 
 ```
-this:
-  Default binding     fn() → undefined (strict) / global
-  Implicit binding    obj.method() → this = obj
-  Explicit binding    .call/.apply/.bind → specified object
-  new binding         new Fn() → new empty object
-  Arrow function      no own this — uses enclosing scope
+Class basics:
+  class Name { constructor(...) { this.prop = value; } }
+  new Name(...args) — creates an instance
 
-Creation patterns:
-  Factory function    no new, closure privacy, memory cost per instance
-  Constructor fn      new, prototype-shared methods, memory efficient
-  class               syntactic sugar, ES6+, extends/super, private fields (#)
+Instance members:
+  Properties: set in constructor (this.x = ...) or class fields
+  Methods: defined in class body, shared via prototype
 
-Prototype chain:
-  obj.__proto__ → Constructor.prototype → Object.prototype → null
-  Property lookup walks chain upward
-  hasOwnProperty / Object.hasOwn — check only own props
+Private (#):
+  #field, #method() — only accessible inside the class
+  Not in Object.keys(), JSON, or external access
+  Enforced by the JS engine (not just convention like _private)
 
-OOP Pillars:
-  Encapsulation:  # private fields + public interface; getters/setters
-  Abstraction:    hide complex internals, expose simple API
-  Inheritance:    extends, super(), override methods
-  Polymorphism:   same interface, different implementations
+Static:
+  static method() — belongs to class, not instances
+  Accessed as ClassName.method(), not instance.method()
+  Use for: factory methods, utilities, counters
 
-Patterns:
-  Template Method: base class defines algorithm, subclasses implement steps
-  Factory Method:  static create() for controlled instantiation
-  Singleton:       static #instance for one shared instance
-  Abstract class:  throw in constructor if new.target === BaseClass
+Getters/Setters:
+  get prop() { ... } — called like a property (no ())
+  set prop(value) { ... } — intercept assignment, validate
+
+Inheritance:
+  class Child extends Parent { ... }
+  Must call super() before using `this` in a constructor
+  super.method() — call parent's version of overridden method
+
+Mixins:
+  const Mixed = (Base) => class extends Base { ... }
+  Compose multiple behaviours without deep hierarchies
+
+Principles:
+  Single responsibility — one class, one purpose
+  Encapsulation — hide internals with private fields
+  Prefer composition — attach behaviour rather than deep inheritance
 ```
 
 ---
 
-_Next: [Part 7 — Asynchronous JavaScript & APIs](./part-7-async-and-apis.md)_
+_Next: [06 — Asynchronous JavaScript & APIs](./06%20-%20Asynchronous%20JavaScript%20%26%20APIs.md)_

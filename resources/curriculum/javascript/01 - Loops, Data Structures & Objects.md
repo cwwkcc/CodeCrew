@@ -1,929 +1,667 @@
-> **Part 2 of 7.** Covers for/while/do-while loops, logical operators, arrays (with all built-in techniques), and JavaScript objects.
+> Data is the raw material of every program. JavaScript gives you several containers for data — arrays, objects, Map, Set — and several tools for iterating over them. Understanding which container fits which problem, and how to move data between them efficiently, is the core skill of this file.
 
 ---
 
 ## Table of Contents
 
-1. [Logical Operators](#1-logical-operators)
-2. [For Loop](#2-for-loop)
-3. [While Loop](#3-while-loop)
-4. [Do-While Loop](#4-do-while-loop)
-5. [Loop Control: break & continue](#5-loop-control-break--continue)
-6. [Arrays: Introduction](#6-arrays-introduction)
-7. [Array Techniques](#7-array-techniques)
-8. [JavaScript Objects](#8-javascript-objects)
+1. [Arrays](#1-arrays)
+2. [Array Methods — Transformation](#2-array-methods--transformation)
+3. [Array Methods — Search and Test](#3-array-methods--search-and-test)
+4. [Array Methods — Reduction and Accumulation](#4-array-methods--reduction-and-accumulation)
+5. [Loops](#5-loops)
+6. [Objects](#6-objects)
+7. [Destructuring](#7-destructuring)
+8. [Spread and Rest](#8-spread-and-rest)
+9. [Map and Set](#9-map-and-set)
+10. [Choosing the Right Data Structure](#10-choosing-the-right-data-structure)
 
 ---
 
-## 1. Logical Operators
+## 1. Arrays
 
-Logical operators combine or invert boolean expressions. In JavaScript, they're more powerful than just `true`/`false` — they actually return **one of their operands**.
+An array is an ordered list of values. Values can be any type, and you can mix types (though you usually shouldn't).
 
-### `&&` — Logical AND
+```javascript
+// Creating arrays
+const empty = [];
+const numbers = [1, 2, 3, 4, 5];
+const names = ["Ashan", "Dineth", "Kavya"];
+const mixed = [1, "hello", true, null];  // valid, but unusual
 
-Returns the **first falsy** value it encounters, or the **last value** if all are truthy.
+// Accessing elements
+numbers[0]      // 1 — zero-indexed
+numbers[4]      // 5
+numbers.at(-1)  // 5 — last element (modern, cleaner)
+numbers.at(-2)  // 4 — second to last
 
-```js
-true && true       // true
-true && false      // false
-"hello" && 42      // 42      (both truthy, returns last)
-null && "hello"    // null    (null is falsy, short-circuits)
-0 && "never runs"  // 0       (0 is falsy, short-circuits)
+// Modifying
+numbers[0] = 10;           // replace first element
+numbers.push(6);           // add to end → [1, 2, 3, 4, 5, 6]
+numbers.pop();             // remove from end → returns 6
+numbers.unshift(0);        // add to beginning → [0, 1, 2, 3, 4, 5]
+numbers.shift();           // remove from beginning → returns 0
+
+// Length
+numbers.length             // 5
+
+// Checking
+Array.isArray(numbers)     // true
+Array.isArray("string")    // false
 ```
 
-**Real use — guard conditions:**
+### Slicing and Splicing
 
-```js
-// Only call the function if the user exists AND has a permission
-user && user.permissions && user.permissions.includes("write") && saveDocument();
+```javascript
+const arr = [1, 2, 3, 4, 5];
 
-// In React: conditional render
-{isAuthenticated && <UserMenu />}
-```
+// slice — returns a NEW array (non-destructive)
+arr.slice(1, 3)    // [2, 3] — from index 1, up to (not including) 3
+arr.slice(2)       // [3, 4, 5] — from index 2 to end
+arr.slice(-2)      // [4, 5] — last 2 elements
+// arr is unchanged
 
-### `||` — Logical OR
+// splice — modifies the ORIGINAL array (destructive)
+const removed = arr.splice(1, 2);  // remove 2 elements starting at index 1
+// arr is now [1, 4, 5], removed is [2, 3]
 
-Returns the **first truthy** value, or the **last value** if all are falsy.
+arr.splice(1, 0, 10, 20);  // insert 10, 20 at index 1 without removing
+// arr is now [1, 10, 20, 4, 5]
 
-```js
-false || "default"    // "default"
-null || undefined     // undefined (both falsy, returns last)
-"value" || "default"  // "value"
-0 || 42               // 42 (0 is falsy)
-```
-
-**Real use — fallback values:**
-
-```js
-const port = process.env.PORT || 3000;
-const displayName = user.nickname || user.username || user.email;
-```
-
-**Trap:** `0` and `""` are falsy. If they're valid values, `||` will incorrectly fall back:
-
-```js
-const timeout = userConfig.timeout || 5000;
-// If userConfig.timeout is 0 (immediate), this WRONGLY gives 5000!
-```
-
-### `??` — Nullish Coalescing
-
-Returns the right side only if the left is **`null` or `undefined`** (not just any falsy value).
-
-```js
-0 ?? "default"          // 0     (0 is not null/undefined)
-"" ?? "default"         // ""    (empty string is not null/undefined)
-null ?? "default"       // "default"
-undefined ?? "default"  // "default"
-
-// Fix for the timeout problem above:
-const timeout = userConfig.timeout ?? 5000; // 0 is preserved!
-```
-
-### `!` — Logical NOT
-
-Inverts a boolean. `!!` converts any value to its boolean equivalent.
-
-```js
-!true       // false
-!false      // true
-!null       // true  (null is falsy, so NOT gives true)
-!0          // true
-!"hello"    // false (truthy string, NOT gives false)
-
-// Double NOT — common idiom
-!!null      // false
-!!"hello"   // true
-!!0         // false
-
-// Real use: converting to boolean for a flag
-const hasPermission = !!(user.roles && user.roles.length > 0);
-```
-
-### Logical Assignment Operators (ES2021)
-
-```js
-// ||= — assign only if left side is falsy
-user.role ||= "guest"; // same as: user.role = user.role || "guest"
-
-// &&= — assign only if left side is truthy
-user.profile &&= cleanProfile(user.profile); // only clean if profile exists
-
-// ??= — assign only if left side is null/undefined
-config.timeout ??= 5000;
+// Flattening nested arrays
+[1, [2, 3], [4, [5]]].flat()     // [1, 2, 3, 4, [5]] — one level
+[1, [2, 3], [4, [5]]].flat(2)    // [1, 2, 3, 4, 5] — two levels
+[1, [2, [3, [4]]]].flat(Infinity) // [1, 2, 3, 4] — all levels
 ```
 
 ---
 
-## 2. For Loop
+## 2. Array Methods — Transformation
 
-The classic `for` loop gives you full control over iteration: initialization, condition, and update all in one line.
+These methods return NEW arrays. They don't modify the original.
 
-### Anatomy
-
-```js
-for (initialization; condition; update) {
-  // body
-}
-
-// Step by step:
-for (let i = 0; i < 5; i++) {
-  // 1. let i = 0       — runs once before loop starts
-  // 2. i < 5           — checked before every iteration
-  // 3. body executes   — if condition is true
-  // 4. i++             — runs after every iteration
-  // 5. go back to 2
-}
-```
-
-### Iterating Over an Array
-
-```js
-const users = ["alice", "bob", "charlie"];
-
-for (let i = 0; i < users.length; i++) {
-  console.log(i, users[i]); // 0 "alice", 1 "bob", 2 "charlie"
-}
-```
-
-**Tip:** Cache `array.length` if the array could change or the loop is performance-critical:
-
-```js
-const len = users.length;
-for (let i = 0; i < len; i++) { ... }
-```
-
-### Reverse Iteration
-
-```js
-for (let i = users.length - 1; i >= 0; i--) {
-  console.log(users[i]); // "charlie", "bob", "alice"
-}
-```
-
-### Nested For Loops
-
-```js
-// Building a multiplication table
-for (let row = 1; row <= 3; row++) {
-  for (let col = 1; col <= 3; col++) {
-    process.stdout.write(`${row * col}\t`);
-  }
-  console.log(); // newline
-}
-// 1  2  3
-// 2  4  6
-// 3  6  9
-```
-
-**Real-world nested loop — processing a 2D data structure:**
-
-```js
-// Dashboard: weekly sales data — rows are weeks, cols are days
-const weeklySales = [
-  [120, 200, 150, 300, 250, 180, 90],  // week 1
-  [140, 220, 160, 280, 270, 200, 110], // week 2
+```javascript
+const students = [
+  { name: "Ashan",  grade: 11, score: 82 },
+  { name: "Dineth", grade: 12, score: 91 },
+  { name: "Kavya",  grade: 11, score: 67 },
+  { name: "Saman",  grade: 12, score: 55 },
 ];
 
-let grandTotal = 0;
-for (let week = 0; week < weeklySales.length; week++) {
-  let weekTotal = 0;
-  for (let day = 0; day < weeklySales[week].length; day++) {
-    weekTotal += weeklySales[week][day];
-  }
-  console.log(`Week ${week + 1} total: $${weekTotal}`);
-  grandTotal += weekTotal;
-}
-console.log(`Grand total: $${grandTotal}`);
+// map — transform each element, returns new array of same length
+const names = students.map(s => s.name);
+// ["Ashan", "Dineth", "Kavya", "Saman"]
+
+const withGrade = students.map(s => ({
+  ...s,
+  letterGrade: s.score >= 75 ? "A" : s.score >= 65 ? "B" : s.score >= 50 ? "C" : "F",
+}));
+
+// filter — keep only elements that pass a test
+const grade11 = students.filter(s => s.grade === 11);
+// [{ name: "Ashan", ... }, { name: "Kavya", ... }]
+
+const passed = students.filter(s => s.score >= 50);
+
+// Chaining: filter then map
+const grade11Names = students
+  .filter(s => s.grade === 11)
+  .map(s => s.name);
+// ["Ashan", "Kavya"]
+
+// flatMap — map then flatten one level
+const words = ["hello world", "foo bar"].flatMap(s => s.split(" "));
+// ["hello", "world", "foo", "bar"]
+
+// sort — MUTATES original, returns the same array (careful!)
+const scores = [82, 91, 67, 55];
+scores.sort((a, b) => a - b);   // ascending: [55, 67, 82, 91]
+scores.sort((a, b) => b - a);   // descending: [91, 82, 67, 55]
+
+// Sort objects
+students.sort((a, b) => b.score - a.score);  // highest score first
+students.sort((a, b) => a.name.localeCompare(b.name));  // alphabetical
+
+// To sort without mutating:
+const sorted = [...students].sort((a, b) => b.score - a.score);
 ```
 
 ---
 
-## 3. While Loop
+## 3. Array Methods — Search and Test
 
-A `while` loop runs as long as a condition is true. Use it when you don't know in advance how many iterations you'll need.
-
-```js
-while (condition) {
-  // body
-  // IMPORTANT: something inside must eventually make condition false
-  // or you get an infinite loop
-}
-```
-
-### Example: Polling for Data
-
-```js
-// Real-world: retry a failed API call up to N times
-async function fetchWithRetry(url, maxRetries = 3) {
-  let attempts = 0;
-  let lastError;
-
-  while (attempts < maxRetries) {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return await response.json();
-    } catch (error) {
-      lastError = error;
-      attempts++;
-      console.warn(`Attempt ${attempts} failed: ${error.message}`);
-      // Exponential backoff: wait 1s, 2s, 4s between retries
-      await sleep(1000 * 2 ** (attempts - 1));
-    }
-  }
-
-  throw new Error(`Failed after ${maxRetries} attempts: ${lastError.message}`);
-}
-
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-```
-
-### Pagination with While
-
-```js
-// Fetching all pages of a paginated API
-async function fetchAllUsers() {
-  const allUsers = [];
-  let page = 1;
-  let hasMore = true;
-
-  while (hasMore) {
-    const response = await fetch(`/api/users?page=${page}&limit=100`);
-    const { users, total, limit } = await response.json();
-
-    allUsers.push(...users);
-    hasMore = allUsers.length < total;
-    page++;
-  }
-
-  return allUsers;
-}
-```
-
-### Infinite Loop Guard
-
-Always ensure your loop can terminate:
-
-```js
-// INFINITE LOOP — never terminates!
-let x = 0;
-while (x < 5) {
-  console.log(x);
-  // forgot x++ — x stays 0 forever
-}
-
-// Safe version
-let x = 0;
-while (x < 5) {
-  console.log(x);
-  x++; // termination condition progresses
-}
-```
-
----
-
-## 4. Do-While Loop
-
-Like a while loop, but the body runs **at least once** before the condition is checked.
-
-```js
-do {
-  // body (runs at least once)
-} while (condition);
-```
-
-### Example: User Input Validation
-
-```js
-// Keep asking until valid input is received
-let userInput;
-do {
-  userInput = prompt("Enter a number between 1 and 10:");
-  userInput = Number(userInput);
-} while (isNaN(userInput) || userInput < 1 || userInput > 10);
-
-console.log(`You entered: ${userInput}`);
-```
-
-### Real Use: Game Loop / Menu Loop
-
-```js
-// Simulating a terminal menu
-let choice;
-do {
-  choice = showMenu(); // display and get option
-  switch (choice) {
-    case "1": viewProfile(); break;
-    case "2": editSettings(); break;
-    case "3": logout(); break;
-  }
-} while (choice !== "3");
-```
-
-**In practice:** `do-while` is rare. It's mainly useful when you need at least one execution guaranteed. Most loops use `for` or `while`.
-
----
-
-## 5. Loop Control: `break` & `continue`
-
-### `break` — Exit the Loop Immediately
-
-```js
-// Find the first admin user, stop searching once found
-let adminUser = null;
-for (let i = 0; i < users.length; i++) {
-  if (users[i].role === "admin") {
-    adminUser = users[i];
-    break; // no point checking further
-  }
-}
-```
-
-### `continue` — Skip This Iteration
-
-```js
-// Process only active products (skip inactive ones)
-for (let i = 0; i < products.length; i++) {
-  if (!products[i].isActive) continue; // skip to next iteration
-
-  // This only runs for active products
-  renderProductCard(products[i]);
-}
-```
-
-### Labeled Breaks (Nested Loops)
-
-```js
-// Break out of OUTER loop from inside INNER loop
-outerLoop: for (let i = 0; i < matrix.length; i++) {
-  for (let j = 0; j < matrix[i].length; j++) {
-    if (matrix[i][j] === targetValue) {
-      console.log(`Found at [${i}][${j}]`);
-      break outerLoop; // breaks the outer loop, not just the inner one
-    }
-  }
-}
-```
-
----
-
-## 6. Arrays: Introduction
-
-Arrays are **ordered, indexed, dynamically-sized** collections of values. In JavaScript, arrays are objects — they can hold values of any type, including other arrays.
-
-### Creating Arrays
-
-```js
-// Array literal (preferred)
-const fruits = ["apple", "banana", "cherry"];
-
-// Array constructor (avoid — ambiguous)
-const arr = new Array(3);      // [empty × 3] — not [3]!
-const arr2 = new Array(1, 2);  // [1, 2]
-
-// Array.from — creates array from array-like or iterable
-Array.from("hello")            // ["h", "e", "l", "l", "o"]
-Array.from({ length: 5 }, (_, i) => i + 1) // [1, 2, 3, 4, 5]
-Array.from(new Set([1, 2, 2, 3])) // [1, 2, 3] — deduplication
-
-// Array.of
-Array.of(7)   // [7] — unlike new Array(7) which creates empty array of length 7
-```
-
-### Accessing and Modifying Elements
-
-```js
-const items = ["a", "b", "c", "d"];
-
-items[0]          // "a" — first element
-items[items.length - 1] // "d" — last element
-items.at(-1)      // "d" — ES2022: negative index from end
-items.at(-2)      // "c"
-
-items[1] = "B";   // ["a", "B", "c", "d"] — direct mutation
-items[10] = "x";  // creates sparse array — items[4] through [9] are `empty`
-```
-
-### Core Mutation Methods (Modify the Original Array)
-
-```js
-const arr = [1, 2, 3];
-
-// Adding elements
-arr.push(4);         // [1, 2, 3, 4] — adds to END, returns new length
-arr.unshift(0);      // [0, 1, 2, 3, 4] — adds to BEGINNING, returns new length
-
-// Removing elements
-arr.pop();           // removes from END, returns removed element
-arr.shift();         // removes from BEGINNING, returns removed element
-
-// Removing/inserting at any position: splice(start, deleteCount, ...items)
-arr.splice(1, 2);           // removes 2 elements starting at index 1
-arr.splice(1, 0, "a", "b"); // inserts "a", "b" at index 1 (nothing deleted)
-arr.splice(2, 1, "x");      // replaces element at index 2 with "x"
-
-// Sorting
-const nums = [3, 1, 4, 1, 5];
-nums.sort();                  // lexicographic sort — "10" < "9"!
-nums.sort((a, b) => a - b);   // numeric ascending
-nums.sort((a, b) => b - a);   // numeric descending
-
-// Reversing
-arr.reverse(); // mutates and returns the array
-```
-
-### Non-Mutating Methods (Return New Array)
-
-```js
-const arr = [1, 2, 3];
-
-arr.concat([4, 5])        // [1, 2, 3, 4, 5] — original untouched
-arr.slice(1, 3)           // [2, 3] — extracts portion (end exclusive)
-arr.slice(-2)             // [2, 3] — last 2 elements
-
-// Flat (nested arrays)
-[1, [2, 3], [4, [5]]].flat()    // [1, 2, 3, 4, [5]] — 1 level
-[1, [2, [3, [4]]]].flat(Infinity) // [1, 2, 3, 4] — fully flatten
-
-// FlatMap — map + flat(1) in one step
-[[1, 2], [3, 4]].flatMap(x => x) // [1, 2, 3, 4]
-```
-
-### Searching in Arrays
-
-```js
-const users = [
-  { id: 1, name: "Alice", active: true },
-  { id: 2, name: "Bob",   active: false },
-  { id: 3, name: "Alice", active: true },
+```javascript
+const students = [
+  { name: "Ashan",  grade: 11, score: 82 },
+  { name: "Dineth", grade: 12, score: 91 },
+  { name: "Kavya",  grade: 11, score: 67 },
 ];
 
-users.indexOf(2)            // only works for primitives, not objects
-users.includes(2)           // same — primitives only
+// find — returns the FIRST element that passes, or undefined
+const topStudent = students.find(s => s.score > 85);
+// { name: "Dineth", grade: 12, score: 91 }
 
-// For objects, use find/findIndex (covered in Part 4)
-users.find(u => u.name === "Bob")         // { id: 2, name: "Bob", ... }
-users.findIndex(u => u.id === 3)          // 2
-users.findLast(u => u.name === "Alice")   // { id: 3 ... } — searches from end
-```
+// findIndex — returns the INDEX of the first match, or -1
+const idx = students.findIndex(s => s.name === "Kavya");
+// 2
 
-### Checking / Introspecting Arrays
+// findLast / findLastIndex — searches from the end (ES2023)
+const lastGrade11 = students.findLast(s => s.grade === 11);
 
-```js
-Array.isArray([])      // true — the ONLY reliable way to check for arrays
-Array.isArray({})      // false
-[].length              // 0
-[1, 2, 3].length       // 3
-```
+// some — true if ANY element passes the test
+students.some(s => s.score > 90);   // true
+students.some(s => s.score > 100);  // false
 
-### Spread with Arrays
+// every — true if ALL elements pass the test
+students.every(s => s.score >= 50);  // true (all passed)
+students.every(s => s.score >= 70);  // false (Kavya: 67)
 
-```js
-const a = [1, 2, 3];
-const b = [4, 5, 6];
+// includes — check if a VALUE is in the array (use with primitives)
+[1, 2, 3].includes(2);       // true
+["a", "b"].includes("c");    // false
 
-const combined = [...a, ...b];       // [1, 2, 3, 4, 5, 6]
-const copy = [...a];                 // shallow copy — not same reference
-
-// Passing array items as function arguments
-Math.max(...a); // same as Math.max(1, 2, 3)
+// indexOf — returns first index of value, or -1
+[1, 2, 3, 2].indexOf(2);     // 1
+[1, 2, 3].indexOf(99);       // -1
 ```
 
 ---
 
-## 7. Array Techniques
+## 4. Array Methods — Reduction and Accumulation
 
-This section covers the power methods: the functional iteration helpers that are used constantly in real projects. (In-depth treatment is in Part 4 — here we cover the core mutating techniques and utility patterns.)
+```javascript
+// reduce — accumulates a single value from an array
+// Most powerful, most flexible array method
 
-### Joining and Converting
+const scores = [82, 91, 67, 55, 78];
 
-```js
-[1, 2, 3].join(", ")          // "1, 2, 3"
-[1, 2, 3].join("")            // "123"
-[1, 2, 3].toString()          // "1,2,3"
+// Sum
+const total = scores.reduce((acc, score) => acc + score, 0);
+// 373
 
-// Real use: building a SQL IN clause (conceptually)
-const ids = [1, 2, 3, 4];
-const placeholder = ids.map((_, i) => `$${i + 1}`).join(", ");
-// "$1, $2, $3, $4"
-```
+// Average
+const avg = scores.reduce((acc, score) => acc + score, 0) / scores.length;
+// 74.6
 
-### Copying Arrays (Shallow vs Deep)
+// Max (though Math.max(...scores) is simpler)
+const max = scores.reduce((acc, score) => score > acc ? score : acc, -Infinity);
+// 91
 
-```js
-const original = [{ id: 1 }, { id: 2 }];
-
-// Shallow copy — new array, but SAME object references inside
-const shallow1 = [...original];
-const shallow2 = original.slice();
-const shallow3 = Array.from(original);
-const shallow4 = original.concat();
-
-// Mutating a nested object affects ALL shallow copies
-shallow1[0].id = 99;
-console.log(original[0].id); // 99 — changed!
-
-// Deep copy — truly independent
-const deep = JSON.parse(JSON.stringify(original)); // simple, loses functions/dates
-const deep2 = structuredClone(original);           // modern, handles more types
-```
-
-### Removing Duplicates
-
-```js
-const tags = ["js", "node", "js", "react", "node"];
-
-// Using Set (preserves insertion order)
-const unique = [...new Set(tags)]; // ["js", "node", "react"]
-
-// For arrays of objects (by a specific key)
-function uniqueById(arr) {
-  const seen = new Set();
-  return arr.filter(item => {
-    if (seen.has(item.id)) return false;
-    seen.add(item.id);
-    return true;
-  });
-}
-```
-
-### Grouping (ES2024 / Polyfill Pattern)
-
-```js
-const orders = [
-  { id: 1, status: "pending",   amount: 100 },
-  { id: 2, status: "shipped",   amount: 200 },
-  { id: 3, status: "pending",   amount: 150 },
-  { id: 4, status: "delivered", amount: 300 },
+// Group by a property
+const students = [
+  { name: "Ashan",  grade: 11 },
+  { name: "Dineth", grade: 12 },
+  { name: "Kavya",  grade: 11 },
+  { name: "Saman",  grade: 12 },
 ];
 
-// Group by status
-const grouped = orders.reduce((acc, order) => {
-  const key = order.status;
-  acc[key] = acc[key] || [];
-  acc[key].push(order);
-  return acc;
+const byGrade = students.reduce((groups, student) => {
+  const key = student.grade;
+  groups[key] ??= [];         // create array if doesn't exist
+  groups[key].push(student);
+  return groups;
 }, {});
 
-/*
-{
-  pending:   [{ id: 1 }, { id: 3 }],
-  shipped:   [{ id: 2 }],
-  delivered: [{ id: 4 }],
-}
-*/
+// Result:
+// {
+//   11: [{ name: "Ashan" }, { name: "Kavya" }],
+//   12: [{ name: "Dineth" }, { name: "Saman" }]
+// }
 
-// ES2024: Object.groupBy
-const grouped2 = Object.groupBy(orders, order => order.status);
-```
-
-### Chunking an Array
-
-```js
-// Split array into chunks of size n — useful for batch API calls
-function chunk(arr, size) {
-  const chunks = [];
-  for (let i = 0; i < arr.length; i += size) {
-    chunks.push(arr.slice(i, i + size));
-  }
-  return chunks;
-}
-
-const userIds = [1, 2, 3, 4, 5, 6, 7];
-chunk(userIds, 3); // [[1, 2, 3], [4, 5, 6], [7]]
-
-// Real use: send emails in batches of 50 to avoid API rate limits
-const emailBatches = chunk(emailList, 50);
-for (const batch of emailBatches) {
-  await sendBatchEmail(batch);
-  await sleep(1000); // rate limit gap
-}
-```
-
-### Flattening Nested Menu Structure
-
-```js
-// Real-world: flatten a nested navigation config
-const nav = [
-  { label: "Home", href: "/" },
-  {
-    label: "Products",
-    children: [
-      { label: "Electronics", href: "/electronics" },
-      { label: "Clothing",    href: "/clothing" },
-    ],
-  },
-];
-
-// Get all hrefs (including nested)
-const allLinks = nav.flatMap(item =>
-  item.children ? item.children.map(c => c.href) : [item.href]
-);
-// ["/", "/electronics", "/clothing"]
+// Build a lookup object from an array
+const userById = students.reduce((map, student) => {
+  map[student.name] = student;
+  return map;
+}, {});
+// { Ashan: {...}, Dineth: {...}, Kavya: {...}, Saman: {...} }
 ```
 
 ---
 
-## 8. JavaScript Objects
+## 5. Loops
 
-Objects are **collections of key-value pairs** (properties). They're the backbone of JavaScript — nearly everything is an object.
+### `for` loop (classic)
 
-### Creating Objects
+```javascript
+for (let i = 0; i < 5; i++) {
+  console.log(i);  // 0, 1, 2, 3, 4
+}
 
-```js
-// Object literal (most common)
-const user = {
-  id: 1,
-  name: "Alice",
-  email: "alice@example.com",
-  role: "admin",
-  isActive: true,
-  address: {         // nested object
-    city: "New York",
-    country: "US",
-  },
-  permissions: ["read", "write", "delete"], // array as value
-};
+// Iterate with index
+const arr = ["a", "b", "c"];
+for (let i = 0; i < arr.length; i++) {
+  console.log(i, arr[i]);  // 0 "a", 1 "b", 2 "c"
+}
 ```
 
-### Accessing Properties
+### `for...of` — iterate over values
 
-```js
-// Dot notation (preferred when key is a valid identifier)
-user.name          // "Alice"
-user.address.city  // "New York"
+```javascript
+// Arrays
+for (const name of ["Ashan", "Dineth", "Kavya"]) {
+  console.log(name);
+}
 
-// Bracket notation (required when key is dynamic or has special chars)
-user["name"]       // "Alice"
+// With index using entries()
+for (const [index, name] of ["Ashan", "Dineth"].entries()) {
+  console.log(index, name);  // 0 "Ashan", 1 "Dineth"
+}
 
-const key = "email";
-user[key]          // "alice@example.com" — dynamic access
+// Strings
+for (const char of "KITS") {
+  console.log(char);  // K, I, T, S
+}
 
-const data = { "first-name": "Alice", "2024_revenue": 50000 };
-data["first-name"]   // "Alice" — can't use dot notation for hyphenated keys
-data["2024_revenue"] // 50000
+// Maps and Sets (covered later)
+for (const [key, value] of myMap) { ... }
+for (const item of mySet) { ... }
 ```
 
-### Adding, Updating, Deleting Properties
+### `for...in` — iterate over object keys
 
-```js
-const product = { id: 1, name: "Laptop" };
+```javascript
+const student = { name: "Ashan", grade: 11, score: 82 };
 
-// Add
-product.price = 999.99;
-product["inStock"] = true;
+for (const key in student) {
+  console.log(key, student[key]);
+  // name Ashan
+  // grade 11
+  // score 82
+}
 
-// Update
-product.name = "Gaming Laptop";
-
-// Delete
-delete product.inStock;
-
-// Check if a property exists
-"name" in product              // true
-product.hasOwnProperty("name") // true — only own properties, not inherited
-Object.hasOwn(product, "name") // true — modern, preferred over hasOwnProperty
+// Warning: for...in iterates over ALL enumerable properties,
+// including inherited ones. Prefer Object.keys() for plain objects.
 ```
 
-### Iterating Over Objects
+### `while` and `do...while`
 
-```js
-const config = { host: "localhost", port: 5432, db: "paideon" };
+```javascript
+let attempts = 0;
+while (attempts < 3) {
+  const result = tryOperation();
+  if (result.success) break;
+  attempts++;
+}
 
-// for...in — iterates over ALL enumerable keys (including inherited!)
-for (const key in config) {
-  if (Object.hasOwn(config, key)) { // guard against inherited props
-    console.log(`${key}: ${config[key]}`);
+// do...while — body executes at least once
+let input;
+do {
+  input = getUserInput();
+} while (!isValid(input));
+```
+
+### `break` and `continue`
+
+```javascript
+// break — exit the loop entirely
+for (const student of students) {
+  if (student.score > 90) {
+    console.log("Found top student:", student.name);
+    break;  // stop looking
   }
 }
 
-// Object.keys() — own enumerable property NAMES
-Object.keys(config)   // ["host", "port", "db"]
-
-// Object.values() — own enumerable property VALUES
-Object.values(config) // ["localhost", 5432, "paideon"]
-
-// Object.entries() — [key, value] pairs — most useful
-Object.entries(config)
-// [["host", "localhost"], ["port", 5432], ["db", "paideon"]]
-
-// Loop with entries (most common in real code)
-for (const [key, value] of Object.entries(config)) {
-  console.log(`${key} = ${value}`);
+// continue — skip this iteration, continue to next
+for (const student of students) {
+  if (student.grade !== 11) continue;  // skip non-grade-11
+  console.log(student.name);           // only grade 11 students
 }
+```
 
-// Practical: transform values
-const uppercased = Object.fromEntries(
-  Object.entries(config).map(([k, v]) => [k, String(v).toUpperCase()])
-);
+---
+
+## 6. Objects
+
+An object is a collection of key-value pairs. Keys are strings (or Symbols), values can be anything.
+
+```javascript
+// Object literal
+const student = {
+  name: "Ashan",
+  grade: 11,
+  scores: [82, 91, 78],
+  address: {
+    city: "Mathugama",
+    district: "Kalutara",
+  },
+  greet() {
+    return `Hi, I'm ${this.name}`;
+  },
+};
+
+// Access properties
+student.name            // "Ashan" — dot notation
+student["name"]         // "Ashan" — bracket notation (use when key is dynamic)
+student.address.city    // "Mathugama" — nested access
+student.nonExistent     // undefined — no error
+
+// Modify
+student.grade = 12;
+student.email = "ashan@school.lk";  // add new property
+delete student.email;               // remove property (avoid in production)
+
+// Computed property names
+const field = "score";
+const obj = { [field]: 95 };  // { score: 95 }
 ```
 
 ### Object Methods
 
-```js
-// Object.assign — shallow merge / copy
-const defaults = { theme: "light", lang: "en", timeout: 5000 };
-const userPrefs = { theme: "dark", lang: "fr" };
-const settings = Object.assign({}, defaults, userPrefs);
-// { theme: "dark", lang: "fr", timeout: 5000 }
-// NOTE: Object.assign mutates the first argument — pass {} as target to avoid
+```javascript
+const student = { name: "Ashan", grade: 11, score: 82 };
 
-// Spread (preferred modern way)
-const settings2 = { ...defaults, ...userPrefs };
-// Same result, cleaner syntax
+Object.keys(student)     // ["name", "grade", "score"]
+Object.values(student)   // ["Ashan", 11, 82]
+Object.entries(student)  // [["name","Ashan"], ["grade",11], ["score",82]]
 
-// Object.freeze — makes object immutable (shallow)
-const ROLES = Object.freeze({ ADMIN: "admin", USER: "user", MOD: "mod" });
-ROLES.ADMIN = "superadmin"; // silently fails (or throws in strict mode)
-ROLES.NEW = "new";          // also silently fails
-
-// Object.keys / values / entries — see above
-
-// Object.fromEntries — converts [key, value] pairs back to an object
-const entries = [["a", 1], ["b", 2]];
-Object.fromEntries(entries); // { a: 1, b: 2 }
-
-// Real use: filter an object's keys
-function pickFields(obj, fields) {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([key]) => fields.includes(key))
-  );
-}
-pickFields(user, ["name", "email"]); // { name: "Alice", email: "..." }
-
-function omitFields(obj, fields) {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([key]) => !fields.includes(key))
-  );
-}
-omitFields(user, ["password", "internalId"]); // user without sensitive fields
-```
-
-### Destructuring Objects (Preview of Part 4)
-
-```js
-const { name, email, role = "user" } = user;
-// Extracts name, email, role from user
-// role defaults to "user" if undefined
-
-// Rename during destructure
-const { name: userName, email: userEmail } = user;
-
-// Nested destructure
-const { address: { city, country } } = user;
-
-// Function parameter destructure (very common in real code)
-function renderUserCard({ name, email, role, isActive }) {
-  // use them directly, no user.name etc.
-}
-```
-
-### Computed Property Names
-
-```js
-// Build an object with dynamic keys
-const field = "username";
-const value = "alice";
-
-const update = { [field]: value }; // { username: "alice" }
-
-// Real use: building a dynamic filter object
-function buildFilter(filters) {
-  return filters.reduce((acc, { field, value }) => {
-    acc[field] = value;
-    return acc;
-  }, {});
+// Iterating over entries
+for (const [key, value] of Object.entries(student)) {
+  console.log(`${key}: ${value}`);
 }
 
-buildFilter([
-  { field: "status", value: "active" },
-  { field: "role",   value: "admin" },
-]);
-// { status: "active", role: "admin" }
-```
+// Object.assign — shallow merge (mutates target)
+const defaults = { role: "student", isActive: true };
+const user = Object.assign({}, defaults, { name: "Ashan" });
+// { role: "student", isActive: true, name: "Ashan" }
 
-### Shorthand Property Notation
+// Object.freeze — prevent modifications
+const config = Object.freeze({ apiUrl: "https://api.cwwkcc.lk" });
+config.apiUrl = "other";  // silently fails in sloppy mode, throws in strict
+config.apiUrl;            // still "https://api.cwwkcc.lk"
 
-```js
-const name = "Alice";
-const email = "alice@example.com";
-const role = "admin";
+// Object.fromEntries — entries array → object
+const entries = [["name", "Ashan"], ["grade", 11]];
+Object.fromEntries(entries)  // { name: "Ashan", grade: 11 }
 
-// Old way:
-const user = { name: name, email: email, role: role };
-
-// Shorthand (ES6):
-const user = { name, email, role }; // when key and variable have same name
-```
-
-### Object Cloning Patterns
-
-```js
-const original = {
-  id: 1,
-  name: "Alice",
-  address: { city: "NY" },
-  tags: ["admin"],
-};
-
-// SHALLOW CLONE — nested objects are still shared references
-const shallow = { ...original };
-const shallow2 = Object.assign({}, original);
-
-shallow.address.city = "LA"; // ALSO changes original.address.city!
-
-// DEEP CLONE — fully independent
-const deep1 = JSON.parse(JSON.stringify(original));
-// Limitations: loses Date, Function, undefined, circular refs
-
-const deep2 = structuredClone(original);
-// Modern (Node 17+, all modern browsers): handles Date, RegExp, etc.
-```
-
-### Real-World Example: Building a User Profile Object
-
-```js
-// Incoming data from API — may be messy or partial
-const rawApiUser = {
-  user_id: "u_123",
-  full_name: "Alice Chen",
-  email_address: "alice@example.com",
-  account_status: "ACTIVE",
-  created_at: "2024-01-15T08:30:00Z",
-  last_login: null,
-  roles: ["admin", "editor"],
-  profile: {
-    bio: "Full-stack developer",
-    avatar_url: "https://cdn.example.com/avatars/u_123.jpg",
-  },
-};
-
-// Normalize to our app's format
-function normalizeUser(raw) {
-  return {
-    id: raw.user_id,
-    name: raw.full_name,
-    email: raw.email_address,
-    isActive: raw.account_status === "ACTIVE",
-    createdAt: new Date(raw.created_at),
-    lastLoginAt: raw.last_login ? new Date(raw.last_login) : null,
-    roles: raw.roles ?? [],
-    isAdmin: raw.roles?.includes("admin") ?? false,
-    avatar: raw.profile?.avatar_url ?? "/default-avatar.png",
-    bio: raw.profile?.bio ?? "",
-  };
-}
-
-const user = normalizeUser(rawApiUser);
-```
-
-### Symbol as Object Keys
-
-Symbols create unique property keys that won't clash with string keys:
-
-```js
-const SECRET_KEY = Symbol("secretKey");
-const obj = {
-  name: "Alice",
-  [SECRET_KEY]: "top-secret-value",
-};
-
-obj[SECRET_KEY]    // "top-secret-value"
-Object.keys(obj)   // ["name"] — Symbol is NOT enumerable!
-JSON.stringify(obj) // '{"name":"Alice"}' — Symbol is NOT serialized
-
-// Real use: framework internals, preventing key collisions
-const TYPE = Symbol("type");
-function createAction(type, payload) {
-  return { [TYPE]: type, payload };
-}
+// Useful pattern: transform object values
+const doubled = Object.fromEntries(
+  Object.entries({ a: 1, b: 2, c: 3 }).map(([k, v]) => [k, v * 2])
+);
+// { a: 2, b: 4, c: 6 }
 ```
 
 ---
 
-## Summary Cheat Sheet
+## 7. Destructuring
+
+Destructuring extracts values from arrays or objects into named variables.
+
+### Object Destructuring
+
+```javascript
+const student = { name: "Ashan", grade: 11, score: 82, city: "Mathugama" };
+
+// Basic
+const { name, grade } = student;
+// name = "Ashan", grade = 11
+
+// Rename
+const { name: studentName, grade: year } = student;
+// studentName = "Ashan", year = 11
+
+// Default values
+const { name, role = "student" } = student;
+// role = "student" (wasn't in student object)
+
+// Nested
+const { address: { city, district } } = { address: { city: "Mathugama", district: "Kalutara" } };
+// city = "Mathugama", district = "Kalutara"
+
+// Rest — collect remaining properties
+const { name, ...rest } = student;
+// name = "Ashan"
+// rest = { grade: 11, score: 82, city: "Mathugama" }
+
+// In function parameters — very common in React
+function renderStudent({ name, grade, score = 0 }) {
+  return `${name} (Grade ${grade}): ${score}`;
+}
+renderStudent(student);
+```
+
+### Array Destructuring
+
+```javascript
+const scores = [82, 91, 67, 55, 78];
+
+const [first, second] = scores;
+// first = 82, second = 91
+
+// Skip elements
+const [, , third] = scores;
+// third = 67
+
+// Rest
+const [top, ...rest] = scores;
+// top = 82, rest = [91, 67, 55, 78]
+
+// Default values
+const [a = 0, b = 0, c = 0] = [1, 2];
+// a = 1, b = 2, c = 0
+
+// Swap variables — classic trick
+let x = 1, y = 2;
+[x, y] = [y, x];
+// x = 2, y = 1
+
+// Destructuring from a function return
+function getRange() {
+  return [0, 100];
+}
+const [min, max] = getRange();
+```
+
+---
+
+## 8. Spread and Rest
+
+### Spread `...` — expand an iterable
+
+```javascript
+// Arrays
+const a = [1, 2, 3];
+const b = [4, 5, 6];
+const combined = [...a, ...b];        // [1, 2, 3, 4, 5, 6]
+const withMiddle = [...a, 99, ...b];  // [1, 2, 3, 99, 4, 5, 6]
+const copy = [...a];                  // shallow copy
+
+// Objects
+const defaults = { role: "student", active: true };
+const override = { role: "teacher", name: "Ashan" };
+const merged = { ...defaults, ...override };
+// { role: "teacher", active: true, name: "Ashan" }
+// Later properties override earlier ones
+
+// Copy and modify — very common in React state updates
+const student = { name: "Ashan", score: 82 };
+const updated = { ...student, score: 90 };
+// { name: "Ashan", score: 90 } — original unchanged
+
+// Spread into function call
+const numbers = [3, 1, 4, 1, 5, 9];
+Math.max(...numbers);    // 9 — same as Math.max(3, 1, 4, 1, 5, 9)
+```
+
+### Rest `...` — collect remaining items
+
+```javascript
+// In function parameters
+function log(level, ...messages) {
+  console.log(`[${level}]`, ...messages);
+}
+log("INFO", "Server started", "on port 3000");
+// [INFO] Server started on port 3000
+
+// In destructuring (already shown above)
+const { name, ...rest } = student;
+const [first, ...remaining] = array;
+```
+
+---
+
+## 9. Map and Set
+
+### `Map` — key-value pairs with any key type
+
+```javascript
+// Unlike objects, Map keys can be ANY type (objects, functions, etc.)
+const map = new Map();
+
+// Set
+map.set("name", "Ashan");
+map.set(42, "the answer");
+map.set(true, "boolean key");
+map.set({ id: 1 }, "object key");  // objects as keys!
+
+// Get
+map.get("name");   // "Ashan"
+map.get(42);       // "the answer"
+map.get("missing"); // undefined
+
+// Has
+map.has("name");   // true
+map.has("other");  // false
+
+// Delete
+map.delete("name");
+
+// Size
+map.size           // 3
+
+// Iteration — Map preserves insertion order
+for (const [key, value] of map) {
+  console.log(key, value);
+}
+
+map.keys()     // iterable of keys
+map.values()   // iterable of values
+map.entries()  // iterable of [key, value] pairs
+
+// Create from entries
+const userMap = new Map([
+  ["alice", { role: "admin" }],
+  ["bob",   { role: "user" }],
+]);
+```
+
+**When to use Map over Object:**
+
+- Keys that are not strings (numbers, objects, functions)
+- Need to know the size easily (`.size`)
+- Need to maintain insertion order reliably
+- Frequently adding/removing keys (Map is optimised for this)
+
+### `Set` — collection of unique values
+
+```javascript
+const set = new Set([1, 2, 3, 2, 1]);  // duplicates removed
+// Set {1, 2, 3}
+
+set.add(4);
+set.add(2);   // already present — no change
+set.has(3);   // true
+set.delete(1);
+set.size;     // 3
+
+// Iteration
+for (const value of set) {
+  console.log(value);
+}
+
+// Most common use: deduplicate an array
+const withDuplicates = [1, 2, 2, 3, 3, 3, 4];
+const unique = [...new Set(withDuplicates)];
+// [1, 2, 3, 4]
+
+// Check membership efficiently
+// Set.has() is O(1), Array.includes() is O(n)
+const allowedRoles = new Set(["admin", "teacher", "staff"]);
+allowedRoles.has("admin");    // true
+allowedRoles.has("student");  // false
+
+// Set operations
+const a = new Set([1, 2, 3]);
+const b = new Set([2, 3, 4]);
+
+const union        = new Set([...a, ...b]);        // {1, 2, 3, 4}
+const intersection = new Set([...a].filter(x => b.has(x)));  // {2, 3}
+const difference   = new Set([...a].filter(x => !b.has(x))); // {1}
+```
+
+---
+
+## 10. Choosing the Right Data Structure
 
 ```
-Logical:       && (first falsy), || (first truthy), ?? (first non-null/undefined)
-Assignment:    ||=  &&=  ??=
-Loop choice:   for — known iterations; while — unknown; do-while — at least 1 run
-Control:       break (exit), continue (skip), labeled break (nested loops)
+Problem                                   Best choice
+──────────────────────────────────────────────────────────────────
+Ordered list of items                     Array
+Unique collection of items                Set
+Key-value pairs, string keys, fixed shape Object literal
+Key-value pairs, any key type             Map
+Key-value pairs, frequently added/removed Map
+Deduplication                             Set
+Lookup by key                             Object or Map
+Maintaining insertion order               Map (Objects too in modern JS)
+Membership check (fast)                   Set
+```
 
+```javascript
+// Real-world example: building a student report
+const students = [...];                    // Array — ordered list
+
+// Unique subjects across all students
+const subjects = new Set(
+  students.flatMap(s => s.subjects)        // Set — unique values
+);
+
+// Quick lookup by student ID
+const studentById = new Map(
+  students.map(s => [s.id, s])            // Map — any key, fast lookup
+);
+
+// Student's info shape
+const student = {                          // Object — fixed known shape
+  name: "Ashan",
+  grade: 11,
+  scores: { math: 82, science: 91 },
+};
+```
+
+---
+
+## Summary
+
+```
 Arrays:
-  Mutating:    push/pop (end), shift/unshift (start), splice (anywhere), sort, reverse
-  Non-mutating: slice, concat, flat, flatMap, spread
-  Searching:   find, findIndex, includes, indexOf
-  Utility:     Array.from, Array.isArray, structuredClone
+  Creation: [], Array.from(), new Array()
+  Transformation (new array): map, filter, flatMap, sort (careful!)
+  Search: find, findIndex, includes, indexOf, some, every
+  Accumulation: reduce
+
+Loops:
+  for          — classic, use when you need index control
+  for...of     — iterate values (arrays, strings, Maps, Sets)
+  for...in     — iterate object keys (prefer Object.keys() + for...of)
+  while        — when condition-driven
+  break/continue — control loop flow
 
 Objects:
-  Access:      dot (static key), bracket (dynamic key)
-  Iterate:     Object.keys/values/entries + for...of
-  Clone:       spread (shallow), structuredClone (deep)
-  Merge:       { ...obj1, ...obj2 }
-  Check key:   Object.hasOwn(obj, key) or 'key' in obj
+  Access: dot notation or bracket notation
+  Methods: Object.keys/values/entries, Object.assign, Object.fromEntries
+
+Destructuring:
+  Object: const { name, role = "student" } = user
+  Array:  const [first, ...rest] = arr
+  In function params: function fn({ name, age }) {}
+
+Spread/Rest:
+  Spread: expand into call or literal: [...arr], {...obj}
+  Rest: collect remaining: function fn(...args), const { a, ...rest }
+
+Map vs Object: Map when keys aren't strings, or need size, or frequent mutations
+Set vs Array:  Set for unique values and fast membership checks
 ```
 
 ---
 
-_Next: [Part 3 — Functions, Scope, Closures, Object Methods, JSON, Dates & Timers](./part-3-functions.md)_
+_Next: [02 — Functions, Scope, JSON, Dates & Timers](./02%20-%20Functions%2C%20Scope%2C%20JSON%2C%20Dates%20%26%20Timers.md)_

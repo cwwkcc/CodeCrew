@@ -1,1531 +1,681 @@
-> **Part 7 of 7.** The full async story — sync vs async, the event loop in depth, callback hell, Promises from scratch, async/await, reading files, JSON data, the Fetch API, and comprehensive error handling.
+> Most real programs talk to the outside world — fetching data from a server, reading a file, waiting for a timer. These operations take time. Asynchronous JavaScript is how you write code that does useful work while waiting. This is the foundation of every web app, every API call, every real-time feature.
 
 ---
 
 ## Table of Contents
 
-1. [Sync vs Async Programming](#1-sync-vs-async-programming)
-2. [Real-World Async Examples](#2-real-world-async-examples)
-3. [Callback Hell](#3-callback-hell)
-4. [Promises — From Scratch](#4-promises--from-scratch)
-5. [Promise Combinators](#5-promise-combinators)
-6. [Async / Await](#6-async--await)
-7. [Reading Textual Data](#7-reading-textual-data)
-8. [Handling JSON Data](#8-handling-json-data)
-9. [Fetching Data from APIs](#9-fetching-data-from-apis)
-10. [Error Handling](#10-error-handling)
+1. [The Problem Async Solves](#1-the-problem-async-solves)
+2. [Callbacks — The Old Way](#2-callbacks--the-old-way)
+3. [Promises — In Depth](#3-promises--in-depth)
+4. [async / await](#4-async--await)
+5. [Error Handling in Async Code](#5-error-handling-in-async-code)
+6. [Parallel Async Operations](#6-parallel-async-operations)
+7. [fetch and the Network](#7-fetch-and-the-network)
+8. [Aborting Requests](#8-aborting-requests)
+9. [Building an API Client](#9-building-an-api-client)
+10. [Common Async Patterns](#10-common-async-patterns)
 
 ---
 
-## 1. Sync vs Async Programming
+## 1. The Problem Async Solves
 
-### Synchronous (Blocking)
+JavaScript is single-threaded. If you write blocking code that waits for something, the entire program freezes — no user input, no rendering, nothing.
 
-Synchronous code runs **line by line, in order**. Each line must finish before the next begins. If one line is slow (disk read, network call), the entire thread waits — blocking everything including the UI.
+```javascript
+// BLOCKING — imagine this takes 3 seconds
+const data = readFileFromDisk("data.json");  // blocks EVERYTHING for 3 seconds
+render(data);
 
-```js
-// Synchronous — predictable, sequential
-console.log("Step 1");
-const result = computeSomething(); // blocks until done
-console.log("Step 2 — only runs after computeSomething finishes");
-console.log("Step 3");
+// Meanwhile: user can't click buttons, page can't animate, nothing works
+// In the browser: the page completely freezes
+// In Node.js: no other requests can be served
 ```
 
-Synchronous code is fine for CPU-bound work (math, parsing, sorting). It's a problem for **I/O-bound work** (waiting on the network, disk, database) — you'd be blocking the thread just to wait.
+The solution: instead of waiting, _describe what to do when the result arrives_, and continue with other work.
 
-### Asynchronous (Non-Blocking)
-
-You start an operation, register a callback (or return a Promise), and continue running other code immediately. When the operation completes, your callback runs.
-
-```js
-console.log("1 — start");
-
-setTimeout(() => {
-  console.log("3 — this runs after the stack clears");
-}, 0); // even 0ms is async — goes through the event loop
-
-console.log("2 — runs before the timeout callback");
-// Output: 1, 2, 3
-```
-
-### The Event Loop — The Full Picture
-
-JavaScript is **single-threaded**: one call stack, one thing at a time. But the runtime (browser or Node.js) has background threads for I/O. Here's how async work gets done:
-
-```
-┌──────────────────────────────────────────────┐
-│                  Call Stack                  │ ← JS runs here, one frame at a time
-├──────────────────────────────────────────────┤
-│             Web APIs / Node APIs             │ ← Background threads handle timers,
-│  setTimeout, fetch, fs.readFile, DOM events  │   network, disk I/O
-├──────────────────────────────────────────────┤
-│           Microtask Queue (priority)         │ ← Promise .then(), queueMicrotask()
-├──────────────────────────────────────────────┤
-│            Macrotask Queue (tasks)           │ ← setTimeout, setInterval, I/O events
-└──────────────────────────────────────────────┘
-
-Event Loop algorithm:
-  1. Execute everything on the call stack (synchronous code)
-  2. Drain the ENTIRE microtask queue (all Promises resolve)
-  3. Pick ONE macrotask (setTimeout/setInterval/I/O)
-  4. Run it → go back to step 2
-  5. Repeat
-```
-
-```js
-// Demonstrating the full order
-console.log("A"); // sync
-
-setTimeout(() => console.log("E"), 0); // macrotask
-
-Promise.resolve()
-  .then(() => console.log("C"))  // microtask
-  .then(() => console.log("D")); // microtask (chained)
-
-console.log("B"); // sync
-
-// Output: A, B, C, D, E
-// A, B — sync stack
-// C, D — microtask queue (drained before any macrotask)
-// E     — macrotask
-```
-
-### Why Microtasks Run Before Macrotasks
-
-This matters in real code:
-
-```js
-async function fetchUser(id) {
-  const user = await db.findUser(id);     // awaits = microtask
-  const perms = await db.getPerms(id);   // awaits = microtask
-  return { user, perms };
-}
-
-setTimeout(checkSessionExpiry, 0);  // macrotask — won't run until fetchUser resolves
-
-fetchUser(1).then(render);  // microtasks complete first
+```javascript
+// NON-BLOCKING — register what to do, keep going
+readFileFromDisk("data.json", (data) => {
+  render(data);  // called when file is ready
+});
+// Code continues here immediately, file is loading in the background
 ```
 
 ---
 
-## 2. Real-World Async Examples
+## 2. Callbacks — The Old Way
 
-### Why Async Matters in a Web App
+A callback is a function you pass to another function, to be called when an async operation completes.
 
-```js
-// Synchronous DB call — BLOCKS everything (hypothetical, never do this)
-function getUserSync(id) {
-  const result = db.querySync(`SELECT * FROM users WHERE id = ${id}`);
-  // During this DB round-trip (maybe 50ms), NOTHING else can run:
-  // - No other HTTP requests processed
-  // - No UI updates
-  // - No timers fire
-  return result;
-}
+```javascript
+// Node.js style: error-first callbacks
+fs.readFile("data.json", "utf8", (err, data) => {
+  if (err) {
+    console.error("Read failed:", err);
+    return;
+  }
+  console.log("Got:", data);
+});
 
-// Asynchronous — proper way
-async function getUser(id) {
-  const result = await db.query("SELECT * FROM users WHERE id = $1", [id]);
-  // While waiting for DB: event loop is free to handle other requests, timers, etc.
-  return result;
-}
+// Browser: addEventListener is a callback
+button.addEventListener("click", (event) => {
+  handleClick(event);
+});
 ```
 
-### The Async Timeline
+### Callback Hell — Why Callbacks Fail at Scale
 
-```
-Time ─────────────────────────────────────────────────────────▶
-
-Request 1: ──[start]──[waiting for DB]────────────────[got result]──[send response]
-                              │
-                              └── Event loop is free
-                                         │
-Request 2:               ──[start]──[waiting for DB]──────[got result]──[send response]
-                                              │
-Request 3:                        ──[start]──[waiting...]──[got result]──[send response]
-
-Synchronous server would handle ONE request at a time.
-Async server handles thousands concurrently.
-```
-
----
-
-## 3. Callback Hell
-
-Before Promises (pre-2015), all async code used callbacks. When operations depend on each other, callbacks nest — leading to the infamous "pyramid of doom."
-
-### The Problem
-
-```js
-// Loading a user's dashboard: fetch user → fetch orders → fetch recommendations
-// Each step depends on the previous result
-
-getUser(userId, function(err, user) {
+```javascript
+// Each async operation needs another callback — they nest deeply
+login(credentials, (err, user) => {
   if (err) return handleError(err);
 
-  getOrders(user.id, function(err, orders) {
+  fetchProfile(user.id, (err, profile) => {
     if (err) return handleError(err);
 
-    getRecommendations(user.preferences, function(err, recs) {
+    fetchPosts(profile.id, (err, posts) => {
       if (err) return handleError(err);
 
-      getInventory(recs.map(r => r.productId), function(err, inventory) {
+      fetchComments(posts[0].id, (err, comments) => {
         if (err) return handleError(err);
-
-        // Finally do something with all this data
-        // By this point we're 4 levels deep
-        renderDashboard({
-          user,
-          orders,
-          recommendations: recs.filter(r => inventory[r.productId]?.inStock),
-        });
+        render({ user, profile, posts, comments });
+        // This is "callback hell" — impossible to maintain
       });
     });
   });
 });
 ```
 
-### Why It's a Problem
-
-1. **Deeply nested** — hard to read, hard to reason about
-2. **Error handling is repetitive** — every level needs its own `if (err)` check
-3. **Control flow is hard** — doing things in parallel (not just sequential) becomes a nightmare
-4. **Debugging is painful** — stack traces are confusing
-
-### The Parallel Callback Problem
-
-```js
-// Fetching user AND orders at the same time (not sequential)
-// This is genuinely hard with callbacks:
-
-let user, orders, errors = [];
-
-function checkDone() {
-  if (user !== undefined && orders !== undefined) {
-    if (errors.length) return handleError(errors[0]);
-    renderDashboard({ user, orders });
-  }
-}
-
-getUser(userId, (err, result) => {
-  if (err) { errors.push(err); checkDone(); return; }
-  user = result;
-  checkDone();
-});
-
-getOrders(userId, (err, result) => {
-  if (err) { errors.push(err); checkDone(); return; }
-  orders = result;
-  checkDone();
-});
-
-// This is disgusting. Promise.all() does this in one line.
-```
+Promises and async/await solve this.
 
 ---
 
-## 4. Promises — From Scratch
+## 3. Promises — In Depth
 
-A **Promise** is an object representing the **eventual result** of an asynchronous operation. It is in one of three states:
+A Promise is an object representing an asynchronous operation that will eventually produce a value (or fail).
 
-- **Pending** — operation not yet complete
-- **Fulfilled** — operation completed successfully (has a value)
-- **Rejected** — operation failed (has a reason/error)
+```
+Promise states:
+  pending    — operation in progress
+  fulfilled  — completed successfully (has a value)
+  rejected   — failed (has a reason/error)
 
-Once settled (fulfilled or rejected), a Promise's state **never changes**.
-
-### Creating a Promise
-
-```js
-const promise = new Promise((resolve, reject) => {
-  // This function runs immediately and synchronously
-  // `resolve(value)` — fulfills the promise with value
-  // `reject(reason)` — rejects the promise with reason
-
-  // Simulate async work
-  setTimeout(() => {
-    const success = Math.random() > 0.5;
-    if (success) {
-      resolve({ id: 1, name: "Alice" }); // fulfill
-    } else {
-      reject(new Error("Failed to fetch user")); // reject
-    }
-  }, 1000);
-});
+Once settled (fulfilled or rejected), a Promise cannot change state.
 ```
 
-### Consuming a Promise with `.then()` / `.catch()` / `.finally()`
+### Creating Promises
 
-```js
-promise
-  .then(user => {
-    // Runs if promise was FULFILLED
-    // Receives the resolve value
-    console.log("Got user:", user);
-    return user.id; // return value becomes the next .then()'s input
-  })
-  .then(userId => {
-    console.log("User ID:", userId);
-    return fetchOrders(userId); // can return another promise — chains!
-  })
-  .catch(error => {
-    // Runs if ANY promise in the chain was REJECTED
-    // Also catches errors thrown in .then() handlers
-    console.error("Something failed:", error.message);
-    return []; // recover — chain continues with this value
-  })
-  .finally(() => {
-    // Runs regardless of success or failure
-    hideLoadingSpinner();
-  });
-```
-
-### Promise Chaining
-
-The key insight: `.then()` **always returns a new Promise**. You can chain them.
-
-```js
-// Each .then() receives the return value of the previous one
-// If you return a Promise from .then(), the chain waits for it
-
-fetchUser(userId)                           // Promise<User>
-  .then(user => fetchOrders(user.id))       // returns Promise<Order[]>
-  .then(orders => {
-    const recentOrders = orders.filter(o => isRecent(o.date));
-    return recentOrders;                    // returns plain value — auto-wrapped in Promise
-  })
-  .then(recentOrders => renderOrders(recentOrders))
-  .catch(err => showErrorMessage(err.message))
-  .finally(() => setLoading(false));
-```
-
-### Promisifying Callback-Based APIs
-
-Converting Node.js callback-style functions to Promises:
-
-```js
-// Manual promisify
-function readFilePromise(path, encoding) {
+```javascript
+// Wrapping a callback-based API in a Promise
+function readFile(path) {
   return new Promise((resolve, reject) => {
-    fs.readFile(path, encoding, (err, data) => {
-      if (err) reject(err);
-      else resolve(data);
+    fs.readFile(path, "utf8", (err, data) => {
+      if (err) reject(err);      // fulfilled with error
+      else resolve(data);        // fulfilled with data
     });
   });
 }
 
-// Node.js has a built-in util.promisify
-const { promisify } = require("util");
-const readFile = promisify(fs.readFile);
-
-// Usage
-readFile("./config.json", "utf8")
-  .then(data => JSON.parse(data))
-  .then(config => initApp(config))
-  .catch(err => console.error("Failed to load config:", err));
+// Immediately resolved/rejected
+const resolved = Promise.resolve(42);
+const rejected = Promise.reject(new Error("instant fail"));
 ```
 
-### Building Your Own Promise-Based API
+### Consuming Promises
 
-```js
-// Real-world: wrapping IndexedDB (complex callback-based browser API)
-function openDatabase(name, version) {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(name, version);
+```javascript
+// .then() — handle success, returns a NEW Promise
+// .catch() — handle failure, returns a NEW Promise
+// .finally() — always runs, doesn't affect the chain
 
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
-
-    request.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains("sessions")) {
-        db.createObjectStore("sessions", { keyPath: "id" });
-      }
-    };
+readFile("data.json")
+  .then(data => {
+    return JSON.parse(data);  // return value becomes next .then()'s argument
+  })
+  .then(obj => {
+    return fetchDetails(obj.id);  // returning a Promise chains into it
+  })
+  .then(details => {
+    render(details);
+  })
+  .catch(err => {
+    // Catches errors from ANY step above
+    console.error("Pipeline failed:", err);
+  })
+  .finally(() => {
+    hideSpinner();  // always runs, chain value passes through unchanged
   });
+```
+
+### Promise Chaining Rules
+
+```javascript
+// .then() can return:
+// 1. A value — next .then() receives it
+Promise.resolve(1)
+  .then(n => n + 1)    // returns 2
+  .then(n => n * 2)    // receives 2, returns 4
+  .then(console.log);  // logs 4
+
+// 2. A Promise — chain waits for it to resolve
+Promise.resolve("userId")
+  .then(id => fetchUser(id))     // fetchUser returns a Promise
+  .then(user => console.log(user)); // receives the user when fetchUser resolves
+
+// 3. Throw — error propagates to next .catch()
+Promise.resolve("data")
+  .then(data => { throw new Error("bad data"); })
+  .then(() => { /* skipped */ })
+  .catch(err => console.error(err.message));  // "bad data"
+```
+
+---
+
+## 4. `async` / `await`
+
+`async/await` is syntax sugar over Promises. It makes async code read like synchronous code.
+
+```javascript
+// An async function always returns a Promise
+async function greet() {
+  return "Hello";  // same as: return Promise.resolve("Hello")
+}
+greet().then(console.log);  // "Hello"
+
+// await — pause until a Promise resolves, then unwrap the value
+// Only valid INSIDE an async function
+async function loadDashboard(userId) {
+  const user    = await fetchUser(userId);     // waits for fetchUser
+  const posts   = await fetchPosts(user.id);   // waits for fetchPosts
+  const metrics = await fetchMetrics(user.id); // waits for fetchMetrics
+
+  return { user, posts, metrics };
+}
+```
+
+### Top-Level `await` (ES2022, in modules)
+
+```javascript
+// In ES modules, await can be used at the top level
+// config.js
+const config = await fetch("/api/config").then(r => r.json());
+export { config };
+// This module won't finish loading until the fetch resolves
+```
+
+### Sequential vs Parallel
+
+```javascript
+// SEQUENTIAL — each waits for the previous (slow if independent)
+async function loadSequential(userId) {
+  const user  = await fetchUser(userId);    // 200ms
+  const posts = await fetchPosts(userId);   // 300ms — starts AFTER user
+  const stats = await fetchStats(userId);   // 100ms — starts AFTER posts
+  // Total: ~600ms
 }
 
-// Real-world: delay utility
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+// PARALLEL — all start at the same time (fast)
+async function loadParallel(userId) {
+  const [user, posts, stats] = await Promise.all([
+    fetchUser(userId),     // 200ms
+    fetchPosts(userId),    // 300ms — starts SAME TIME
+    fetchStats(userId),    // 100ms — starts SAME TIME
+  ]);
+  // Total: ~300ms (limited by slowest)
+}
 
-// Usage: retry with delay
-async function retryWithDelay(fn, retries = 3, delayMs = 1000) {
-  for (let i = 0; i < retries; i++) {
-    try {
-      return await fn();
-    } catch (err) {
-      if (i === retries - 1) throw err; // last attempt — rethrow
-      console.warn(`Attempt ${i + 1} failed, retrying in ${delayMs}ms...`);
-      await sleep(delayMs * 2 ** i); // exponential backoff: 1s, 2s, 4s
-    }
-  }
+// Rule: if operations are INDEPENDENT, run them in parallel
+// If B depends on A's result, they must be sequential
+async function dependent(userId) {
+  const user    = await fetchUser(userId);    // must come first
+  const details = await fetchDetails(user.profileId);  // needs user.profileId
+  // These two MUST be sequential
 }
 ```
 
 ---
 
-## 5. Promise Combinators
+## 5. Error Handling in Async Code
 
-These static methods let you work with multiple Promises at once.
-
-### `Promise.all` — All Must Succeed
-
-Runs all promises in parallel. Resolves when ALL resolve. Rejects immediately if ANY reject ("fail fast").
-
-```js
-// Fetch user, orders, and recommendations in parallel (not sequentially)
-const [user, orders, recommendations] = await Promise.all([
-  fetchUser(userId),
-  fetchOrders(userId),
-  fetchRecommendations(userId),
-]);
-
-// All three requests fire simultaneously!
-// Total time = slowest request (not sum of all)
-```
-
-```js
-// Real-world: dashboard data loading
-async function loadDashboard(userId) {
-  setLoading(true);
+```javascript
+// try/catch works with async/await
+async function loadUser(id) {
   try {
-    const [profile, stats, notifications, recentActivity] = await Promise.all([
-      api.getProfile(userId),
-      api.getStats(userId),
-      api.getNotifications(userId),
-      api.getActivity(userId, { limit: 10 }),
-    ]);
-
-    return { profile, stats, notifications, recentActivity };
-  } finally {
-    setLoading(false);
+    const response = await fetch(`/api/users/${id}`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    return await response.json();
+  } catch (err) {
+    console.error("Failed to load user:", err.message);
+    return null;  // return a safe default
   }
 }
+
+// Errors propagate upward through await chains
+async function step3() { throw new Error("step3 failed"); }
+async function step2() { return await step3(); }
+async function step1() { return await step2(); }
+
+async function main() {
+  try {
+    await step1();
+  } catch (err) {
+    // Catches step3's error — propagated through step2 and step1
+    console.error(err.message);  // "step3 failed"
+  }
+}
+
+// Async functions that throw become rejected Promises
+const rejected = loadUser("invalid");
+rejected.catch(err => console.error(err));
+// OR use await in try/catch
 ```
 
-**Gotcha:** If any Promise rejects, Promise.all rejects with that error and the other results are lost. If you need partial results even when some fail, use `allSettled`.
+### Handling Errors Without try/catch
 
-### `Promise.allSettled` — Wait for All, Get All Results
+```javascript
+// .catch() on an async function call
+async function loadData() {
+  throw new Error("failed");
+}
 
-Waits for ALL promises to settle (fulfill OR reject). Never rejects itself. Returns array of result objects.
+loadData()
+  .then(data => render(data))
+  .catch(err => showError(err));  // catches thrown errors too
 
-```js
+// Safe wrapper — never throws, always returns { data } or { error }
+async function safeLoad(fn) {
+  try {
+    const data = await fn();
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+}
+
+const { data, error } = await safeLoad(() => fetchUser(id));
+if (error) showError(error);
+else render(data);
+```
+
+---
+
+## 6. Parallel Async Operations
+
+```javascript
+// Promise.all — all must succeed, fails fast on first rejection
+const [user, posts, config] = await Promise.all([
+  fetchUser(id),
+  fetchPosts(id),
+  fetchConfig(),
+]);
+// If ANY rejects → entire Promise.all rejects immediately
+
+// Promise.allSettled — wait for ALL, regardless of success/failure
 const results = await Promise.allSettled([
-  fetchUser(1),
-  fetchUser(2),   // this one might fail
-  fetchUser(3),
+  fetchUser(id),
+  fetchPosts(id),
+  fetchConfig(),
 ]);
 
 results.forEach(result => {
   if (result.status === "fulfilled") {
-    console.log("Got user:", result.value);
+    console.log("Success:", result.value);
   } else {
-    console.error("Failed:", result.reason.message);
+    console.error("Failed:", result.reason);
   }
 });
+// Never rejects — always resolves with array of { status, value/reason }
 
-// Real-world: send emails to a batch, report per-email results
-async function sendBulkEmails(recipients) {
-  const results = await Promise.allSettled(
-    recipients.map(r => sendEmail(r.email, buildEmailContent(r)))
+// Promise.race — settles as soon as FIRST promise settles
+// Useful for timeouts
+function withTimeout(promise, ms) {
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error(`Timed out after ${ms}ms`)), ms)
   );
-
-  const sent = results.filter(r => r.status === "fulfilled").length;
-  const failed = results.filter(r => r.status === "rejected");
-
-  console.log(`Sent: ${sent}/${recipients.length}`);
-  failed.forEach((f, i) => {
-    console.error(`Failed for ${recipients[i].email}: ${f.reason.message}`);
-  });
-}
-```
-
-### `Promise.race` — First One Wins
-
-Resolves or rejects with the first Promise to settle. All others are ignored (but still run in the background).
-
-```js
-// Timeout pattern: race a fetch against a timer
-function fetchWithTimeout(url, timeoutMs = 5000) {
-  const fetchPromise = fetch(url);
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error(`Request timed out after ${timeoutMs}ms`)), timeoutMs)
-  );
-  return Promise.race([fetchPromise, timeoutPromise]);
+  return Promise.race([promise, timeout]);
 }
 
-// Retry with first success: try multiple servers, use whichever responds first
-const data = await Promise.race([
-  fetch("https://primary-server.com/api/data"),
-  fetch("https://backup-server.com/api/data"),
+const user = await withTimeout(fetchUser(id), 5000);
+// Throws if fetchUser takes more than 5 seconds
+
+// Promise.any — resolves with FIRST success, rejects only if ALL fail
+// Useful for trying multiple sources
+const data = await Promise.any([
+  fetchFromPrimaryServer(),
+  fetchFromBackupServer(),
+  fetchFromCache(),
 ]);
+// Returns first one that succeeds; throws AggregateError if all fail
 ```
-
-### `Promise.any` — First Success
-
-Resolves with the first fulfilled promise. Only rejects if ALL reject (AggregateError).
-
-```js
-// Try multiple CDNs, use whichever loads first successfully
-const resource = await Promise.any([
-  fetch("https://cdn1.example.com/resource.js"),
-  fetch("https://cdn2.example.com/resource.js"),
-  fetch("https://cdn3.example.com/resource.js"),
-]);
-// Even if cdn1 and cdn2 fail, cdn3 can still succeed
-```
-
-### Combinator Summary
-
-|Method|Resolves when|Rejects when|Use case|
-|---|---|---|---|
-|`all`|ALL fulfill|ANY rejects|Need all results, any failure is fatal|
-|`allSettled`|ALL settle|Never|Need all results regardless of failures|
-|`race`|FIRST settles|FIRST rejects|Timeout patterns, fastest server|
-|`any`|FIRST fulfills|ALL reject|Fallback sources, any success works|
 
 ---
 
-## 6. Async / Await
+## 7. `fetch` and the Network
 
-`async/await` is syntactic sugar over Promises. It makes async code look and behave like synchronous code — easier to read, write, and debug.
+`fetch` is the browser's built-in HTTP client. It returns a Promise.
 
-### Basic Syntax
+```javascript
+// Basic GET request
+const response = await fetch("https://api.cwwkcc.lk/students");
 
-```js
-// An `async` function always returns a Promise
-async function fetchUser(id) {
-  // `await` pauses execution until the Promise resolves
-  // The paused code doesn't block the event loop — other tasks can run
-  const response = await fetch(`/api/users/${id}`);
-  const user = await response.json();
-  return user; // auto-wrapped in Promise.resolve(user)
+// IMPORTANT: fetch only rejects on NETWORK errors (no internet, server unreachable)
+// HTTP error status codes (4xx, 5xx) do NOT cause rejection — check response.ok
+if (!response.ok) {
+  throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
 }
 
-// Consuming it
-fetchUser(1).then(user => console.log(user));
-// or with await in another async function
-const user = await fetchUser(1);
+const students = await response.json();  // parse JSON body
+
+// Other response body methods:
+await response.text();        // plain text
+await response.blob();        // binary data (images, files)
+await response.arrayBuffer(); // raw binary
+await response.formData();    // form data
+
+// Response properties
+response.status;        // 200, 201, 404, 500...
+response.statusText;    // "OK", "Not Found"...
+response.ok;            // true if status 200-299
+response.url;           // final URL (after redirects)
+response.headers.get("content-type");  // read a response header
 ```
 
-### `await` Pauses the Current Function, Not the Thread
+### POST, PUT, PATCH, DELETE
 
-```js
-async function loadData() {
-  console.log("A — before await");
-  const data = await fetch("/api/data"); // pause THIS function
-  console.log("C — after await (data arrived)");
-  return data;
-}
-
-loadData();
-console.log("B — runs while loadData is paused at await");
-
-// Output: A, B, C
-```
-
-### Replacing Promise Chains with async/await
-
-```js
-// Promise chain version
-function loadUserDashboard(userId) {
-  return fetchUser(userId)
-    .then(user => {
-      return fetchOrders(user.id)
-        .then(orders => ({ user, orders }));
-    })
-    .then(({ user, orders }) => fetchRecs(user.preferences, orders))
-    .then(recs => renderDashboard(recs))
-    .catch(err => showError(err));
-}
-
-// async/await version — same behavior, much clearer
-async function loadUserDashboard(userId) {
-  try {
-    const user = await fetchUser(userId);
-    const orders = await fetchOrders(user.id);
-    const recs = await fetchRecs(user.preferences, orders);
-    renderDashboard(recs);
-  } catch (err) {
-    showError(err);
-  }
-}
-```
-
-### Sequential vs Parallel with async/await
-
-```js
-// ❌ SEQUENTIAL — each waits for the previous (slow, 3× the time)
-async function loadDashboardSlow(userId) {
-  const user    = await fetchUser(userId);     // wait ~100ms
-  const orders  = await fetchOrders(userId);   // wait ~150ms
-  const profile = await fetchProfile(userId);  // wait ~80ms
-  // Total: ~330ms
-}
-
-// ✅ PARALLEL — all run at the same time
-async function loadDashboardFast(userId) {
-  const [user, orders, profile] = await Promise.all([
-    fetchUser(userId),
-    fetchOrders(userId),
-    fetchProfile(userId),
-  ]);
-  // Total: ~150ms (slowest request)
-}
-
-// ✅ PARALLEL with individual error handling
-async function loadDashboardRobust(userId) {
-  const [userResult, ordersResult] = await Promise.allSettled([
-    fetchUser(userId),
-    fetchOrders(userId),
-  ]);
-
-  const user   = userResult.status === "fulfilled" ? userResult.value : null;
-  const orders = ordersResult.status === "fulfilled" ? ordersResult.value : [];
-
-  return { user, orders };
-}
-```
-
-### Async in Loops
-
-```js
-const userIds = [1, 2, 3, 4, 5];
-
-// ❌ forEach — doesn't await! All run and finish without waiting
-userIds.forEach(async (id) => {
-  const user = await fetchUser(id); // forEach doesn't care about this Promise
-  processUser(user); // order not guaranteed, errors swallowed
+```javascript
+// POST with JSON body
+const response = await fetch("/api/students", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${accessToken}`,
+  },
+  body: JSON.stringify({
+    name: "Ashan",
+    grade: 11,
+    email: "ashan@school.lk",
+  }),
 });
 
-// ✅ Sequential: for...of with await
-for (const id of userIds) {
-  const user = await fetchUser(id); // waits for each
-  await processUser(user);
+// PATCH — partial update
+await fetch(`/api/students/${id}`, {
+  method: "PATCH",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ score: 91 }),
+});
+
+// DELETE
+await fetch(`/api/students/${id}`, {
+  method: "DELETE",
+  headers: { "Authorization": `Bearer ${token}` },
+});
+
+// File upload with FormData
+const formData = new FormData();
+formData.append("file", fileInput.files[0]);
+formData.append("studentId", "u123");
+
+await fetch("/api/upload", {
+  method: "POST",
+  // Don't set Content-Type — browser sets it with the boundary automatically
+  body: formData,
+});
+```
+
+---
+
+## 8. Aborting Requests
+
+```javascript
+// AbortController lets you cancel a fetch
+const controller = new AbortController();
+
+// Cancel after 10 seconds
+const timeoutId = setTimeout(() => controller.abort(), 10_000);
+
+try {
+  const response = await fetch("/api/slow-endpoint", {
+    signal: controller.signal,
+  });
+  clearTimeout(timeoutId);  // cancel the timeout if request succeeded
+  return await response.json();
+} catch (err) {
+  if (err.name === "AbortError") {
+    console.log("Request was cancelled");
+    return null;
+  }
+  throw err;  // rethrow other errors
 }
-// Predictable order, easy error handling — but slow (sequential)
 
-// ✅ Parallel: Promise.all + map
-const users = await Promise.all(userIds.map(id => fetchUser(id)));
-// All fire at once — fast
+// Cancel when user navigates away (React pattern)
+useEffect(() => {
+  const controller = new AbortController();
 
-// ✅ Parallel with concurrency limit (rate limiting)
-async function mapWithConcurrency(items, fn, concurrency = 5) {
+  async function load() {
+    try {
+      const data = await fetchUser(id, { signal: controller.signal });
+      setUser(data);
+    } catch (err) {
+      if (err.name !== "AbortError") setError(err);
+    }
+  }
+
+  load();
+
+  return () => controller.abort();  // cancel on unmount or id change
+}, [id]);
+```
+
+---
+
+## 9. Building an API Client
+
+A reusable API client centralises request configuration and error handling.
+
+```javascript
+class ApiClient {
+  #baseUrl;
+  #getToken;
+
+  constructor(baseUrl, getToken) {
+    this.#baseUrl = baseUrl;
+    this.#getToken = getToken;
+  }
+
+  async #request(method, endpoint, options = {}) {
+    const { body, params, signal } = options;
+
+    const url = new URL(`${this.#baseUrl}${endpoint}`);
+    if (params) {
+      Object.entries(params).forEach(([k, v]) => {
+        if (v !== undefined && v !== null) url.searchParams.set(k, v);
+      });
+    }
+
+    const token = this.#getToken();
+    const headers = {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+
+    const response = await fetch(url.toString(), {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+      signal,
+    });
+
+    if (response.status === 401) {
+      this.#onUnauthorised();
+      throw new Error("Unauthorised");
+    }
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: response.statusText }));
+      throw Object.assign(new Error(error.message ?? "Request failed"), {
+        status: response.status,
+        details: error,
+      });
+    }
+
+    if (response.status === 204) return null;  // No Content
+    return response.json();
+  }
+
+  #onUnauthorised() {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  }
+
+  get(endpoint, params, signal)       { return this.#request("GET",    endpoint, { params, signal }); }
+  post(endpoint, body, signal)        { return this.#request("POST",   endpoint, { body, signal }); }
+  put(endpoint, body, signal)         { return this.#request("PUT",    endpoint, { body, signal }); }
+  patch(endpoint, body, signal)       { return this.#request("PATCH",  endpoint, { body, signal }); }
+  delete(endpoint, signal)            { return this.#request("DELETE", endpoint, { signal }); }
+}
+
+// Usage
+const api = new ApiClient("https://api.cwwkcc.lk", () => localStorage.getItem("token"));
+
+const students = await api.get("/students", { grade: 11, limit: 20 });
+const newStudent = await api.post("/students", { name: "Ashan", grade: 11 });
+await api.delete(`/students/${id}`);
+```
+
+---
+
+## 10. Common Async Patterns
+
+### Sequential with loop
+
+```javascript
+// Process items one at a time (order matters, or API has rate limits)
+async function processSequentially(items) {
   const results = [];
-  for (let i = 0; i < items.length; i += concurrency) {
-    const batch = items.slice(i, i + concurrency);
-    const batchResults = await Promise.all(batch.map(fn));
-    results.push(...batchResults);
+  for (const item of items) {
+    const result = await processItem(item);
+    results.push(result);
   }
   return results;
 }
 
-// Send emails 10 at a time (not all 1000 simultaneously)
-const results = await mapWithConcurrency(emailList, sendEmail, 10);
+// Common mistake: map with async doesn't await each
+const results = await items.map(async item => processItem(item));
+// returns array of Promises, not values!
+// Fix:
+const results = await Promise.all(items.map(item => processItem(item)));
 ```
 
-### Top-Level Await (ES2022)
+### Polling
 
-In ES modules, you can use `await` at the top level (outside any async function):
+```javascript
+async function pollUntilComplete(taskId, interval = 2000, maxAttempts = 30) {
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const status = await checkTaskStatus(taskId);
 
-```js
-// config.js (ES module)
-const config = await fetch("/api/config").then(r => r.json());
-export const API_URL = config.apiUrl;
-export const TIMEOUT = config.timeout;
+    if (status === "complete") return await getTaskResult(taskId);
+    if (status === "failed")   throw new Error(`Task ${taskId} failed`);
 
-// Any module importing this will wait for the fetch to complete
-```
-
----
-
-## 7. Reading Textual Data
-
-### In the Browser
-
-```js
-// Reading a file selected by the user (File API)
-const fileInput = document.querySelector("input[type='file']");
-
-fileInput.addEventListener("change", async (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  // Read as text
-  const text = await file.text();
-  console.log("File content:", text);
-
-  // Read as ArrayBuffer (for binary files)
-  const buffer = await file.arrayBuffer();
-
-  // Read as data URL (for images)
-  const dataUrl = await file.readAsDataURL?.() ?? await readAsDataURL(file);
-});
-
-// FileReader (older API)
-function readFileAsText(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => resolve(e.target.result);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsText(file, "utf-8");
-  });
-}
-
-// Reading a CSV file and parsing it
-async function parseCSVFile(file) {
-  const text = await file.text();
-  const lines = text.trim().split("\n");
-  const headers = lines[0].split(",").map(h => h.trim());
-
-  return lines.slice(1).map(line => {
-    const values = line.split(",");
-    return headers.reduce((obj, header, i) => {
-      obj[header] = values[i]?.trim() ?? "";
-      return obj;
-    }, {});
-  });
+    await new Promise(resolve => setTimeout(resolve, interval));
+  }
+  throw new Error(`Task ${taskId} did not complete in time`);
 }
 ```
 
-### In Node.js
-
-```js
-const fs = require("fs");
-const path = require("path");
-
-// Modern: fs.promises (returns Promises — use with async/await)
-const { readFile, writeFile, readdir, stat } = require("fs/promises");
-
-async function readConfig(configPath) {
-  try {
-    const raw = await readFile(configPath, "utf-8");
-    return JSON.parse(raw);
-  } catch (err) {
-    if (err.code === "ENOENT") {
-      // File doesn't exist — return defaults
-      return { port: 3000, debug: false };
-    }
-    throw err;
-  }
-}
-
-async function processLogFile(logPath) {
-  const content = await readFile(logPath, "utf-8");
-  const lines = content.split("\n").filter(Boolean);
-
-  return lines.map(line => {
-    const match = line.match(/^\[(\w+)\] (\d{4}-\d{2}-\d{2}) (.+)$/);
-    if (!match) return null;
-    const [, level, date, message] = match;
-    return { level, date: new Date(date), message };
-  }).filter(Boolean);
-}
-
-// Reading large files with streams (memory-efficient)
-const { createReadStream } = require("fs");
-const { createInterface } = require("readline");
-
-async function processLargeCSV(filePath, processRow) {
-  const fileStream = createReadStream(filePath);
-  const rl = createInterface({ input: fileStream, crlfDelay: Infinity });
-
-  let isFirstLine = true;
-  let headers = [];
-
-  for await (const line of rl) {
-    if (isFirstLine) {
-      headers = line.split(",").map(h => h.trim());
-      isFirstLine = false;
-      continue;
-    }
-    const values = line.split(",");
-    const row = Object.fromEntries(headers.map((h, i) => [h, values[i]?.trim()]));
-    await processRow(row);
-  }
-}
-
-// Usage: process a 10GB CSV without loading it all into memory
-await processLargeCSV("./orders.csv", async (row) => {
-  await db.orders.upsert(row);
-});
-```
-
----
-
-## 8. Handling JSON Data
-
-### Fetching and Parsing JSON
-
-```js
-// The modern way — fetch automatically handles JSON
-async function getUsers() {
-  const response = await fetch("/api/users");
-
-  if (!response.ok) {
-    // response.json() might still have error details
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message ?? `HTTP ${response.status}`);
-  }
-
-  return response.json(); // Returns Promise<any> — parses body as JSON
-}
-```
-
-### Storing and Loading JSON in Node.js
-
-```js
-const { readFile, writeFile } = require("fs/promises");
-
-async function loadData(filePath, defaultData = {}) {
-  try {
-    const raw = await readFile(filePath, "utf-8");
-    return JSON.parse(raw);
-  } catch (err) {
-    if (err.code === "ENOENT") return defaultData;
-    if (err instanceof SyntaxError) {
-      console.error(`Malformed JSON in ${filePath}:`, err.message);
-      return defaultData;
-    }
-    throw err;
-  }
-}
-
-async function saveData(filePath, data) {
-  const json = JSON.stringify(data, null, 2); // pretty-print
-  await writeFile(filePath, json, "utf-8");
-}
-
-// Atomic write — prevents corrupt file if process crashes mid-write
-async function saveDataAtomic(filePath, data) {
-  const tmpPath = `${filePath}.tmp`;
-  try {
-    await writeFile(tmpPath, JSON.stringify(data, null, 2), "utf-8");
-    await require("fs/promises").rename(tmpPath, filePath); // atomic on most systems
-  } catch (err) {
-    await require("fs/promises").unlink(tmpPath).catch(() => {});
-    throw err;
-  }
-}
-```
-
-### Transforming JSON for Different Contexts
-
-```js
-// API returns snake_case, your app uses camelCase
-function toCamelCase(str) {
-  return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
-}
-
-function transformKeys(obj, transform) {
-  if (Array.isArray(obj)) return obj.map(item => transformKeys(item, transform));
-  if (obj !== null && typeof obj === "object") {
-    return Object.fromEntries(
-      Object.entries(obj).map(([key, value]) => [
-        transform(key),
-        transformKeys(value, transform),
-      ])
-    );
-  }
-  return obj;
-}
-
-// Convert entire API response from snake_case to camelCase
-const rawResponse = {
-  user_id: 1,
-  full_name: "Alice Chen",
-  email_address: "alice@example.com",
-  created_at: "2024-01-15",
-  order_history: [{ order_id: 1, order_total: 99.99 }],
-};
-
-const camelCased = transformKeys(rawResponse, toCamelCase);
-// { userId: 1, fullName: "Alice Chen", emailAddress: "...", orderHistory: [...] }
-```
-
-### JSON Schema Validation
-
-```js
-// Simple validator for API responses (without a library)
-function validateUserSchema(data) {
-  const errors = [];
-
-  if (typeof data.id !== "number") errors.push("id must be a number");
-  if (typeof data.name !== "string" || !data.name.trim()) errors.push("name is required");
-  if (typeof data.email !== "string" || !data.email.includes("@")) errors.push("valid email required");
-  if (!["user", "admin", "moderator"].includes(data.role)) errors.push("invalid role");
-
-  return { valid: errors.length === 0, errors };
-}
-
-// In production: use Zod, Joi, or Yup for full schema validation
-import { z } from "zod";
-
-const UserSchema = z.object({
-  id: z.number().positive(),
-  name: z.string().min(1).max(100),
-  email: z.string().email(),
-  role: z.enum(["user", "admin", "moderator"]),
-  isActive: z.boolean().default(true),
-  createdAt: z.string().datetime().optional(),
-});
-
-async function fetchAndValidateUser(id) {
-  const raw = await fetch(`/api/users/${id}`).then(r => r.json());
-  const result = UserSchema.safeParse(raw);
-
-  if (!result.success) {
-    console.error("API returned invalid data:", result.error.issues);
-    throw new Error("Invalid API response shape");
-  }
-
-  return result.data; // fully typed, validated
-}
-```
-
----
-
-## 9. Fetching Data from APIs
-
-### The Fetch API — Complete Guide
-
-`fetch` is the modern browser and Node.js (18+) API for HTTP requests.
-
-```js
-// Basic GET
-const response = await fetch("https://api.example.com/users");
-const users = await response.json();
-```
-
-### The Response Object
-
-```js
-const response = await fetch(url);
-
-response.ok;          // true if status 200–299
-response.status;      // 200, 201, 400, 401, 404, 500, etc.
-response.statusText;  // "OK", "Not Found", etc.
-response.headers;     // Headers object
-response.url;         // final URL (after redirects)
-response.redirected;  // true if redirected
-
-// Reading the body (can only be read ONCE)
-await response.json();        // parse as JSON
-await response.text();        // parse as string
-await response.blob();        // parse as Blob (for files/images)
-await response.arrayBuffer(); // parse as ArrayBuffer (binary)
-await response.formData();    // parse as FormData
-
-// Clone to read body multiple times
-const clone = response.clone();
-const text = await clone.text();
-const json = await response.json();
-```
-
-### Complete Request Options
-
-```js
-const response = await fetch(url, {
-  method: "POST",      // "GET" (default), "POST", "PUT", "PATCH", "DELETE"
-
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${token}`,
-    "Accept": "application/json",
-    "X-Request-ID": crypto.randomUUID(),
-  },
-
-  body: JSON.stringify(data), // for POST/PUT/PATCH — must match Content-Type
-
-  // Caching
-  cache: "no-cache",  // "default", "no-cache", "no-store", "reload", "force-cache"
-
-  // Credentials (cookies)
-  credentials: "include",  // "omit" (default), "same-origin", "include"
-
-  // Redirect handling
-  redirect: "follow",  // "follow" (default), "error", "manual"
-
-  // Abort signal (for cancellation)
-  signal: abortController.signal,
-
-  // Mode (CORS)
-  mode: "cors", // "cors" (default), "no-cors", "same-origin"
-});
-```
-
-### Building a Reusable API Client
-
-```js
-class ApiClient {
-  #baseUrl;
-  #defaultHeaders;
-  #getToken;
-
-  constructor({ baseUrl, getToken }) {
-    this.#baseUrl = baseUrl;
-    this.#getToken = getToken;
-    this.#defaultHeaders = {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    };
-  }
-
-  async #buildHeaders(extraHeaders = {}) {
-    const headers = { ...this.#defaultHeaders, ...extraHeaders };
-    const token = await this.#getToken?.();
-    if (token) headers["Authorization"] = `Bearer ${token}`;
-    return headers;
-  }
-
-  async #request(method, path, { body, headers = {}, signal } = {}) {
-    const url = `${this.#baseUrl}${path}`;
-    const requestHeaders = await this.#buildHeaders(headers);
-
-    const options = {
-      method,
-      headers: requestHeaders,
-      signal,
-    };
-
-    if (body !== undefined) {
-      options.body = JSON.stringify(body);
-    }
-
-    let response;
-    try {
-      response = await fetch(url, options);
-    } catch (err) {
-      if (err.name === "AbortError") throw new Error("Request cancelled");
-      throw new Error(`Network error: ${err.message}`);
-    }
-
-    // Handle auth errors globally
-    if (response.status === 401) {
-      this.#handleAuthError();
-      throw new UnauthorizedError();
-    }
-
-    // Parse response
-    const contentType = response.headers.get("Content-Type") ?? "";
-    const data = contentType.includes("application/json")
-      ? await response.json()
-      : await response.text();
-
-    if (!response.ok) {
-      const message = data?.message ?? data ?? `HTTP ${response.status}`;
-      const error = new ApiError(message, response.status, data?.code);
-      throw error;
-    }
-
-    return data;
-  }
-
-  #handleAuthError() {
-    // Emit event, redirect to login, etc.
-    window.dispatchEvent(new CustomEvent("auth:expired"));
-  }
-
-  get(path, options) { return this.#request("GET", path, options); }
-  post(path, body, options) { return this.#request("POST", path, { ...options, body }); }
-  put(path, body, options) { return this.#request("PUT", path, { ...options, body }); }
-  patch(path, body, options) { return this.#request("PATCH", path, { ...options, body }); }
-  delete(path, options) { return this.#request("DELETE", path, options); }
-}
-
-// Usage
-const api = new ApiClient({
-  baseUrl: "https://api.example.com",
-  getToken: () => authService.getAccessToken(),
-});
-
-const user = await api.get("/users/1");
-await api.post("/users", { name: "Alice", email: "alice@example.com" });
-await api.patch(`/users/${id}`, { name: "Alice Chen" });
-await api.delete(`/users/${id}`);
-```
-
-### Request Cancellation with AbortController
-
-```js
-// Cancel a fetch when the user navigates away or changes search term
-let currentController = null;
-
-async function searchProducts(query) {
-  // Cancel previous request if still in flight
-  currentController?.abort();
-  currentController = new AbortController();
-
-  try {
-    const products = await api.get(
-      `/products?q=${encodeURIComponent(query)}`,
-      { signal: currentController.signal }
-    );
-    renderResults(products);
-  } catch (err) {
-    if (err.name === "AbortError" || err.message === "Request cancelled") {
-      return; // Ignore — user already typed something new
-    }
-    showError(err.message);
-  }
-}
-
-// Clean up on component unmount (React)
-useEffect(() => {
-  const controller = new AbortController();
-  fetchData({ signal: controller.signal });
-  return () => controller.abort(); // cleanup
-}, []);
-```
-
-### Pagination Patterns
-
-```js
-// Offset-based pagination
-async function fetchAllPages(endpoint, pageSize = 100) {
-  const allItems = [];
-  let page = 1;
-  let hasMore = true;
-
-  while (hasMore) {
-    const { items, total } = await api.get(
-      `${endpoint}?page=${page}&limit=${pageSize}`
-    );
-    allItems.push(...items);
-    hasMore = allItems.length < total;
-    page++;
-  }
-
-  return allItems;
-}
-
-// Cursor-based pagination (more efficient for large datasets)
-async function* fetchPagesByCursor(endpoint, pageSize = 50) {
-  let cursor = null;
-
-  while (true) {
-    const params = new URLSearchParams({ limit: pageSize });
-    if (cursor) params.set("cursor", cursor);
-
-    const { items, nextCursor } = await api.get(`${endpoint}?${params}`);
-    yield items;
-
-    if (!nextCursor) break;
-    cursor = nextCursor;
-  }
-}
-
-// Usage — process each page as it arrives (memory-efficient)
-for await (const page of fetchPagesByCursor("/orders")) {
-  await processBatch(page);
-}
-```
-
-### Real-World: Auth API Module
-
-```js
-const authApi = {
-  async login(email, password) {
-    return api.post("/auth/login", { email, password });
-  },
-
-  async logout() {
-    return api.post("/auth/logout");
-  },
-
-  async refreshToken(refreshToken) {
-    // Don't use the main api client here (would create infinite loop on 401)
-    const response = await fetch(`${BASE_URL}/auth/refresh`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
-    });
-    if (!response.ok) throw new Error("Token refresh failed");
-    return response.json();
-  },
-
-  async register(userData) {
-    return api.post("/auth/register", userData);
-  },
-
-  async verifyEmail(token) {
-    return api.post("/auth/verify-email", { token });
-  },
-
-  async requestPasswordReset(email) {
-    return api.post("/auth/forgot-password", { email });
-  },
-
-  async resetPassword(token, newPassword) {
-    return api.post("/auth/reset-password", { token, newPassword });
-  },
-};
-```
-
----
-
-## 10. Error Handling
-
-### Types of Errors
-
-```js
-// 1. Synchronous errors — thrown immediately
-throw new Error("Something went wrong");
-throw new TypeError("Expected a string");
-throw new RangeError("Value out of range");
-
-// 2. Promise rejections — async errors
-const promise = Promise.reject(new Error("Async failure"));
-fetch("bad-url").catch(err => console.error(err)); // network error
-
-// 3. Unhandled promise rejections — the worst kind (crash the process in Node.js)
-fetch("bad-url"); // Promise rejected but no .catch() — bad!
-```
-
-### try/catch/finally
-
-```js
-async function createUser(data) {
-  try {
-    // Validate — sync throw
-    if (!data.email) throw new ValidationError([{ field: "email", message: "Required" }]);
-
-    // DB operation — async, might reject
-    const existing = await db.users.findByEmail(data.email);
-    if (existing) throw new ConflictError("Email already registered");
-
-    const user = await db.users.create(data);
-    await emailService.sendWelcome(user.email);
-
-    return user;
-
-  } catch (err) {
-    // Handle specific error types differently
-    if (err instanceof ValidationError) {
-      throw err; // re-throw to let caller handle
-    }
-    if (err instanceof ConflictError) {
-      throw err;
-    }
-    // Unknown error — log it (it might be a bug)
-    logger.error("Unexpected error in createUser:", { err, data: omit(data, "password") });
-    throw new AppError("Failed to create user", 500);
-
-  } finally {
-    // Always runs — good for cleanup
-    // Release DB connection, clear temp files, stop loading state
-  }
-}
-```
-
-### Global Error Handling
-
-```js
-// Browser: catch unhandled promise rejections
-window.addEventListener("unhandledrejection", (event) => {
-  console.error("Unhandled promise rejection:", event.reason);
-  event.preventDefault(); // prevent default browser behavior (console error)
-  reportErrorToService(event.reason);
-});
-
-// Browser: catch uncaught synchronous errors
-window.addEventListener("error", (event) => {
-  console.error("Uncaught error:", event.error);
-  reportErrorToService(event.error);
-});
-
-// Node.js
-process.on("unhandledRejection", (reason, promise) => {
-  console.error("Unhandled Rejection at:", promise, "reason:", reason);
-  // In production: log, then gracefully shut down
-  process.exit(1);
-});
-
-process.on("uncaughtException", (error) => {
-  console.error("Uncaught Exception:", error);
-  process.exit(1); // Always exit after uncaught exception
-});
-```
-
-### Error Hierarchy for a Real App
-
-```js
-// Base error
-class AppError extends Error {
-  constructor(message, statusCode = 500, code = "INTERNAL_ERROR", details = null) {
-    super(message);
-    this.name = this.constructor.name;
-    this.statusCode = statusCode;
-    this.code = code;
-    this.details = details;
-    this.isOperational = true;
-    this.timestamp = new Date().toISOString();
-    Error.captureStackTrace(this, this.constructor);
-  }
-
-  toJSON() {
-    return {
-      error: {
-        code: this.code,
-        message: this.message,
-        details: this.details,
-        timestamp: this.timestamp,
-      },
-    };
-  }
-}
-
-class ValidationError extends AppError {
-  constructor(fields) {
-    super("Validation failed", 400, "VALIDATION_ERROR", fields);
-  }
-}
-
-class AuthError extends AppError {
-  constructor(msg = "Authentication required") {
-    super(msg, 401, "UNAUTHORIZED");
-  }
-}
-
-class ForbiddenError extends AppError {
-  constructor(action = "perform this action") {
-    super(`You are not allowed to ${action}`, 403, "FORBIDDEN");
-  }
-}
-
-class NotFoundError extends AppError {
-  constructor(resource = "Resource") {
-    super(`${resource} not found`, 404, "NOT_FOUND");
-  }
-}
-
-class ConflictError extends AppError {
-  constructor(msg = "Resource already exists") {
-    super(msg, 409, "CONFLICT");
-  }
-}
-
-class RateLimitError extends AppError {
-  constructor(retryAfterMs) {
-    super("Too many requests", 429, "RATE_LIMITED", { retryAfterMs });
-  }
-}
-```
-
-### Error Handling Middleware (Express-style)
-
-```js
-// Centralized error handler — all errors funnel here
-function globalErrorHandler(err, req, res, next) {
-  // Operational errors — expected, safe to tell the client about
-  if (err instanceof AppError && err.isOperational) {
-    return res.status(err.statusCode).json(err.toJSON());
-  }
-
-  // Programming errors — unexpected bugs
-  // Log with full detail for developers, hide from client
-  logger.error({
-    message: err.message,
-    stack: err.stack,
-    url: req.url,
-    method: req.method,
-    body: req.body,
-    userId: req.user?.id,
-  });
-
-  return res.status(500).json({
-    error: {
-      code: "INTERNAL_ERROR",
-      message: "An unexpected error occurred",
-    },
-  });
-}
-```
-
-### The Result Pattern (Alternative to throw)
-
-Inspired by Rust and Go — return `[error, data]` instead of throwing:
-
-```js
-async function safeAsync(promise) {
-  try {
-    return [null, await promise];
-  } catch (error) {
-    return [error, null];
-  }
-}
-
-// Usage — no try/catch needed at call site
-async function handleSignup(req) {
-  const [validationErr, cleanData] = await safeAsync(validateSignupData(req.body));
-  if (validationErr) return res.status(400).json({ error: validationErr.message });
-
-  const [createErr, user] = await safeAsync(userService.create(cleanData));
-  if (createErr) return res.status(500).json({ error: "Failed to create user" });
-
-  const [emailErr] = await safeAsync(emailService.sendWelcome(user.email));
-  if (emailErr) logger.warn("Welcome email failed:", emailErr); // non-fatal
-
-  return res.status(201).json({ user: user.toJSON() });
-}
-```
-
-### Retry Logic with Error Handling
-
-```js
-async function withRetry(fn, options = {}) {
-  const {
-    retries = 3,
-    delay = 1000,
-    backoff = 2,
-    retryOn = (err) => err.statusCode >= 500 || err.code === "NETWORK_ERROR",
-  } = options;
-
-  let lastError;
-
-  for (let attempt = 1; attempt <= retries; attempt++) {
+### Retry with exponential backoff
+
+```javascript
+async function withRetry(fn, maxAttempts = 3) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       return await fn();
     } catch (err) {
-      lastError = err;
+      if (attempt === maxAttempts) throw err;
 
-      if (attempt === retries || !retryOn(err)) {
-        break; // don't retry — last attempt or non-retryable error
-      }
-
-      const waitMs = delay * backoff ** (attempt - 1);
-      console.warn(`Attempt ${attempt} failed. Retrying in ${waitMs}ms...`);
-      await sleep(waitMs);
+      const delay = Math.min(1000 * 2 ** attempt, 30_000);  // 2s, 4s, 8s... max 30s
+      console.warn(`Attempt ${attempt} failed, retrying in ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
-
-  throw lastError;
 }
 
-// Usage
-const user = await withRetry(
-  () => api.get("/users/1"),
-  {
-    retries: 3,
-    delay: 500,
-    retryOn: (err) => [429, 500, 502, 503, 504].includes(err.statusCode),
-  }
-);
+const data = await withRetry(() => fetchCriticalData());
 ```
 
-### Circuit Breaker Pattern
+### Concurrency limit
 
-Stops calling a failing service for a period to prevent cascade failures:
+```javascript
+// Run at most N tasks at a time (avoid overwhelming an API)
+async function withConcurrencyLimit(tasks, limit) {
+  const results = [];
+  const executing = new Set();
 
-```js
-class CircuitBreaker {
-  #state = "closed"; // "closed" = working, "open" = failing, "half-open" = testing
-  #failureCount = 0;
-  #lastFailureTime = null;
-  #threshold;
-  #timeout;
-
-  constructor(threshold = 5, timeoutMs = 30_000) {
-    this.#threshold = threshold;
-    this.#timeout = timeoutMs;
-  }
-
-  async call(fn) {
-    if (this.#state === "open") {
-      const elapsed = Date.now() - this.#lastFailureTime;
-      if (elapsed < this.#timeout) {
-        throw new Error("Circuit breaker is OPEN — service unavailable");
-      }
-      this.#state = "half-open";
-    }
-
-    try {
-      const result = await fn();
-      this.#onSuccess();
+  for (const task of tasks) {
+    const promise = task().then(result => {
+      executing.delete(promise);
       return result;
-    } catch (err) {
-      this.#onFailure();
-      throw err;
+    });
+
+    executing.add(promise);
+    results.push(promise);
+
+    if (executing.size >= limit) {
+      await Promise.race(executing);  // wait for one to finish before starting next
     }
   }
 
-  #onSuccess() {
-    this.#failureCount = 0;
-    this.#state = "closed";
-  }
-
-  #onFailure() {
-    this.#failureCount++;
-    this.#lastFailureTime = Date.now();
-    if (this.#failureCount >= this.#threshold) {
-      this.#state = "open";
-      console.error(`Circuit breaker OPENED after ${this.#threshold} failures`);
-    }
-  }
-
-  get state() { return this.#state; }
+  return Promise.all(results);
 }
 
-const emailBreaker = new CircuitBreaker(5, 30_000);
-
-async function sendEmail(to, content) {
-  return emailBreaker.call(() => emailProvider.send(to, content));
-}
+const tasks = studentIds.map(id => () => fetchStudentDetails(id));
+const details = await withConcurrencyLimit(tasks, 5);  // max 5 at once
 ```
 
 ---
 
-## Summary — The Full Async Picture
+## Summary
 
 ```
-Event Loop:
-  Call Stack → Microtask Queue (Promises) → Macrotask Queue (setTimeout/I/O)
-  Microtasks always drain completely before next macrotask
+The problem:
+  JS is single-threaded. Blocking operations freeze everything.
+  Async code describes what to do when results arrive, then continues.
 
 Promises:
-  new Promise((resolve, reject) => {})
-  States: pending → fulfilled | rejected (immutable once settled)
-  .then(onFulfill) → new Promise  .catch(onReject)  .finally(always)
-  Chaining: return value/Promise from .then() passes to next
-
-Promise combinators:
-  all([...])        — parallel, fail-fast
-  allSettled([...]) — parallel, get all results
-  race([...])       — first to settle wins
-  any([...])        — first to SUCCEED wins
+  Three states: pending → fulfilled or rejected (final)
+  .then(onFulfilled) — chain on success, returns new Promise
+  .catch(onRejected) — handle errors from entire chain above
+  .finally(fn)       — always runs, doesn't change chain value
 
 async/await:
-  async fn always returns a Promise
-  await unwraps a Promise, pauses function (not thread)
-  Sequential: await one, then another (adds up time)
-  Parallel:   await Promise.all([a(), b(), c()])
-  Loops:      for...of with await; never forEach with async
+  async function — always returns a Promise
+  await          — pause until Promise resolves, unwrap value
+  try/catch      — error handling for async code
 
-Error handling:
-  try/catch/finally for all async code
-  Global: unhandledrejection, uncaughtException
-  Error hierarchy: AppError → specific subclasses
-  Retry: exponential backoff for transient failures
-  Circuit breaker: stop hammering failing services
+Sequential vs Parallel:
+  Sequential: for...of with await (when B depends on A)
+  Parallel:   Promise.all([a, b, c]) (when independent — much faster)
 
-Fetch:
-  fetch(url, { method, headers, body, signal })
-  response.ok, .status, .json(), .text()
-  Always check response.ok before parsing body
-  AbortController for cancellation
-  Build a reusable ApiClient class
+Promise utilities:
+  Promise.all         — all succeed, or fail fast on first rejection
+  Promise.allSettled  — wait for all, never rejects, collect all results
+  Promise.race        — first settled wins (timeouts)
+  Promise.any         — first fulfilled wins (fallbacks)
+
+fetch:
+  GET:    fetch(url)
+  POST:   fetch(url, { method:"POST", headers, body: JSON.stringify(data) })
+  Always check response.ok — HTTP errors don't reject fetch!
+  AbortController — cancel requests on timeout or unmount
+
+Patterns:
+  withTimeout     — race against a timeout Promise
+  withRetry       — exponential backoff on failure
+  pollUntilDone   — check status repeatedly
+  concurrencyLimit — throttle parallel work
 ```
 
 ---
 
-_This is the final part of the 7-part JavaScript Deep Documentation series._
-
-```
-Part 1: Foundations        — types, variables, operators, strings, conditionals
-Part 2: Loops & Data       — loops, arrays, objects, logical operators
-Part 3: Functions          — closures, scope, callbacks, JSON, dates, timers
-Part 4: Modern JS (ES6+)   — destructuring, spread, arrow fns, array helpers, Map/Set
-Part 5: DOM & Events       — DOM manipulation, styles, events, keyboard, delegation
-Part 6: OOP                — this, prototypes, classes, encapsulation, inheritance, polymorphism
-Part 7: Async & APIs       — event loop, Promises, async/await, Fetch, error handling
-```
+_Next: [07 — The JavaScript Engine, Runtime & Memory](./07%20-%20The%20JavaScript%20Engine%2C%20Runtime%20%26%20Memory.md)_
