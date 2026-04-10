@@ -82,11 +82,11 @@ The cascade considers three factors in this order:
 
 ### 1. Origin and Importance
 
-|Origin|Priority|
-|---|---|
-|Browser default stylesheet|Lowest|
-|Author stylesheet (your CSS)|Middle|
-|`!important` declarations|Highest|
+| Origin                       | Priority |
+| ---------------------------- | -------- |
+| Browser default stylesheet   | Lowest   |
+| Author stylesheet (your CSS) | Middle   |
+| `!important` declarations    | Highest  |
 
 `!important` overrides everything. It is a last resort, not a tool — overusing it is a sign of poorly structured CSS.
 
@@ -100,14 +100,14 @@ When two rules from the same origin target the same element, the more _specific_
 
 Specificity is calculated as a score with three components: **(ID, Class, Element)**
 
-|Selector type|Specificity score|
-|---|---|
-|Element selector (`p`, `h1`, `div`)|0, 0, 1|
-|Class selector (`.card`)|0, 1, 0|
-|Attribute selector (`[type="text"]`)|0, 1, 0|
-|Pseudo-class (`:hover`, `:first-child`)|0, 1, 0|
-|ID selector (`#header`)|1, 0, 0|
-|Inline `style=""`|1, 0, 0, 0 (always wins)|
+| Selector type                           | Specificity score        |
+| --------------------------------------- | ------------------------ |
+| Element selector (`p`, `h1`, `div`)     | 0, 0, 1                  |
+| Class selector (`.card`)                | 0, 1, 0                  |
+| Attribute selector (`[type="text"]`)    | 0, 1, 0                  |
+| Pseudo-class (`:hover`, `:first-child`) | 0, 1, 0                  |
+| ID selector (`#header`)                 | 1, 0, 0                  |
+| Inline `style=""`                       | 1, 0, 0, 0 (always wins) |
 
 ```css
 p { color: blue; }           /* 0,0,1 — loses */
@@ -182,11 +182,11 @@ A more complete option is [modern-normalize](https://github.com/sindresorhus/mod
 
 ## Summary
 
-|Concept|What it means|
-|---|---|
-|External stylesheet|CSS in a separate `.css` file, linked via `<link>`|
-|Rule|A selector + declaration block|
-|Cascade|The algorithm for deciding which rule wins|
-|Specificity|How precisely a selector targets elements — more specific wins|
-|Inheritance|Child elements automatically receive some property values from parents|
-|Browser defaults|The starting stylesheet every browser applies before yours|
+| Concept             | What it means                                                          |
+| ------------------- | ---------------------------------------------------------------------- |
+| External stylesheet | CSS in a separate `.css` file, linked via `<link>`                     |
+| Rule                | A selector + declaration block                                         |
+| Cascade             | The algorithm for deciding which rule wins                             |
+| Specificity         | How precisely a selector targets elements — more specific wins         |
+| Inheritance         | Child elements automatically receive some property values from parents |
+| Browser defaults    | The starting stylesheet every browser applies before yours             |

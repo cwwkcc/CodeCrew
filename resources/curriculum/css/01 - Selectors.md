@@ -210,13 +210,13 @@ The inserted content is not part of the DOM — it cannot be selected, copied, o
 
 ## Specificity Quick Reference
 
-|Selector|Score (ID, Class, Element)|
-|---|---|
-|`p`|0, 0, 1|
-|`.card`|0, 1, 0|
-|`p.card`|0, 1, 1|
-|`nav > ul > li`|0, 0, 3|
-|`#header`|1, 0, 0|
-|`#header .nav li:hover`|1, 1, 1|
+| Selector                | Score (ID, Class, Element) |
+| ----------------------- | -------------------------- |
+| `p`                     | 0, 0, 1                    |
+| `.card`                 | 0, 1, 0                    |
+| `p.card`                | 0, 1, 1                    |
+| `nav > ul > li`         | 0, 0, 3                    |
+| `#header`               | 1, 0, 0                    |
+| `#header .nav li:hover` | 1, 1, 1                    |
 
 When two rules conflict, the one with the higher specificity score wins. If scores are equal, the later rule in the file wins.

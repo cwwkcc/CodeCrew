@@ -4,12 +4,12 @@
 
 ### Outer Display Values
 
-|Value|Behaviour|
-|---|---|
-|`block`|Takes full width, stacks vertically|
-|`inline`|Flows with text, width/height ignored|
-|`inline-block`|Flows with text, but respects width/height and all margins|
-|`none`|Removed from layout entirely (not just invisible — takes no space)|
+| Value          | Behaviour                                                          |
+| -------------- | ------------------------------------------------------------------ |
+| `block`        | Takes full width, stacks vertically                                |
+| `inline`       | Flows with text, width/height ignored                              |
+| `inline-block` | Flows with text, but respects width/height and all margins         |
+| `none`         | Removed from layout entirely (not just invisible — takes no space) |
 
 ```css
 span    { display: block; }         /* make inline elements stack */
@@ -22,11 +22,11 @@ button  { display: inline-block; }  /* flow inline but control size */
 
 These turn the element into a container with a special layout algorithm for children:
 
-|Value|What children do|
-|---|---|
-|`flex`|Flexible one-dimensional layout (Module 07)|
-|`grid`|Two-dimensional grid layout (Module 08)|
-|`flow-root`|Creates a new block formatting context (clears floats)|
+| Value       | What children do                                       |
+| ----------- | ------------------------------------------------------ |
+| `flex`      | Flexible one-dimensional layout (Module 07)            |
+| `grid`      | Two-dimensional grid layout (Module 08)                |
+| `flow-root` | Creates a new block formatting context (clears floats) |
 
 ### `visibility: hidden` vs `display: none`
 
