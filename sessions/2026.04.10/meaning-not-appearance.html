@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Is Meaning, Not Appearance</title>
+  </head>
+  <body>
+    <h1>HTML Is About Meaning — Not How Things Look</h1>
+
+    <!-- ==================== BR DEMO ==================== -->
+
+    <h2>1. What the br Tag Actually Does</h2>
+
+    <p>Without br — this is one paragraph, the browser wraps it naturally:</p>
+    <p>Line one. Line two. Line three.</p>
+
+    <p>With br — line breaks are forced inside the same paragraph:</p>
+    <p>
+      Line one.<br />
+      Line two.<br />
+      Line three.
+    </p>
+
+    <p>Wrong use of br — using it to fake paragraph spacing:</p>
+    <p>
+      This is my first idea.
+      <br />
+      <br />
+      This is my second idea.
+    </p>
+
+    <p>This is my first idea.</p>
+    <p>This is my second idea.</p>
+
+    <p>
+      The gap above was made with two br tags. This is wrong. If content is a
+      new paragraph, use a new p tag — not br. br is only for line breaks
+      <em>within</em> a single block of content.
+    </p>
+
+    <p>Correct use of br</p>
+    <p>a postal address:</p>
+    <p>
+      CodeCrew<br />
+      Beruwala<br />
+      Kalutara District<br />
+      Sri Lanka
+    </p>
+
+    <p>poem or song lyrics:</p>
+    <p>
+      Twinkle, twinkle, little star<br />
+      How I wonder what you are
+    </p>
+
+    <hr />
+
+    <!-- ==================== MEANING VS APPEARANCE ==================== -->
+
+    <h2>2. Tags Define Meaning — CSS Controls Appearance</h2>
+
+    <p>
+      Look at the two lines below. They look the same. But in the DOM, they are
+      completely different things.
+    </p>
+
+    <!-- Both lines look identical visually -->
+    <p>This is how normal p tag looks</p>
+    <h1 style="font-size: 16px; font-weight: normal">
+      I am an h1 tag — styled to look like a paragraph.
+    </h1>
+
+    <h1>This is how normal h1 tag looks</h1>
+    <p style="font-size: 32px; font-weight: bold; font-family: serif">
+      I am a p tag — styled to look like a heading.
+    </p>
+
+    <p>
+      Now look at the two lines below. They also look the same. But again —
+      completely different in meaning.
+    </p>
+
+    <p><strong>I am strong — I am important content.</strong></p>
+    <p><b>I am b — I just look bold. I carry no meaning.</b></p>
+
+    <hr />
+
+    <h2>3. Why This Matters</h2>
+
+    <p>
+      A browser renders both the same way on screen. But these tools read the
+      actual tags — not the visual output:
+    </p>
+
+    <ul>
+      <li>
+        <strong>Screen readers</strong> — announce h1 as the main heading of the
+        page. They skip over a p tag, even if it looks bold and big.
+      </li>
+      <li>
+        <strong>Search engines</strong> — treat h1 content as the most important
+        text on the page for ranking. A styled p tag gets no such weight.
+      </li>
+      <li>
+        <strong>Browser reading mode</strong> — strips all CSS and relies purely
+        on tags to build the readable version of the page.
+      </li>
+      <li>
+        <strong>Other developers</strong> — read your HTML to understand the
+        structure of your page, not to admire how it looks.
+      </li>
+    </ul>
+
+    <p>
+      <mark
+        >The purpose of an HTML tag is to tell the browser and the world what
+        your content <em>means</em> — not what it should look like.</mark
+      >
+      CSS is a separate job.
+    </p>
+    <p>
+      <strong>
+        Always ask: what is this content? Then pick the tag that matches that
+        meaning.
+      </strong>
+    </p>
+  </body>
+</html>
