@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeCrew — HTML Reference</title>
+  </head>
+  <body>
+    <h1>CodeCrew HTML Reference</h1>
+    <p>
+      A single page covering the core HTML elements. Built in class, step by
+      step.
+    </p>
+
+    <hr />
+
+    <!-- ============================================================
+         SECTION 1 — TEXT ELEMENTS (REVISION)
+    ============================================================ -->
+
+    <h2>1. Text Elements</h2>
+
+    <!-- HEADINGS -->
+
+    <h3>Headings</h3>
+
+    <p>
+      There are six heading levels. They define the
+      <strong>outline and structure</strong> of your document — not the font
+      size. Always use them in order. Never skip a level.
+    </p>
+
+    <h1>h1 — The main title of the page. Use only once per page.</h1>
+    <h2>h2 — A major section heading.</h2>
+    <h3>h3 — A sub-section inside an h2.</h3>
+    <h4>h4 — A sub-section inside an h3.</h4>
+    <h5>h5 — Rarely needed. A sub-section inside an h4.</h5>
+    <h6>h6 — The deepest level. Almost never used.</h6>
+
+    <!-- PARAGRAPHS, BR, HR -->
+
+    <h3>Paragraphs, Line Breaks, and Thematic Breaks</h3>
+
+    <p>
+      Every block of prose lives in a p tag. The browser adds spacing above and
+      below automatically. Never use br tags to fake that spacing.
+    </p>
+
+    <p>
+      The br tag forces a line break <em>inside</em> a paragraph.<br />
+      This line started with a br.<br />
+      Use it only when the line break is part of the meaning — like an address
+      or poem.
+    </p>
+
+    <p>Postal address — correct use of br:</p>
+    <p>
+      CodeCrew<br />
+      Beruwala<br />
+      Kalutara District<br />
+      Sri Lanka
+    </p>
+
+    <p>
+      The hr tag below represents a <em>thematic break</em> — a shift in topic.
+      It is a semantic element, not a decorative line.
+    </p>
+
+    <hr />
+
+    <!-- SEMANTIC INLINE ELEMENTS -->
+
+    <h3>Semantic Inline Elements</h3>
+
+    <p>
+      <strong>strong</strong> — marks content as critically important or urgent.
+      Rendered bold by default but its purpose is meaning, not styling.
+    </p>
+
+    <p>
+      <em>em</em> — marks stressed emphasis, the word you would stress when
+      speaking. Compare: <em>I</em> did not say that — versus — I did not say
+      <em>that</em>. The meaning shifts.
+    </p>
+
+    <p>
+      <mark>mark</mark> — highlights text relevant to the current context, like
+      a search result match or a key term being introduced for the first time.
+    </p>
+
+    <p>
+      <abbr title="HyperText Markup Language">HTML</abbr> — the abbr tag marks
+      abbreviations. The title attribute holds the full expanded form. Hover
+      your mouse over HTML above to see the tooltip.
+    </p>
+
+    <p>
+      <time datetime="1991-08-06">6 August 1991</time> — the time tag wraps a
+      date or time and makes it machine-readable via the datetime attribute. The
+      content between the tags is for humans; the datetime value is for browsers
+      and search engines.
+    </p>
+
+    <p>
+      <code>&lt;p&gt;Hello&lt;/p&gt;</code> — the code tag marks a fragment of
+      computer code. Rendered in a monospace font by default.
+    </p>
+
+    <p>
+      <kbd>Ctrl</kbd> + <kbd>S</kbd> — the kbd tag represents keyboard input.
+      Use it when instructing a user to press a key.
+    </p>
+
+    <p>
+      E = mc<sup>2</sup> — sup creates superscript. &nbsp; H<sub>2</sub>O — sub
+      creates subscript.
+    </p>
+
+    <p>
+      <small
+        >small — for side comments, legal fine print, and minor notes. Not a
+        font-size control — a semantic signal that this content is
+        supplementary.</small
+      >
+    </p>
+
+    <!-- PRESENTATIONAL INLINE ELEMENTS -->
+
+    <h3>Presentational Inline Elements</h3>
+
+    <p>
+      <b>b</b> — bold without semantic importance. Use only when bold styling is
+      needed but the content is not genuinely urgent. Prefer strong when meaning
+      is involved.
+    </p>
+
+    <p>
+      <i>i</i> — italic without stress emphasis. Use for technical terms,
+      foreign words, or titles of works. Prefer em when meaning is involved.
+    </p>
+
+    <p>
+      <u>u</u> — underline without semantic meaning. Use carefully — users
+      associate underlines with links.
+    </p>
+
+    <!-- QUOTATIONS -->
+
+    <h3>Quotations</h3>
+
+    <p>
+      Tim Berners-Lee once said:
+      <q>The web is more a social creation than a technical one.</q> — the q tag
+      adds quotation marks automatically. Use it for short inline quotes.
+    </p>
+
+    <blockquote>
+      The blockquote element is for long quotations that stand apart from the
+      main paragraph flow. Use it when the quote deserves its own block, not
+      when it sits inside a sentence.
+    </blockquote>
+
+    <hr />
+
+    <!-- ============================================================
+         SECTION 2 — LINKS
+    ============================================================ -->
+
+    <h2>2. Links</h2>
+
+    <p>
+      The a tag (anchor) creates a hyperlink. The href attribute is what makes
+      it navigate somewhere. Without href, it is just an inert placeholder.
+    </p>
+
+    <!-- HREF VALUE TYPES -->
+
+    <h3>Types of href Values</h3>
+
+    <p><strong>Absolute URL</strong> — full address including the scheme:</p>
+    <p><a href="https://www.google.com">https://www.google.com</a></p>
+
+    <p>
+      <strong>Root-relative URL</strong> — path from the root of the site,
+      starts with a forward slash:
+    </p>
+    <p><a href="/about">About Page</a></p>
+
+    <p>
+      <strong>Relative URL</strong> — path relative to the current file's
+      location:
+    </p>
+    <p><a href="../images/photo.jpg">Photo</a></p>
+
+    <p>
+      <strong>Fragment identifier</strong> — links to an element on the same
+      page using its id attribute:
+    </p>
+    <p><a href="#tables">Jump to the Tables section on this page</a></p>
+
+    <p><strong>Email link</strong> — opens the user's email client:</p>
+    <p><a href="mailto:hello@codecrew.lk">hello@codecrew.lk</a></p>
+
+    <p>
+      <strong>Phone link</strong> — on mobile, tapping this initiates a call:
+    </p>
+    <p><a href="tel:+94712345678">+94 71 234 5678</a></p>
+
+    <p>
+      <strong>Download link</strong> — prompts a file download instead of
+      navigating. The download attribute sets the suggested filename:
+    </p>
+    <p>
+      <a href="/files/notes.pdf" download="CodeCrew-HTML-Notes.pdf">
+        Download Class Notes
+      </a>
+    </p>
+
+    <!-- TARGET AND REL -->
+
+    <h3>target and rel</h3>
+
+    <p>
+      Use target="_blank" to open a link in a new tab. Always pair it with
+      rel="noopener noreferrer" for security and privacy. Without it, the opened
+      page can access the parent window via JavaScript:
+    </p>
+    <p>
+      <a
+        href="https://developer.mozilla.org"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        MDN Web Docs (opens in new tab)
+      </a>
+    </p>
+
+    <!-- ANCHOR TARGETS / FRAGMENT IDS -->
+
+    <h3>Linking to a Section on the Same Page</h3>
+
+    <p>
+      Any element with an id attribute becomes a linkable target. The id must be
+      unique in the document and must not contain spaces:
+    </p>
+    <p>
+      <a href="#section-lists">Jump to the Lists section</a>
+      &nbsp;|&nbsp;
+      <a href="#tables">Jump to the Tables section</a>
+    </p>
+
+    <!-- NAV -->
+
+    <h3>Navigation with nav</h3>
+
+    <p>
+      Wrap site navigation links in a nav element. It is a landmark element —
+      screen readers announce it as a navigation region. Use aria-label when
+      there are multiple nav elements on the page to tell them apart. Navigation
+      items are always a list — nav wraps a ul with li and a inside:
+    </p>
+
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="mailto:hello@codecrew.lk">Email Us</a></li>
+      </ul>
+    </nav>
+
+    <hr />
+
+    <!-- ============================================================
+         SECTION 3 — LISTS
+    ============================================================ -->
+
+    <h2 id="section-lists">3. Lists</h2>
+
+    <!-- UNORDERED LIST -->
+
+    <h3>Unordered List — ul</h3>
+
+    <p>Use when order does not matter. Each item is an li element.</p>
+
+    <ul>
+      <li>HTML — defines structure and meaning</li>
+      <li>CSS — defines visual appearance</li>
+      <li>JavaScript — defines behaviour and interactivity</li>
+    </ul>
+
+    <!-- ORDERED LIST -->
+
+    <h3>Ordered List — ol</h3>
+
+    <p>Use when order matters — steps, rankings, sequences.</p>
+
+    <ol>
+      <li>Browser sends an HTTP request to the server</li>
+      <li>Server responds with an HTML document</li>
+      <li>Browser parses the HTML and builds the DOM</li>
+      <li>Browser renders the page on screen</li>
+    </ol>
+
+    <h3>ol Attributes</h3>
+
+    <p>start — begin numbering from a custom number:</p>
+    <ol start="5">
+      <li>This item is numbered 5</li>
+      <li>This item is numbered 6</li>
+      <li>This item is numbered 7</li>
+    </ol>
+
+    <p>reversed — count downward:</p>
+    <ol reversed>
+      <li>Third place</li>
+      <li>Second place</li>
+      <li>First place</li>
+    </ol>
+
+    <p>type="a" — use lowercase letters:</p>
+    <ol type="a">
+      <li>Option a</li>
+      <li>Option b</li>
+      <li>Option c</li>
+    </ol>
+
+    <p>type="i" — use Roman numerals:</p>
+    <ol type="i">
+      <li>Roman numeral i</li>
+      <li>Roman numeral ii</li>
+      <li>Roman numeral iii</li>
+    </ol>
+
+    <p>value on li — override a specific item's number:</p>
+    <ol>
+      <li>Item one</li>
+      <li value="10">This item jumps to number 10</li>
+      <li>This item continues as 11</li>
+    </ol>
+
+    <!-- NESTED LIST -->
+
+    <h3>Nested List</h3>
+
+    <p>A nested list must go inside the parent li, not after it.</p>
+
+    <ul>
+      <li>
+        Frontend Development
+        <ul>
+          <li>HTML</li>
+          <li>CSS</li>
+          <li>
+            JavaScript
+            <ul>
+              <li>React</li>
+              <li>TypeScript</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        Backend Development
+        <ul>
+          <li>Node.js</li>
+          <li>NestJS</li>
+          <li>
+            Databases
+            <ul>
+              <li>PostgreSQL</li>
+              <li>MongoDB</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <!-- DESCRIPTION LIST -->
+
+    <h3>Description List — dl</h3>
+
+    <p>
+      Use for term-definition pairs — glossaries, metadata, key-value displays.
+      dt is the term. dd is the definition. One dt can have multiple dd values.
+      Multiple dt elements can share one dd.
+    </p>
+
+    <dl>
+      <dt>HTML</dt>
+      <dd>
+        HyperText Markup Language — defines the structure and meaning of web
+        content.
+      </dd>
+
+      <dt>CSS</dt>
+      <dd>
+        Cascading Style Sheets — controls the visual presentation of HTML
+        elements.
+      </dd>
+
+      <dt>DOM</dt>
+      <dd>
+        Document Object Model — the in-memory tree the browser builds from
+        parsed HTML.
+      </dd>
+
+      <dt>HTTP</dt>
+      <dt>HyperText Transfer Protocol</dt>
+      <dd>
+        The application-layer protocol used to transfer web documents. Both
+        terms above share this single definition.
+      </dd>
+    </dl>
+
+    <hr />
+
+    <!-- ============================================================
+         SECTION 4 — TABLES
+    ============================================================ -->
+
+    <h2 id="tables">4. Tables</h2>
+
+    <p>
+      Tables are for <strong>tabular data</strong> — information that has a
+      meaningful row and column relationship. Never use tables for page layout.
+    </p>
+
+    <!-- FULL TABLE STRUCTURE -->
+
+    <h3>Full Table Structure</h3>
+
+    <p>
+      A complete table uses caption for the title, thead for column headers,
+      tbody for data rows, and tfoot for summary or total rows. The scope
+      attribute on th tells screen readers which cells the header covers.
+    </p>
+
+    <table border="1">
+      <caption>
+        CodeCrew Batch Results — Module 1 Quiz
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Student</th>
+          <th scope="col">HTML</th>
+          <th scope="col">CSS</th>
+          <th scope="col">JavaScript</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Kavisha</th>
+          <td>92</td>
+          <td>87</td>
+          <td>78</td>
+        </tr>
+        <tr>
+          <th scope="row">Dinesh</th>
+          <td>85</td>
+          <td>91</td>
+          <td>88</td>
+        </tr>
+        <tr>
+          <th scope="row">Amara</th>
+          <td>78</td>
+          <td>74</td>
+          <td>95</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th scope="row">Average</th>
+          <td>85</td>
+          <td>84</td>
+          <td>87</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- COLSPAN AND ROWSPAN -->
+
+    <h3>colspan and rowspan</h3>
+
+    <p>
+      colspan stretches a cell across multiple columns. rowspan stretches a cell
+      down multiple rows. When a cell uses rowspan, the rows it covers must not
+      include that cell.
+    </p>
+
+    <table border="1">
+      <caption>
+        Class Schedule
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Day</th>
+          <th scope="colgroup" colspan="2">Morning</th>
+          <th scope="colgroup" colspan="2">Afternoon</th>
+        </tr>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Subject</th>
+          <th scope="col">Time</th>
+          <th scope="col">Subject</th>
+          <th scope="col">Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row" rowspan="2">Monday</th>
+          <td>HTML</td>
+          <td>09:00</td>
+          <td>CSS</td>
+          <td>14:00</td>
+        </tr>
+        <tr>
+          <!-- No th here — rowspan="2" on Monday covers this row -->
+          <td>Revision</td>
+          <td>10:30</td>
+          <td colspan="2">— Free Period —</td>
+        </tr>
+        <tr>
+          <th scope="row">Tuesday</th>
+          <td>JavaScript</td>
+          <td>09:00</td>
+          <td>Project Work</td>
+          <td>14:00</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- COLGROUP -->
+
+    <h3>colgroup and col</h3>
+
+    <p>
+      colgroup lets you apply attributes to entire columns without repeating
+      them on every cell. col is a void element — one col per column.
+    </p>
+
+    <table border="1">
+      <caption>
+        HTML Element Quick Reference
+      </caption>
+      <colgroup>
+        <col span="1" style="background-color: lightgray" />
+        <col span="1" />
+        <col span="1" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col">Element</th>
+          <th scope="col">Type</th>
+          <th scope="col">Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>h1 – h6</td>
+          <td>Block</td>
+          <td>Section headings — define document outline</td>
+        </tr>
+        <tr>
+          <td>p</td>
+          <td>Block</td>
+          <td>Paragraph of text</td>
+        </tr>
+        <tr>
+          <td>a</td>
+          <td>Inline</td>
+          <td>Hyperlink — navigates to href value</td>
+        </tr>
+        <tr>
+          <td>ul / ol</td>
+          <td>Block</td>
+          <td>Unordered / ordered list container</td>
+        </tr>
+        <tr>
+          <td>dl</td>
+          <td>Block</td>
+          <td>Description list — term and definition pairs</td>
+        </tr>
+        <tr>
+          <td>strong</td>
+          <td>Inline</td>
+          <td>Important or urgent content</td>
+        </tr>
+        <tr>
+          <td>em</td>
+          <td>Inline</td>
+          <td>Stressed emphasis — changes sentence meaning</td>
+        </tr>
+        <tr>
+          <td>mark</td>
+          <td>Inline</td>
+          <td>Highlighted / contextually relevant text</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr />
+
+    <p>
+      <small
+        >Built during class — CodeCrew HTML Module. All concepts from the
+        official curriculum.</small
+      >
+    </p>
+  </body>
+</html>
