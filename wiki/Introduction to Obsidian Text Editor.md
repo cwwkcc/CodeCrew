@@ -1336,24 +1336,7 @@ The power of Obsidian isn't in any single feature - it's in how all the features
 5. Keep going!
 
 Your future self will thank you for building this external brain. 🧠
+Remember: The best time to start was yesterday. The second-best time is now! 🚀
 
 **Happy noting!** ✨
 
----
-
-## Quick Start Checklist
-
-- [ ] Download and install Obsidian
-- [ ] Create your first vault
-- [ ] Write 3-5 notes
-- [ ] Link notes together using [[brackets]]
-- [ ] View your graph
-- [ ] Set up a daily note template
-- [ ] Enable 2-3 core plugins you need
-- [ ] Explore 1-2 community plugins
-- [ ] Set up mobile sync (if needed)
-- [ ] Create a backup system
-- [ ] Join Obsidian community (forum/Discord)
-- [ ] Keep learning and building your second brain!
-
-Remember: The best time to start was yesterday. The second-best time is now! 🚀
