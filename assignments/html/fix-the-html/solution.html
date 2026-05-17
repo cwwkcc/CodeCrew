@@ -1,0 +1,223 @@
+<!--
+  CodeCrew — Assignment 2 Solution
+  File    : profile-fixed.html
+  Module  : Links, Lists, Tables
+  Notes   : All 15 errors fixed. Bonus errors A and B also fixed.
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeCrew Student Hub</title>
+  </head>
+  <body>
+    <h1>CodeCrew Student Hub</h1>
+    <h2>Your guide to everything HTML</h2>
+
+    <!-- FIX 5 & 6: nav element with ul > li > a structure -->
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a href="#resources">Useful Resources</a></li>
+        <li><a href="#setup">How to Set Up VS Code</a></li>
+        <li><a href="#schedule">Class Schedule</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <hr />
+
+    <h2 id="resources">Useful Resources</h2>
+    <p>Check out these links to support your learning:</p>
+
+    <!-- FIX 7: added rel="noopener noreferrer" to both external links -->
+    <p>
+      <a
+        href="https://developer.mozilla.org"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        MDN Web Docs
+      </a>
+    </p>
+    <p>
+      <a
+        href="https://www.w3schools.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        W3Schools
+      </a>
+    </p>
+
+    <!-- FIX 8: added a valid href -->
+    <p><a href="https://validator.w3.org">HTML Validator</a></p>
+
+    <!-- FIX 9: removed target="_blank" from mailto link -->
+    <p><a href="mailto:hello@codecrew.lk">Email Us</a></p>
+
+    <!-- FIX 10: added download attribute with suggested filename -->
+    <p>
+      <a href="/notes.pdf" download="CodeCrew-Class-Notes.pdf">
+        Download Class Notes
+      </a>
+    </p>
+
+    <hr />
+
+    <h2 id="setup">How to Set Up VS Code</h2>
+    <p>Follow these steps carefully to set up your coding environment.</p>
+
+    <!-- FIX 11: changed ul to ol — these are ordered steps -->
+    <ol>
+      <li>Go to code.visualstudio.com</li>
+      <li>Click the Download button</li>
+      <li>Run the installer</li>
+      <li>Open VS Code after installation</li>
+      <li>Install the Live Server extension</li>
+    </ol>
+
+    <hr />
+
+    <h2 id="stack">Technologies We Teach</h2>
+    <p>Here is what you will learn at CodeCrew:</p>
+
+    <!-- FIX 12: changed ol to ul — these items have no meaningful order -->
+    <ul>
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>JavaScript</li>
+      <li>React</li>
+      <li>Node.js</li>
+    </ul>
+
+    <hr />
+
+    <h2 id="frontend-backend">Frontend vs Backend</h2>
+    <p>The web is divided into two sides:</p>
+
+    <!-- FIX 13: moved nested ul inside the parent li, not after it -->
+    <ul>
+      <li>
+        Frontend
+        <ul>
+          <li>HTML</li>
+          <li>CSS</li>
+          <li>JavaScript</li>
+        </ul>
+      </li>
+      <li>
+        Backend
+        <ul>
+          <li>Node.js</li>
+          <li>Databases</li>
+        </ul>
+      </li>
+    </ul>
+
+    <hr />
+
+    <h2 id="glossary">Key Terms</h2>
+    <p>Important words every developer must know:</p>
+
+    <!-- FIX 14: replaced ul with dl, dt, dd for term-definition pairs -->
+    <dl>
+      <dt>HTML</dt>
+      <dd>
+        HyperText Markup Language — the standard language for structuring web
+        content.
+      </dd>
+
+      <dt>CSS</dt>
+      <dd>
+        Cascading Style Sheets — controls the visual presentation of HTML
+        elements.
+      </dd>
+
+      <dt>DOM</dt>
+      <dd>
+        Document Object Model — the in-memory tree the browser builds from
+        parsed HTML.
+      </dd>
+
+      <dt>HTTP</dt>
+      <dd>The application-layer protocol used to transfer web documents.</dd>
+    </dl>
+
+    <hr />
+
+    <!-- FIX 15: added caption, thead, tbody, tfoot, th with scope -->
+    <h2 id="schedule">Class Schedule</h2>
+    <table border="1">
+      <caption>
+        CodeCrew Weekly Class Schedule
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Day</th>
+          <th scope="col">Subject</th>
+          <th scope="col">Time</th>
+          <th scope="col">Room</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Monday</th>
+          <td>HTML</td>
+          <td>09:00</td>
+          <td>Lab 1</td>
+        </tr>
+        <tr>
+          <th scope="row">Tuesday</th>
+          <td>CSS</td>
+          <td>09:00</td>
+          <td>Lab 1</td>
+        </tr>
+        <tr>
+          <th scope="row">Wednesday</th>
+          <td>JavaScript</td>
+          <td>10:00</td>
+          <td>Lab 2</td>
+        </tr>
+        <tr>
+          <th scope="row">Thursday</th>
+          <td>React</td>
+          <td>10:00</td>
+          <td>Lab 2</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th scope="row" colspan="4">4 sessions per week</th>
+        </tr>
+      </tfoot>
+    </table>
+
+    <hr />
+
+    <h2 id="contact">Contact</h2>
+
+    <!-- FIX BONUS A: b → strong, i → em -->
+    <p>
+      <strong>
+        Important: The next class is on Friday 18 April at 9AM. Do not be late.
+      </strong>
+    </p>
+
+    <!-- FIX BONUS B: removed br br between paragraphs -->
+    <p>
+      Have questions? <em>We are always happy to help.</em> Reach out any time.
+    </p>
+
+    <p>
+      You can also find us on
+      <a
+        href="https://github.com/codecrew"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub </a
+      >.
+    </p>
+  </body>
+</html>
