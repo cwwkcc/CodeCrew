@@ -1,4 +1,6 @@
-A transition smoothly animates a property from one value to another when it changes (usually on hover or focus). It is the simplest form of CSS animation.
+A transition smoothly animates a CSS property from one value to another when it changes — on hover, focus, or a class toggle. It is the right tool when you have exactly two states: before and after.
+
+---
 
 ## Basic Syntax
 
@@ -19,86 +21,233 @@ selector {
 }
 ```
 
+Declare the `transition` on the element in its **default state**, not inside `:hover`. This ensures both the forward transition (default → hover) and the reverse (hover → default) are animated.
+
 ---
 
-## Properties
+## Individual Transition Properties
 
 ```css
-/* Single property */
-transition: color 0.2s ease;
-
-/* Multiple properties */
-transition: color 0.2s ease, transform 0.3s ease-out;
-
-/* All properties (use carefully — can be expensive) */
-transition: all 0.3s ease;
+.card {
+  transition-property:        transform, box-shadow;
+  transition-duration:        0.2s, 0.3s;
+  transition-timing-function: ease, ease-out;
+  transition-delay:           0s, 0.05s;
+}
 ```
 
-### Duration
-
-How long the transition takes. Always include a unit:
+The shorthand for multiple properties:
 
 ```css
-transition: color 300ms ease;  /* milliseconds */
-transition: color 0.3s ease;   /* seconds */
+.card {
+  transition:
+    transform   0.2s ease,
+    box-shadow  0.3s ease-out 0.05s;  /* property  duration  timing  delay */
+}
 ```
 
-### Timing Function
+### `transition-property`
 
-Controls the speed curve of the transition:
+```css
+transition-property: color;                     /* single property */
+transition-property: color, transform, opacity; /* multiple */
+transition-property: all;                       /* everything — convenient but use carefully */
+```
+
+### `transition-duration`
+
+```css
+transition-duration: 300ms;   /* milliseconds */
+transition-duration: 0.3s;    /* seconds — same result */
+```
+
+Typical ranges:
+
+- Hover/focus micro-interactions: `100ms` – `200ms`
+- UI state changes (open drawer, expand card): `200ms` – `400ms`
+- Decorative motion: `400ms` – `600ms`
+
+### `transition-timing-function`
+
+Controls the speed curve:
 
 |Value|Behaviour|
 |---|---|
 |`ease`|Slow start, fast middle, slow end (default)|
-|`linear`|Constant speed|
-|`ease-in`|Slow start, fast end|
-|`ease-out`|Fast start, slow end|
-|`ease-in-out`|Slow start and end|
+|`linear`|Constant speed throughout|
+|`ease-in`|Slow start, fast finish|
+|`ease-out`|Fast start, slow finish — feels natural for things leaving the screen|
+|`ease-in-out`|Slow at both ends|
 |`cubic-bezier(x1,y1,x2,y2)`|Custom curve|
-
-### Delay
-
-Wait before the transition starts:
+|`steps(n)`|Discrete jumps — useful for sprite animations|
 
 ```css
-transition: color 0.3s ease 0.1s;  /* 0.1s delay */
+/* Custom springy curve */
+transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+```
+
+### `transition-delay`
+
+Wait before the transition begins:
+
+```css
+transition: color 0.3s ease 0.1s;   /* wait 0.1s, then animate over 0.3s */
+```
+
+Useful for staggering multiple elements:
+
+```css
+.menu li:nth-child(1) { transition-delay: 0ms; }
+.menu li:nth-child(2) { transition-delay: 50ms; }
+.menu li:nth-child(3) { transition-delay: 100ms; }
+.menu li:nth-child(4) { transition-delay: 150ms; }
 ```
 
 ---
 
-## What Can Be Transitioned
+## What Can and Cannot Be Transitioned
 
-Properties with numeric or colour values can transition smoothly: `color`, `background-color`, `opacity`, `transform`, `width`, `height`, `padding`, `margin`, `border-radius`, `box-shadow`, `font-size`
+### Can Transition
 
-Properties that cannot be transitioned smoothly (they snap): `display`, `visibility` (visibility actually does transition — it fades at the end), `font-family`
+```css
+color, background-color, border-color
+opacity
+transform
+width, height, max-width, max-height
+padding, margin
+border-width, border-radius
+box-shadow, text-shadow
+font-size, line-height, letter-spacing
+```
+
+### Cannot Transition Smoothly (they snap)
+
+```css
+display           /* none/block snaps instantly */
+font-family       /* snaps */
+background-image  /* no interpolation between two images */
+```
+
+### `visibility` — Special Case
+
+`visibility` transitions but snaps at the boundary. Combine it with `opacity` for a fade that also removes the element from accessibility:
+
+```css
+.tooltip {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.tooltip.visible {
+  opacity: 1;
+  visibility: visible;
+}
+```
 
 ---
 
 ## Common Patterns
 
 ```css
-/* Smooth hover colour change */
+/* Smooth link colour */
 a {
-  color: navy;
-  transition: color 0.2s ease;
+  color: royalblue;
+  transition: color 0.15s ease;
 }
-a:hover { color: royalblue; }
+a:hover { color: navy; }
 
-/* Scale on hover */
+
+/* Card lift on hover */
 .card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Smooth show/hide with opacity */
-.tooltip {
-  opacity: 0;
-  transition: opacity 0.2s ease;
+
+/* Button press */
+.btn {
+  transition: transform 0.1s ease, background 0.2s ease;
 }
-.tooltip.visible { opacity: 1; }
+.btn:hover  { background: royalblue; }
+.btn:active { transform: scale(0.97); }
+
+
+/* Input focus ring */
+input {
+  border: 1px solid #ccc;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input:focus {
+  border-color: royalblue;
+  box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.25);
+  outline: none;
+}
+
+
+/* Hamburger → close icon */
+.bar {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.open .bar-middle  { opacity: 0; }
+.open .bar-top     { transform: rotate(45deg)  translate(5px, 5px); }
+.open .bar-bottom  { transform: rotate(-45deg) translate(5px, -5px); }
 ```
 
 ---
+
+## `will-change` — Performance Hint
+
+Tells the browser a property is about to animate so it can prepare in advance:
+
+```css
+.card {
+  will-change: transform;
+}
+```
+
+Use sparingly — it consumes memory. Only add it when you have a real performance issue, not as a default:
+
+```css
+/* Good — only on elements about to animate */
+.modal-entering { will-change: opacity, transform; }
+
+/* Bad — applied globally */
+* { will-change: transform; }   /* wastes memory */
+```
+
+---
+
+## Accessibility
+
+Always respect the user's motion preference:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration:  0.01ms !important;
+  }
+}
+```
+
+Users who enable "Reduce Motion" in their OS have motion sensitivity, vestibular disorders, or epilepsy. Never skip this rule.
+
+---
+
+## Transitions vs Animations — When to Use Which
+
+||Transitions|Animations|
+|---|---|---|
+|Trigger|Requires a state change (hover, focus, class toggle)|Run automatically|
+|Steps|Two states only: A → B|Unlimited keyframes|
+|Direction|Reverses automatically|Requires `animation-direction`|
+|Use for|Hover effects, UI state changes|Looping, multi-step motion, entrance/exit sequences|
+
+---
+

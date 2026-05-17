@@ -1,14 +1,37 @@
-HTML uses `<` and `>` as tag delimiters and `&` as entity start. To display these as literal characters, use character references.
+HTML uses `<`, `>`, and `&` as syntax characters. To display them as literal text, you use character references. With UTF-8 encoding — which every modern page uses — most other characters can be typed directly without any escaping.
+
+---
+
+## The Three Characters You Must Always Escape
+
+```html
+<!-- & must become &amp; in text content AND in attribute values -->
+<p>Use ?a=1&amp;b=2 in query strings</p>
+<a href="/search?a=1&amp;b=2">Search</a>
+
+<!-- < and > must be escaped when not used as tag delimiters -->
+<p>If x &lt; 10 and y &gt; 5, then proceed.</p>
+
+<!-- " must be escaped inside double-quoted attribute values -->
+<input value="She said &quot;hello&quot;">
+
+<!-- ' must be escaped inside single-quoted attribute values -->
+<input value='It&apos;s working'>
+```
+
+Any other character — if your file is saved as UTF-8 — can be written directly.
+
+---
 
 ## Named Character References
 
-|Character|Entity|Notes|
+|Display|Entity|Description|
 |---|---|---|
-|`<`|`&lt;`|Less-than|
-|`>`|`&gt;`|Greater-than|
-|`&`|`&amp;`|Ampersand — must escape in text and attribute values|
-|`"`|`&quot;`|Double quote — escape inside `"` attribute values|
-|`'`|`&apos;`|Single quote — escape inside `'` attribute values|
+|`<`|`&lt;`|Less-than sign|
+|`>`|`&gt;`|Greater-than sign|
+|`&`|`&amp;`|Ampersand|
+|`"`|`&quot;`|Double quote|
+|`'`|`&apos;`|Apostrophe|
 ||`&nbsp;`|Non-breaking space|
 |`©`|`&copy;`|Copyright|
 |`®`|`&reg;`|Registered trademark|
@@ -18,33 +41,117 @@ HTML uses `<` and `>` as tag delimiters and `&` as entity start. To display thes
 |`…`|`&hellip;`|Ellipsis|
 |`→`|`&rarr;`|Right arrow|
 |`←`|`&larr;`|Left arrow|
+|`↑`|`&uarr;`|Up arrow|
+|`↓`|`&darr;`|Down arrow|
 |`×`|`&times;`|Multiplication sign|
 |`÷`|`&divide;`|Division sign|
 |`±`|`&plusmn;`|Plus-minus|
-|`°`|`&deg;`|Degree|
+|`°`|`&deg;`|Degree sign|
 |`½`|`&frac12;`|One half|
+|`¼`|`&frac14;`|One quarter|
+|`¾`|`&frac34;`|Three quarters|
+|`€`|`&euro;`|Euro sign|
+|`£`|`&pound;`|Pound sign|
+|`¥`|`&yen;`|Yen sign|
+|`•`|`&bull;`|Bullet|
+|`"`|`&ldquo;`|Left double quote|
+|`"`|`&rdquo;`|Right double quote|
+|`'`|`&lsquo;`|Left single quote|
+|`'`|`&rsquo;`|Right single quote|
+|`∞`|`&infin;`|Infinity|
+|`≠`|`&ne;`|Not equal to|
+|`≤`|`&le;`|Less than or equal to|
+|`≥`|`&ge;`|Greater than or equal to|
+|`π`|`&pi;`|Greek pi|
+|`√`|`&radic;`|Square root|
+
+---
 
 ## Numeric Character References
 
-Any Unicode code point can be referenced numerically:
+Any Unicode character can be referenced by its code point — decimal or hexadecimal:
 
 ```html
-&#169;     <!-- © — decimal -->
-&#x00A9;   <!-- © — hexadecimal -->
+&#169;      <!-- © — decimal -->
+&#x00A9;    <!-- © — hexadecimal (U+00A9) -->
+
+&#8364;     <!-- € — decimal -->
+&#x20AC;    <!-- € — hexadecimal -->
+
+&#128512;   <!-- 😀 — emoji, decimal -->
+&#x1F600;   <!-- 😀 — emoji, hexadecimal -->
 ```
 
-## When to Use Entities vs. Literal Characters
+The hex form is more common since Unicode documentation uses hex (U+00A9, U+20AC, etc.).
 
-With UTF-8 encoding (which you should always use), you can type most characters directly. The only characters you _must_ escape are `<`, `>`, and `&` in text content, and `"` or `'` inside attribute values.
+---
+
+## `&nbsp;` — Non-Breaking Space
+
+A regular space is a line-break opportunity — the browser may wrap the line there. `&nbsp;` prevents the break:
 
 ```html
-<!-- Must escape -->
-<p>5 &lt; 10 and 10 &gt; 5</p>
-<p>Use &amp; between query params: ?a=1&amp;b=2</p>
+<!-- Keeps "10 km" on one line — never broken across lines -->
+<p>The distance is 10&nbsp;km.</p>
 
-<!-- Can write directly (with UTF-8) -->
-<p>Temperature: 37°C — well above normal.</p>
-<p>Copyright © 2025 CodeCrew</p>
+<!-- Keeps a title together -->
+<p>Dr.&nbsp;Perera will see you now.</p>
+
+<!-- Unit values -->
+<p>Temperature: 37.5&nbsp;°C</p>
+```
+
+Do not use `&nbsp;` to add spacing or indentation for visual purposes — that is CSS's job.
+
+---
+
+## When You Do and Don't Need to Escape
+
+With `<meta charset="UTF-8">` in `<head>` (which every page should have), most characters can be typed directly:
+
+```html
+<!-- Must escape — these conflict with HTML syntax -->
+<p>if (a &lt; b &amp;&amp; c &gt; d)</p>
+
+<!-- Can type directly — no syntax conflict -->
+<p>Temperature: 32°C</p>
+<p>Copyright © 2025 Paideon</p>
+<p>Price: Rs. 1,500.00</p>
+<p>→ Learn more</p>
+```
+
+Inside attribute values, be more careful:
+
+```html
+<!-- Double-quoted attribute — escape " inside it -->
+<meta name="description" content="She said &quot;hello&quot;.">
+
+<!-- URL attribute — escape & inside it -->
+<a href="/search?lang=si&amp;q=hello">Search</a>
 ```
 
 ---
+
+## Showing HTML Code on a Page
+
+When you want to display HTML tags as visible text (like in a tutorial), escape the angle brackets:
+
+```html
+<pre><code>
+&lt;div class="container"&gt;
+  &lt;p&gt;Hello World&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+```
+
+The browser renders this as:
+
+```
+<div class="container">
+  <p>Hello World</p>
+</div>
+```
+
+---
+
+_Next: [The `<head>` Element and Metadata](https://claude.ai/chat/11%20-%20The%20head%20Element%20and%20Metadata.md)_
