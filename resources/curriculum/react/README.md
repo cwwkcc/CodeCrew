@@ -70,17 +70,3 @@ ADVANCED (20–24)
 
 ---
 
-## Relation to Project Nexus
-
-Every file in this curriculum has a direct counterpart in the codebase:
-
-- Files `00–07` → every component in `apps/web/src/components/`
-- Files `08–13` → data fetching, auth state, scroll animations
-- File `14` → Server Actions for the admissions form, optimistic updates
-- File `15` → Next.js App Router (which extends React Router concepts)
-- File `16` → tRPC + TanStack Query for all data fetching
-- File `17` → the A/L admissions form, contact forms
-- File `18` → global UI state (sidebar, modals, theme)
-- File `19` → hero animations, page transitions
-- File `21` → every component (the whole codebase is TypeScript)
-- File `24` → shadcn/ui components used throughout
