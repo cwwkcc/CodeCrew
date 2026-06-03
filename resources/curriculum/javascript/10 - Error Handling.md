@@ -703,4 +703,4 @@ Result pattern:
 
 ---
 
-_Next: [11 — JavaScript Design Patterns](./11%20-%20JavaScript%20Design%20Patterns.md)_
+_Next: [11 — JavaScript Design Patterns](11%20-%20JavaScript%20design%20Patterns.md)_
