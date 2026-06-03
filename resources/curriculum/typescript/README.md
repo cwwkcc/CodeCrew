@@ -1,8 +1,8 @@
 # TypeScript Curriculum
 
-A structured, progressive curriculum for learning TypeScript from type annotations through advanced type manipulation, decorators, error handling, and the full Project Nexus stack integration. Read files in order — each builds on the previous.
+A structured, progressive curriculum for learning TypeScript from type annotations through advanced type manipulation, decorators, error handling, and the full stack integration. Read files in order — each builds on the previous.
 
-> **Location:** `resources/curriculum/typescript/`
+> **Location:** `resources/curriculum/typescript/`
 
 ---
 
@@ -36,5 +36,11 @@ A structured, progressive curriculum for learning TypeScript from type annotatio
 |06|Decorators — Class, Method, Property, Parameter Decorators, NestJS Internals|`06 - Decorators.md`|
 |07|Error Handling Patterns — Custom Errors, Result Pattern, Typed Catch|`07 - Error Handling Patterns.md`|
 |08|TypeScript with Zod, Prisma & tRPC — End-to-End Type Safety|`08 - TypeScript with Zod, Prisma & tRPC.md`|
+
+### Part 5 — TypeScript with React
+
+|#|Topic|File|
+|---|---|---|
+|09|TypeScript with React — Props, Hooks, Events, Context, forwardRef|`09 - TypeScript with React.md`|
 
 ---

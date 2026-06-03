@@ -31,21 +31,21 @@ A structured, progressive curriculum for learning HTML from first principles thr
 |#|Topic|File|
 |---|---|---|
 |08|Semantic HTML5 Elements|`08 - Semantic HTML5 Elements.md`|
-|09|Embedded Content — Audio, Video, iframe|`09 - Embedded Content.md`|
+|09|Embedded Content — Audio, Video, iframe, Picture|`09 - Embedded Content {Audio, Video, iframe}.md`|
 |10|HTML Entities and Character References|`10 - HTML Entities and Character References.md`|
 
 ### Part 4 — The Head & Document Metadata
 
 |#|Topic|File|
 |---|---|---|
-|11|The `<head>` — Meta Tags, Title, Link, and Scripts|`11 - The Head Element and Metadata.md`|
+|11|The `<head>` — Meta Tags, Open Graph, Favicons, Resource Hints, Script Loading|`11 - The head Element and Metadata.md`|
 
 ### Part 5 — Quality & Craft
 
 |#|Topic|File|
 |---|---|---|
 |12|Accessibility and ARIA|`12 - Accessibility and ARIA.md`|
-|13|Global Attributes, Data Attributes, and the DOM|`13 - Global Attributes and Data Attributes.md`|
+|13|Global Attributes and Data Attributes|`13 - Global Attributes and Data Attributes.md`|
 |14|Validation, Best Practices, and the Living Standard|`14 - Validation and Best Practices.md`|
 
 ---

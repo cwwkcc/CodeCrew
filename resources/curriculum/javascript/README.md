@@ -10,57 +10,46 @@ None. This is the starting point for the web development track.
 
 ---
 
-## What This Curriculum Covers
+## Module Index
 
-```
-00 - Foundations
-     Variables, types, operators, control flow, functions, scope.
-     The ground floor. Everything else builds on this.
+### Part 1 — Core Language
 
-01 - Loops, Data Structures & Objects
-     Arrays, objects, Map, Set, for...of, destructuring, spread.
-     The containers JavaScript uses to hold and move data.
+|#|Topic|File|
+|---|---|---|
+|00|Foundations — Variables, Types, Operators, Scope, Hoisting|`00 - Foundations.md`|
+|01|Loops, Data Structures & Objects — Arrays, Map, Set, Destructuring|`01 - Loops, Data Structures & Objects.md`|
+|02|Functions, Scope, JSON, Dates & Timers|`02 - Functions, Scope, JSON, Dates & Timers.md`|
+|03|Modern JavaScript (ES6+) — Arrow Functions, Modules, Generators, Symbols|`03 - Modern JavaScript (ES6+).md`|
 
-02 - Functions, Scope, JSON, Dates & Timers
-     Closures (first look), higher-order functions, callbacks,
-     JSON serialisation, working with dates, setTimeout/setInterval.
+### Part 2 — The Browser
 
-03 - Modern JavaScript (ES6+)
-     Arrow functions, template literals, modules, optional chaining,
-     nullish coalescing, Promises (first look), and the features
-     that make modern JS readable and safe.
+|#|Topic|File|
+|---|---|---|
+|04|DOM Manipulation & Events — Querying, Event Bubbling, Delegation, Forms|`04 - DOM Manipulation & Events.md`|
+|13|Browser APIs — Storage, History, URL, Clipboard, Workers, Observers|`13 - Browser APIs.md`|
 
-04 - DOM Manipulation & Events
-     How JavaScript controls the browser. querySelector, event listeners,
-     the event object, bubbling/capturing, form handling.
+### Part 3 — Object Model
 
-05 - Object-Oriented Programming
-     Classes, constructors, inheritance, static methods, getters/setters.
-     How to model real-world systems in code.
+|#|Topic|File|
+|---|---|---|
+|05|Object-Oriented Programming — Classes, Inheritance, Private Fields|`05 - Object-Oriented Programming.md`|
+|09|Prototypes & The Prototype Chain — How Classes Work Under the Hood|`09 - Prototypes & The Prototype Chain.md`|
 
-06 - Asynchronous JavaScript & APIs
-     The event loop, Promises in depth, async/await, fetch, error
-     handling in async code, Promise.all and friends.
+### Part 4 — Async & Runtime
 
-07 - The JavaScript Engine, Runtime & Memory
-     V8, the call stack, the heap, garbage collection, memory leaks,
-     the event loop in full detail, microtasks vs macrotasks.
+|#|Topic|File|
+|---|---|---|
+|06|Asynchronous JavaScript & APIs — Promises, async/await, fetch, Patterns|`06 - Asynchronous JavaScript & APIs.md`|
+|07|The JavaScript Engine, Runtime & Memory — V8, Call Stack, Heap, Event Loop|`07 - The JavaScript Engine, Runtime & Memory.md`|
 
-08 - Closures In Depth
-     What closures really are, the classic loop bug, data privacy,
-     memoisation, partial application, stale closures in React.
+### Part 5 — Deep Dives
 
-09 - Prototypes & the Prototype Chain
-     What classes compile to, __proto__ vs .prototype, Object.create,
-     how inheritance actually works at the language level.
-
-10 - Error Handling
-     try/catch/finally, custom error classes, async error propagation,
-     the Result pattern, global error handlers.
-
-11 - JavaScript Design Patterns
-     Module, Singleton, Observer, Factory, Strategy, Middleware,
-     Proxy, Command — and how they appear in React.
-```
+|#|Topic|File|
+|---|---|---|
+|08|Closures In Depth — Lexical Scope, Patterns, React Stale Closures|`08 - Closures In Depth.md`|
+|10|Error Handling — Custom Errors, Result Pattern, Async Errors|`10 - Error Handling.md`|
+|11|JavaScript Design Patterns — Module, Observer, Factory, Strategy, Middleware|`11 - JavaScript Design Patterns.md`|
+|12|Regular Expressions — Syntax, Groups, Lookahead, String Methods, Patterns|`12 - Regular Expressions.md`|
+|14|Modules In Depth — ESM Phases, Live Bindings, Dynamic Import, Tree Shaking|`14 - Modules In Depth.md`|
 
 ---

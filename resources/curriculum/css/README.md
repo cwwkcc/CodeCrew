@@ -20,7 +20,7 @@ A structured, progressive curriculum for learning CSS from first principles thro
 
 |#|Topic|File|
 |---|---|---|
-|03|Colors and Backgrounds|`03 - Colors and Backgrounds.md`|
+|03|Colors and Backgrounds — All Formats, Gradients, Shadows|`03 - Colors and Backgrounds.md`|
 |04|Typography|`04 - Typography.md`|
 |05|Units and Values|`05 - Units and Values.md`|
 
@@ -36,21 +36,21 @@ A structured, progressive curriculum for learning CSS from first principles thro
 
 |#|Topic|File|
 |---|---|---|
-|09|Responsive Design and Media Queries|`09 - Responsive Design and Media Queries.md`|
+|09|Responsive Design and Media Queries — Mobile-First, Container Queries, clamp()|`09 - Responsive Design and Media Queries.md`|
 
 ### Part 5 — Motion and Effects
 
 |#|Topic|File|
 |---|---|---|
-|10|Transitions|`10 - Transitions.md`|
-|11|Animations|`11 - Animations.md`|
-|12|Transforms|`12 - Transforms.md`|
+|10|Transitions — Timing Functions, will-change, Accessibility|`10 - Transitions.md`|
+|11|Animations — @keyframes, fill-mode, Staggering, Performance|`11 - Animations.md`|
+|12|Transforms — 2D, 3D, Card Flip, transform-origin|`12 - Transforms.md`|
 
 ### Part 6 — Advanced CSS
 
 |#|Topic|File|
 |---|---|---|
-|13|Custom Properties (CSS Variables)|`13 - Custom Properties.md`|
-|14|Pseudo-classes and Pseudo-elements|`14 - Pseudo-classes and Pseudo-elements.md`|
+|13|Custom Properties (CSS Variables) — Scope, Dark Mode, @property, calc()|`13 - Custom Properties (CSS Variables).md`|
+|14|Pseudo-classes and Pseudo-elements — :has(), :is(), :where(), ::before, ::after|`14 - Pseudo-classes and Pseudo-elements.md`|
 
 ---

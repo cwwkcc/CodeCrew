@@ -31,7 +31,7 @@ ECOSYSTEM (15–19)
   The libraries that complete a real application.
   Router, TanStack Query, React Hook Form + Zod, Zustand, Framer Motion.
 
-ADVANCED (20–24)
+ADVANCED (20–27)
   Performance, TypeScript integration, patterns, testing, shadcn/ui.
   These files assume you've built something with React already.
 ```
@@ -66,6 +66,9 @@ ADVANCED (20–24)
 22 - Design Patterns in React
 23 - Testing React Components
 24 - Component Library (shadcn & Radix)
+25 - Suspense & Error Boundaries
+26 - Useimperativehandle & Forwardref
+27 - React Router vs Next.js App Router
 ```
 
 ---
