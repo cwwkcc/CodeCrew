@@ -22,24 +22,27 @@ This assignment requires you to use:
 ### Create a program that collects the following information from the user:
 
 1. **Personal Information**
-    
-    - Full name (`string`)
-    - Age (`short`) - Students are typically young, short is enough
-    - Gender (single character: M/F/O) (`char`)
-    - Student ID number (`long`) - Large numbers need long
+
+   - Full name (`string`)
+   - Age (`short`) - Students are typically young, short is enough
+   - Gender (single character: M/F/O) (`char`)
+   - Student ID number (`long`) - Large numbers need long
+
 2. **Academic Information**
-    
-    - Year of enrollment (e.g., 2024) (`int`)
-    - Total days attended this semester (`int`)
-    - Grade Point Average / GPA (e.g., 3.85) (`float`)
+
+   - Year of enrollment (e.g., 2024) (`int`)
+   - Total days attended this semester (`int`)
+   - Grade Point Average / GPA (e.g., 3.85) (`float`)
+
 3. **Physical Measurements**
-    
-    - Height in meters (e.g., 1.75) (`double`) - More precision needed
-    - Weight in kilograms (e.g., 65.5) (`float`)
+
+   - Height in meters (e.g., 1.75) (`double`) - More precision needed
+   - Weight in kilograms (e.g., 65.5) (`float`)
+
 4. **Contact Information**
-    
-    - Phone number (as a number, no dashes) (`long long`) - Phone numbers are very long
-    - Postal/ZIP code (`int`)
+
+   - Phone number (as a number, no dashes) (`long long`) - Phone numbers are very long
+   - Postal/ZIP code (`int`)
 
 ---
 
@@ -123,9 +126,9 @@ Thank you for using the Student Information System!
 #include <string>
 
 int main() {
-    
+
     // Your code goes here
-    
+
     return 0;
 }
 ```
@@ -238,7 +241,7 @@ float gpa;  // RIGHT! Can store decimal values
 
 ---
 
-❌ Forgetting to include `<string>` 
+❌ Forgetting to include `<string>`
 
 ```
 cpp
@@ -316,23 +319,22 @@ std::cin >> age;  // Then use
 ## Submission Guidelines
 
 1. **File Name**: Save your program as `student_info.cpp`
-    
+
 2. **Comments**: Add a comment at the top with:
-    
-    ```cpp
-    // Student Name: [Your Name]
-    // Assignment: Student Information System
-    // Date: [Today's Date]
-    ```
-    
+
+   ```cpp
+   // Student Name: [Your Name]
+   // Assignment: Student Information System
+   // Date: [Today's Date]
+   ```
+
 3. **Test**: Run your program at least twice with different data to ensure it works
-    
+
 4. **Submit**: Submit your `.cpp` file
-    
 
 ---
 
-## Bonus Challenge 
+## Bonus Challenge
 
 Make your output look even nicer by:
 
@@ -374,7 +376,6 @@ By completing this assignment, you will demonstrate:
 - ✓ Knowledge of output operations (`cout`)
 - ✓ Ability to create a complete, working C++ program
 - ✓ Understanding of program structure and organization
-
 
 ---
 
