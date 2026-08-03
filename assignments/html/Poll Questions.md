@@ -23,12 +23,13 @@
 
 **Answer: C**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|You absolutely can put style attributes on any HTML element. That's not the problem here.|
-|B|✗|This is the exact mindset HTML is fighting against. "Looks right" and "is right" are two different things. Screen readers, search engines, and the document outline still see an h1 — not a normal paragraph.|
-|C|✓|The style changes the visual output only. The DOM still holds an h1. Screen readers will announce it as the page's main heading. Search engines will weight it as the top-level topic. CSS is a costume — it doesn't change what the element _is_.|
-|D|✗|font-weight: normal is a completely valid CSS property. The browser renders it fine — that's actually the whole point of why this mistake is dangerous. It _looks_ fine.|
+| Option | Verdict | Why                                                                                                                                                                                                                                                |
+| ------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | You absolutely can put style attributes on any HTML element. That's not the problem here.                                                                                                                                                          |
+| B      | ✗       | This is the exact mindset HTML is fighting against. "Looks right" and "is right" are two different things. Screen readers, search engines, and the document outline still see an h1 — not a normal paragraph.                                      |
+| C      | ✓       | The style changes the visual output only. The DOM still holds an h1. Screen readers will announce it as the page's main heading. Search engines will weight it as the top-level topic. CSS is a costume — it doesn't change what the element _is_. |
+| D      | ✗       | font-weight: normal is a completely valid CSS property. The browser renders it fine — that's actually the whole point of why this mistake is dangerous. It _looks_ fine.                                                                           |
+|        |         |                                                                                                                                                                                                                                                    |
 
 ---
 
@@ -51,12 +52,12 @@
 
 **Answer: C**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|You can technically nest an anchor inside a p tag. The browser won't break. But that doesn't make it correct.|
-|B|✗|Bare anchor tags with no structure are even worse — no grouping, no meaning, just floating links.|
-|C|✓|Navigation is a list of links. Semantically, `<nav><ul><li><a>` is the correct structure. `<nav>` tells the browser this is a navigation landmark. `<ul>` says it's a list of items. Screen readers announce it as navigation and let users skip past it. Three `<p>` tags communicate none of that.|
-|D|✗|It renders. It is not correct. The browser is forgiving — it will display almost anything. That forgiveness is not permission.|
+| Option | Verdict | Why                                                                                                                                                                                                                                                                                                  |
+| ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | You can technically nest an anchor inside a p tag. The browser won't break. But that doesn't make it correct.                                                                                                                                                                                        |
+| B      | ✗       | Bare anchor tags with no structure are even worse — no grouping, no meaning, just floating links.                                                                                                                                                                                                    |
+| C      | ✓       | Navigation is a list of links. Semantically, `<nav><ul><li><a>` is the correct structure. `<nav>` tells the browser this is a navigation landmark. `<ul>` says it's a list of items. Screen readers announce it as navigation and let users skip past it. Three `<p>` tags communicate none of that. |
+| D      | ✗       | It renders. It is not correct. The browser is forgiving — it will display almost anything. That forgiveness is not permission.                                                                                                                                                                       |
 
 ---
 
@@ -67,7 +68,7 @@
 The student wrote:
 
 ```html
-<p>First idea.<br><br>Second idea.</p>
+<p>First idea.<br /><br />Second idea.</p>
 ```
 
 - A) It's correct — `<br>` creates paragraph spacing
@@ -77,12 +78,12 @@ The student wrote:
 
 **Answer: C**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|Wrong. `<br>` is a line break within a single block of content. Using it to fake paragraph spacing is a semantic mistake — you're hiding two ideas inside one paragraph.|
-|B|✗|Wrong. `<hr>` is a thematic divider between sections — not a spacing tool. Using it here changes the meaning entirely.|
-|C|✓|Correct. Two separate ideas are two separate paragraphs. CSS handles the visual space between them. HTML handles the meaning.|
-|D|✗|Wrong approach. The problem is semantic, not visual. You first fix the HTML structure, then CSS handles appearance.|
+| Option | Verdict | Why                                                                                                                                                                      |
+| ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A      | ✗       | Wrong. `<br>` is a line break within a single block of content. Using it to fake paragraph spacing is a semantic mistake — you're hiding two ideas inside one paragraph. |
+| B      | ✗       | Wrong. `<hr>` is a thematic divider between sections — not a spacing tool. Using it here changes the meaning entirely.                                                   |
+| C      | ✓       | Correct. Two separate ideas are two separate paragraphs. CSS handles the visual space between them. HTML handles the meaning.                                            |
+| D      | ✗       | Wrong approach. The problem is semantic, not visual. You first fix the HTML structure, then CSS handles appearance.                                                      |
 
 ---
 
@@ -97,12 +98,12 @@ The student wrote:
 
 **Answer: B**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|They look the same in a browser but mean different things. HTML is about meaning, not appearance.|
-|B|✓|`<strong>` tells screen readers, search engines, and other tools that this content is semantically important. `<b>` carries zero meaning — it's a purely visual instruction.|
-|C|✗|It's the opposite. `<b>` is a legacy tag from when HTML was used for styling. Modern HTML separates meaning from appearance. Use `<strong>`.|
-|D|✗|Neither tag changes size or color by default. Both make text bold visually. The difference is entirely in meaning, not appearance.|
+| Option | Verdict | Why                                                                                                                                                                          |
+| ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | They look the same in a browser but mean different things. HTML is about meaning, not appearance.                                                                            |
+| B      | ✓       | `<strong>` tells screen readers, search engines, and other tools that this content is semantically important. `<b>` carries zero meaning — it's a purely visual instruction. |
+| C      | ✗       | It's the opposite. `<b>` is a legacy tag from when HTML was used for styling. Modern HTML separates meaning from appearance. Use `<strong>`.                                 |
+| D      | ✗       | Neither tag changes size or color by default. Both make text bold visually. The difference is entirely in meaning, not appearance.                                           |
 
 ---
 
@@ -123,12 +124,12 @@ The student wrote:
 
 **Answer: B**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|Technically not a browser error — the page will render. But it is semantically wrong. The heading order creates a hierarchy, and skipping levels breaks that structure.|
-|B|✓|Headings define a document outline. Jumping from h1 to h4 creates a gap in the hierarchy that screen readers and search engines depend on. Always step down one level at a time: h1 → h2 → h3.|
-|C|✗|Only h1 is recommended once per page. h2, h3, h4 and below can repeat as many times as you need.|
-|D|✗|It will render visually, yes. But "renders fine" is not the same as "correct HTML". Screen readers, search engines, and other tools read meaning — not visual output.|
+| Option | Verdict | Why                                                                                                                                                                                            |
+| ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | Technically not a browser error — the page will render. But it is semantically wrong. The heading order creates a hierarchy, and skipping levels breaks that structure.                        |
+| B      | ✓       | Headings define a document outline. Jumping from h1 to h4 creates a gap in the hierarchy that screen readers and search engines depend on. Always step down one level at a time: h1 → h2 → h3. |
+| C      | ✗       | Only h1 is recommended once per page. h2, h3, h4 and below can repeat as many times as you need.                                                                                               |
+| D      | ✗       | It will render visually, yes. But "renders fine" is not the same as "correct HTML". Screen readers, search engines, and other tools read meaning — not visual output.                          |
 
 ---
 
@@ -143,12 +144,12 @@ The student wrote:
 
 **Answer: C**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|Section breaks are structural — use separate block tags like `<p>`, `<section>`, or `<hr>` for a thematic divide. `<br>` is not a layout tool.|
-|B|✗|Two different ideas = two separate `<p>` tags. Don't hide separate ideas inside one paragraph just because `<br>` forces a new line visually.|
-|C|✓|`<br>` belongs inside a single paragraph when the content itself requires a line break — like a poem, song lyrics, or a postal address. The content is one idea; the line break is part of how that idea is expressed.|
-|D|✗|Visual spacing is CSS's job — margin and padding. Using `<br>` tags for layout is one of the oldest bad habits in HTML.|
+| Option | Verdict | Why                                                                                                                                                                                                                    |
+| ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | Section breaks are structural — use separate block tags like `<p>`, `<section>`, or `<hr>` for a thematic divide. `<br>` is not a layout tool.                                                                         |
+| B      | ✗       | Two different ideas = two separate `<p>` tags. Don't hide separate ideas inside one paragraph just because `<br>` forces a new line visually.                                                                          |
+| C      | ✓       | `<br>` belongs inside a single paragraph when the content itself requires a line break — like a poem, song lyrics, or a postal address. The content is one idea; the line break is part of how that idea is expressed. |
+| D      | ✗       | Visual spacing is CSS's job — margin and padding. Using `<br>` tags for layout is one of the oldest bad habits in HTML.                                                                                                |
 
 ---
 
@@ -169,12 +170,12 @@ The student wrote:
 
 **Answer: C**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|`<i>` is not deprecated. It was redefined in HTML5 with a specific, valid meaning: technical terms, foreign phrases, fictional character thoughts, and typographic conventions like titles. It's a legitimate element when used correctly.|
-|B|✗|They look the same visually. They mean different things. `<em>` means spoken stress — the kind that changes the meaning of a sentence. `<i>` means "offset from the surrounding prose in a conventional way." Titles fall under that second definition.|
-|C|✓|Book titles, film titles, and album titles are a typographic convention — you're not emphasising _Dune_ the way you'd stress a word in speech. `<em>` is for: _"I never said he did it"_ — where which word you stress changes the meaning. `<i>` is for the technical, conventional use of italics. The senior is right.|
-|D|✗|The tag's job is not to produce italics — that's CSS's job. The tag's job is to communicate meaning. "Should be italic" is never a reason to pick a tag.|
+| Option | Verdict | Why                                                                                                                                                                                                                                                                                                                       |
+| ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | `<i>` is not deprecated. It was redefined in HTML5 with a specific, valid meaning: technical terms, foreign phrases, fictional character thoughts, and typographic conventions like titles. It's a legitimate element when used correctly.                                                                                |
+| B      | ✗       | They look the same visually. They mean different things. `<em>` means spoken stress — the kind that changes the meaning of a sentence. `<i>` means "offset from the surrounding prose in a conventional way." Titles fall under that second definition.                                                                   |
+| C      | ✓       | Book titles, film titles, and album titles are a typographic convention — you're not emphasising _Dune_ the way you'd stress a word in speech. `<em>` is for: _"I never said he did it"_ — where which word you stress changes the meaning. `<i>` is for the technical, conventional use of italics. The senior is right. |
+| D      | ✗       | The tag's job is not to produce italics — that's CSS's job. The tag's job is to communicate meaning. "Should be italic" is never a reason to pick a tag.                                                                                                                                                                  |
 
 ---
 
@@ -189,12 +190,12 @@ The student wrote:
 
 **Answer: B**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|`<title>` belongs exclusively inside `<head>`. Placed in `<body>`, browsers may ignore it or display it as raw text. It sets the browser tab name — it is never a visible page heading.|
-|B|✓|`<small>` originally meant fine print — legal text, copyright notices, disclaimers. Its semantic meaning in HTML5 is specifically "side comments and small print." This is an exact fit.|
-|C|✗|`<s>` marks content that is no longer accurate or relevant — like a cancelled appointment. A crossed-out price on a sale is actually the right case for `<del>`, which carries the meaning "this was removed." `<s>` is close but imprecise.|
-|D|✗|`<em>` means spoken emphasis — a word you'd stress out loud. Keyboard instructions are code-like content. The correct tag is `<kbd>`, which exists specifically for keyboard input. `<em>` here is using the wrong meaning entirely.|
+| Option | Verdict | Why                                                                                                                                                                                                                                          |
+| ------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | `<title>` belongs exclusively inside `<head>`. Placed in `<body>`, browsers may ignore it or display it as raw text. It sets the browser tab name — it is never a visible page heading.                                                      |
+| B      | ✓       | `<small>` originally meant fine print — legal text, copyright notices, disclaimers. Its semantic meaning in HTML5 is specifically "side comments and small print." This is an exact fit.                                                     |
+| C      | ✗       | `<s>` marks content that is no longer accurate or relevant — like a cancelled appointment. A crossed-out price on a sale is actually the right case for `<del>`, which carries the meaning "this was removed." `<s>` is close but imprecise. |
+| D      | ✗       | `<em>` means spoken emphasis — a word you'd stress out loud. Keyboard instructions are code-like content. The correct tag is `<kbd>`, which exists specifically for keyboard input. `<em>` here is using the wrong meaning entirely.         |
 
 ---
 
@@ -213,12 +214,12 @@ The student wrote:
 
 **Answer: B**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|`target="_blank"` specifically opens the link in a new tab. Opening in the same tab is the default behaviour — no attribute needed.|
-|B|✓|`target="_blank"` opens the link in a new tab. Always add `rel="noopener noreferrer"` — without it, the new page can access and manipulate your page through `window.opener`. It's a real security risk.|
-|C|✗|`target="_blank"` has nothing to do with popups. `rel="popup"` doesn't exist in HTML.|
-|D|✗|A disabled placeholder link uses `href="#"` or `javascript:void(0)`, not `target="_blank"`. `_blank` always opens something.|
+| Option | Verdict | Why                                                                                                                                                                                                      |
+| ------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | `target="_blank"` specifically opens the link in a new tab. Opening in the same tab is the default behaviour — no attribute needed.                                                                      |
+| B      | ✓       | `target="_blank"` opens the link in a new tab. Always add `rel="noopener noreferrer"` — without it, the new page can access and manipulate your page through `window.opener`. It's a real security risk. |
+| C      | ✗       | `target="_blank"` has nothing to do with popups. `rel="popup"` doesn't exist in HTML.                                                                                                                    |
+| D      | ✗       | A disabled placeholder link uses `href="#"` or `javascript:void(0)`, not `target="_blank"`. `_blank` always opens something.                                                                             |
 
 ---
 
@@ -233,12 +234,12 @@ The student wrote:
 
 **Answer: B**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|`email:` is not a valid URI scheme. The browser will not know what to do with it.|
-|B|✓|`mailto:` is the official URI scheme for email links. The browser passes it to the system's default email client, which opens a new message with the address pre-filled.|
-|C|✗|`send:` doesn't exist as a URI scheme in HTML.|
-|D|✗|`contact:` is not a valid URI scheme. The valid schemes you'll use in web development are `https:`, `mailto:`, `tel:`, and fragment `#` — "contact:" is not one of them.|
+| Option | Verdict | Why                                                                                                                                                                      |
+| ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A      | ✗       | `email:` is not a valid URI scheme. The browser will not know what to do with it.                                                                                        |
+| B      | ✓       | `mailto:` is the official URI scheme for email links. The browser passes it to the system's default email client, which opens a new message with the address pre-filled. |
+| C      | ✗       | `send:` doesn't exist as a URI scheme in HTML.                                                                                                                           |
+| D      | ✗       | `contact:` is not a valid URI scheme. The valid schemes you'll use in web development are `https:`, `mailto:`, `tel:`, and fragment `#` — "contact:" is not one of them. |
 
 ---
 
@@ -247,8 +248,7 @@ The student wrote:
 **What is the difference between these two links?**
 
 ```html
-<a href="about.html">About</a>
-<a href="/about.html">About</a>
+<a href="about.html">About</a> <a href="/about.html">About</a>
 ```
 
 - A) No difference — both go to the same page
@@ -258,12 +258,12 @@ The student wrote:
 
 **Answer: B**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|They look identical but behave differently depending on where you are on the site. Same visual output, different meaning — you've seen this before.|
-|B|✓|`about.html` is relative — it looks for about.html in the same folder as the current page. If you're inside `/blog/post.html`, it resolves to `/blog/about.html`. `/about.html` is root-relative — it always resolves to `/about.html` from the site's root, regardless of which page you're on.|
-|C|✗|A leading slash does not make something external. External URLs require a full scheme — `https://`. A slash means root of the current site.|
-|D|✗|Close to the truth but backwards. `about.html` (no slash) is the one that breaks when used from nested pages. `/about.html` works consistently from anywhere on the site.|
+| Option | Verdict | Why                                                                                                                                                                                                                                                                                              |
+| ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A      | ✗       | They look identical but behave differently depending on where you are on the site. Same visual output, different meaning — you've seen this before.                                                                                                                                              |
+| B      | ✓       | `about.html` is relative — it looks for about.html in the same folder as the current page. If you're inside `/blog/post.html`, it resolves to `/blog/about.html`. `/about.html` is root-relative — it always resolves to `/about.html` from the site's root, regardless of which page you're on. |
+| C      | ✗       | A leading slash does not make something external. External URLs require a full scheme — `https://`. A slash means root of the current site.                                                                                                                                                      |
+| D      | ✗       | Close to the truth but backwards. `about.html` (no slash) is the one that breaks when used from nested pages. `/about.html` works consistently from anywhere on the site.                                                                                                                        |
 
 ---
 
@@ -284,12 +284,12 @@ The student wrote:
 
 **Answer: C**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|The tab does not load nothing. `#` is a fragment pointing to the top of the current page — that location is still a real URL.|
-|B|✗|`#` has no relation to the homepage. It refers to the current document.|
-|C|✓|`href="#"` means "the top of the current page." `target="_blank"` opens that in a new tab. So clicking this opens a new tab that loads an exact copy of the page the user is already on. A common mistake — and a common interview trap.|
-|D|✗|`href="#"` is one of the most active links you can write. It always resolves. It never disables.|
+| Option | Verdict | Why                                                                                                                                                                                                                                      |
+| ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | The tab does not load nothing. `#` is a fragment pointing to the top of the current page — that location is still a real URL.                                                                                                            |
+| B      | ✗       | `#` has no relation to the homepage. It refers to the current document.                                                                                                                                                                  |
+| C      | ✓       | `href="#"` means "the top of the current page." `target="_blank"` opens that in a new tab. So clicking this opens a new tab that loads an exact copy of the page the user is already on. A common mistake — and a common interview trap. |
+| D      | ✗       | `href="#"` is one of the most active links you can write. It always resolves. It never disables.                                                                                                                                         |
 
 ---
 
@@ -304,12 +304,12 @@ The student wrote:
 
 **Answer: C**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|`call:` is not a valid URI scheme. The browser has no handler for it and will do nothing.|
-|B|✗|`phone:` is also not a valid URI scheme. Only a defined set of schemes have browser handlers.|
-|C|✓|`tel:` is the correct scheme for telephone links. On mobile, tapping it opens the phone dialler with the number pre-filled. The number should always include the country code in international format.|
-|D|✗|`dial:` doesn't exist as a URI scheme. There are very few valid schemes — guessing variations of the right word will always fail.|
+| Option | Verdict | Why                                                                                                                                                                                                    |
+| ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A      | ✗       | `call:` is not a valid URI scheme. The browser has no handler for it and will do nothing.                                                                                                              |
+| B      | ✗       | `phone:` is also not a valid URI scheme. Only a defined set of schemes have browser handlers.                                                                                                          |
+| C      | ✓       | `tel:` is the correct scheme for telephone links. On mobile, tapping it opens the phone dialler with the number pre-filled. The number should always include the country code in international format. |
+| D      | ✗       | `dial:` doesn't exist as a URI scheme. There are very few valid schemes — guessing variations of the right word will always fail.                                                                      |
 
 ---
 
@@ -328,12 +328,12 @@ The student wrote:
 
 **Answer: B**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|`type="external"` is not a valid attribute on anchor tags. It does nothing.|
-|B|✓|Without `rel="noopener noreferrer"`, the page opened in the new tab gets access to the `window.opener` object of your page. A malicious site can use this to redirect your original page to a phishing URL while the user is distracted. `rel="noopener"` cuts that connection. `noreferrer` also hides where the user came from. Always use both.|
-|C|✗|`external:` is not a URI scheme. The browser would not know what to do with it.|
-|D|✗|It works and renders correctly — but correct-looking code can still be insecure. This is exactly the kind of thing code review exists to catch.|
+| Option | Verdict | Why                                                                                                                                                                                                                                                                                                                                                |
+| ------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | `type="external"` is not a valid attribute on anchor tags. It does nothing.                                                                                                                                                                                                                                                                        |
+| B      | ✓       | Without `rel="noopener noreferrer"`, the page opened in the new tab gets access to the `window.opener` object of your page. A malicious site can use this to redirect your original page to a phishing URL while the user is distracted. `rel="noopener"` cuts that connection. `noreferrer` also hides where the user came from. Always use both. |
+| C      | ✗       | `external:` is not a URI scheme. The browser would not know what to do with it.                                                                                                                                                                                                                                                                    |
+| D      | ✗       | It works and renders correctly — but correct-looking code can still be insecure. This is exactly the kind of thing code review exists to catch.                                                                                                                                                                                                    |
 
 ---
 
@@ -355,12 +355,12 @@ The student wrote:
 
 **Answer: B**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|Matching text alone is not enough. The `id` value itself is invalid. An invalid `id` produces an invalid anchor target, regardless of whether the `href` matches.|
-|B|✓|The HTML spec requires that `id` values contain no spaces. A space in an `id` is invalid markup. The fix is `id="contact-section"` and `href="#contact-section"`.|
-|C|✗|Some browsers may attempt to encode the space and resolve the fragment anyway, but this is undefined error-recovery behaviour, not specified behaviour you can rely on.|
-|D|✗|`id` is a global attribute — it can go on any HTML element. `<h2>`, `<p>`, `<div>`, `<section>` — any of them can be an anchor target.|
+| Option | Verdict | Why                                                                                                                                                                     |
+| ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | Matching text alone is not enough. The `id` value itself is invalid. An invalid `id` produces an invalid anchor target, regardless of whether the `href` matches.       |
+| B      | ✓       | The HTML spec requires that `id` values contain no spaces. A space in an `id` is invalid markup. The fix is `id="contact-section"` and `href="#contact-section"`.       |
+| C      | ✗       | Some browsers may attempt to encode the space and resolve the fragment anyway, but this is undefined error-recovery behaviour, not specified behaviour you can rely on. |
+| D      | ✗       | `id` is a global attribute — it can go on any HTML element. `<h2>`, `<p>`, `<div>`, `<section>` — any of them can be an anchor target.                                  |
 
 ---
 
@@ -379,12 +379,12 @@ The student wrote:
 
 **Answer: B**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|The browser never refuses to render HTML. It will always try to display something. Crashing on missing declarations would break half the internet.|
-|B|✓|Without `<!DOCTYPE html>`, the browser switches to quirks mode — a compatibility mode that deliberately emulates the incorrect, inconsistent behaviour of 1990s browsers. Box model calculations, layout, and rendering all change. Things that look fine in standards mode can silently break in quirks mode.|
-|C|✗|The page _looks_ fine on screen, so students assume it's fine. It isn't. The rendering engine is running in the wrong mode — you just can't see it until something subtle breaks.|
-|D|✗|It's the opposite. Quirks mode matters most on modern browsers because they still maintain it for backward compatibility. Modern browsers are the ones that will silently switch modes on you.|
+| Option | Verdict | Why                                                                                                                                                                                                                                                                                                            |
+| ------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | The browser never refuses to render HTML. It will always try to display something. Crashing on missing declarations would break half the internet.                                                                                                                                                             |
+| B      | ✓       | Without `<!DOCTYPE html>`, the browser switches to quirks mode — a compatibility mode that deliberately emulates the incorrect, inconsistent behaviour of 1990s browsers. Box model calculations, layout, and rendering all change. Things that look fine in standards mode can silently break in quirks mode. |
+| C      | ✗       | The page _looks_ fine on screen, so students assume it's fine. It isn't. The rendering engine is running in the wrong mode — you just can't see it until something subtle breaks.                                                                                                                              |
+| D      | ✗       | It's the opposite. Quirks mode matters most on modern browsers because they still maintain it for backward compatibility. Modern browsers are the ones that will silently switch modes on you.                                                                                                                 |
 
 ---
 
@@ -393,7 +393,7 @@ The student wrote:
 **Why does the `lang` attribute on the `<html>` tag matter? Pick the most complete answer.**
 
 ```html
-<html lang="en">
+<html lang="en"></html>
 ```
 
 - A) It has no real effect — it's just a label for developers
@@ -403,12 +403,12 @@ The student wrote:
 
 **Answer: C**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|It is consumed by multiple systems that are invisible to a developer looking at the screen. "No visual effect" is not the same as "no effect."|
-|B|✗|Spell-check is one small side effect. The real consumers are screen readers, search engines, and CSS — all three depend on `lang` for fundamentally different reasons.|
-|C|✓|Screen readers use it to select the correct pronunciation engine — `lang="si"` switches to Sinhala pronunciation. Search engines use it for language targeting. `hyphens: auto` in CSS uses it to know which hyphenation dictionary to load. Omitting it is an accessibility defect.|
-|D|✗|`lang` is required on every page, regardless of whether it mixes languages. Multi-language content uses `lang` on individual elements to override the root — but the root declaration is always mandatory.|
+| Option | Verdict | Why                                                                                                                                                                                                                                                                                  |
+| ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A      | ✗       | It is consumed by multiple systems that are invisible to a developer looking at the screen. "No visual effect" is not the same as "no effect."                                                                                                                                       |
+| B      | ✗       | Spell-check is one small side effect. The real consumers are screen readers, search engines, and CSS — all three depend on `lang` for fundamentally different reasons.                                                                                                               |
+| C      | ✓       | Screen readers use it to select the correct pronunciation engine — `lang="si"` switches to Sinhala pronunciation. Search engines use it for language targeting. `hyphens: auto` in CSS uses it to know which hyphenation dictionary to load. Omitting it is an accessibility defect. |
+| D      | ✗       | `lang` is required on every page, regardless of whether it mixes languages. Multi-language content uses `lang` on individual elements to override the root — but the root declaration is always mandatory.                                                                           |
 
 ---
 
@@ -423,12 +423,12 @@ The student wrote:
 
 **Answer: B**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|Position absolutely matters here. The browser reads the file top to bottom. If it encounters the `<title>` before it knows the encoding, it may misread any non-ASCII characters in the title.|
-|B|✓|The browser needs to know the encoding before it reads anything else in the document — including the title, which might contain characters outside ASCII. First child of `<head>` is the rule.|
-|C|✗|Metadata belongs in `<head>`. A `<meta>` tag placed in `<body>` is invalid HTML. The browser may move it, ignore it, or handle it unpredictably.|
-|D|✗|`<!DOCTYPE html>` must be the absolute first line — nothing before it, not even whitespace. The charset declaration goes inside `<head>`, not before the doctype.|
+| Option | Verdict | Why                                                                                                                                                                                            |
+| ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | Position absolutely matters here. The browser reads the file top to bottom. If it encounters the `<title>` before it knows the encoding, it may misread any non-ASCII characters in the title. |
+| B      | ✓       | The browser needs to know the encoding before it reads anything else in the document — including the title, which might contain characters outside ASCII. First child of `<head>` is the rule. |
+| C      | ✗       | Metadata belongs in `<head>`. A `<meta>` tag placed in `<body>` is invalid HTML. The browser may move it, ignore it, or handle it unpredictably.                                               |
+| D      | ✗       | `<!DOCTYPE html>` must be the absolute first line — nothing before it, not even whitespace. The charset declaration goes inside `<head>`, not before the doctype.                              |
 
 ---
 
@@ -449,12 +449,12 @@ The student wrote:
 
 **Answer: B**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|`<span>` works perfectly fine without a class. A class is optional — it's used as a hook for CSS and JavaScript, not for validity.|
-|B|✓|`<span>` is inline — it can only hold other inline elements and text. `<p>` is a block-level element. Nesting a block inside an inline violates the content model. The browser will attempt to fix it using error recovery, but you're relying on the browser's guess, not correct HTML.|
-|C|✗|The browser's error recovery algorithm is forgiving — it will rearrange invalid nesting to make something displayable. That forgiveness is not permission.|
-|D|✗|`<span>` is not deprecated. It's the standard generic inline container, actively used in modern HTML.|
+| Option | Verdict | Why                                                                                                                                                                                                                                                                                      |
+| ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | `<span>` works perfectly fine without a class. A class is optional — it's used as a hook for CSS and JavaScript, not for validity.                                                                                                                                                       |
+| B      | ✓       | `<span>` is inline — it can only hold other inline elements and text. `<p>` is a block-level element. Nesting a block inside an inline violates the content model. The browser will attempt to fix it using error recovery, but you're relying on the browser's guess, not correct HTML. |
+| C      | ✗       | The browser's error recovery algorithm is forgiving — it will rearrange invalid nesting to make something displayable. That forgiveness is not permission.                                                                                                                               |
+| D      | ✗       | `<span>` is not deprecated. It's the standard generic inline container, actively used in modern HTML.                                                                                                                                                                                    |
 
 ---
 
@@ -463,7 +463,7 @@ The student wrote:
 **How many spaces does this render as in the browser?**
 
 ```html
-<p>Hello          world</p>
+<p>Hello world</p>
 ```
 
 - A) 10 spaces — exactly as written
@@ -473,12 +473,12 @@ The student wrote:
 
 **Answer: C**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|The browser does not preserve whitespace in HTML content by default. This is why you can freely indent your code without it affecting the visual output.|
-|B|✗|It doesn't strip whitespace entirely — words would run together. It collapses it down to one space, not zero.|
-|C|✓|The HTML spec says consecutive whitespace — spaces, tabs, newlines — in text content is collapsed to a single space. This is what makes clean indentation possible and why `<br>` exists for intentional line breaks. If you need to preserve exact whitespace, that's what `<pre>` is for.|
-|D|✗|This behaviour is defined in the HTML spec — every standards-mode browser does it the same way. It is not browser-dependent.|
+| Option | Verdict | Why                                                                                                                                                                                                                                                                                         |
+| ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | The browser does not preserve whitespace in HTML content by default. This is why you can freely indent your code without it affecting the visual output.                                                                                                                                    |
+| B      | ✗       | It doesn't strip whitespace entirely — words would run together. It collapses it down to one space, not zero.                                                                                                                                                                               |
+| C      | ✓       | The HTML spec says consecutive whitespace — spaces, tabs, newlines — in text content is collapsed to a single space. This is what makes clean indentation possible and why `<br>` exists for intentional line breaks. If you need to preserve exact whitespace, that's what `<pre>` is for. |
+| D      | ✗       | This behaviour is defined in the HTML spec — every standards-mode browser does it the same way. It is not browser-dependent.                                                                                                                                                                |
 
 ---
 
@@ -497,12 +497,12 @@ The student wrote:
 
 **Answer: C**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|There's no such thing as an HTML rendering error. The browser will display it. Missing `href` is not a fatal problem — it's a defined state.|
-|B|✗|Without `href`, there is no navigation behaviour at all. No clicking, no cursor change, no underline by default. It doesn't go anywhere because it isn't a link.|
-|C|✓|An `<a>` without `href` is a placeholder anchor — valid in HTML, and sometimes used intentionally for links that will be activated dynamically by JavaScript later. It renders as plain text with no focus, no pointer cursor, and no default underline.|
-|D|✗|`href="#"` is an active link — it gives the element link behaviour and navigates to the top of the page on click. A missing `href` does none of that.|
+| Option | Verdict | Why                                                                                                                                                                                                                                                      |
+| ------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | There's no such thing as an HTML rendering error. The browser will display it. Missing `href` is not a fatal problem — it's a defined state.                                                                                                             |
+| B      | ✗       | Without `href`, there is no navigation behaviour at all. No clicking, no cursor change, no underline by default. It doesn't go anywhere because it isn't a link.                                                                                         |
+| C      | ✓       | An `<a>` without `href` is a placeholder anchor — valid in HTML, and sometimes used intentionally for links that will be activated dynamically by JavaScript later. It renders as plain text with no focus, no pointer cursor, and no default underline. |
+| D      | ✗       | `href="#"` is an active link — it gives the element link behaviour and navigates to the top of the page on click. A missing `href` does none of that.                                                                                                    |
 
 ---
 
@@ -511,7 +511,7 @@ The student wrote:
 **What is the difference between these two lines?**
 
 ```html
-<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/style.css" />
 <a href="/style.css">Download stylesheet</a>
 ```
 
@@ -522,9 +522,9 @@ The student wrote:
 
 **Answer: B**
 
-|Option|Verdict|Why|
-|---|---|---|
-|A|✗|They point to the same file, but the meaning and the audience are completely different. One is an instruction to the browser. One is an offer to the user. Same URL, entirely different semantics.|
-|B|✓|`<link>` is a machine-readable declaration in `<head>`. It tells the browser: "this document has a relationship with this resource" — load it as a stylesheet, use it as a favicon, treat it as the canonical URL. The user never sees it. `<a>` is a clickable link in `<body>` — it exists for humans to follow. Two different elements, two different jobs, two different places in the document.|
-|C|✗|It's the opposite. `<link>` belongs in `<head>`. `<a>` belongs in `<body>`.|
-|D|✗|`<link>` is not deprecated — it's the correct and only way to attach stylesheets declaratively in HTML. Using `<a>` for a stylesheet would do nothing except offer the user a link to download the raw CSS file.|
+| Option | Verdict | Why                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | ✗       | They point to the same file, but the meaning and the audience are completely different. One is an instruction to the browser. One is an offer to the user. Same URL, entirely different semantics.                                                                                                                                                                                                   |
+| B      | ✓       | `<link>` is a machine-readable declaration in `<head>`. It tells the browser: "this document has a relationship with this resource" — load it as a stylesheet, use it as a favicon, treat it as the canonical URL. The user never sees it. `<a>` is a clickable link in `<body>` — it exists for humans to follow. Two different elements, two different jobs, two different places in the document. |
+| C      | ✗       | It's the opposite. `<link>` belongs in `<head>`. `<a>` belongs in `<body>`.                                                                                                                                                                                                                                                                                                                          |
+| D      | ✗       | `<link>` is not deprecated — it's the correct and only way to attach stylesheets declaratively in HTML. Using `<a>` for a stylesheet would do nothing except offer the user a link to download the raw CSS file.                                                                                                                                                                                     |
