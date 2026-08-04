@@ -11,21 +11,20 @@ This assignment focuses purely on **text content and semantic meaning** in HTM
 This assignment requires you to use:
 
 - ✅ **Headings**: `<h1>`, `<h2>`, `<h3>` for logical hierarchy
-    
+
 - ✅ **Paragraphs**: `<p>` for storytelling
-    
+
 - ✅ **Importance**: `<strong>` to signal serious or important information
-    
+
 - ✅ **Emphasis**: `<em>` to convey feelings, tone, or stress
-    
+
 - ✅ **Highlighting**: `<mark>` to call attention to specific moments
-    
+
 - ✅ **Side Notes**: `<small>` for extra details or "whispered" thoughts
-    
+
 - ✅ **Structural Breaks**: `<br>` for dramatic pauses and `<hr>` for time transitions
-    
+
 - ✅ **No CSS. No JavaScript. No `style` attributes anywhere.**
-    
 
 ---
 
@@ -34,49 +33,48 @@ This assignment requires you to use:
 ### Your page must have these 6 sections:
 
 1. **Title (The Hook)**
-    
-    - Use an `<h1>` tag.
-        
-    - Must be creative and engaging (e.g., _"The Day the Coffee Ran Out"_ or _"A Coder’s Guide to 5 AM"_).
-        
+
+   - Use an `<h1>` tag.
+
+   - Must be creative and engaging (e.g., _"The Day the Coffee Ran Out"_ or _"A Coder’s Guide to 5 AM"_).
+
 2. **Morning Section**
-    
-    - An `<h2>` heading titled "Morning".
-        
-    - A paragraph describing your start to the day.
-        
-    - Must include `<em>` for feelings and `<strong>` for something critical.
-        
+
+   - An `<h2>` heading titled "Morning".
+
+   - A paragraph describing your start to the day.
+
+   - Must include `<em>` for feelings and `<strong>` for something critical.
+
 3. **Afternoon Section**
-    
-    - An `<h2>` heading titled "Afternoon".
-        
-    - Describe an unexpected, funny, or busy moment.
-        
-    - Must include `<mark>` for a key moment and `<br>` for a dramatic sentence break.
-        
+
+   - An `<h2>` heading titled "Afternoon".
+
+   - Describe an unexpected, funny, or busy moment.
+
+   - Must include `<mark>` for a key moment and `<br>` for a dramatic sentence break.
+
 4. **Evening Section**
-    
-    - An `<h2>` heading titled "Evening".
-        
-    - A reflective paragraph on how the day ended.
-        
-    - Must include `<strong>` for a lesson learned and `<small>` for a side thought.
-        
+
+   - An `<h2>` heading titled "Evening".
+
+   - A reflective paragraph on how the day ended.
+
+   - Must include `<strong>` for a lesson learned and `<small>` for a side thought.
+
 5. **Quote of the Day**
-    
-    - An `<h3>` heading titled "Quote of the Day".
-        
-    - Add a short quote that fits your mood.
-        
-    - Must wrap the quote in **both** `<em>` and `<strong>`.
-        
+
+   - An `<h3>` heading titled "Quote of the Day".
+
+   - Add a short quote that fits your mood.
+
+   - Must wrap the quote in **both** `<em>` and `<strong>`.
+
 6. **Final Twist**
-    
-    - One final concluding paragraph.
-        
-    - Highlight the most important "moral of the story" using `<mark>`.
-        
+
+   - One final concluding paragraph.
+
+   - Highlight the most important "moral of the story" using `<mark>`.
 
 ---
 
@@ -85,13 +83,12 @@ This assignment requires you to use:
 Your finished page should:
 
 1. **Follow Heading Hierarchy** — Never skip levels (don't go from `<h1>` to `<h3>`).
-    
+
 2. **Use Semantic Containers** — Every piece of text must be inside a `<p>` or heading tag.
-    
+
 3. **Prioritize Meaning** — Use inline tags (`<strong>`, `<em>`) because the words are important, not just to change the look.
-    
+
 4. **Be Clean and Readable** — Even without CSS, the spacing between paragraphs and headings should make the story easy to follow.
-    
 
 ---
 
@@ -162,11 +159,10 @@ Build the Morning, Afternoon, and Evening sections one by one. Use the `<hr>` 
 Go back through your text and add the required tags.
 
 - **Is a sentence emotional?** Wrap it in `<em>`.
-    
+
 - **Is a specific time or event vital?** Use `<strong>`.
-    
+
 - **Is there a funny realization?** Add it at the end of a paragraph in `<small>`.
-    
 
 ---
 
@@ -227,11 +223,10 @@ HTML
 ## Submission Guidelines
 
 1. **File name**: Save your file as `story.html`.
-    
+
 2. **Comments**: Add a comment block at the very top:
-    
+
 3. **Validation**: Open the file in your browser. Ensure the headings are bold and large, and your `<mark>` highlights are visible.
-    
 
 ---
 
@@ -240,23 +235,21 @@ HTML
 For an extra 10 points:
 
 - 🔥 Use **nested tags** (e.g., a `<strong>` word inside an `<em>` sentence).
-    
+
 - 🎭 Add a massive "Plot Twist" using a combination of `<hr>` and `<mark>`.
-    
+
 - 🧠 Use the `<abbr>` tag for any slang or technical terms you use in your story.
-    
 
 ---
 
 ## Learning Objectives
 
 - ✓ Master heading levels and document structure.
-    
+
 - ✓ Differentiate between "Physical" and "Semantic" styling.
-    
+
 - ✓ Learn to guide a reader's eye using only HTML defaults.
-    
+
 - ✓ Demonstrate clean, valid code without the crutch of CSS.
-    
 
 **Good Luck! 🚀**
