@@ -177,7 +177,8 @@ Problem  : ...
 Fix      : ...
 ```
 
-* There are **15 errors** hidden in this file. 
+- There are **15 errors** hidden in this file.
+
 ### Step 2 — Rewrite the File
 
 Once you have identified all the errors, rewrite the complete HTML file from
@@ -218,7 +219,6 @@ Save your fixed file as `profile-fixed.html`.
 ---
 
 ## Bonus Challenge 🏆
-
 
 - 🔍 There is a **floating text** error that is easy to miss. Find it and fix it.
 - 📋 Improve the table by adding a `<tfoot>` row that shows the total number of sessions.
