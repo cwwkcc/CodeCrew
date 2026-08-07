@@ -83,19 +83,19 @@ No specific structure is required beyond that. The Markdown syntax itself should
 
 Since this is your first `.md` file, here is everything you need:
 
-|Element|Syntax|
-|---|---|
-|Heading 2|`## Text`|
-|Heading 3|`### Text`|
-|Bold|`**Text**`|
-|Italic|`*Text*`|
-|Inline code|`` `code` ``|
-|Code block|` ```html ` then code then ` ``` `|
-|Unordered list|`- Item`|
-|Ordered list|`1. Item`|
-|Table|`\| Col \| Col \|` then `\|---|
-|Horizontal rule|`---`|
-|Blockquote|`> Text`|
+| Element         | Syntax                             |
+| --------------- | ---------------------------------- |
+| Heading 2       | `## Text`                          |
+| Heading 3       | `### Text`                         |
+| Bold            | `**Text**`                         |
+| Italic          | `*Text*`                           |
+| Inline code     | `` `code` ``                       |
+| Code block      | ` ```html ` then code then ` ``` ` |
+| Unordered list  | `- Item`                           |
+| Ordered list    | `1. Item`                          |
+| Table           | `\| Col \| Col \|` then `\|---     |
+| Horizontal rule | `---`                              |
+| Blockquote      | `> Text`                           |
 
 One important rule: always leave a **blank line** before a heading, list, or code block. If your formatting looks broken, a missing blank line is almost always the reason.
 
@@ -104,12 +104,12 @@ One important rule: always leave a **blank line** before a heading, list, or cod
 ## Submission Guidelines
 
 1. **File name**: `yourname.md` — for example `jevindu.md`, `savija.md`.
-    
+
 2. **Before submitting**, open the file in Obsidian's preview mode and check:
-    
-    - Does it look clean and readable?
-    - Do your code blocks render properly?
-    - Can someone else read your notes and actually learn something from them?
+
+   - Does it look clean and readable?
+   - Do your code blocks render properly?
+   - Can someone else read your notes and actually learn something from them?
 
 ---
 
