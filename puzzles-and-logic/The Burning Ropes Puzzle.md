@@ -9,21 +9,22 @@
 #### **The Strategy:**
 
 1. **Light Rope A from both ends** at the same time
-    
+
 2. **Light Rope B from one end** at the same time
-    
+
 3. **Wait for Rope A to burn completely**
-    
-    - Since it's burning from both ends, it will finish in 30 minutes
-    - At this moment, Rope B has been burning for 30 minutes
-    - Rope B has 30 minutes of burn time left
+
+   - Since it's burning from both ends, it will finish in 30 minutes
+   - At this moment, Rope B has been burning for 30 minutes
+   - Rope B has 30 minutes of burn time left
+
 4. **At the 30-minute mark (when Rope A finishes):**
-    
-    - Light the other end of Rope B
-    - Now Rope B is burning from both ends
-    - It had 30 minutes left, but burning from both ends makes it finish in 15 minutes
+
+   - Light the other end of Rope B
+   - Now Rope B is burning from both ends
+   - It had 30 minutes left, but burning from both ends makes it finish in 15 minutes
+
 5. **Total time:** 30 minutes + 15 minutes = **45 minutes exactly!**
-    
 
 #### **Visual Timeline:**
 

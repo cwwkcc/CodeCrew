@@ -4,9 +4,10 @@
 
 Starting from the back of the line, the king asks each prisoner to guess the color of their own hat. They can only say "black" or "white" - nothing else. If they guess correctly, they live. If wrong, they die (silently, so others don't know).
 
-**The Challenge:** The prisoners can discuss a strategy beforehand, but once the hats are placed, they cannot communicate except for saying their guess. What strategy can save the maximum number of prisoners,  and how many of them can be saved?? 
+**The Challenge:** The prisoners can discuss a strategy beforehand, but once the hats are placed, they cannot communicate except for saying their guess. What strategy can save the maximum number of prisoners,  and how many of them can be saved??
 
 ---
+
 What does  “lines them up single file” mean?
 
 **Single file** means:
@@ -16,11 +17,10 @@ What does  “lines them up single file” mean?
 Think of:
 
 - a queue at a counter
-    
+
 - students standing for morning assembly
-    
+
 - people waiting in line for a bus
-    
 
 So the advisors are arranged like this:
 
@@ -32,25 +32,23 @@ Everyone is facing **the same direction** (toward the king).
 
 ---
 
- How can each person see everyone in front of them?
+How can each person see everyone in front of them?
 
 Because:
 
 - Everyone is facing forward
-    
+
 - You can naturally see the backs of heads of people **ahead of you**
-    
+
 - You **cannot** see behind your own head
-      
 
 So:
 
 - **Person 100 (last in line)** can see hats of **Persons 1–99**
-    
+
 - **Person 50** can see hats of **Persons 1–49**
-    
+
 - **Person 1 (front)** sees **no one**
-    
 
 Example view:
 
@@ -72,29 +70,32 @@ P100 → sees P1 to P99 hats
 #### **The Strategy:**
 
 1. **Before the hats are placed:** The prisoners agree on a system:
-    
-    - Count the number of BLACK hats you can see
-    - If the count is EVEN, say "BLACK"
-    - If the count is ODD, say "WHITE"
+
+   - Count the number of BLACK hats you can see
+   - If the count is EVEN, say "BLACK"
+   - If the count is ODD, say "WHITE"
+
 2. **The first prisoner (at the back):**
-    
-    - Sees all 99 hats in front
-    - Counts black hats: let's say 37 (odd number)
-    - Says "WHITE" (because count is odd)
-    - This prisoner has 50% chance of survival
-    - But crucially, they've given information to everyone else!
+
+   - Sees all 99 hats in front
+   - Counts black hats: let's say 37 (odd number)
+   - Says "WHITE" (because count is odd)
+   - This prisoner has 50% chance of survival
+   - But crucially, they've given information to everyone else!
+
 3. **The second prisoner:**
-    
-    - Heard "WHITE" meaning odd number of black hats originally
-    - Can see 98 hats in front
-    - Counts black hats in front: let's say 36 (even)
-    - Thinks: "Original was odd (37), now I see even (36), so I must be wearing BLACK"
-    - Says "BLACK" and survives!
+
+   - Heard "WHITE" meaning odd number of black hats originally
+   - Can see 98 hats in front
+   - Counts black hats in front: let's say 36 (even)
+   - Thinks: "Original was odd (37), now I see even (36), so I must be wearing BLACK"
+   - Says "BLACK" and survives!
+
 4. **Each subsequent prisoner:**
-    
-    - Keeps track of the parity (odd/even) using all previous information
-    - Updates based on what they hear and what they see
-    - Can deduce their own hat color with 100% certainty
+
+   - Keeps track of the parity (odd/even) using all previous information
+   - Updates based on what they hear and what they see
+   - Can deduce their own hat color with 100% certainty
 
 #### **Example Walkthrough:**
 

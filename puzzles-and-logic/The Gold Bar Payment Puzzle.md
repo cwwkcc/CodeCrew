@@ -15,15 +15,15 @@
 
 **Daily Payments:**
 
-|Day|You Give|You Take Back|Worker Has|
-|---|---|---|---|
-|1|1|-|1|
-|2|2|1|2|
-|3|1|-|3 (2+1)|
-|4|4|2, 1|4|
-|5|1|-|5 (4+1)|
-|6|2|1|6 (4+2)|
-|7|1|-|7 (4+2+1)|
+| Day | You Give | You Take Back | Worker Has |
+| --- | -------- | ------------- | ---------- |
+| 1   | 1        | -             | 1          |
+| 2   | 2        | 1             | 2          |
+| 3   | 1        | -             | 3 (2+1)    |
+| 4   | 4        | 2, 1          | 4          |
+| 5   | 1        | -             | 5 (4+1)    |
+| 6   | 2        | 1             | 6 (4+2)    |
+| 7   | 1        | -             | 7 (4+2+1)  |
 
 ---
 
@@ -32,18 +32,18 @@
 This demonstrates **Binary Representation** and **Powers of 2**:
 
 - **Binary Numbers:** With pieces 1, 2, 4, you can make any number 1-7
-    
-    - 1 = 1
-    - 2 = 2
-    - 3 = 2 + 1
-    - 4 = 4
-    - 5 = 4 + 1
-    - 6 = 4 + 2
-    - 7 = 4 + 2 + 1
+
+  - 1 = 1
+  - 2 = 2
+  - 3 = 2 + 1
+  - 4 = 4
+  - 5 = 4 + 1
+  - 6 = 4 + 2
+  - 7 = 4 + 2 + 1
+
 - **Greedy Algorithm:** Can exchange pieces to maintain correct daily payment
-    
+
 - **Optimal Partitioning:** Minimum cuts for maximum flexibility
-    
 
 #### **Programming Impact:**
 
