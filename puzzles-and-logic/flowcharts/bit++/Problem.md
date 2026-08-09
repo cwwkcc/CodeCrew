@@ -34,6 +34,4 @@ X++
 outputCopy
 0
 
-
-
 https://codeforces.com/problemset/problem/282/A
