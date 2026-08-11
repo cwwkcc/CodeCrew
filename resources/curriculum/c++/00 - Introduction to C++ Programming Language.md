@@ -265,14 +265,14 @@ C++ has evolved over 40 years and has accumulated many features. This richness c
 
 ## C++ vs Other Languages (Quick Comparison)
 
-|Feature|C++|Python|Java|C|JavaScript|
-|---|---|---|---|---|---|
-|**Speed**|Very Fast|Slow|Medium|Very Fast|Medium|
-|**Learning Difficulty**|Hard|Easy|Medium|Hard|Easy|
-|**Memory Management**|Manual (with smart pointers)|Automatic|Automatic|Manual|Automatic|
-|**Use Cases**|Systems, Games, Performance|AI, Data Science, Scripting|Enterprise Apps, Android|OS, Embedded|Web Development|
-|**Compilation**|Compiled|Interpreted|Compiled to Bytecode|Compiled|Interpreted|
-|**Portability**|Good|Excellent|Excellent|Good|Excellent (Browsers)|
+| Feature                 | C++                          | Python                      | Java                     | C            | JavaScript           |
+| ----------------------- | ---------------------------- | --------------------------- | ------------------------ | ------------ | -------------------- |
+| **Speed**               | Very Fast                    | Slow                        | Medium                   | Very Fast    | Medium               |
+| **Learning Difficulty** | Hard                         | Easy                        | Medium                   | Hard         | Easy                 |
+| **Memory Management**   | Manual (with smart pointers) | Automatic                   | Automatic                | Manual       | Automatic            |
+| **Use Cases**           | Systems, Games, Performance  | AI, Data Science, Scripting | Enterprise Apps, Android | OS, Embedded | Web Development      |
+| **Compilation**         | Compiled                     | Interpreted                 | Compiled to Bytecode     | Compiled     | Interpreted          |
+| **Portability**         | Good                         | Excellent                   | Excellent                | Good         | Excellent (Browsers) |
 
 ---
 
@@ -301,16 +301,17 @@ Examples of modern features:
 ### What You Need
 
 1. **A C++ Compiler**: Converts your code to executable programs
-    
-    - Windows: Microsoft Visual C++, MinGW
-    - macOS: Clang (comes with Xcode)
-    - Linux: GCC (usually pre-installed)
+
+   - Windows: Microsoft Visual C++, MinGW
+   - macOS: Clang (comes with Xcode)
+   - Linux: GCC (usually pre-installed)
+
 2. **An IDE or Text Editor**:
-    
-    - Visual Studio (Windows)
-    - CLion (Cross-platform, powerful)
-    - Code::Blocks (Free, beginner-friendly)
-    - VS Code with C++ extensions (Lightweight)
+
+   - Visual Studio (Windows)
+   - CLion (Cross-platform, powerful)
+   - Code::Blocks (Free, beginner-friendly)
+   - VS Code with C++ extensions (Lightweight)
 
 ### Your First Program
 

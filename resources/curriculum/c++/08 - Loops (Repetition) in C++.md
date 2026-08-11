@@ -78,15 +78,15 @@ using namespace std;
 
 int main() {
     int count = 1;
-    
+
     while (count <= 5) {
         cout << count << " ";
         count++;  // IMPORTANT: Increment or loop runs forever!
     }
-    
+
     cout << endl;
     // Output: 1 2 3 4 5
-    
+
     return 0;
 }
 ```
@@ -180,19 +180,19 @@ using namespace std;
 int main() {
     // Initialize random number generator
     srand(time(0));
-    
+
     int secretNumber = rand() % 100 + 1;  // Random 1-100
     int guess;
     int attempts = 0;
-    
+
     cout << "=== Number Guessing Game ===" << endl;
     cout << "I'm thinking of a number between 1 and 100." << endl;
-    
+
     while (guess != secretNumber) {
         cout << "\nEnter your guess: ";
         cin >> guess;
         attempts++;
-        
+
         if (guess > secretNumber) {
             cout << "Too high! Try again." << endl;
         } else if (guess < secretNumber) {
@@ -202,7 +202,7 @@ int main() {
             cout << "It took you " << attempts << " attempts." << endl;
         }
     }
-    
+
     return 0;
 }
 ```
@@ -239,7 +239,7 @@ using namespace std;
 
 int main() {
     int choice;
-    
+
     do {
         cout << "\n=== Menu ===" << endl;
         cout << "1. Play Game" << endl;
@@ -247,7 +247,7 @@ int main() {
         cout << "3. Exit" << endl;
         cout << "Choice: ";
         cin >> choice;
-        
+
         if (choice == 1) {
             cout << "Starting game..." << endl;
         } else if (choice == 2) {
@@ -257,9 +257,9 @@ int main() {
         } else {
             cout << "Invalid choice!" << endl;
         }
-        
+
     } while (choice != 3);
-    
+
     return 0;
 }
 ```
@@ -272,7 +272,7 @@ int age;
 do {
     cout << "Enter your age (1-120): ";
     cin >> age;
-    
+
     if (age < 1 || age > 120) {
         cout << "Invalid age! Try again." << endl;
     }
@@ -289,7 +289,7 @@ string password;
 do {
     cout << "Create a password (min 8 characters): ";
     cin >> password;
-    
+
     if (password.length() < 8) {
         cout << "Too short! Must be at least 8 characters." << endl;
     }
@@ -335,9 +335,9 @@ int main() {
     double balance = 1000.00;
     int choice;
     double amount;
-    
+
     cout << "=== ATM System ===" << endl;
-    
+
     do {
         // Display menu
         cout << "\n--- Main Menu ---" << endl;
@@ -347,56 +347,56 @@ int main() {
         cout << "4. Exit" << endl;
         cout << "Enter choice (1-4): ";
         cin >> choice;
-        
+
         switch (choice) {
             case 1:
                 cout << fixed << setprecision(2);
                 cout << "\nCurrent Balance: $" << balance << endl;
                 break;
-            
+
             case 2:
                 do {
                     cout << "\nEnter deposit amount: $";
                     cin >> amount;
-                    
+
                     if (amount <= 0) {
                         cout << "Invalid amount! Must be positive." << endl;
                     }
                 } while (amount <= 0);
-                
+
                 balance += amount;
                 cout << "Deposit successful!" << endl;
                 cout << "New balance: $" << balance << endl;
                 break;
-            
+
             case 3:
                 do {
                     cout << "\nEnter withdrawal amount: $";
                     cin >> amount;
-                    
+
                     if (amount <= 0) {
                         cout << "Invalid amount! Must be positive." << endl;
                     } else if (amount > balance) {
                         cout << "Insufficient funds! Balance: $" << balance << endl;
                     }
                 } while (amount <= 0 || amount > balance);
-                
+
                 balance -= amount;
                 cout << "Withdrawal successful!" << endl;
                 cout << "New balance: $" << balance << endl;
                 break;
-            
+
             case 4:
                 cout << "\nThank you for using ATM!" << endl;
                 break;
-            
+
             default:
                 cout << "\nInvalid choice! Please select 1-4." << endl;
                 break;
         }
-        
+
     } while (choice != 4);
-    
+
     return 0;
 }
 ```
@@ -562,10 +562,10 @@ using namespace std;
 
 int main() {
     int rows;
-    
+
     cout << "Enter number of rows: ";
     cin >> rows;
-    
+
     // Right triangle
     cout << "\n--- Right Triangle ---" << endl;
     for (int i = 1; i <= rows; i++) {
@@ -574,7 +574,7 @@ int main() {
         }
         cout << endl;
     }
-    
+
     // Inverted triangle
     cout << "\n--- Inverted Triangle ---" << endl;
     for (int i = rows; i >= 1; i--) {
@@ -583,7 +583,7 @@ int main() {
         }
         cout << endl;
     }
-    
+
     // Number pyramid
     cout << "\n--- Number Pyramid ---" << endl;
     for (int i = 1; i <= rows; i++) {
@@ -592,7 +592,7 @@ int main() {
         }
         cout << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -623,21 +623,21 @@ using namespace std;
 
 int main() {
     int number;
-    
+
     cout << "Enter numbers (0 to stop):" << endl;
-    
+
     while (true) {  // Infinite loop
         cin >> number;
-        
+
         if (number == 0) {
             break;  // Exit loop when 0 is entered
         }
-        
+
         cout << "You entered: " << number << endl;
     }
-    
+
     cout << "Loop ended!" << endl;
-    
+
     return 0;
 }
 ```
@@ -673,16 +673,16 @@ int maxAttempts = 3;
 while (attempts < maxAttempts) {
     cout << "Enter password: ";
     cin >> password;
-    
+
     if (password == correctPassword) {
         cout << "Access granted!" << endl;
         break;  // Exit loop on success
     }
-    
+
     attempts++;
-    
+
     if (attempts < maxAttempts) {
-        cout << "Wrong password! " << (maxAttempts - attempts) 
+        cout << "Wrong password! " << (maxAttempts - attempts)
              << " attempts remaining." << endl;
     }
 }
@@ -714,7 +714,7 @@ for (int i = 1; i <= 10; i++) {
     if (i % 2 == 0) {
         continue;  // Skip even numbers
     }
-    
+
     cout << i << " ";  // Only odd numbers print
 }
 cout << endl;
@@ -731,7 +731,7 @@ for (int i = 0; i < 7; i++) {
     if (numbers[i] < 0) {
         continue;  // Skip negative numbers
     }
-    
+
     cout << numbers[i] << " ";
 }
 cout << endl;
@@ -749,12 +749,12 @@ cout << "Enter 5 positive numbers:" << endl;
 for (int i = 0; i < 5; i++) {
     int num;
     cin >> num;
-    
+
     if (num <= 0) {
         cout << "Invalid! Skipping..." << endl;
         continue;  // Skip to next iteration
     }
-    
+
     sum += num;
     count++;
 }
@@ -799,7 +799,7 @@ for (int i = 1; i <= 10; i++) {
 ```cpp
 for (initialization1; condition1; update1) {
     // Outer loop
-    
+
     for (initialization2; condition2; update2) {
         // Inner loop
         // Executes multiple times per outer loop iteration
@@ -818,14 +818,14 @@ using namespace std;
 
 int main() {
     cout << "Multiplication Table (1-10):" << endl;
-    
+
     for (int i = 1; i <= 10; i++) {
         for (int j = 1; j <= 10; j++) {
             cout << setw(4) << (i * j);
         }
         cout << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -911,7 +911,7 @@ using namespace std;
 
 int main() {
     int n = 5;
-    
+
     // Pattern 1: Pyramid
     cout << "--- Pyramid ---" << endl;
     for (int i = 1; i <= n; i++) {
@@ -925,7 +925,7 @@ int main() {
         }
         cout << endl;
     }
-    
+
     // Pattern 2: Diamond
     cout << "\n--- Diamond ---" << endl;
     // Upper half
@@ -948,7 +948,7 @@ int main() {
         }
         cout << endl;
     }
-    
+
     // Pattern 3: Hollow rectangle
     cout << "\n--- Hollow Rectangle ---" << endl;
     int rows = 5, cols = 8;
@@ -962,7 +962,7 @@ int main() {
         }
         cout << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1013,13 +1013,13 @@ for (int i = 1; i <= 10 && !found; i++) {
 
 ### Comparison Table
 
-|Feature|for|while|do-while|
-|---|---|---|---|
-|**Check condition**|Before each iteration|Before each iteration|After each iteration|
-|**Minimum executions**|0 (if condition false)|0 (if condition false)|1 (always)|
-|**Best for**|Counting, known iterations|Unknown iterations|At least one execution|
-|**Syntax**|Compact|Simple|Simple|
-|**Common use**|Arrays, patterns, counting|Validation, file reading|Menus, input validation|
+| Feature                | for                        | while                    | do-while                |
+| ---------------------- | -------------------------- | ------------------------ | ----------------------- |
+| **Check condition**    | Before each iteration      | Before each iteration    | After each iteration    |
+| **Minimum executions** | 0 (if condition false)     | 0 (if condition false)   | 1 (always)              |
+| **Best for**           | Counting, known iterations | Unknown iterations       | At least one execution  |
+| **Syntax**             | Compact                    | Simple                   | Simple                  |
+| **Common use**         | Arrays, patterns, counting | Validation, file reading | Menus, input validation |
 
 ---
 
@@ -1034,10 +1034,10 @@ using namespace std;
 int main() {
     int number;
     bool isPrime = true;
-    
+
     cout << "Enter a number: ";
     cin >> number;
-    
+
     if (number <= 1) {
         isPrime = false;
     } else {
@@ -1049,13 +1049,13 @@ int main() {
             }
         }
     }
-    
+
     if (isPrime) {
         cout << number << " is a PRIME number." << endl;
     } else {
         cout << number << " is NOT a prime number." << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1068,19 +1068,19 @@ using namespace std;
 
 int main() {
     int n;
-    
+
     cout << "How many Fibonacci numbers to generate? ";
     cin >> n;
-    
+
     if (n <= 0) {
         cout << "Invalid input!" << endl;
         return 1;
     }
-    
+
     long long first = 0, second = 1, next;
-    
+
     cout << "Fibonacci Sequence: ";
-    
+
     for (int i = 1; i <= n; i++) {
         if (i == 1) {
             cout << first << " ";
@@ -1093,9 +1093,9 @@ int main() {
             second = next;
         }
     }
-    
+
     cout << endl;
-    
+
     return 0;
 }
 ```
@@ -1112,10 +1112,10 @@ int main() {
     int choice;
     double amount;
     bool running = true;
-    
+
     cout << "=== Simple Bank ===" << endl;
     cout << "Starting balance: $" << balance << endl;
-    
+
     while (running) {
         cout << "\n--- Menu ---" << endl;
         cout << "1. Deposit" << endl;
@@ -1125,12 +1125,12 @@ int main() {
         cout << "5. Exit" << endl;
         cout << "Choice: ";
         cin >> choice;
-        
+
         switch (choice) {
             case 1:
                 cout << "Enter deposit amount: $";
                 cin >> amount;
-                
+
                 if (amount > 0) {
                     balance += amount;
                     cout << "Deposited $" << amount << endl;
@@ -1138,11 +1138,11 @@ int main() {
                     cout << "Invalid amount!" << endl;
                 }
                 break;
-            
+
             case 2:
                 cout << "Enter withdrawal amount: $";
                 cin >> amount;
-                
+
                 if (amount > 0 && amount <= balance) {
                     balance -= amount;
                     cout << "Withdrawn $" << amount << endl;
@@ -1152,27 +1152,27 @@ int main() {
                     cout << "Invalid amount!" << endl;
                 }
                 break;
-            
+
             case 3:
                 cout << fixed << setprecision(2);
                 cout << "Current balance: $" << balance << endl;
                 break;
-            
+
             case 4:
                 cout << "Feature coming soon!" << endl;
                 break;
-            
+
             case 5:
                 cout << "Thank you for banking with us!" << endl;
                 running = false;
                 break;
-            
+
             default:
                 cout << "Invalid choice!" << endl;
                 break;
         }
     }
-    
+
     return 0;
 }
 ```
@@ -1188,32 +1188,32 @@ int main() {
     int numStudents;
     double score, sum = 0, highest = 0, lowest = 100;
     int countA = 0, countB = 0, countC = 0, countD = 0, countF = 0;
-    
+
     cout << "How many students? ";
     cin >> numStudents;
-    
+
     if (numStudents <= 0) {
         cout << "Invalid number of students!" << endl;
         return 1;
     }
-    
+
     // Input scores
     for (int i = 1; i <= numStudents; i++) {
         do {
             cout << "Enter score for student " << i << " (0-100): ";
             cin >> score;
-            
+
             if (score < 0 || score > 100) {
                 cout << "Invalid score! Try again." << endl;
             }
         } while (score < 0 || score > 100);
-        
+
         // Update statistics
         sum += score;
-        
+
         if (score > highest) highest = score;
         if (score < lowest) lowest = score;
-        
+
         // Count grades
         if (score >= 90) countA++;
         else if (score >= 80) countB++;
@@ -1221,10 +1221,10 @@ int main() {
         else if (score >= 60) countD++;
         else countF++;
     }
-    
+
     // Calculate average
     double average = sum / numStudents;
-    
+
     // Display results
     cout << fixed << setprecision(2);
     cout << "\n=== Grade Statistics ===" << endl;
@@ -1232,14 +1232,14 @@ int main() {
     cout << "Average score: " << average << endl;
     cout << "Highest score: " << highest << endl;
     cout << "Lowest score: " << lowest << endl;
-    
+
     cout << "\n--- Grade Distribution ---" << endl;
     cout << "A (90-100): " << countA << " students" << endl;
     cout << "B (80-89):  " << countB << " students" << endl;
     cout << "C (70-79):  " << countC << " students" << endl;
     cout << "D (60-69):  " << countD << " students" << endl;
     cout << "F (0-59):   " << countF << " students" << endl;
-    
+
     return 0;
 }
 ```
@@ -1253,16 +1253,16 @@ using namespace std;
 
 int main() {
     int month, year, startDay, daysInMonth;
-    
+
     cout << "Enter month (1-12): ";
     cin >> month;
-    
+
     cout << "Enter year: ";
     cin >> year;
-    
+
     cout << "Enter starting day (0=Sunday, 1=Monday, ..., 6=Saturday): ";
     cin >> startDay;
-    
+
     // Determine days in month
     if (month == 2) {
         // Check leap year
@@ -1276,29 +1276,29 @@ int main() {
     } else {
         daysInMonth = 31;
     }
-    
+
     // Display calendar
     cout << "\n--- Calendar ---" << endl;
     cout << "Sun Mon Tue Wed Thu Fri Sat" << endl;
-    
+
     // Print leading spaces
     for (int i = 0; i < startDay; i++) {
         cout << "    ";
     }
-    
+
     // Print days
     int currentDay = startDay;
     for (int day = 1; day <= daysInMonth; day++) {
         cout << setw(3) << day << " ";
         currentDay++;
-        
+
         if (currentDay % 7 == 0) {
             cout << endl;
         }
     }
-    
+
     cout << endl;
-    
+
     return 0;
 }
 ```
@@ -1367,7 +1367,7 @@ int input;
 do {
     cout << "Enter valid input: ";
     cin >> input;
-    
+
     if (invalid) {
         cout << "Error!" << endl;
     }
@@ -1557,11 +1557,11 @@ for (int i = 0; i < 5; i++) {
 
 - Ask user to create a password
 - Check:
-    - At least 8 characters
-    - Contains uppercase letter
-    - Contains lowercase letter
-    - Contains digit
-    - Contains special character
+  - At least 8 characters
+  - Contains uppercase letter
+  - Contains lowercase letter
+  - Contains digit
+  - Contains special character
 - Keep asking until password meets all requirements
 - Show which requirements are missing
 
@@ -1571,10 +1571,10 @@ for (int i = 0; i < 5; i++) {
 
 - Ask user for height
 - Generate patterns:
-    - Right triangle of numbers
-    - Inverted triangle
-    - Full pyramid
-    - Diamond shape
+  - Right triangle of numbers
+  - Inverted triangle
+  - Full pyramid
+  - Diamond shape
 - Let user choose pattern type
 
 ### Exercise 5: Simple Calculator with History
@@ -1603,8 +1603,8 @@ for (int i = 0; i < 5; i++) {
 
 - Ask for a starting number
 - Apply rules:
-    - If even: divide by 2
-    - If odd: multiply by 3 and add 1
+  - If even: divide by 2
+  - If odd: multiply by 3 and add 1
 - Continue until reaching 1
 - Display the sequence
 - Count how many steps it took

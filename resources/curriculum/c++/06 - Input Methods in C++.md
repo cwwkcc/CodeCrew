@@ -40,12 +40,12 @@ using namespace std;
 
 int main() {
     int age;
-    
+
     cout << "Enter your age: ";
     cin >> age;
-    
+
     cout << "You are " << age << " years old." << endl;
-    
+
     return 0;
 }
 ```
@@ -53,7 +53,7 @@ int main() {
 **Execution Flow**:
 
 ```
-Program: Enter your age: 
+Program: Enter your age:
 User types: 25 [Enter]
 Program: You are 25 years old.
 ```
@@ -68,21 +68,21 @@ int main() {
     int wholeNumber;
     double decimal;
     char letter;
-    
+
     cout << "Enter an integer: ";
     cin >> wholeNumber;
-    
+
     cout << "Enter a decimal number: ";
     cin >> decimal;
-    
+
     cout << "Enter a character: ";
     cin >> letter;
-    
+
     cout << "\nYou entered:" << endl;
     cout << "Integer: " << wholeNumber << endl;
     cout << "Decimal: " << decimal << endl;
     cout << "Character: " << letter << endl;
-    
+
     return 0;
 }
 ```
@@ -150,12 +150,12 @@ using namespace std;
 
 int main() {
     string firstName;
-    
+
     cout << "Enter your first name: ";
     cin >> firstName;
-    
+
     cout << "Hello, " << firstName << "!" << endl;
-    
+
     return 0;
 }
 ```
@@ -210,12 +210,12 @@ using namespace std;
 
 int main() {
     string fullName;
-    
+
     cout << "Enter your full name: ";
     getline(cin, fullName);
-    
+
     cout << "Hello, " << fullName << "!" << endl;
-    
+
     return 0;
 }
 ```
@@ -236,21 +236,21 @@ using namespace std;
 
 int main() {
     string name, address, city;
-    
+
     cout << "Enter your name: ";
     getline(cin, name);
-    
+
     cout << "Enter your address: ";
     getline(cin, address);
-    
+
     cout << "Enter your city: ";
     getline(cin, city);
-    
+
     cout << "\n--- Information ---" << endl;
     cout << "Name: " << name << endl;
     cout << "Address: " << address << endl;
     cout << "City: " << city << endl;
-    
+
     return 0;
 }
 ```
@@ -282,7 +282,7 @@ cout << "Name: " << name << endl;
 ```
 Enter your age: 25
 Enter your name: Age: 25
-Name: 
+Name:
 ```
 
 **Why?** When you type `25` and press Enter:
@@ -382,16 +382,16 @@ using namespace std;
 
 int main() {
     int age;
-    
+
     cout << "Enter your age: ";
     cin >> age;
-    
+
     if (cin.fail()) {
         cout << "Error: Invalid input!" << endl;
     } else {
         cout << "You entered: " << age << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -405,11 +405,11 @@ using namespace std;
 
 int main() {
     int age;
-    
+
     while (true) {
         cout << "Enter your age (1-120): ";
         cin >> age;
-        
+
         // Check if input failed (wrong type)
         if (cin.fail()) {
             cout << "Error: Please enter a valid number!" << endl;
@@ -417,19 +417,19 @@ int main() {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Clear buffer
             continue;
         }
-        
+
         // Check if age is in valid range
         if (age < 1 || age > 120) {
             cout << "Error: Age must be between 1 and 120!" << endl;
             continue;
         }
-        
+
         // Input is valid!
         break;
     }
-    
+
     cout << "Valid age entered: " << age << endl;
-    
+
     return 0;
 }
 ```
@@ -450,23 +450,23 @@ using namespace std;
 
 int getValidInt(string prompt, int min, int max) {
     int value;
-    
+
     while (true) {
         cout << prompt;
         cin >> value;
-        
+
         if (cin.fail()) {
             cout << "Error: Please enter a valid number!" << endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             continue;
         }
-        
+
         if (value < min || value > max) {
             cout << "Error: Number must be between " << min << " and " << max << "!" << endl;
             continue;
         }
-        
+
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         return value;
     }
@@ -475,10 +475,10 @@ int getValidInt(string prompt, int min, int max) {
 int main() {
     int age = getValidInt("Enter your age (1-120): ", 1, 120);
     int score = getValidInt("Enter your score (0-100): ", 0, 100);
-    
+
     cout << "\nAge: " << age << endl;
     cout << "Score: " << score << endl;
-    
+
     return 0;
 }
 ```
@@ -567,10 +567,10 @@ using namespace std;
 
 int main() {
     string input;
-    
+
     cout << "Enter a number: ";
     getline(cin, input);
-    
+
     try {
         int number = stoi(input);  // String to integer
         cout << "You entered: " << number << endl;
@@ -579,7 +579,7 @@ int main() {
     catch (...) {
         cout << "Error: Invalid number!" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -593,13 +593,13 @@ using namespace std;
 
 int main() {
     string input;
-    
+
     cout << "Enter your age: ";
     getline(cin, input);
-    
+
     try {
         int age = stoi(input);
-        
+
         if (age < 0 || age > 120) {
             cout << "Invalid age range!" << endl;
         } else {
@@ -612,7 +612,7 @@ int main() {
     catch (out_of_range&) {
         cout << "Error: Number too large!" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -629,16 +629,16 @@ using namespace std;
 
 int main() {
     int choice;
-    
+
     cout << "=== Main Menu ===" << endl;
     cout << "1. Option One" << endl;
     cout << "2. Option Two" << endl;
     cout << "3. Option Three" << endl;
     cout << "4. Exit" << endl;
     cout << "Enter your choice (1-4): ";
-    
+
     cin >> choice;
-    
+
     if (choice == 1) {
         cout << "You selected Option One" << endl;
     } else if (choice == 2) {
@@ -650,7 +650,7 @@ int main() {
     } else {
         cout << "Invalid choice!" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -664,7 +664,7 @@ using namespace std;
 
 int main() {
     int choice;
-    
+
     while (true) {
         cout << "\n=== Main Menu ===" << endl;
         cout << "1. New Game" << endl;
@@ -672,9 +672,9 @@ int main() {
         cout << "3. Settings" << endl;
         cout << "4. Exit" << endl;
         cout << "Choice: ";
-        
+
         cin >> choice;
-        
+
         // Validate input
         if (cin.fail()) {
             cout << "Invalid input! Please enter a number." << endl;
@@ -682,12 +682,12 @@ int main() {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             continue;
         }
-        
+
         if (choice < 1 || choice > 4) {
             cout << "Invalid choice! Please enter 1-4." << endl;
             continue;
         }
-        
+
         // Process valid choice
         if (choice == 1) {
             cout << "Starting new game..." << endl;
@@ -700,7 +700,7 @@ int main() {
             break;
         }
     }
-    
+
     return 0;
 }
 ```
@@ -717,10 +717,10 @@ using namespace std;
 
 int main() {
     char answer;
-    
+
     cout << "Do you want to continue? (Y/N): ";
     cin >> answer;
-    
+
     if (answer == 'Y' || answer == 'y') {
         cout << "Continuing..." << endl;
     } else if (answer == 'N' || answer == 'n') {
@@ -728,7 +728,7 @@ int main() {
     } else {
         cout << "Invalid input!" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -743,16 +743,16 @@ using namespace std;
 
 bool getYesNo(string question) {
     string answer;
-    
+
     while (true) {
         cout << question << " (yes/no): ";
         getline(cin, answer);
-        
+
         // Convert to lowercase
         for (char& c : answer) {
             c = tolower(c);
         }
-        
+
         if (answer == "yes" || answer == "y") {
             return true;
         } else if (answer == "no" || answer == "n") {
@@ -769,13 +769,13 @@ int main() {
     } else {
         cout << "Maybe you'll learn to love it!" << endl;
     }
-    
+
     if (getYesNo("Continue?")) {
         cout << "Continuing..." << endl;
     } else {
         cout << "Goodbye!" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -793,20 +793,20 @@ using namespace std;
 int main() {
     double num1, num2;
     char operation;
-    
+
     cout << "=== Simple Calculator ===" << endl;
-    
+
     cout << "Enter first number: ";
     cin >> num1;
-    
+
     cout << "Enter operation (+, -, *, /): ";
     cin >> operation;
-    
+
     cout << "Enter second number: ";
     cin >> num2;
-    
+
     double result;
-    
+
     if (operation == '+') {
         result = num1 + num2;
     } else if (operation == '-') {
@@ -823,9 +823,9 @@ int main() {
         cout << "Error: Invalid operation!" << endl;
         return 1;
     }
-    
+
     cout << "\nResult: " << num1 << " " << operation << " " << num2 << " = " << result << endl;
-    
+
     return 0;
 }
 ```
@@ -842,22 +842,22 @@ int main() {
     string firstName, lastName, email, username, password;
     int age;
     char gender;
-    
+
     cout << "=== Registration Form ===" << endl << endl;
-    
+
     // First Name
     cout << "First Name: ";
     getline(cin, firstName);
-    
+
     // Last Name
     cout << "Last Name: ";
     getline(cin, lastName);
-    
+
     // Age with validation
     while (true) {
         cout << "Age: ";
         cin >> age;
-        
+
         if (cin.fail() || age < 13 || age > 120) {
             cout << "Invalid age! Must be 13-120." << endl;
             cin.clear();
@@ -867,12 +867,12 @@ int main() {
             break;
         }
     }
-    
+
     // Gender
     while (true) {
         cout << "Gender (M/F/O): ";
         cin >> gender;
-        
+
         if (gender == 'M' || gender == 'F' || gender == 'O' ||
             gender == 'm' || gender == 'f' || gender == 'o') {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -883,19 +883,19 @@ int main() {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
-    
+
     // Email
     cout << "Email: ";
     getline(cin, email);
-    
+
     // Username
     cout << "Username: ";
     getline(cin, username);
-    
+
     // Password
     cout << "Password: ";
     getline(cin, password);
-    
+
     // Display summary
     cout << "\n=== Registration Summary ===" << endl;
     cout << "Name: " << firstName << " " << lastName << endl;
@@ -904,9 +904,9 @@ int main() {
     cout << "Email: " << email << endl;
     cout << "Username: " << username << endl;
     cout << "Password: " << string(password.length(), '*') << endl;
-    
+
     cout << "\nRegistration successful!" << endl;
-    
+
     return 0;
 }
 ```
@@ -921,9 +921,9 @@ using namespace std;
 int main() {
     int score = 0;
     string answer;
-    
+
     cout << "=== C++ Quiz ===" << endl << endl;
-    
+
     // Question 1
     cout << "Question 1: What does 'cout' stand for?" << endl;
     cout << "a) Console Output" << endl;
@@ -931,7 +931,7 @@ int main() {
     cout << "c) Computer Output" << endl;
     cout << "Your answer: ";
     getline(cin, answer);
-    
+
     if (answer == "a" || answer == "A") {
         cout << "Correct! ✓" << endl;
         score++;
@@ -939,7 +939,7 @@ int main() {
         cout << "Wrong! ✗ The answer is 'a'" << endl;
     }
     cout << endl;
-    
+
     // Question 2
     cout << "Question 2: Which symbol is used for input in C++?" << endl;
     cout << "a) <<" << endl;
@@ -947,7 +947,7 @@ int main() {
     cout << "c) <>" << endl;
     cout << "Your answer: ";
     getline(cin, answer);
-    
+
     if (answer == "b" || answer == "B") {
         cout << "Correct! ✓" << endl;
         score++;
@@ -955,13 +955,13 @@ int main() {
         cout << "Wrong! ✗ The answer is 'b'" << endl;
     }
     cout << endl;
-    
+
     // Question 3
     cout << "Question 3: What is 5 + 3 * 2?" << endl;
     cout << "Your answer: ";
     int numAnswer;
     cin >> numAnswer;
-    
+
     if (numAnswer == 11) {
         cout << "Correct! ✓" << endl;
         score++;
@@ -969,14 +969,14 @@ int main() {
         cout << "Wrong! ✗ The answer is 11 (multiplication first)" << endl;
     }
     cout << endl;
-    
+
     // Show results
     cout << "=== Quiz Complete ===" << endl;
     cout << "Your score: " << score << "/3" << endl;
-    
+
     double percentage = (score / 3.0) * 100;
     cout << "Percentage: " << percentage << "%" << endl;
-    
+
     if (score == 3) {
         cout << "Perfect score! Excellent! 🌟" << endl;
     } else if (score >= 2) {
@@ -984,7 +984,7 @@ int main() {
     } else {
         cout << "Keep studying! 📚" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1110,12 +1110,12 @@ if (answer == 'y') {
 
 ### Input Method Comparison
 
-|Method|Best For|Pros|Cons|
-|---|---|---|---|
-|`cin >>`|Single words/numbers|Simple, fast|Stops at spaces|
-|`getline()`|Full lines with spaces|Gets entire line|Needs buffer clearing|
-|`cin.get()`|Single characters|Gets exact character|One character only|
-|`stoi()`, etc.|Converting strings|Validates input|Needs error handling|
+| Method         | Best For               | Pros                 | Cons                  |
+| -------------- | ---------------------- | -------------------- | --------------------- |
+| `cin >>`       | Single words/numbers   | Simple, fast         | Stops at spaces       |
+| `getline()`    | Full lines with spaces | Gets entire line     | Needs buffer clearing |
+| `cin.get()`    | Single characters      | Gets exact character | One character only    |
+| `stoi()`, etc. | Converting strings     | Validates input      | Needs error handling  |
 
 ### Best Practices Checklist
 
@@ -1214,9 +1214,9 @@ Create a program that:
 
 - Asks user to create a password
 - Checks if password meets criteria:
-    - At least 8 characters
-    - Contains a number
-    - Contains uppercase and lowercase
+  - At least 8 characters
+  - Contains a number
+  - Contains uppercase and lowercase
 - Asks to confirm password
 - Validates passwords match
 

@@ -286,7 +286,7 @@ With `endl`:
 ```cpp
 cout << "Hello" << endl;
 cout << "World";
-// Output: 
+// Output:
 // Hello
 // World
 ```

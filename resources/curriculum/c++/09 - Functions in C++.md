@@ -101,7 +101,7 @@ int main() {
     greet();  // Function call
     greet();  // Can call multiple times
     greet();
-    
+
     return 0;
 }
 
@@ -209,7 +209,7 @@ int main() {
     printLine();
     greetUser("Alice");
     displayMenu();
-    
+
     return 0;
 }
 ```
@@ -233,7 +233,7 @@ int getAge() {
 int main() {
     int sum = add(10, 5);          // sum = 15
     int userAge = getAge();        // Gets input and returns it
-    
+
     return 0;
 }
 ```
@@ -259,13 +259,13 @@ bool isEven(int number) {
 
 bool isPrime(int n) {
     if (n <= 1) return false;
-    
+
     for (int i = 2; i * i <= n; i++) {
         if (n % i == 0) {
             return false;
         }
     }
-    
+
     return true;
 }
 
@@ -273,11 +273,11 @@ int main() {
     if (isEven(10)) {
         cout << "10 is even" << endl;
     }
-    
+
     if (isPrime(17)) {
         cout << "17 is prime" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -400,10 +400,10 @@ double power(double base, int exponent = 2) {
 int main() {
     greet();              // Uses default: "Hello, Guest!"
     greet("Alice");       // Uses provided: "Hello, Alice!"
-    
+
     cout << power(5);     // 5^2 = 25
     cout << power(5, 3);  // 5^3 = 125
-    
+
     return 0;
 }
 ```
@@ -441,11 +441,11 @@ void modifyValue(int x) {
 
 int main() {
     int num = 5;
-    
+
     cout << "Before function: " << num << endl;  // 5
     modifyValue(num);                             // Inside: 100
     cout << "After function: " << num << endl;   // 5 (unchanged!)
-    
+
     return 0;
 }
 ```
@@ -478,11 +478,11 @@ void modifyValue(int &x) {  // Note the &
 
 int main() {
     int num = 5;
-    
+
     cout << "Before function: " << num << endl;  // 5
     modifyValue(num);                             // Inside: 100
     cout << "After function: " << num << endl;   // 100 (changed!)
-    
+
     return 0;
 }
 ```
@@ -542,7 +542,7 @@ int main() {
 ### Multiple Return Values Using References
 
 ```cpp
-void getRectangleInfo(double length, double width, 
+void getRectangleInfo(double length, double width,
                       double &area, double &perimeter) {
     area = length * width;
     perimeter = 2 * (length + width);
@@ -550,12 +550,12 @@ void getRectangleInfo(double length, double width,
 
 int main() {
     double a, p;
-    
+
     getRectangleInfo(5.0, 3.0, a, p);
-    
+
     cout << "Area: " << a << endl;          // 15
     cout << "Perimeter: " << p << endl;     // 16
-    
+
     return 0;
 }
 ```
@@ -591,7 +591,7 @@ int main() {
     cout << add(5, 3) << endl;           // Calls function 1: 8
     cout << add(5, 3, 2) << endl;        // Calls function 2: 10
     cout << add(5.5, 3.2) << endl;       // Calls function 3: 8.7
-    
+
     return 0;
 }
 ```
@@ -622,7 +622,7 @@ int main() {
     display(42);         // Calls first version
     display(3.14);       // Calls second version
     display("Hello");    // Calls third version
-    
+
     return 0;
 }
 ```
@@ -667,7 +667,7 @@ void countdown(int n) {
         cout << "Blast off!" << endl;
         return;  // Base case - stop recursion
     }
-    
+
     cout << n << " ";
     countdown(n - 1);  // Recursive call
 }
@@ -705,7 +705,7 @@ int factorial(int n) {
     if (n <= 1) {
         return 1;
     }
-    
+
     // Recursive case
     return n * factorial(n - 1);
 }
@@ -738,7 +738,7 @@ int fibonacci(int n) {
     if (n <= 1) {
         return n;
     }
-    
+
     // Recursive case
     return fibonacci(n - 1) + fibonacci(n - 2);
 }
@@ -750,7 +750,7 @@ int main() {
     }
     cout << endl;
     // Output: 0 1 1 2 3 5 8 13 21 34
-    
+
     return 0;
 }
 ```
@@ -763,7 +763,7 @@ int sumDigits(int n) {
     if (n == 0) {
         return 0;
     }
-    
+
     // Recursive case
     return (n % 10) + sumDigits(n / 10);
 }
@@ -868,7 +868,7 @@ int x = 100;  // Global
 void function() {
     int x = 50;  // Local - shadows global
     cout << x << endl;  // Prints 50 (local)
-    
+
     cout << ::x << endl;  // Prints 100 (global, using :: operator)
 }
 ```
@@ -914,36 +914,36 @@ void getNumbers(double &num1, double &num2);
 int main() {
     double num1, num2, result;
     char choice;
-    
+
     do {
         displayMenu();
         choice = getChoice();
-        
+
         if (choice == 'Q' || choice == 'q') {
             break;
         }
-        
+
         getNumbers(num1, num2);
-        
+
         switch (choice) {
             case 'A':
             case 'a':
                 result = add(num1, num2);
                 cout << "Result: " << result << endl;
                 break;
-            
+
             case 'S':
             case 's':
                 result = subtract(num1, num2);
                 cout << "Result: " << result << endl;
                 break;
-            
+
             case 'M':
             case 'm':
                 result = multiply(num1, num2);
                 cout << "Result: " << result << endl;
                 break;
-            
+
             case 'D':
             case 'd':
                 if (num2 != 0) {
@@ -953,18 +953,18 @@ int main() {
                     cout << "Error: Division by zero!" << endl;
                 }
                 break;
-            
+
             default:
                 cout << "Invalid choice!" << endl;
                 break;
         }
-        
+
         cout << endl;
-        
+
     } while (true);
-    
+
     cout << "Thank you for using calculator!" << endl;
-    
+
     return 0;
 }
 
@@ -1025,12 +1025,12 @@ void performConversion(int choice);
 
 int main() {
     int choice;
-    
+
     do {
         displayMenu();
         cout << "Enter choice (1-7): ";
         cin >> choice;
-        
+
         if (choice >= 1 && choice <= 6) {
             performConversion(choice);
         } else if (choice == 7) {
@@ -1038,11 +1038,11 @@ int main() {
         } else {
             cout << "Invalid choice!" << endl;
         }
-        
+
         cout << endl;
-        
+
     } while (choice != 7);
-    
+
     return 0;
 }
 
@@ -1059,38 +1059,38 @@ void displayMenu() {
 
 void performConversion(int choice) {
     double temp, result;
-    
+
     cout << "Enter temperature: ";
     cin >> temp;
-    
+
     cout << fixed << setprecision(2);
-    
+
     switch (choice) {
         case 1:
             result = celsiusToFahrenheit(temp);
             cout << temp << "°C = " << result << "°F" << endl;
             break;
-        
+
         case 2:
             result = fahrenheitToCelsius(temp);
             cout << temp << "°F = " << result << "°C" << endl;
             break;
-        
+
         case 3:
             result = celsiusToKelvin(temp);
             cout << temp << "°C = " << result << "K" << endl;
             break;
-        
+
         case 4:
             result = kelvinToCelsius(temp);
             cout << temp << "K = " << result << "°C" << endl;
             break;
-        
+
         case 5:
             result = celsiusToKelvin(fahrenheitToCelsius(temp));
             cout << temp << "°F = " << result << "K" << endl;
             break;
-        
+
         case 6:
             result = celsiusToFahrenheit(kelvinToCelsius(temp));
             cout << temp << "K = " << result << "°F" << endl;
@@ -1138,17 +1138,17 @@ int main() {
     double grades[MAX_STUDENTS];
     int count = 0;
     int choice;
-    
+
     do {
         displayMenu();
         cout << "Choice: ";
         cin >> choice;
-        
+
         switch (choice) {
             case 1:
                 enterGrades(grades, count);
                 break;
-            
+
             case 2:
                 if (count > 0) {
                     displayGrades(grades, count);
@@ -1156,7 +1156,7 @@ int main() {
                     cout << "No grades entered yet!" << endl;
                 }
                 break;
-            
+
             case 3:
                 if (count > 0) {
                     displayStatistics(grades, count);
@@ -1164,20 +1164,20 @@ int main() {
                     cout << "No grades entered yet!" << endl;
                 }
                 break;
-            
+
             case 4:
                 cout << "Exiting program..." << endl;
                 break;
-            
+
             default:
                 cout << "Invalid choice!" << endl;
                 break;
         }
-        
+
         cout << endl;
-        
+
     } while (choice != 4);
-    
+
     return 0;
 }
 
@@ -1192,33 +1192,33 @@ void displayMenu() {
 void enterGrades(double grades[], int &count) {
     cout << "How many students? ";
     cin >> count;
-    
+
     if (count > MAX_STUDENTS) {
         cout << "Maximum " << MAX_STUDENTS << " students allowed!" << endl;
         count = MAX_STUDENTS;
     }
-    
+
     for (int i = 0; i < count; i++) {
         do {
             cout << "Enter grade for student " << (i + 1) << " (0-100): ";
             cin >> grades[i];
-            
+
             if (grades[i] < 0 || grades[i] > 100) {
                 cout << "Invalid grade! Try again." << endl;
             }
         } while (grades[i] < 0 || grades[i] > 100);
     }
-    
+
     cout << "Grades entered successfully!" << endl;
 }
 
 void displayGrades(double grades[], int count) {
     cout << "\n=== Student Grades ===" << endl;
     cout << fixed << setprecision(2);
-    
+
     for (int i = 0; i < count; i++) {
-        cout << "Student " << (i + 1) << ": " 
-             << grades[i] << " (" 
+        cout << "Student " << (i + 1) << ": "
+             << grades[i] << " ("
              << getLetterGrade(grades[i]) << ")" << endl;
     }
 }
@@ -1227,11 +1227,11 @@ void displayStatistics(double grades[], int count) {
     double average = calculateAverage(grades, count);
     double highest = findHighest(grades, count);
     double lowest = findLowest(grades, count);
-    
+
     cout << fixed << setprecision(2);
     cout << "\n=== Statistics ===" << endl;
     cout << "Number of students: " << count << endl;
-    cout << "Average grade: " << average << " (" 
+    cout << "Average grade: " << average << " ("
          << getLetterGrade(average) << ")" << endl;
     cout << "Highest grade: " << highest << endl;
     cout << "Lowest grade: " << lowest << endl;
@@ -1295,39 +1295,39 @@ bool isPalindrome(int n);
 
 int main() {
     int num1, num2;
-    
+
     cout << "Enter first number: ";
     cin >> num1;
-    
+
     cout << "Enter second number: ";
     cin >> num2;
-    
+
     // Prime check
     cout << "\n--- Prime Check ---" << endl;
     cout << num1 << (isPrime(num1) ? " is" : " is not") << " prime" << endl;
     cout << num2 << (isPrime(num2) ? " is" : " is not") << " prime" << endl;
-    
+
     // GCD and LCM
     cout << "\n--- GCD and LCM ---" << endl;
     cout << "GCD(" << num1 << ", " << num2 << ") = " << gcd(num1, num2) << endl;
     cout << "LCM(" << num1 << ", " << num2 << ") = " << lcm(num1, num2) << endl;
-    
+
     // Perfect number
     cout << "\n--- Perfect Number ---" << endl;
     cout << num1 << (isPerfect(num1) ? " is" : " is not") << " perfect" << endl;
-    
+
     // Divisors
     cout << "\n--- Divisors of " << num1 << " ---" << endl;
     printDivisors(num1);
     cout << "Sum of divisors: " << sumOfDivisors(num1) << endl;
-    
+
     // Digit operations
     cout << "\n--- Digit Operations for " << num1 << " ---" << endl;
     cout << "Number of digits: " << countDigits(num1) << endl;
     cout << "Sum of digits: " << sumOfDigits(num1) << endl;
     cout << "Reversed number: " << reverseNumber(num1) << endl;
     cout << num1 << (isPalindrome(num1) ? " is" : " is not") << " a palindrome" << endl;
-    
+
     return 0;
 }
 
@@ -1335,13 +1335,13 @@ bool isPrime(int n) {
     if (n <= 1) return false;
     if (n <= 3) return true;
     if (n % 2 == 0 || n % 3 == 0) return false;
-    
+
     for (int i = 5; i * i <= n; i += 6) {
         if (n % i == 0 || n % (i + 2) == 0) {
             return false;
         }
     }
-    
+
     return true;
 }
 

@@ -543,16 +543,16 @@ using namespace std;
 
 int main() {
     int localVariable = 10;  // Local to main()
-    
+
     if (true) {
         int blockVariable = 20;  // Local to this if block
         cout << localVariable;   // ✓ Can access
         cout << blockVariable;   // ✓ Can access
     }
-    
+
     cout << localVariable;   // ✓ Can access
     cout << blockVariable;   // ✗ Error! Outside its scope
-    
+
     return 0;
 }
 ```
@@ -590,16 +590,16 @@ Variables declared inside `{ }` braces are only accessible within those braces.
 ```cpp
 int main() {
     int x = 10;
-    
+
     {
         int y = 20;
         cout << x;  // ✓ Works
         cout << y;  // ✓ Works
     }
-    
+
     cout << x;  // ✓ Works
     cout << y;  // ✗ Error! y doesn't exist here
-    
+
     return 0;
 }
 ```
@@ -973,16 +973,16 @@ using namespace std;
 int main() {
     double num1, num2, result;
     char operation;
-    
+
     cout << "Enter first number: ";
     cin >> num1;
-    
+
     cout << "Enter operation (+, -, *, /): ";
     cin >> operation;
-    
+
     cout << "Enter second number: ";
     cin >> num2;
-    
+
     if (operation == '+') {
         result = num1 + num2;
     } else if (operation == '-') {
@@ -992,9 +992,9 @@ int main() {
     } else if (operation == '/') {
         result = num1 / num2;
     }
-    
+
     cout << "Result: " << result << endl;
-    
+
     return 0;
 }
 ```
@@ -1007,14 +1007,14 @@ using namespace std;
 
 int main() {
     double celsius, fahrenheit;
-    
+
     cout << "Enter temperature in Celsius: ";
     cin >> celsius;
-    
+
     fahrenheit = (celsius * 9.0 / 5.0) + 32;
-    
+
     cout << celsius << "°C = " << fahrenheit << "°F" << endl;
-    
+
     return 0;
 }
 ```
@@ -1027,17 +1027,17 @@ using namespace std;
 
 int main() {
     int birthYear, currentYear, age;
-    
+
     cout << "Enter current year: ";
     cin >> currentYear;
-    
+
     cout << "Enter your birth year: ";
     cin >> birthYear;
-    
+
     age = currentYear - birthYear;
-    
+
     cout << "You are " << age << " years old." << endl;
-    
+
     return 0;
 }
 ```
@@ -1051,14 +1051,14 @@ using namespace std;
 int main() {
     const double PI = 3.14159;
     double radius, area;
-    
+
     cout << "Enter circle radius: ";
     cin >> radius;
-    
+
     area = PI * radius * radius;
-    
+
     cout << "Circle area: " << area << endl;
-    
+
     return 0;
 }
 ```
@@ -1087,10 +1087,10 @@ int main() {
     cout << "Size of int: " << sizeof(int) << " bytes" << endl;
     cout << "Size of double: " << sizeof(double) << " bytes" << endl;
     cout << "Size of char: " << sizeof(char) << " bytes" << endl;
-    
+
     int age = 25;
     cout << "Size of age variable: " << sizeof(age) << " bytes" << endl;
-    
+
     return 0;
 }
 ```

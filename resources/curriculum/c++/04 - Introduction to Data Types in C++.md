@@ -227,12 +227,12 @@ unsigned int:  0 to 4 billion (roughly)
 
 **Integer Types Size Comparison Table**:
 
-|Type|Size|Range (Signed)|Range (Unsigned)|
-|---|---|---|---|
-|short|2 bytes|-32,768 to 32,767|0 to 65,535|
-|int|4 bytes|-2.1 billion to 2.1 billion|0 to 4.2 billion|
-|long|4-8 bytes|At least ±2.1 billion|At least 0 to 4.2 billion|
-|long long|8 bytes|±9.2 quintillion|0 to 18.4 quintillion|
+| Type      | Size      | Range (Signed)              | Range (Unsigned)          |
+| --------- | --------- | --------------------------- | ------------------------- |
+| short     | 2 bytes   | -32,768 to 32,767           | 0 to 65,535               |
+| int       | 4 bytes   | -2.1 billion to 2.1 billion | 0 to 4.2 billion          |
+| long      | 4-8 bytes | At least ±2.1 billion       | At least 0 to 4.2 billion |
+| long long | 8 bytes   | ±9.2 quintillion            | 0 to 18.4 quintillion     |
 
 ---
 
@@ -340,11 +340,11 @@ long double astronomicalDistance = 1.496e11L;
 
 **Floating-Point Types Comparison**:
 
-|Type|Size|Precision|Example Use Case|
-|---|---|---|---|
-|float|4 bytes|6-7 digits|Game graphics, basic calculations|
-|double|8 bytes|15-16 digits|Scientific work, financial apps|
-|long double|8-16 bytes|18+ digits|Research, advanced mathematics|
+| Type        | Size       | Precision    | Example Use Case                  |
+| ----------- | ---------- | ------------ | --------------------------------- |
+| float       | 4 bytes    | 6-7 digits   | Game graphics, basic calculations |
+| double      | 8 bytes    | 15-16 digits | Scientific work, financial apps   |
+| long double | 8-16 bytes | 18+ digits   | Research, advanced mathematics    |
 
 **Special Floating-Point Values**:
 
@@ -713,17 +713,17 @@ class Rectangle {
 private:
     double width;
     double height;
-    
+
 public:
     Rectangle(double w, double h) {
         width = w;
         height = h;
     }
-    
+
     double area() {
         return width * height;
     }
-    
+
     double perimeter() {
         return 2 * (width + height);
     }
@@ -891,7 +891,7 @@ int main() {
     cout << "float: " << sizeof(float) << " bytes" << endl;
     cout << "double: " << sizeof(double) << " bytes" << endl;
     cout << "bool: " << sizeof(bool) << " bytes" << endl;
-    
+
     return 0;
 }
 ```
@@ -904,14 +904,14 @@ int main() {
 using namespace std;
 
 int main() {
-    cout << "int range: " 
-         << numeric_limits<int>::min() << " to " 
+    cout << "int range: "
+         << numeric_limits<int>::min() << " to "
          << numeric_limits<int>::max() << endl;
-         
-    cout << "double range: " 
-         << numeric_limits<double>::min() << " to " 
+
+    cout << "double range: "
+         << numeric_limits<double>::min() << " to "
          << numeric_limits<double>::max() << endl;
-         
+
     return 0;
 }
 ```
@@ -1191,7 +1191,7 @@ int main() {
     double gpa = 3.85;
     bool isFullTime = true;
     unsigned int creditsCompleted = 90;
-    
+
     cout << "Student Information:" << endl;
     cout << "Name: " << studentName << endl;
     cout << "ID: " << studentID << endl;
@@ -1200,7 +1200,7 @@ int main() {
     cout << "GPA: " << gpa << endl;
     cout << "Full-time: " << (isFullTime ? "Yes" : "No") << endl;
     cout << "Credits: " << creditsCompleted << endl;
-    
+
     return 0;
 }
 ```
@@ -1213,16 +1213,16 @@ using namespace std;
 
 int main() {
     double celsius, fahrenheit, kelvin;
-    
+
     cout << "Enter temperature in Celsius: ";
     cin >> celsius;
-    
+
     fahrenheit = (celsius * 9.0 / 5.0) + 32.0;
     kelvin = celsius + 273.15;
-    
+
     cout << celsius << "°C = " << fahrenheit << "°F" << endl;
     cout << celsius << "°C = " << kelvin << "K" << endl;
-    
+
     return 0;
 }
 ```
@@ -1241,26 +1241,26 @@ int main() {
     bool isActive = true;
     char accountType = 'S';  // S=Savings, C=Checking
     unsigned int transactionCount = 145;
-    
+
     // Deposit
     double depositAmount = 500.00;
     balance += depositAmount;
     transactionCount++;
-    
+
     // Withdraw
     double withdrawAmount = 200.00;
     if (balance >= withdrawAmount) {
         balance -= withdrawAmount;
         transactionCount++;
     }
-    
+
     cout << "Account: " << accountNumber << endl;
     cout << "Holder: " << accountHolder << endl;
     cout << "Type: " << (accountType == 'S' ? "Savings" : "Checking") << endl;
     cout << "Balance: $" << balance << endl;
     cout << "Transactions: " << transactionCount << endl;
     cout << "Status: " << (isActive ? "Active" : "Inactive") << endl;
-    
+
     return 0;
 }
 ```
@@ -1280,18 +1280,18 @@ int main() {
     bool hasShield = false;
     double healthPercentage = 100.0;
     unsigned long long totalXP = 0;
-    
+
     // Game events
     score += 100;           // Collected item
     totalXP += 50;
-    
+
     healthPercentage -= 25.5;  // Took damage
-    
+
     if (healthPercentage <= 0 && lives > 0) {
         lives--;
         healthPercentage = 100.0;
     }
-    
+
     cout << "Player: " << playerName << endl;
     cout << "Level: " << level << endl;
     cout << "Score: " << score << endl;
@@ -1299,7 +1299,7 @@ int main() {
     cout << "Health: " << healthPercentage << "%" << endl;
     cout << "XP: " << totalXP << endl;
     cout << "Shield: " << (hasShield ? "Active" : "Inactive") << endl;
-    
+
     return 0;
 }
 ```

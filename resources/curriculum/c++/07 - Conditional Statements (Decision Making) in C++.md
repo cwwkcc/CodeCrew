@@ -71,16 +71,16 @@ using namespace std;
 
 int main() {
     int number;
-    
+
     cout << "Enter a number: ";
     cin >> number;
-    
+
     if (number > 0) {
         cout << "The number is positive!" << endl;
     }
-    
+
     cout << "Program ends." << endl;
-    
+
     return 0;
 }
 ```
@@ -196,16 +196,16 @@ using namespace std;
 
 int main() {
     int number;
-    
+
     cout << "Enter a number: ";
     cin >> number;
-    
+
     if (number % 2 == 0) {
         cout << number << " is EVEN" << endl;
     } else {
         cout << number << " is ODD" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -252,10 +252,10 @@ using namespace std;
 int main() {
     string password;
     const string CORRECT_PASSWORD = "secret123";
-    
+
     cout << "Enter password: ";
     cin >> password;
-    
+
     if (password == CORRECT_PASSWORD) {
         cout << "✓ Access granted!" << endl;
         cout << "Welcome to the system." << endl;
@@ -263,7 +263,7 @@ int main() {
         cout << "✗ Access denied!" << endl;
         cout << "Incorrect password." << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -304,10 +304,10 @@ using namespace std;
 
 int main() {
     int score;
-    
+
     cout << "Enter your score (0-100): ";
     cin >> score;
-    
+
     if (score >= 90) {
         cout << "Grade: A" << endl;
     } else if (score >= 80) {
@@ -319,7 +319,7 @@ int main() {
     } else {
         cout << "Grade: F" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -387,20 +387,20 @@ using namespace std;
 
 int main() {
     double weight, height, bmi;
-    
+
     cout << "=== BMI Calculator ===" << endl;
     cout << "Enter weight (kg): ";
     cin >> weight;
-    
+
     cout << "Enter height (m): ";
     cin >> height;
-    
+
     // Calculate BMI
     bmi = weight / (height * height);
-    
+
     cout << fixed << setprecision(1);
     cout << "\nYour BMI: " << bmi << endl;
-    
+
     // Determine category
     if (bmi < 18.5) {
         cout << "Category: Underweight" << endl;
@@ -415,7 +415,7 @@ int main() {
         cout << "Category: Obese" << endl;
         cout << "Recommendation: Consult a doctor" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -433,7 +433,7 @@ int main() {
 ```cpp
 if (outer_condition) {
     // Outer block
-    
+
     if (inner_condition) {
         // Inner block - only executes if BOTH conditions are true
     }
@@ -453,7 +453,7 @@ cin >> age;
 if (age >= 18) {
     // First condition: Adult
     cout << "You are an adult." << endl;
-    
+
     if (age >= 65) {
         // Second condition: Senior
         cout << "You qualify for senior discount!" << endl;
@@ -486,7 +486,7 @@ cin >> number;
 
 if (number > 0) {
     cout << "Positive number" << endl;
-    
+
     if (number % 2 == 0) {
         cout << "And it's EVEN" << endl;
     } else {
@@ -494,7 +494,7 @@ if (number > 0) {
     }
 } else if (number < 0) {
     cout << "Negative number" << endl;
-    
+
     if (number % 2 == 0) {
         cout << "And it's EVEN" << endl;
     } else {
@@ -514,19 +514,19 @@ using namespace std;
 
 int main() {
     string username, password;
-    
+
     cout << "Enter username: ";
     cin >> username;
-    
+
     cout << "Enter password: ";
     cin >> password;
-    
+
     if (username == "admin") {
         cout << "Valid username!" << endl;
-        
+
         if (password.length() >= 8) {
             cout << "Password length is good." << endl;
-            
+
             if (password == "admin123") {
                 cout << "✓ Login successful!" << endl;
             } else {
@@ -538,7 +538,7 @@ int main() {
     } else {
         cout << "✗ Invalid username!" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -553,14 +553,14 @@ int main() {
     int age;
     char day;
     double price;
-    
+
     cout << "=== Movie Ticket Pricing ===" << endl;
     cout << "Enter age: ";
     cin >> age;
-    
+
     cout << "Is it a weekend? (Y/N): ";
     cin >> day;
-    
+
     if (age < 0 || age > 120) {
         cout << "Invalid age!" << endl;
     } else {
@@ -578,16 +578,16 @@ int main() {
             price = 10.00;
             cout << "Category: Adult" << endl;
         }
-        
+
         // Apply weekend surcharge
         if (day == 'Y' || day == 'y') {
             price += 2.00;
             cout << "Weekend surcharge: +$2.00" << endl;
         }
-        
+
         cout << "Total ticket price: $" << price << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -607,15 +607,15 @@ switch (variable) {
     case value1:
         // Code for value1
         break;
-    
+
     case value2:
         // Code for value2
         break;
-    
+
     case value3:
         // Code for value3
         break;
-    
+
     default:
         // Code if no case matches
         break;
@@ -639,44 +639,44 @@ using namespace std;
 
 int main() {
     int day;
-    
+
     cout << "Enter day number (1-7): ";
     cin >> day;
-    
+
     switch (day) {
         case 1:
             cout << "Monday" << endl;
             break;
-        
+
         case 2:
             cout << "Tuesday" << endl;
             break;
-        
+
         case 3:
             cout << "Wednesday" << endl;
             break;
-        
+
         case 4:
             cout << "Thursday" << endl;
             break;
-        
+
         case 5:
             cout << "Friday" << endl;
             break;
-        
+
         case 6:
             cout << "Saturday" << endl;
             break;
-        
+
         case 7:
             cout << "Sunday" << endl;
             break;
-        
+
         default:
             cout << "Invalid day!" << endl;
             break;
     }
-    
+
     return 0;
 }
 ```
@@ -690,32 +690,32 @@ using namespace std;
 int main() {
     double num1, num2, result;
     char operation;
-    
+
     cout << "Enter first number: ";
     cin >> num1;
-    
+
     cout << "Enter operation (+, -, *, /): ";
     cin >> operation;
-    
+
     cout << "Enter second number: ";
     cin >> num2;
-    
+
     switch (operation) {
         case '+':
             result = num1 + num2;
             cout << "Result: " << result << endl;
             break;
-        
+
         case '-':
             result = num1 - num2;
             cout << "Result: " << result << endl;
             break;
-        
+
         case '*':
             result = num1 * num2;
             cout << "Result: " << result << endl;
             break;
-        
+
         case '/':
             if (num2 != 0) {
                 result = num1 / num2;
@@ -724,12 +724,12 @@ int main() {
                 cout << "Error: Division by zero!" << endl;
             }
             break;
-        
+
         default:
             cout << "Invalid operation!" << endl;
             break;
     }
-    
+
     return 0;
 }
 ```
@@ -747,27 +747,27 @@ switch (grade) {
     case 'a':  // Handle both upper and lower case
         cout << "GPA: 4.0" << endl;
         break;
-    
+
     case 'B':
     case 'b':
         cout << "GPA: 3.0" << endl;
         break;
-    
+
     case 'C':
     case 'c':
         cout << "GPA: 2.0" << endl;
         break;
-    
+
     case 'D':
     case 'd':
         cout << "GPA: 1.0" << endl;
         break;
-    
+
     case 'F':
     case 'f':
         cout << "GPA: 0.0" << endl;
         break;
-    
+
     default:
         cout << "Invalid grade!" << endl;
         break;
@@ -785,11 +785,11 @@ switch (number) {
     case 1:
         cout << "One" << endl;
         // No break!
-    
+
     case 2:
         cout << "Two" << endl;
         // No break!
-    
+
     case 3:
         cout << "Three" << endl;
         break;
@@ -814,25 +814,25 @@ switch (month) {
     case 2:
         cout << "Season: Winter" << endl;
         break;
-    
+
     case 3:
     case 4:
     case 5:
         cout << "Season: Spring" << endl;
         break;
-    
+
     case 6:
     case 7:
     case 8:
         cout << "Season: Summer" << endl;
         break;
-    
+
     case 9:
     case 10:
     case 11:
         cout << "Season: Fall" << endl;
         break;
-    
+
     default:
         cout << "Invalid month!" << endl;
         break;
@@ -847,7 +847,7 @@ using namespace std;
 
 int main() {
     int choice;
-    
+
     cout << "=== Main Menu ===" << endl;
     cout << "1. Start New Game" << endl;
     cout << "2. Load Game" << endl;
@@ -856,7 +856,7 @@ int main() {
     cout << "5. Exit" << endl;
     cout << "\nEnter your choice (1-5): ";
     cin >> choice;
-    
+
     switch (choice) {
         case 1:
             cout << "\n--- Starting New Game ---" << endl;
@@ -864,35 +864,35 @@ int main() {
             cout << "Loading world..." << endl;
             cout << "Game started!" << endl;
             break;
-        
+
         case 2:
             cout << "\n--- Load Game ---" << endl;
             cout << "Looking for saved games..." << endl;
             cout << "No saved games found!" << endl;
             break;
-        
+
         case 3:
             cout << "\n--- Settings ---" << endl;
             cout << "1. Audio Settings" << endl;
             cout << "2. Video Settings" << endl;
             cout << "3. Controls" << endl;
             break;
-        
+
         case 4:
             cout << "\n--- Help ---" << endl;
             cout << "Visit our website for tutorials." << endl;
             cout << "www.example.com/help" << endl;
             break;
-        
+
         case 5:
             cout << "\nThanks for playing! Goodbye!" << endl;
             break;
-        
+
         default:
             cout << "\nInvalid choice! Please select 1-5." << endl;
             break;
     }
-    
+
     return 0;
 }
 ```
@@ -1057,14 +1057,14 @@ switch (menuChoice) {
 
 ### Comparison Table
 
-|Feature|if-else|switch-case|
-|---|---|---|
-|**Conditions**|Any boolean expression|Only equality checks|
-|**Data types**|Any|int, char (not string*)|
-|**Ranges**|Yes (`>`, `<`, `>=`, `<=`)|No|
-|**Multiple conditions**|Yes (`&&`, `||
-|**Readability**|Good for few options|Better for many options|
-|**Performance**|Slightly slower|Slightly faster|
+| Feature                 | if-else                    | switch-case             |
+| ----------------------- | -------------------------- | ----------------------- |
+| **Conditions**          | Any boolean expression     | Only equality checks    |
+| **Data types**          | Any                        | int, char (not string*) |
+| **Ranges**              | Yes (`>`, `<`, `>=`, `<=`) | No                      |
+| **Multiple conditions** | Yes (`&&`, `               |                         |
+| **Readability**         | Good for few options       | Better for many options |
+| **Performance**         | Slightly slower            | Slightly faster         |
 
 *Modern C++ (C++17+) supports strings in switch with special techniques, but not in basic C++.
 
@@ -1082,7 +1082,7 @@ int main() {
     double balance = 1000.00;
     int choice;
     double amount;
-    
+
     cout << "=== ATM System ===" << endl;
     cout << "1. Check Balance" << endl;
     cout << "2. Deposit" << endl;
@@ -1090,16 +1090,16 @@ int main() {
     cout << "4. Exit" << endl;
     cout << "\nEnter choice: ";
     cin >> choice;
-    
+
     switch (choice) {
         case 1:
             cout << "\nCurrent Balance: $" << balance << endl;
             break;
-        
+
         case 2:
             cout << "\nEnter amount to deposit: $";
             cin >> amount;
-            
+
             if (amount > 0) {
                 balance += amount;
                 cout << "Deposit successful!" << endl;
@@ -1108,11 +1108,11 @@ int main() {
                 cout << "Invalid amount!" << endl;
             }
             break;
-        
+
         case 3:
             cout << "\nEnter amount to withdraw: $";
             cin >> amount;
-            
+
             if (amount > 0) {
                 if (amount <= balance) {
                     balance -= amount;
@@ -1126,16 +1126,16 @@ int main() {
                 cout << "Invalid amount!" << endl;
             }
             break;
-        
+
         case 4:
             cout << "\nThank you for using ATM!" << endl;
             break;
-        
+
         default:
             cout << "\nInvalid choice!" << endl;
             break;
     }
-    
+
     return 0;
 }
 ```
@@ -1148,22 +1148,22 @@ using namespace std;
 
 int main() {
     double side1, side2, side3;
-    
+
     cout << "=== Triangle Classifier ===" << endl;
     cout << "Enter three sides: ";
     cin >> side1 >> side2 >> side3;
-    
+
     // Check if it's a valid triangle
     if (side1 <= 0 || side2 <= 0 || side3 <= 0) {
         cout << "Error: Sides must be positive!" << endl;
-    } else if (side1 + side2 <= side3 || 
-               side1 + side3 <= side2 || 
+    } else if (side1 + side2 <= side3 ||
+               side1 + side3 <= side2 ||
                side2 + side3 <= side1) {
         cout << "Not a valid triangle!" << endl;
         cout << "(Sum of any two sides must be greater than the third)" << endl;
     } else {
         cout << "\nValid triangle!" << endl;
-        
+
         // Classify by sides
         if (side1 == side2 && side2 == side3) {
             cout << "Type by sides: Equilateral (all sides equal)" << endl;
@@ -1172,17 +1172,17 @@ int main() {
         } else {
             cout << "Type by sides: Scalene (all sides different)" << endl;
         }
-        
+
         // Classify by angles (using Pythagorean theorem)
         double a = side1, b = side2, c = side3;
-        
+
         // Make sure c is the longest side
         if (a > c) { double temp = a; a = c; c = temp; }
         if (b > c) { double temp = b; b = c; c = temp; }
-        
+
         double cSquared = c * c;
         double sumSquares = (a * a) + (b * b);
-        
+
         if (cSquared == sumSquares) {
             cout << "Type by angles: Right triangle" << endl;
         } else if (cSquared > sumSquares) {
@@ -1191,7 +1191,7 @@ int main() {
             cout << "Type by angles: Acute triangle" << endl;
         }
     }
-    
+
     return 0;
 }
 ```
@@ -1206,28 +1206,28 @@ using namespace std;
 int main() {
     double weight, distance, baseCost, totalCost;
     char shippingType;
-    
+
     cout << "=== Shipping Cost Calculator ===" << endl;
-    
+
     cout << "Enter package weight (kg): ";
     cin >> weight;
-    
+
     cout << "Enter shipping distance (km): ";
     cin >> distance;
-    
+
     cout << "\nShipping Types:" << endl;
     cout << "S - Standard (5-7 days)" << endl;
     cout << "E - Express (2-3 days)" << endl;
     cout << "O - Overnight (next day)" << endl;
     cout << "Select shipping type: ";
     cin >> shippingType;
-    
+
     // Input validation
     if (weight <= 0 || distance <= 0) {
         cout << "\nError: Weight and distance must be positive!" << endl;
         return 1;
     }
-    
+
     // Calculate base cost by weight
     if (weight <= 1) {
         baseCost = 5.00;
@@ -1238,12 +1238,12 @@ int main() {
     } else {
         baseCost = 15.00 + (weight - 10) * 2.00;  // $2 per kg over 10kg
     }
-    
+
     // Add distance charge
     if (distance > 100) {
         baseCost += (distance / 100) * 5.00;  // $5 per 100km
     }
-    
+
     // Apply shipping type multiplier
     switch (shippingType) {
         case 'S':
@@ -1251,29 +1251,29 @@ int main() {
             totalCost = baseCost * 1.0;  // No multiplier
             cout << "\nShipping Type: Standard" << endl;
             break;
-        
+
         case 'E':
         case 'e':
             totalCost = baseCost * 1.5;  // 50% more
             cout << "\nShipping Type: Express" << endl;
             break;
-        
+
         case 'O':
         case 'o':
             totalCost = baseCost * 2.0;  // Double
             cout << "\nShipping Type: Overnight" << endl;
             break;
-        
+
         default:
             cout << "\nError: Invalid shipping type!" << endl;
             return 1;
     }
-    
+
     // Display results
     cout << fixed << setprecision(2);
     cout << "Base Cost: $" << baseCost << endl;
     cout << "Total Cost: $" << totalCost << endl;
-    
+
     return 0;
 }
 ```
@@ -1287,15 +1287,15 @@ using namespace std;
 int main() {
     int year;
     bool isLeap;
-    
+
     cout << "Enter a year: ";
     cin >> year;
-    
+
     if (year < 0) {
         cout << "Invalid year!" << endl;
         return 1;
     }
-    
+
     // Leap year logic
     if (year % 4 != 0) {
         // Not divisible by 4 → not a leap year
@@ -1322,14 +1322,14 @@ int main() {
             }
         }
     }
-    
+
     // Show February days
     if (isLeap) {
         cout << "February has 29 days this year." << endl;
     } else {
         cout << "February has 28 days this year." << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1345,15 +1345,15 @@ int main() {
     int score = 0;
     int answer;
     string textAnswer;
-    
+
     cout << "=== C++ Quiz Game ===" << endl;
     cout << "Answer the following questions:\n" << endl;
-    
+
     // Question 1
     cout << "Question 1: What is 15 + 27?" << endl;
     cout << "Your answer: ";
     cin >> answer;
-    
+
     if (answer == 42) {
         cout << "✓ Correct!" << endl;
         score++;
@@ -1361,12 +1361,12 @@ int main() {
         cout << "✗ Wrong! The answer is 42." << endl;
     }
     cout << endl;
-    
+
     // Question 2
     cout << "Question 2: Is C++ case-sensitive? (yes/no)" << endl;
     cout << "Your answer: ";
     cin >> textAnswer;
-    
+
     if (textAnswer == "yes" || textAnswer == "Yes" || textAnswer == "YES") {
         cout << "✓ Correct!" << endl;
         score++;
@@ -1374,7 +1374,7 @@ int main() {
         cout << "✗ Wrong! C++ is case-sensitive." << endl;
     }
     cout << endl;
-    
+
     // Question 3
     cout << "Question 3: What does '==' do?" << endl;
     cout << "1. Assigns a value" << endl;
@@ -1382,7 +1382,7 @@ int main() {
     cout << "3. Adds two numbers" << endl;
     cout << "Your answer (1-3): ";
     cin >> answer;
-    
+
     switch (answer) {
         case 2:
             cout << "✓ Correct!" << endl;
@@ -1399,11 +1399,11 @@ int main() {
             break;
     }
     cout << endl;
-    
+
     // Show results
     cout << "=== Quiz Complete ===" << endl;
     cout << "Your score: " << score << "/3" << endl;
-    
+
     if (score == 3) {
         cout << "Perfect! Excellent work! 🌟" << endl;
     } else if (score == 2) {
@@ -1413,7 +1413,7 @@ int main() {
     } else {
         cout << "Keep practicing! You'll improve! 💪" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1489,7 +1489,7 @@ switch (day) {
     case 1:
         cout << "Monday" << endl;
         // No break! Falls through to case 2
-    
+
     case 2:
         cout << "Tuesday" << endl;
         break;
@@ -1505,7 +1505,7 @@ switch (day) {
     case 1:
         cout << "Monday" << endl;
         break;  // Exits switch
-    
+
     case 2:
         cout << "Tuesday" << endl;
         break;
@@ -1588,10 +1588,10 @@ if (score >= 90) {
 
 - Read units consumed
 - Calculate bill:
-    - 0-50 units: $0.50/unit
-    - 51-150 units: $0.75/unit
-    - 151-250 units: $1.20/unit
-    - Above 250: $1.50/unit
+  - 0-50 units: $0.50/unit
+  - 51-150 units: $0.75/unit
+  - 151-250 units: $1.20/unit
+  - Above 250: $1.50/unit
 - Add 20% tax
 - Display total
 
@@ -1611,10 +1611,10 @@ if (score >= 90) {
 - Read day, month, year
 - Check if valid date
 - Consider:
-    - Days in each month
-    - Leap years
-    - Month range (1-12)
-    - Day range based on month
+  - Days in each month
+  - Leap years
+  - Month range (1-12)
+  - Day range based on month
 
 ### Exercise 4: Student Grade System
 

@@ -214,20 +214,20 @@ using namespace std;
 int main() {
     const int SIZE = 5;
     int numbers[SIZE];
-    
+
     cout << "Enter " << SIZE << " numbers:" << endl;
-    
+
     for (int i = 0; i < SIZE; i++) {
         cout << "Number " << (i + 1) << ": ";
         cin >> numbers[i];
     }
-    
+
     cout << "\nYou entered: ";
     for (int i = 0; i < SIZE; i++) {
         cout << numbers[i] << " ";
     }
     cout << endl;
-    
+
     return 0;
 }
 ```
@@ -336,15 +336,15 @@ void doubleValues(int arr[], int size) {
 
 int main() {
     int numbers[5] = {1, 2, 3, 4, 5};
-    
+
     cout << "Original: ";
     printArray(numbers, 5);
-    
+
     doubleValues(numbers, 5);
-    
+
     cout << "After doubling: ";
     printArray(numbers, 5);
-    
+
     return 0;
 }
 
@@ -430,15 +430,15 @@ int linearSearch(int arr[], int size, int target) {
 int main() {
     int numbers[7] = {10, 25, 30, 45, 50, 60, 75};
     int target = 45;
-    
+
     int index = linearSearch(numbers, 7, target);
-    
+
     if (index != -1) {
         cout << target << " found at index " << index << endl;
     } else {
         cout << target << " not found" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -456,36 +456,36 @@ using namespace std;
 int binarySearch(int arr[], int size, int target) {
     int left = 0;
     int right = size - 1;
-    
+
     while (left <= right) {
         int mid = left + (right - left) / 2;
-        
+
         if (arr[mid] == target) {
             return mid;  // Found!
         }
-        
+
         if (arr[mid] < target) {
             left = mid + 1;  // Search right half
         } else {
             right = mid - 1;  // Search left half
         }
     }
-    
+
     return -1;  // Not found
 }
 
 int main() {
     int numbers[7] = {10, 25, 30, 45, 50, 60, 75};  // Must be sorted!
     int target = 45;
-    
+
     int index = binarySearch(numbers, 7, target);
-    
+
     if (index != -1) {
         cout << target << " found at index " << index << endl;
     } else {
         cout << target << " not found" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -497,7 +497,7 @@ int main() {
 ```
 Array: [10, 25, 30, 45, 50, 60, 75]
         L           M            R
-        
+
 Step 1: mid=3, arr[3]=45 → Found!
 ```
 
@@ -535,15 +535,15 @@ void printArray(int arr[], int size) {
 
 int main() {
     int numbers[6] = {64, 34, 25, 12, 22, 11};
-    
+
     cout << "Before sorting: ";
     printArray(numbers, 6);
-    
+
     bubbleSort(numbers, 6);
-    
+
     cout << "After sorting: ";
     printArray(numbers, 6);
-    
+
     return 0;
 }
 
@@ -575,14 +575,14 @@ Find minimum and place it at the beginning.
 void selectionSort(int arr[], int size) {
     for (int i = 0; i < size - 1; i++) {
         int minIndex = i;
-        
+
         // Find minimum in remaining array
         for (int j = i + 1; j < size; j++) {
             if (arr[j] < arr[minIndex]) {
                 minIndex = j;
             }
         }
-        
+
         // Swap with first position of unsorted part
         if (minIndex != i) {
             int temp = arr[i];
@@ -602,13 +602,13 @@ void insertionSort(int arr[], int size) {
     for (int i = 1; i < size; i++) {
         int key = arr[i];
         int j = i - 1;
-        
+
         // Move elements greater than key one position ahead
         while (j >= 0 && arr[j] > key) {
             arr[j + 1] = arr[j];
             j--;
         }
-        
+
         arr[j + 1] = key;
     }
 }
@@ -698,16 +698,16 @@ int main() {
     const int ROWS = 3;
     const int COLS = 3;
     int matrix[ROWS][COLS];
-    
+
     cout << "Enter 9 numbers for 3x3 matrix:" << endl;
-    
+
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
             cout << "Element [" << i << "][" << j << "]: ";
             cin >> matrix[i][j];
         }
     }
-    
+
     cout << "\nMatrix:" << endl;
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
@@ -715,7 +715,7 @@ int main() {
         }
         cout << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -837,41 +837,41 @@ int main() {
     // Declaration and initialization
     char name1[20] = "John";  // Automatically adds \0
     char name2[] = {'J', 'o', 'h', 'n', '\0'};  // Manual null terminator
-    
+
     // Input
     char name3[50];
     cout << "Enter name: ";
     cin >> name3;  // Stops at whitespace
-    
+
     // Input with spaces
     char fullName[100];
     cout << "Enter full name: ";
     cin.getline(fullName, 100);
-    
+
     // String functions (from <cstring>)
     char str1[20] = "Hello";
     char str2[20] = "World";
-    
+
     // Length
     cout << "Length: " << strlen(str1) << endl;  // 5
-    
+
     // Copy
     char copy[20];
     strcpy(copy, str1);
     cout << "Copy: " << copy << endl;  // Hello
-    
+
     // Concatenate
     char combined[40] = "Hello ";
     strcat(combined, "World");
     cout << "Combined: " << combined << endl;  // Hello World
-    
+
     // Compare
     if (strcmp(str1, str2) == 0) {
         cout << "Equal" << endl;
     } else {
         cout << "Not equal" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -909,7 +909,7 @@ int main() {
     double grades[MAX_STUDENTS];
     int count = 0;
     int choice;
-    
+
     do {
         cout << "\n=== Grade Management System ===" << endl;
         cout << "1. Enter Grades" << endl;
@@ -918,12 +918,12 @@ int main() {
         cout << "4. Exit" << endl;
         cout << "Choice: ";
         cin >> choice;
-        
+
         switch (choice) {
             case 1:
                 inputGrades(grades, count);
                 break;
-            
+
             case 2:
                 if (count > 0) {
                     displayGrades(grades, count);
@@ -931,7 +931,7 @@ int main() {
                     cout << "No grades entered!" << endl;
                 }
                 break;
-            
+
             case 3:
                 if (count > 0) {
                     calculateStatistics(grades, count);
@@ -939,34 +939,34 @@ int main() {
                     cout << "No grades entered!" << endl;
                 }
                 break;
-            
+
             case 4:
                 cout << "Goodbye!" << endl;
                 break;
-            
+
             default:
                 cout << "Invalid choice!" << endl;
         }
-        
+
     } while (choice != 4);
-    
+
     return 0;
 }
 
 void inputGrades(double grades[], int &count) {
     cout << "How many students? ";
     cin >> count;
-    
+
     if (count > MAX_STUDENTS) {
         cout << "Maximum " << MAX_STUDENTS << " students!" << endl;
         count = MAX_STUDENTS;
     }
-    
+
     for (int i = 0; i < count; i++) {
         do {
             cout << "Grade for student " << (i + 1) << " (0-100): ";
             cin >> grades[i];
-            
+
             if (grades[i] < 0 || grades[i] > 100) {
                 cout << "Invalid! Must be 0-100." << endl;
             }
@@ -977,10 +977,10 @@ void inputGrades(double grades[], int &count) {
 void displayGrades(double grades[], int count) {
     cout << fixed << setprecision(2);
     cout << "\n=== Student Grades ===" << endl;
-    
+
     for (int i = 0; i < count; i++) {
-        cout << "Student " << setw(2) << (i + 1) << ": " 
-             << setw(6) << grades[i] << " (" 
+        cout << "Student " << setw(2) << (i + 1) << ": "
+             << setw(6) << grades[i] << " ("
              << getLetterGrade(grades[i]) << ")" << endl;
     }
 }
@@ -989,18 +989,18 @@ void calculateStatistics(double grades[], int count) {
     double sum = 0;
     double highest = grades[0];
     double lowest = grades[0];
-    
+
     for (int i = 0; i < count; i++) {
         sum += grades[i];
         if (grades[i] > highest) highest = grades[i];
         if (grades[i] < lowest) lowest = grades[i];
     }
-    
+
     double average = sum / count;
-    
+
     // Count letter grades
     int countA = 0, countB = 0, countC = 0, countD = 0, countF = 0;
-    
+
     for (int i = 0; i < count; i++) {
         char grade = getLetterGrade(grades[i]);
         switch (grade) {
@@ -1011,14 +1011,14 @@ void calculateStatistics(double grades[], int count) {
             case 'F': countF++; break;
         }
     }
-    
+
     cout << fixed << setprecision(2);
     cout << "\n=== Statistics ===" << endl;
     cout << "Number of students: " << count << endl;
     cout << "Average: " << average << " (" << getLetterGrade(average) << ")" << endl;
     cout << "Highest: " << highest << endl;
     cout << "Lowest: " << lowest << endl;
-    
+
     cout << "\n--- Grade Distribution ---" << endl;
     cout << "A: " << countA << " students" << endl;
     cout << "B: " << countB << " students" << endl;
@@ -1055,25 +1055,25 @@ int main() {
     char currentPlayer = 'X';
     int row, col;
     bool gameOver = false;
-    
+
     initializeBoard(board);
-    
+
     cout << "=== Tic-Tac-Toe ===" << endl;
     cout << "Positions: 1-3 for rows and columns" << endl;
-    
+
     while (!gameOver) {
         displayBoard(board);
-        
+
         cout << "\nPlayer " << currentPlayer << "'s turn" << endl;
         cout << "Enter row (1-3): ";
         cin >> row;
         cout << "Enter column (1-3): ";
         cin >> col;
-        
+
         // Convert to 0-indexed
         row--;
         col--;
-        
+
         if (makeMove(board, row, col, currentPlayer)) {
             if (checkWin(board, currentPlayer)) {
                 displayBoard(board);
@@ -1091,7 +1091,7 @@ int main() {
             cout << "Invalid move! Try again." << endl;
         }
     }
-    
+
     return 0;
 }
 
@@ -1119,11 +1119,11 @@ bool makeMove(char board[SIZE][SIZE], int row, int col, char player) {
     if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) {
         return false;  // Out of bounds
     }
-    
+
     if (board[row][col] != ' ') {
         return false;  // Position occupied
     }
-    
+
     board[row][col] = player;
     return true;
 }
@@ -1135,23 +1135,23 @@ bool checkWin(char board[SIZE][SIZE], char player) {
             return true;
         }
     }
-    
+
     // Check columns
     for (int j = 0; j < SIZE; j++) {
         if (board[0][j] == player && board[1][j] == player && board[2][j] == player) {
             return true;
         }
     }
-    
+
     // Check diagonals
     if (board[0][0] == player && board[1][1] == player && board[2][2] == player) {
         return true;
     }
-    
+
     if (board[0][2] == player && board[1][1] == player && board[2][0] == player) {
         return true;
     }
-    
+
     return false;
 }
 
@@ -1194,7 +1194,7 @@ int main() {
     Item inventory[MAX_ITEMS];
     int itemCount = 0;
     int choice;
-    
+
     do {
         cout << "\n=== Inventory Management ===" << endl;
         cout << "1. Add Item" << endl;
@@ -1205,40 +1205,40 @@ int main() {
         cout << "6. Exit" << endl;
         cout << "Choice: ";
         cin >> choice;
-        
+
         switch (choice) {
             case 1:
                 addItem(inventory, itemCount);
                 break;
-            
+
             case 2:
                 displayInventory(inventory, itemCount);
                 break;
-            
+
             case 3:
                 searchItem(inventory, itemCount);
                 break;
-            
+
             case 4:
                 updateQuantity(inventory, itemCount);
                 break;
-            
+
             case 5:
                 cout << fixed << setprecision(2);
-                cout << "Total Inventory Value: $" 
+                cout << "Total Inventory Value: $"
                      << calculateTotalValue(inventory, itemCount) << endl;
                 break;
-            
+
             case 6:
                 cout << "Exiting..." << endl;
                 break;
-            
+
             default:
                 cout << "Invalid choice!" << endl;
         }
-        
+
     } while (choice != 6);
-    
+
     return 0;
 }
 
@@ -1247,25 +1247,25 @@ void addItem(Item inventory[], int &count) {
         cout << "Inventory full!" << endl;
         return;
     }
-    
+
     Item newItem;
-    
+
     cout << "Enter Item ID: ";
     cin >> newItem.id;
-    
+
     cin.ignore();  // Clear newline
     cout << "Enter Item Name: ";
     getline(cin, newItem.name);
-    
+
     cout << "Enter Quantity: ";
     cin >> newItem.quantity;
-    
+
     cout << "Enter Price: $";
     cin >> newItem.price;
-    
+
     inventory[count] = newItem;
     count++;
-    
+
     cout << "Item added successfully!" << endl;
 }
 
@@ -1274,14 +1274,14 @@ void displayInventory(Item inventory[], int count) {
         cout << "Inventory is empty!" << endl;
         return;
     }
-    
+
     cout << fixed << setprecision(2);
     cout << "\n=== Inventory ===" << endl;
-    cout << setw(5) << "ID" << setw(20) << "Name" 
-         << setw(10) << "Qty" << setw(10) << "Price" 
+    cout << setw(5) << "ID" << setw(20) << "Name"
+         << setw(10) << "Qty" << setw(10) << "Price"
          << setw(12) << "Total" << endl;
     cout << string(57, '-') << endl;
-    
+
     for (int i = 0; i < count; i++) {
         double total = inventory[i].quantity * inventory[i].price;
         cout << setw(5) << inventory[i].id
@@ -1296,7 +1296,7 @@ void searchItem(Item inventory[], int count) {
     int searchId;
     cout << "Enter Item ID to search: ";
     cin >> searchId;
-    
+
     bool found = false;
     for (int i = 0; i < count; i++) {
         if (inventory[i].id == searchId) {
@@ -1310,7 +1310,7 @@ void searchItem(Item inventory[], int count) {
             break;
         }
     }
-    
+
     if (!found) {
         cout << "Item not found!" << endl;
     }
@@ -1318,24 +1318,24 @@ void searchItem(Item inventory[], int count) {
 
 void updateQuantity(Item inventory[], int count) {
     int searchId, newQuantity;
-    
+
     cout << "Enter Item ID: ";
     cin >> searchId;
-    
+
     bool found = false;
     for (int i = 0; i < count; i++) {
         if (inventory[i].id == searchId) {
             cout << "Current Quantity: " << inventory[i].quantity << endl;
             cout << "Enter New Quantity: ";
             cin >> newQuantity;
-            
+
             inventory[i].quantity = newQuantity;
             cout << "Quantity updated!" << endl;
             found = true;
             break;
         }
     }
-    
+
     if (!found) {
         cout << "Item not found!" << endl;
     }
@@ -1343,11 +1343,11 @@ void updateQuantity(Item inventory[], int count) {
 
 double calculateTotalValue(Item inventory[], int count) {
     double total = 0;
-    
+
     for (int i = 0; i < count; i++) {
         total += inventory[i].quantity * inventory[i].price;
     }
-    
+
     return total;
 }
 ```

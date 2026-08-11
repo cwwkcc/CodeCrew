@@ -63,12 +63,12 @@ int main() {
     int a = 10;
     int b = 5;
     int sum = a + b;
-    
+
     cout << "Sum: " << sum << endl;  // Output: 15
-    
+
     // Can also use directly in output
     cout << "10 + 5 = " << (10 + 5) << endl;  // Output: 15
-    
+
     return 0;
 }
 ```
@@ -308,32 +308,32 @@ using namespace std;
 
 int main() {
     double num1, num2;
-    
+
     cout << "Enter first number: ";
     cin >> num1;
-    
+
     cout << "Enter second number: ";
     cin >> num2;
-    
+
     // Perform all operations
     cout << "\n=== Results ===" << endl;
     cout << "Addition: " << num1 + num2 << endl;
     cout << "Subtraction: " << num1 - num2 << endl;
     cout << "Multiplication: " << num1 * num2 << endl;
-    
+
     if (num2 != 0) {
         cout << "Division: " << num1 / num2 << endl;
     } else {
         cout << "Division: Cannot divide by zero!" << endl;
     }
-    
+
     // Modulus only works with integers
     int int1 = (int)num1;
     int int2 = (int)num2;
     if (int2 != 0) {
         cout << "Modulus: " << int1 % int2 << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -464,25 +464,25 @@ using namespace std;
 
 int main() {
     int score = 100;
-    
+
     cout << "Initial score: " << score << endl;
-    
+
     // Gain points
     score += 50;
     cout << "After bonus: " << score << endl;  // 150
-    
+
     // Lose points
     score -= 20;
     cout << "After penalty: " << score << endl;  // 130
-    
+
     // Double the score
     score *= 2;
     cout << "After doubling: " << score << endl;  // 260
-    
+
     // Divide by 4
     score /= 4;
     cout << "After dividing: " << score << endl;  // 65
-    
+
     return 0;
 }
 ```
@@ -747,10 +747,10 @@ using namespace std;
 
 int main() {
     int score;
-    
+
     cout << "Enter your score (0-100): ";
     cin >> score;
-    
+
     // Determine grade using comparisons
     if (score >= 90) {
         cout << "Grade: A" << endl;
@@ -763,28 +763,28 @@ int main() {
     } else {
         cout << "Grade: F" << endl;
     }
-    
+
     // Check pass/fail
     if (score >= 60) {
         cout << "Status: PASS" << endl;
     } else {
         cout << "Status: FAIL" << endl;
     }
-    
+
     return 0;
 }
 ```
 
 ### Comparison Operator Summary
 
-|Operator|Meaning|Example|Result (if a=5, b=3)|
-|---|---|---|---|
-|`==`|Equal to|`a == b`|false|
-|`!=`|Not equal to|`a != b`|true|
-|`>`|Greater than|`a > b`|true|
-|`<`|Less than|`a < b`|false|
-|`>=`|Greater or equal|`a >= b`|true|
-|`<=`|Less or equal|`a <= b`|false|
+| Operator | Meaning          | Example  | Result (if a=5, b=3) |
+| -------- | ---------------- | -------- | -------------------- |
+| `==`     | Equal to         | `a == b` | false                |
+| `!=`     | Not equal to     | `a != b` | true                 |
+| `>`      | Greater than     | `a > b`  | true                 |
+| `<`      | Less than        | `a < b`  | false                |
+| `>=`     | Greater or equal | `a >= b` | true                 |
+| `<=`     | Less or equal    | `a <= b` | false                |
 
 ---
 
@@ -961,17 +961,17 @@ int main() {
     string username, password;
     int attempts = 0;
     const int MAX_ATTEMPTS = 3;
-    
+
     const string CORRECT_USER = "admin";
     const string CORRECT_PASS = "password123";
-    
+
     while (attempts < MAX_ATTEMPTS) {
         cout << "Username: ";
         cin >> username;
-        
+
         cout << "Password: ";
         cin >> password;
-        
+
         // Check if BOTH username AND password are correct
         if (username == CORRECT_USER && password == CORRECT_PASS) {
             cout << "Login successful!" << endl;
@@ -979,7 +979,7 @@ int main() {
         } else {
             attempts++;
             cout << "Login failed! ";
-            
+
             if (attempts < MAX_ATTEMPTS) {
                 cout << "Attempts remaining: " << (MAX_ATTEMPTS - attempts) << endl;
             } else {
@@ -987,18 +987,18 @@ int main() {
             }
         }
     }
-    
+
     return 0;
 }
 ```
 
 ### Logical Operators Summary
 
-|Operator|Name|Description|Example|
-|---|---|---|---|
-|`&&`|AND|True if both are true|`(a > 5 && b < 10)`|
-|`||`|OR|
-|`!`|NOT|Reverses boolean value|`!isGameOver`|
+| Operator | Name | Description            | Example             |
+| -------- | ---- | ---------------------- | ------------------- |
+| `&&`     | AND  | True if both are true  | `(a > 5 && b < 10)` |
+| `        |      | `                      | OR                  |
+| `!`      | NOT  | Reverses boolean value | `!isGameOver`       |
 
 ---
 
@@ -1034,8 +1034,8 @@ int a = 10, b = 20;
 int max = (a > b) ? a : b;  // max = 20
 
 int score = 85;
-char grade = (score >= 90) ? 'A' : 
-             (score >= 80) ? 'B' : 
+char grade = (score >= 90) ? 'A' :
+             (score >= 80) ? 'B' :
              (score >= 70) ? 'C' : 'F';
 
 // Use in output
@@ -1099,19 +1099,19 @@ int ascii = static_cast<int>(ch);  // 65
 
 **Order of evaluation** (from highest to lowest priority):
 
-|Priority|Operator|Description|
-|---|---|---|
-|1|`()`|Parentheses|
-|2|`++`, `--`|Increment/Decrement (postfix)|
-|3|`++`, `--`, `!`|Increment/Decrement (prefix), NOT|
-|4|`*`, `/`, `%`|Multiplication, Division, Modulus|
-|5|`+`, `-`|Addition, Subtraction|
-|6|`<`, `<=`, `>`, `>=`|Comparison|
-|7|`==`, `!=`|Equality|
-|8|`&&`|Logical AND|
-|9|`||
-|10|`?:`|Ternary|
-|11|`=`, `+=`, `-=`, etc.|Assignment|
+| Priority | Operator              | Description                       |
+| -------- | --------------------- | --------------------------------- |
+| 1        | `()`                  | Parentheses                       |
+| 2        | `++`, `--`            | Increment/Decrement (postfix)     |
+| 3        | `++`, `--`, `!`       | Increment/Decrement (prefix), NOT |
+| 4        | `*`, `/`, `%`         | Multiplication, Division, Modulus |
+| 5        | `+`, `-`              | Addition, Subtraction             |
+| 6        | `<`, `<=`, `>`, `>=`  | Comparison                        |
+| 7        | `==`, `!=`            | Equality                          |
+| 8        | `&&`                  | Logical AND                       |
+| 9        | `                     |                                   |
+| 10       | `?:`                  | Ternary                           |
+| 11       | `=`, `+=`, `-=`, etc. | Assignment                        |
 
 **When in doubt, use parentheses!**
 
@@ -1136,20 +1136,20 @@ using namespace std;
 
 int main() {
     double weight, height, bmi;
-    
+
     cout << "=== BMI Calculator ===" << endl;
     cout << "Enter weight (kg): ";
     cin >> weight;
-    
+
     cout << "Enter height (m): ";
     cin >> height;
-    
+
     // Calculate BMI
     bmi = weight / (height * height);
-    
+
     cout << fixed << setprecision(2);
     cout << "\nYour BMI: " << bmi << endl;
-    
+
     // Determine category
     string category;
     if (bmi < 18.5) {
@@ -1161,9 +1161,9 @@ int main() {
     } else {
         category = "Obese";
     }
-    
+
     cout << "Category: " << category << endl;
-    
+
     return 0;
 }
 ```
@@ -1176,42 +1176,42 @@ using namespace std;
 
 int main() {
     double test1, test2, test3, average;
-    
+
     cout << "=== Grade Calculator ===" << endl;
-    
+
     cout << "Enter Test 1 score: ";
     cin >> test1;
-    
+
     cout << "Enter Test 2 score: ";
     cin >> test2;
-    
+
     cout << "Enter Test 3 score: ";
     cin >> test3;
-    
+
     // Calculate average
     average = (test1 + test2 + test3) / 3.0;
-    
+
     cout << "\nAverage: " << average << endl;
-    
+
     // Determine letter grade using ternary operator
     char grade = (average >= 90) ? 'A' :
                  (average >= 80) ? 'B' :
                  (average >= 70) ? 'C' :
                  (average >= 60) ? 'D' : 'F';
-    
+
     cout << "Letter Grade: " << grade << endl;
-    
+
     // Pass/Fail status
     string status = (average >= 60) ? "PASS" : "FAIL";
     cout << "Status: " << status << endl;
-    
+
     // Additional feedback
     if (grade == 'A' && average >= 95) {
         cout << "Excellent work! Outstanding!" << endl;
     } else if (grade == 'F' || average < 50) {
         cout << "Please see instructor for help." << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1227,60 +1227,60 @@ int main() {
     double price1, price2, price3;
     int quantity1, quantity2, quantity3;
     double subtotal, tax, discount = 0, total;
-    
+
     const double TAX_RATE = 0.08;  // 8% tax
     const double DISCOUNT_THRESHOLD = 100.0;
     const double DISCOUNT_RATE = 0.10;  // 10% discount
-    
+
     cout << "=== Shopping Cart ===" << endl;
-    
+
     // Item 1
     cout << "Item 1 price: $";
     cin >> price1;
     cout << "Quantity: ";
     cin >> quantity1;
-    
+
     // Item 2
     cout << "Item 2 price: $";
     cin >> price2;
     cout << "Quantity: ";
     cin >> quantity2;
-    
+
     // Item 3
     cout << "Item 3 price: $";
     cin >> price3;
     cout << "Quantity: ";
     cin >> quantity3;
-    
+
     // Calculate subtotal
-    subtotal = (price1 * quantity1) + 
-               (price2 * quantity2) + 
+    subtotal = (price1 * quantity1) +
+               (price2 * quantity2) +
                (price3 * quantity3);
-    
+
     // Apply discount if subtotal >= $100
     if (subtotal >= DISCOUNT_THRESHOLD) {
         discount = subtotal * DISCOUNT_RATE;
         cout << "\nDiscount applied! (10% off orders over $100)" << endl;
     }
-    
+
     // Calculate tax and total
     double afterDiscount = subtotal - discount;
     tax = afterDiscount * TAX_RATE;
     total = afterDiscount + tax;
-    
+
     // Display receipt
     cout << fixed << setprecision(2);
     cout << "\n=== Receipt ===" << endl;
     cout << "Subtotal:  $" << subtotal << endl;
-    
+
     if (discount > 0) {
         cout << "Discount:  -$" << discount << endl;
         cout << "After Discount: $" << afterDiscount << endl;
     }
-    
+
     cout << "Tax (8%):  $" << tax << endl;
     cout << "Total:     $" << total << endl;
-    
+
     return 0;
 }
 ```
@@ -1294,14 +1294,14 @@ using namespace std;
 int main() {
     int year;
     bool isLeapYear;
-    
+
     cout << "Enter a year: ";
     cin >> year;
-    
+
     // Leap year rules:
     // 1. Divisible by 4
     // 2. If divisible by 100, must also be divisible by 400
-    
+
     if (year % 4 == 0) {
         if (year % 100 == 0) {
             // Century year - must be divisible by 400
@@ -1314,10 +1314,10 @@ int main() {
         // Not divisible by 4 - not a leap year
         isLeapYear = false;
     }
-    
+
     // Alternative: One-line version
     // isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-    
+
     if (isLeapYear) {
         cout << year << " is a leap year!" << endl;
         cout << "February has 29 days." << endl;
@@ -1325,7 +1325,7 @@ int main() {
         cout << year << " is NOT a leap year." << endl;
         cout << "February has 28 days." << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1342,43 +1342,43 @@ int main() {
     double principal, rate, time;
     double simpleInterest, simpleTotal;
     double compoundInterest, compoundTotal;
-    
+
     cout << "=== Interest Calculator ===" << endl;
-    
+
     cout << "Enter principal amount: $";
     cin >> principal;
-    
+
     cout << "Enter annual interest rate (%): ";
     cin >> rate;
-    
+
     cout << "Enter time period (years): ";
     cin >> time;
-    
+
     // Convert percentage to decimal
     rate = rate / 100.0;
-    
+
     // Calculate Simple Interest
     // Formula: SI = P * R * T
     simpleInterest = principal * rate * time;
     simpleTotal = principal + simpleInterest;
-    
+
     // Calculate Compound Interest (compounded annually)
     // Formula: A = P(1 + R)^T
     compoundTotal = principal * pow(1 + rate, time);
     compoundInterest = compoundTotal - principal;
-    
+
     // Display results
     cout << fixed << setprecision(2);
     cout << "\n=== Simple Interest ===" << endl;
     cout << "Interest: $" << simpleInterest << endl;
     cout << "Total Amount: $" << simpleTotal << endl;
-    
+
     cout << "\n=== Compound Interest ===" << endl;
     cout << "Interest: $" << compoundInterest << endl;
     cout << "Total Amount: $" << compoundTotal << endl;
-    
+
     cout << "\nDifference: $" << (compoundInterest - simpleInterest) << endl;
-    
+
     return 0;
 }
 ```
@@ -1496,8 +1496,8 @@ Create a program that:
 - Asks if converting Celsius to Fahrenheit or vice versa
 - Takes temperature input
 - Uses the formulas:
-    - F = (C × 9/5) + 32
-    - C = (F - 32) × 5/9
+  - F = (C × 9/5) + 32
+  - C = (F - 32) × 5/9
 - Displays the result
 
 ### Exercise 2: Electricity Bill Calculator
@@ -1506,9 +1506,9 @@ Create a program that:
 
 - Takes number of units consumed
 - Calculates bill using:
-    - First 100 units: $0.50 per unit
-    - Next 100 units: $0.75 per unit
-    - Above 200 units: $1.20 per unit
+  - First 100 units: $0.50 per unit
+  - Next 100 units: $0.75 per unit
+  - Above 200 units: $1.20 per unit
 - Adds 5% tax
 - Displays total bill
 
@@ -1519,9 +1519,9 @@ Create a program that:
 - Takes coefficients a, b, c
 - Calculates discriminant (b² - 4ac)
 - Determines if equation has:
-    - Two real roots
-    - One real root
-    - No real roots
+  - Two real roots
+  - One real root
+  - No real roots
 - Displays the roots if they exist
 
 ### Exercise 4: Time Calculator
@@ -1539,10 +1539,10 @@ Create a program that:
 
 - Takes original price
 - Applies discounts based on price:
-    - $0-$50: No discount
-    - $51-$100: 5% off
-    - $101-$200: 10% off
-    - Above $200: 15% off
+  - $0-$50: No discount
+  - $51-$100: 5% off
+  - $101-$200: 10% off
+  - Above $200: 15% off
 - Calculates final price
 - Shows amount saved
 

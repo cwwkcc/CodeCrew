@@ -103,14 +103,14 @@ An add-on for VS Code that adds C++ specific features.
 
 ### Quick Comparison: winget vs Manual Installation
 
-|Feature|winget Method|Manual Method|
-|---|---|---|
-|**Speed**|⚡ Very Fast (one command)|🐢 Slower (download + clicks)|
-|**Steps**|Fewer (1-2 commands)|More (download, install, configure)|
-|**Updates**|Easy (`winget upgrade --all`)|Manual download again|
-|**Requirements**|Windows 10 (1809+) or 11|Any Windows version|
-|**Control**|Less (automated)|More (choose options)|
-|**Best for**|Quick setup, automation|Older systems, custom paths|
+| Feature          | winget Method                 | Manual Method                       |
+| ---------------- | ----------------------------- | ----------------------------------- |
+| **Speed**        | ⚡ Very Fast (one command)    | 🐢 Slower (download + clicks)       |
+| **Steps**        | Fewer (1-2 commands)          | More (download, install, configure) |
+| **Updates**      | Easy (`winget upgrade --all`) | Manual download again               |
+| **Requirements** | Windows 10 (1809+) or 11      | Any Windows version                 |
+| **Control**      | Less (automated)              | More (choose options)               |
+| **Best for**     | Quick setup, automation       | Older systems, custom paths         |
 
 **Recommendation**: Use **winget** if you have Windows 10/11 - it's faster and easier!
 
@@ -167,10 +167,10 @@ winget install --id Microsoft.VisualStudioCode -e
 3. **Accept the license agreement** and click "Next"
 4. **Choose installation location** (default is fine) and click "Next"
 5. **Select additional tasks**:
-    - ✓ **Check**: "Add to PATH" (IMPORTANT!)
-    - ✓ **Check**: "Create a desktop icon" (optional, but convenient)
-    - ✓ **Check**: "Add 'Open with Code' action to context menu" (recommended)
-    - ✓ **Check**: "Register Code as an editor for supported file types" (recommended)
+   - ✓ **Check**: "Add to PATH" (IMPORTANT!)
+   - ✓ **Check**: "Create a desktop icon" (optional, but convenient)
+   - ✓ **Check**: "Add 'Open with Code' action to context menu" (recommended)
+   - ✓ **Check**: "Register Code as an editor for supported file types" (recommended)
 6. Click **"Next"** then **"Install"**
 7. Wait for installation to complete
 8. **Check**: "Launch Visual Studio Code"
@@ -215,8 +215,8 @@ Winget is Windows Package Manager - a command-line tool that comes built-in with
 **Step 1: Check if winget is installed**
 
 1. Open **PowerShell** or **Command Prompt**:
-    - Press `Windows + X`
-    - Select "Windows PowerShell" or "Terminal"
+   - Press `Windows + X`
+   - Select "Windows PowerShell" or "Terminal"
 2. Type this command and press Enter:
 
 ```bash
@@ -288,9 +288,9 @@ winget install --id MSYS2.MSYS2 -e
 2. **Double-click** to run the installer
 3. **Click "Next"** on the welcome screen
 4. **Installation folder**:
-    - Default is: `C:\msys64`
-    - **Recommendation**: Keep the default location
-    - **IMPORTANT**: Do NOT install in a path with spaces (like "Program Files")
+   - Default is: `C:\msys64`
+   - **Recommendation**: Keep the default location
+   - **IMPORTANT**: Do NOT install in a path with spaces (like "Program Files")
 5. Click **"Next"**
 6. **Start Menu shortcuts**: Keep default, click **"Next"**
 7. Click **"Install"** and wait (takes 2-3 minutes)
@@ -379,9 +379,9 @@ This is **CRUCIAL** - it allows Windows to find the compiler from anywhere.
 **Method 2: Using Command (Alternative)**
 
 1. Open **PowerShell as Administrator**:
-    - Search for "PowerShell" in Start Menu
-    - Right-click "Windows PowerShell"
-    - Choose "Run as administrator"
+   - Search for "PowerShell" in Start Menu
+   - Right-click "Windows PowerShell"
+   - Choose "Run as administrator"
 2. Type this command:
 
 ```powershell
@@ -396,8 +396,8 @@ This is **CRUCIAL** - it allows Windows to find the compiler from anywhere.
 **IMPORTANT**: If you have any Command Prompt or PowerShell windows open, close them and open a new one.
 
 1. Open **Command Prompt** or **PowerShell**:
-    - Press `Windows + R`
-    - Type `cmd` and press Enter
+   - Press `Windows + R`
+   - Type `cmd` and press Enter
 2. Type these commands to verify:
 
 ```bash
@@ -434,9 +434,9 @@ gdb --version
 2. Click the **Extensions icon** in the Activity Bar (left side) or press `Ctrl+Shift+X`
 3. In the search box, type: **"C/C++"**
 4. Look for the extension by **Microsoft** (it should be the first result)
-    - Name: "C/C++"
-    - Publisher: Microsoft
-    - Millions of installs
+   - Name: "C/C++"
+   - Publisher: Microsoft
+   - Millions of installs
 5. Click the **"Install"** button
 6. Wait for installation (takes a few seconds)
 
@@ -445,36 +445,40 @@ gdb --version
 While you're here, install these useful extensions:
 
 1. **"Code Runner"** by Jun Han
-    
-    - Allows you to quickly run code
-    - Click Install
+
+   - Allows you to quickly run code
+   - Click Install
+
 2. **"C/C++ Themes"** (optional)
-    
-    - Better syntax highlighting
-    - Try "C/C++ Themes" by Microsoft
+
+   - Better syntax highlighting
+   - Try "C/C++ Themes" by Microsoft
+
 3. **"Better C++ Syntax"** (optional)
-    
-    - Improved syntax highlighting
+
+   - Improved syntax highlighting
 
 #### Step 2: Create Your First C++ Project
 
 1. **Create a folder for your C++ projects**:
-    
-    - Open File Explorer
-    - Go to a location like `Documents`
-    - Right-click → New → Folder
-    - Name it: `CPP_Projects`
+
+   - Open File Explorer
+   - Go to a location like `Documents`
+   - Right-click → New → Folder
+   - Name it: `CPP_Projects`
+
 2. **Open the folder in VS Code**:
-    
-    - In VS Code: File → Open Folder
-    - Navigate to your `CPP_Projects` folder
-    - Click "Select Folder"
-    - If asked "Do you trust the authors?", click "Yes, I trust the authors"
+
+   - In VS Code: File → Open Folder
+   - Navigate to your `CPP_Projects` folder
+   - Click "Select Folder"
+   - If asked "Do you trust the authors?", click "Yes, I trust the authors"
+
 3. **Create a new C++ file**:
-    
-    - Click the **New File** icon in the Explorer panel
-    - Name it: `hello.cpp`
-    - The file will open in the editor
+
+   - Click the **New File** icon in the Explorer panel
+   - Name it: `hello.cpp`
+   - The file will open in the editor
 
 #### Step 3: Write Your First C++ Program
 
@@ -567,7 +571,7 @@ Let's understand what happens when you compile:
 ### The Steps
 
 ```
-Your Code (hello.cpp) 
+Your Code (hello.cpp)
     ↓
 [Preprocessing] - Handles #include, #define
     ↓
@@ -652,33 +656,31 @@ Defines how to compile your code.
 
 ```json
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "type": "cppbuild",
-            "label": "C/C++: g++.exe build active file",
-            "command": "C:\\msys64\\ucrt64\\bin\\g++.exe",
-            "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "-std=c++17",
-                "-Wall",
-                "${file}",
-                "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
-            ],
-            "options": {
-                "cwd": "${fileDirname}"
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "cppbuild",
+      "label": "C/C++: g++.exe build active file",
+      "command": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+      "args": [
+        "-fdiagnostics-color=always",
+        "-g",
+        "-std=c++17",
+        "-Wall",
+        "${file}",
+        "-o",
+        "${fileDirname}\\${fileBasenameNoExtension}.exe"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
 }
 ```
 
@@ -707,30 +709,30 @@ To create it:
 
 ```json
 {
-    "version": "0.2.0",
-    "configurations": [
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++: g++.exe build and debug active file",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:\\msys64\\ucrt64\\bin\\gdb.exe",
+      "setupCommands": [
         {
-            "name": "C/C++: g++.exe build and debug active file",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${fileDirname}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:\\msys64\\ucrt64\\bin\\gdb.exe",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "C/C++: g++.exe build active file"
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
         }
-    ]
+      ],
+      "preLaunchTask": "C/C++: g++.exe build active file"
+    }
+  ]
 }
 ```
 
@@ -750,25 +752,18 @@ To create it:
 
 ```json
 {
-    "configurations": [
-        {
-            "name": "Win32",
-            "includePath": [
-                "${workspaceFolder}/**",
-                "C:/msys64/ucrt64/include/**"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
-            ],
-            "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "windows-gcc-x64"
-        }
-    ],
-    "version": 4
+  "configurations": [
+    {
+      "name": "Win32",
+      "includePath": ["${workspaceFolder}/**", "C:/msys64/ucrt64/include/**"],
+      "defines": ["_DEBUG", "UNICODE", "_UNICODE"],
+      "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "windows-gcc-x64"
+    }
+  ],
+  "version": 4
 }
 ```
 
@@ -781,27 +776,30 @@ Debugging lets you pause your program, inspect variables, and step through code 
 ### Setting Up Debugging
 
 1. **Set a breakpoint**:
-    
-    - Click in the margin (left of line numbers)
-    - A red dot appears - this is a breakpoint
-    - Program will pause here when debugging
+
+   - Click in the margin (left of line numbers)
+   - A red dot appears - this is a breakpoint
+   - Program will pause here when debugging
+
 2. **Start debugging**:
-    
-    - Press `F5`
-    - Or: Run → Start Debugging
-    - Or: Click the green play button in the Run and Debug panel
+
+   - Press `F5`
+   - Or: Run → Start Debugging
+   - Or: Click the green play button in the Run and Debug panel
+
 3. **Debug controls**:
-    
-    - **Continue (F5)**: Run until next breakpoint
-    - **Step Over (F10)**: Execute current line, move to next
-    - **Step Into (F11)**: Go inside function calls
-    - **Step Out (Shift+F11)**: Finish current function
-    - **Stop (Shift+F5)**: Stop debugging
+
+   - **Continue (F5)**: Run until next breakpoint
+   - **Step Over (F10)**: Execute current line, move to next
+   - **Step Into (F11)**: Go inside function calls
+   - **Step Out (Shift+F11)**: Finish current function
+   - **Stop (Shift+F5)**: Stop debugging
+
 4. **Inspect variables**:
-    
-    - Hover over variables to see their values
-    - Check the Variables panel (left side while debugging)
-    - Add variables to Watch panel
+
+   - Hover over variables to see their values
+   - Check the Variables panel (left side while debugging)
+   - Add variables to Watch panel
 
 ### Simple Debugging Example
 
@@ -813,9 +811,9 @@ int main() {
     int a = 5;        // ← Set breakpoint here
     int b = 10;
     int sum = a + b;
-    
+
     cout << "Sum: " << sum << endl;
-    
+
     return 0;
 }
 ```
@@ -830,28 +828,28 @@ int main() {
 
 ## Useful VS Code Keyboard Shortcuts
 
-|Shortcut|Action|
-|---|---|
-|`Ctrl+S`|Save file|
-|`Ctrl+Shift+S`|Save all files|
-|`Ctrl+N`|New file|
-|`Ctrl+O`|Open file|
-|`Ctrl+Shift+P`|Command palette|
-|`` Ctrl+` ``|Toggle terminal|
-|`Ctrl+B`|Toggle sidebar|
-|`Ctrl+Shift+B`|Build (compile)|
-|`F5`|Start debugging|
-|`Ctrl+F5`|Run without debugging|
-|`F9`|Toggle breakpoint|
-|`F10`|Step over (debugging)|
-|`F11`|Step into (debugging)|
-|`Ctrl+/`|Toggle comment|
-|`Alt+Up/Down`|Move line up/down|
-|`Ctrl+D`|Select next occurrence|
-|`Ctrl+Space`|Trigger IntelliSense|
-|`Ctrl+Shift+K`|Delete line|
-|`Ctrl+Z`|Undo|
-|`Ctrl+Shift+Z`|Redo|
+| Shortcut       | Action                 |
+| -------------- | ---------------------- |
+| `Ctrl+S`       | Save file              |
+| `Ctrl+Shift+S` | Save all files         |
+| `Ctrl+N`       | New file               |
+| `Ctrl+O`       | Open file              |
+| `Ctrl+Shift+P` | Command palette        |
+| `` Ctrl+` ``   | Toggle terminal        |
+| `Ctrl+B`       | Toggle sidebar         |
+| `Ctrl+Shift+B` | Build (compile)        |
+| `F5`           | Start debugging        |
+| `Ctrl+F5`      | Run without debugging  |
+| `F9`           | Toggle breakpoint      |
+| `F10`          | Step over (debugging)  |
+| `F11`          | Step into (debugging)  |
+| `Ctrl+/`       | Toggle comment         |
+| `Alt+Up/Down`  | Move line up/down      |
+| `Ctrl+D`       | Select next occurrence |
+| `Ctrl+Space`   | Trigger IntelliSense   |
+| `Ctrl+Shift+K` | Delete line            |
+| `Ctrl+Z`       | Undo                   |
+| `Ctrl+Shift+Z` | Redo                   |
 
 ---
 
@@ -909,10 +907,10 @@ using namespace std;
 
 int main() {
     int x = 10, y = 5;
-    
+
     cout << "Sum: " << add(x, y) << endl;
     cout << "Difference: " << subtract(x, y) << endl;
-    
+
     return 0;
 }
 ```
@@ -960,15 +958,15 @@ using namespace std;
 int main() {
     int age;
     string name;
-    
+
     cout << "Enter your name: ";
     cin >> name;
-    
+
     cout << "Enter your age: ";
     cin >> age;
-    
+
     cout << "Hello " << name << ", you are " << age << " years old." << endl;
-    
+
     return 0;
 }
 ```
@@ -993,7 +991,7 @@ int main() {
     outFile << "Hello, File!" << endl;
     outFile << "This is line 2" << endl;
     outFile.close();
-    
+
     // Reading from file
     ifstream inFile("output.txt");
     string line;
@@ -1001,7 +999,7 @@ int main() {
         cout << line << endl;
     }
     inFile.close();
-    
+
     return 0;
 }
 ```
@@ -1098,14 +1096,14 @@ Search for these settings and configure:
 
 ```json
 {
-    "editor.fontSize": 14,
-    "editor.tabSize": 4,
-    "editor.insertSpaces": true,
-    "editor.wordWrap": "on",
-    "editor.minimap.enabled": true,
-    "editor.formatOnSave": true,
-    "files.autoSave": "afterDelay",
-    "files.autoSaveDelay": 1000
+  "editor.fontSize": 14,
+  "editor.tabSize": 4,
+  "editor.insertSpaces": true,
+  "editor.wordWrap": "on",
+  "editor.minimap.enabled": true,
+  "editor.formatOnSave": true,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000
 }
 ```
 
@@ -1113,10 +1111,10 @@ Search for these settings and configure:
 
 ```json
 {
-    "C_Cpp.default.cppStandard": "c++17",
-    "C_Cpp.default.compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
-    "C_Cpp.errorSquiggles": "enabled",
-    "C_Cpp.intelliSenseEngine": "default"
+  "C_Cpp.default.cppStandard": "c++17",
+  "C_Cpp.default.compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+  "C_Cpp.errorSquiggles": "enabled",
+  "C_Cpp.intelliSenseEngine": "default"
 }
 ```
 
@@ -1124,9 +1122,9 @@ Search for these settings and configure:
 
 ```json
 {
-    "code-runner.runInTerminal": true,
-    "code-runner.saveFileBeforeRun": true,
-    "code-runner.preserveFocus": false
+  "code-runner.runInTerminal": true,
+  "code-runner.saveFileBeforeRun": true,
+  "code-runner.preserveFocus": false
 }
 ```
 
@@ -1300,7 +1298,7 @@ using namespace std;
 
 int main() {
     // Your code here
-    
+
     return 0;
 }
 ```
@@ -1323,7 +1321,7 @@ void functionName();
 class ClassName {
 private:
     int privateVar;
-    
+
 public:
     ClassName();  // Constructor
     void method();
@@ -1367,11 +1365,10 @@ void ClassName::method() {
 1. **One class per file** (usually)
 2. **Meaningful file names**: `Calculator.cpp`, not `file1.cpp`
 3. **Use folders** for large projects:
-    
-    ```
-    project/├── src/        (source files)├── include/    (header files)├── build/      (compiled files)└── docs/       (documentation)
-    ```
-    
+
+   ```
+   project/├── src/        (source files)├── include/    (header files)├── build/      (compiled files)└── docs/       (documentation)
+   ```
 
 ### Compilation Practices
 
@@ -1388,11 +1385,10 @@ Consider using Git:
 2. Install Git extension in VS Code
 3. Initialize repository: `git init`
 4. Create `.gitignore`:
-    
-    ```
-    *.exe*.o.vscode/build/
-    ```
-    
+
+   ```
+   *.exe*.o.vscode/build/
+   ```
 
 ---
 
@@ -1412,39 +1408,39 @@ using namespace std;
 
 int main() {
     cout << "=== C++ Environment Test ===" << endl << endl;
-    
+
     // Test 1: Basic output
     cout << "✓ Basic I/O working" << endl;
-    
+
     // Test 2: Variables
     int number = 42;
     double pi = 3.14159;
     string text = "Hello";
     cout << "✓ Variables working: " << number << ", " << pi << ", " << text << endl;
-    
+
     // Test 3: Math
     double result = sqrt(16);
     cout << "✓ Math library working: sqrt(16) = " << result << endl;
-    
+
     // Test 4: STL
     vector<int> numbers = {1, 2, 3, 4, 5};
     cout << "✓ STL working: vector size = " << numbers.size() << endl;
-    
+
     // Test 5: Loops
     int sum = 0;
     for(int i = 1; i <= 5; i++) {
         sum += i;
     }
     cout << "✓ Loops working: sum(1..5) = " << sum << endl;
-    
+
     // Test 6: Functions
     auto greet = [](string name) {
         return "Hello, " + name + "!";
     };
     cout << "✓ Functions working: " << greet("World") << endl;
-    
+
     cout << endl << "All tests passed! Environment is ready! ✓" << endl;
-    
+
     return 0;
 }
 ```
