@@ -82,7 +82,7 @@ delete[] numbers;  // Manually free memory
 void function() {
     int x = 10;        // On stack
     int arr[5];        // On stack
-    
+
 }  // x and arr automatically destroyed
 ```
 
@@ -99,7 +99,7 @@ void function() {
 void function() {
     int* ptr = new int;        // On heap
     int* arr = new int[100];   // On heap
-    
+
     delete ptr;
     delete[] arr;  // Must manually delete!
 }
@@ -176,31 +176,31 @@ using namespace std;
 
 int main() {
     int size;
-    
+
     cout << "How many numbers? ";
     cin >> size;
-    
+
     // Dynamically allocate array
     int* numbers = new int[size];
-    
+
     // Input values
     cout << "Enter " << size << " numbers:" << endl;
     for (int i = 0; i < size; i++) {
         cin >> numbers[i];
     }
-    
+
     // Calculate sum
     int sum = 0;
     for (int i = 0; i < size; i++) {
         sum += numbers[i];
     }
-    
+
     cout << "Sum: " << sum << endl;
     cout << "Average: " << (double)sum / size << endl;
-    
+
     // Free memory
     delete[] numbers;
-    
+
     return 0;
 }
 ```
@@ -283,41 +283,40 @@ void goodFunction() {
 ### Common Causes of Memory Leaks
 
 1. **Forgetting to delete**:
-    
-    ```cpp
-    int* ptr = new int;
-    // No delete!
-    ```
-    
+
+   ```cpp
+   int* ptr = new int;
+   // No delete!
+   ```
+
 2. **Early return**:
-    
-    ```cpp
-    void function() {
-        int* ptr = new int;
-        if (condition) {
-            return;  // Leak! Forgot to delete
-        }
-        delete ptr;
-    }
-    ```
-    
+
+   ```cpp
+   void function() {
+       int* ptr = new int;
+       if (condition) {
+           return;  // Leak! Forgot to delete
+       }
+       delete ptr;
+   }
+   ```
+
 3. **Exception thrown**:
-    
-    ```cpp
-    void function() {
-        int* ptr = new int;
-        throw exception();  // Leak if exception occurs
-        delete ptr;  // Never reached!
-    }
-    ```
-    
+
+   ```cpp
+   void function() {
+       int* ptr = new int;
+       throw exception();  // Leak if exception occurs
+       delete ptr;  // Never reached!
+   }
+   ```
+
 4. **Losing pointer**:
-    
-    ```cpp
-    int* ptr = new int(10);
-    ptr = new int(20);  // Leak! Lost first allocation
-    ```
-    
+
+   ```cpp
+   int* ptr = new int(10);
+   ptr = new int(20);  // Leak! Lost first allocation
+   ```
 
 ---
 
@@ -455,11 +454,11 @@ class Student {
 public:
     string name;
     int age;
-    
+
     Student(string n, int a) : name(n), age(a) {
         cout << "Student created: " << name << endl;
     }
-    
+
     ~Student() {
         cout << "Student destroyed: " << name << endl;
     }
@@ -468,14 +467,14 @@ public:
 int main() {
     // Static object
     Student s1("Alice", 20);  // On stack
-    
+
     // Dynamic object
     Student* s2 = new Student("Bob", 21);  // On heap
-    
+
     cout << s2->name << endl;  // Access with ->
-    
+
     delete s2;  // Must delete! Calls destructor
-    
+
     return 0;
 }  // s1 automatically destroyed
 ```
@@ -511,17 +510,17 @@ private:
 
 public:
     Counter() : count(0) { }
-    
+
     Counter* increment() {
         count++;
         return this;  // Return pointer to self
     }
-    
+
     Counter* decrement() {
         count--;
         return this;
     }
-    
+
     void display() {
         cout << "Count: " << count << endl;
     }
@@ -529,10 +528,10 @@ public:
 
 int main() {
     Counter* c = new Counter();
-    
+
     c->increment()->increment()->increment();
     c->display();  // Count: 3
-    
+
     delete c;
 }
 ```
@@ -559,7 +558,7 @@ public:
     Array(int s) : size(s) {
         data = new int[size];
     }
-    
+
     ~Array() {
         delete[] data;
     }
@@ -568,7 +567,7 @@ public:
 int main() {
     Array a1(5);
     Array a2 = a1;  // Shallow copy - both point to same data!
-    
+
     return 0;
 }  // Double delete! Crash!
 ```
@@ -589,12 +588,12 @@ public:
             data[i] = 0;
         }
     }
-    
+
     // Destructor
     ~Array() {
         delete[] data;
     }
-    
+
     // Copy Constructor
     Array(const Array& other) : size(other.size) {
         data = new int[size];  // Deep copy
@@ -602,22 +601,22 @@ public:
             data[i] = other.data[i];
         }
     }
-    
+
     // Copy Assignment Operator
     Array& operator=(const Array& other) {
         if (this != &other) {  // Check self-assignment
             delete[] data;  // Free old data
-            
+
             size = other.size;
             data = new int[size];  // Allocate new
-            
+
             for (int i = 0; i < size; i++) {
                 data[i] = other.data[i];  // Copy
             }
         }
         return *this;
     }
-    
+
     int& operator[](int index) {
         return data[index];
     }
@@ -626,11 +625,11 @@ public:
 int main() {
     Array a1(5);
     a1[0] = 10;
-    
+
     Array a2 = a1;       // Copy constructor
     Array a3(3);
     a3 = a1;             // Copy assignment
-    
+
     return 0;
 }  // All destructors work correctly!
 ```
@@ -661,11 +660,11 @@ using namespace std;
 
 int main() {
     unique_ptr<int> ptr(new int(42));  // Or: make_unique<int>(42)
-    
+
     cout << *ptr << endl;  // Use like regular pointer
-    
+
     // No delete needed! Automatically freed
-    
+
     return 0;
 }
 ```
@@ -689,15 +688,15 @@ unique_ptr<int> ptr2 = move(ptr1);  // ✓ Can move
 
 int main() {
     shared_ptr<int> ptr1(new int(42));  // Or: make_shared<int>(42)
-    
+
     {
         shared_ptr<int> ptr2 = ptr1;  // ✓ Can copy
         cout << *ptr2 << endl;
         cout << "Count: " << ptr1.use_count() << endl;  // 2
     }  // ptr2 destroyed, but memory still alive
-    
+
     cout << "Count: " << ptr1.use_count() << endl;  // 1
-    
+
     return 0;
 }  // Memory automatically freed when last shared_ptr is destroyed
 ```
@@ -738,13 +737,13 @@ int main() {
     // Modern way - no manual delete needed!
     auto s1 = make_unique<Student>("Alice");
     auto s2 = make_shared<Student>("Bob");
-    
+
     vector<shared_ptr<Student>> students;
     students.push_back(make_shared<Student>("Charlie"));
     students.push_back(make_shared<Student>("David"));
-    
+
     // All memory automatically managed!
-    
+
     return 0;
 }
 ```
@@ -769,42 +768,42 @@ public:
     DynamicArray(int cap = 10) : size(0), capacity(cap) {
         data = new int[capacity];
     }
-    
+
     ~DynamicArray() {
         delete[] data;
     }
-    
+
     void add(int value) {
         if (size >= capacity) {
             resize();
         }
         data[size++] = value;
     }
-    
+
     void resize() {
         capacity *= 2;
         int* newData = new int[capacity];
-        
+
         for (int i = 0; i < size; i++) {
             newData[i] = data[i];
         }
-        
+
         delete[] data;
         data = newData;
-        
+
         cout << "Resized to capacity: " << capacity << endl;
     }
-    
+
     int get(int index) const {
         if (index >= 0 && index < size) {
             return data[index];
         }
         throw out_of_range("Index out of bounds");
     }
-    
+
     int getSize() const { return size; }
     int getCapacity() const { return capacity; }
-    
+
     void display() const {
         cout << "Array [size=" << size << ", capacity=" << capacity << "]: ";
         for (int i = 0; i < size; i++) {
@@ -816,12 +815,12 @@ public:
 
 int main() {
     DynamicArray arr(5);
-    
+
     for (int i = 1; i <= 12; i++) {
         arr.add(i * 10);
         arr.display();
     }
-    
+
     return 0;
 }
 ```
@@ -835,7 +834,7 @@ using namespace std;
 struct Node {
     int data;
     Node* next;
-    
+
     Node(int val) : data(val), next(nullptr) { }
 };
 
@@ -846,14 +845,14 @@ private:
 
 public:
     LinkedList() : head(nullptr), size(0) { }
-    
+
     ~LinkedList() {
         clear();
     }
-    
+
     void insert(int value) {
         Node* newNode = new Node(value);
-        
+
         if (head == nullptr) {
             head = newNode;
         } else {
@@ -863,13 +862,13 @@ public:
             }
             current->next = newNode;
         }
-        
+
         size++;
     }
-    
+
     void display() const {
         Node* current = head;
-        
+
         cout << "List: ";
         while (current != nullptr) {
             cout << current->data << " -> ";
@@ -877,23 +876,23 @@ public:
         }
         cout << "NULL" << endl;
     }
-    
+
     bool search(int value) const {
         Node* current = head;
-        
+
         while (current != nullptr) {
             if (current->data == value) {
                 return true;
             }
             current = current->next;
         }
-        
+
         return false;
     }
-    
+
     void remove(int value) {
         if (head == nullptr) return;
-        
+
         if (head->data == value) {
             Node* temp = head;
             head = head->next;
@@ -901,7 +900,7 @@ public:
             size--;
             return;
         }
-        
+
         Node* current = head;
         while (current->next != nullptr) {
             if (current->next->data == value) {
@@ -914,7 +913,7 @@ public:
             current = current->next;
         }
     }
-    
+
     void clear() {
         while (head != nullptr) {
             Node* temp = head;
@@ -923,25 +922,25 @@ public:
         }
         size = 0;
     }
-    
+
     int getSize() const { return size; }
 };
 
 int main() {
     LinkedList list;
-    
+
     list.insert(10);
     list.insert(20);
     list.insert(30);
     list.insert(40);
-    
+
     list.display();
-    
+
     cout << "Search 30: " << (list.search(30) ? "Found" : "Not found") << endl;
-    
+
     list.remove(20);
     list.display();
-    
+
     return 0;
 }
 ```
@@ -958,10 +957,10 @@ public:
     int id;
     string name;
     double gpa;
-    
-    Student(int i = 0, string n = "", double g = 0.0) 
+
+    Student(int i = 0, string n = "", double g = 0.0)
         : id(i), name(n), gpa(g) { }
-    
+
     void display() const {
         cout << "ID: " << id << ", Name: " << name << ", GPA: " << gpa << endl;
     }
@@ -977,47 +976,47 @@ public:
     StudentDatabase(int cap = 10) : count(0), capacity(cap) {
         students = new Student*[capacity];
     }
-    
+
     ~StudentDatabase() {
         for (int i = 0; i < count; i++) {
             delete students[i];
         }
         delete[] students;
     }
-    
+
     void addStudent(int id, string name, double gpa) {
         if (count >= capacity) {
             resize();
         }
-        
+
         students[count++] = new Student(id, name, gpa);
         cout << "Student added successfully!" << endl;
     }
-    
+
     void resize() {
         capacity *= 2;
         Student** newStudents = new Student*[capacity];
-        
+
         for (int i = 0; i < count; i++) {
             newStudents[i] = students[i];
         }
-        
+
         delete[] students;
         students = newStudents;
     }
-    
+
     void displayAll() const {
         if (count == 0) {
             cout << "No students in database." << endl;
             return;
         }
-        
+
         cout << "\n=== Student Database ===" << endl;
         for (int i = 0; i < count; i++) {
             students[i]->display();
         }
     }
-    
+
     Student* search(int id) const {
         for (int i = 0; i < count; i++) {
             if (students[i]->id == id) {
@@ -1026,22 +1025,22 @@ public:
         }
         return nullptr;
     }
-    
+
     void removeStudent(int id) {
         for (int i = 0; i < count; i++) {
             if (students[i]->id == id) {
                 delete students[i];
-                
+
                 for (int j = i; j < count - 1; j++) {
                     students[j] = students[j + 1];
                 }
-                
+
                 count--;
                 cout << "Student removed!" << endl;
                 return;
             }
         }
-        
+
         cout << "Student not found!" << endl;
     }
 };
@@ -1051,7 +1050,7 @@ int main() {
     int choice, id;
     string name;
     double gpa;
-    
+
     do {
         cout << "\n=== Student Management System ===" << endl;
         cout << "1. Add Student" << endl;
@@ -1061,7 +1060,7 @@ int main() {
         cout << "5. Exit" << endl;
         cout << "Choice: ";
         cin >> choice;
-        
+
         switch (choice) {
             case 1:
                 cout << "Enter ID: ";
@@ -1073,11 +1072,11 @@ int main() {
                 cin >> gpa;
                 db.addStudent(id, name, gpa);
                 break;
-            
+
             case 2:
                 db.displayAll();
                 break;
-            
+
             case 3:
                 cout << "Enter ID to search: ";
                 cin >> id;
@@ -1091,23 +1090,23 @@ int main() {
                     }
                 }
                 break;
-            
+
             case 4:
                 cout << "Enter ID to remove: ";
                 cin >> id;
                 db.removeStudent(id);
                 break;
-            
+
             case 5:
                 cout << "Goodbye!" << endl;
                 break;
-            
+
             default:
                 cout << "Invalid choice!" << endl;
         }
-        
+
     } while (choice != 5);
-    
+
     return 0;
 }
 ```
@@ -1242,7 +1241,7 @@ class Array {
 public:
     Array(int s) : size(s) { data = new int[size]; }
     ~Array() { delete[] data; }
-    
+
     // Deep copy constructor
     Array(const Array& other) : size(other.size) {
         data = new int[size];
@@ -1281,84 +1280,82 @@ delete[] huge;
 ### ✅ DO:
 
 1. **Always delete what you new**
-    
-    ```cpp
-    int* ptr = new int;
-    delete ptr;
-    ```
-    
+
+   ```cpp
+   int* ptr = new int;
+   delete ptr;
+   ```
+
 2. **Use delete[] for arrays**
-    
-    ```cpp
-    int* arr = new int[10];
-    delete[] arr;
-    ```
-    
+
+   ```cpp
+   int* arr = new int[10];
+   delete[] arr;
+   ```
+
 3. **Set pointers to nullptr after delete**
-    
-    ```cpp
-    delete ptr;
-    ptr = nullptr;
-    ```
-    
+
+   ```cpp
+   delete ptr;
+   ptr = nullptr;
+   ```
+
 4. **Use smart pointers when possible**
-    
-    ```cpp
-    auto ptr = make_unique<int>(42);
-    ```
-    
+
+   ```cpp
+   auto ptr = make_unique<int>(42);
+   ```
+
 5. **Implement Rule of Three for resource-managing classes**
-    
-    ```cpp
-    // Destructor, Copy Constructor, Copy Assignment
-    ```
-    
+
+   ```cpp
+   // Destructor, Copy Constructor, Copy Assignment
+   ```
+
 6. **Check allocation success for large allocations**
-    
-    ```cpp
-    int* ptr = new(nothrow) int[huge_size];
-    if (ptr == nullptr) { /* handle */ }
-    ```
-    
+
+   ```cpp
+   int* ptr = new(nothrow) int[huge_size];
+   if (ptr == nullptr) { /* handle */ }
+   ```
 
 ### ❌ DON'T:
 
 1. **Don't forget to delete**
-    
-    ```cpp
-    // int* ptr = new int;  // Leak!
-    ```
-    
+
+   ```cpp
+   // int* ptr = new int;  // Leak!
+   ```
+
 2. **Don't use after delete**
-    
-    ```cpp
-    // delete ptr;
-    // *ptr = 42;  // Dangling pointer!
-    ```
-    
+
+   ```cpp
+   // delete ptr;
+   // *ptr = 42;  // Dangling pointer!
+   ```
+
 3. **Don't delete stack variables**
-    
-    ```cpp
-    // int x = 10;
-    // delete &x;  // Wrong! x is on stack!
-    ```
-    
+
+   ```cpp
+   // int x = 10;
+   // delete &x;  // Wrong! x is on stack!
+   ```
+
 4. **Don't mix new/delete with malloc/free**
-    
-    ```cpp
-    // int* ptr = (int*)malloc(sizeof(int));
-    // delete ptr;  // Wrong! Use free()
-    ```
-    
+
+   ```cpp
+   // int* ptr = (int*)malloc(sizeof(int));
+   // delete ptr;  // Wrong! Use free()
+   ```
+
 5. **Don't return pointers to local variables**
-    
-    ```cpp
-    // int* func() {
-    //     int x = 10;
-    //     return &x;  // Dangling pointer!
-    // }
-    ```
-    
+
+   ```cpp
+   // int* func() {
+   //     int x = 10;
+   //     return &x;  // Dangling pointer!
+   // }
+   ```
 
 ---
 

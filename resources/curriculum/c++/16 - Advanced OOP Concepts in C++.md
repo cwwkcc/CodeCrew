@@ -78,11 +78,11 @@ class Animal {
 public:
     string name;
     int age;
-    
+
     void eat() {
         cout << name << " is eating." << endl;
     }
-    
+
     void sleep() {
         cout << name << " is sleeping." << endl;
     }
@@ -92,7 +92,7 @@ public:
 class Dog : public Animal {
 public:
     string breed;
-    
+
     void bark() {
         cout << name << " says: Woof! Woof!" << endl;
     }
@@ -100,17 +100,17 @@ public:
 
 int main() {
     Dog myDog;
-    
+
     // Inherited members from Animal
     myDog.name = "Buddy";
     myDog.age = 3;
     myDog.eat();
     myDog.sleep();
-    
+
     // Dog's own members
     myDog.breed = "Golden Retriever";
     myDog.bark();
-    
+
     return 0;
 }
 ```
@@ -294,11 +294,11 @@ class Derived : private Base {
 
 ### Access Table
 
-|Base Class|public Inheritance|protected Inheritance|private Inheritance|
-|---|---|---|---|
-|public|public|protected|private|
-|protected|protected|protected|private|
-|private|Not accessible|Not accessible|Not accessible|
+| Base Class | public Inheritance | protected Inheritance | private Inheritance |
+| ---------- | ------------------ | --------------------- | ------------------- |
+| public     | public             | protected             | private             |
+| protected  | protected          | protected             | private             |
+| private    | Not accessible     | Not accessible        | Not accessible      |
 
 ---
 
@@ -394,7 +394,7 @@ public:
     Student(string n, int a, int id) : Person(n, a), studentID(id) {
         cout << "Student constructor" << endl;
     }
-    
+
     void display() {
         cout << "Name: " << name << endl;
         cout << "Age: " << age << endl;
@@ -443,11 +443,11 @@ int main() {
     Animal a;
     Dog d;
     Cat c;
-    
+
     a.makeSound();  // Animal makes a sound
     d.makeSound();  // Dog barks: Woof! Woof!
     c.makeSound();  // Cat meows: Meow! Meow!
-    
+
     return 0;
 }
 ```
@@ -496,13 +496,14 @@ Derived display
 ### Types of Polymorphism
 
 1. **Compile-time Polymorphism** (Static)
-    
-    - Function overloading
-    - Operator overloading
+
+   - Function overloading
+   - Operator overloading
+
 2. **Runtime Polymorphism** (Dynamic)
-    
-    - Virtual functions
-    - Function overriding
+
+   - Virtual functions
+   - Function overriding
 
 ---
 
@@ -516,11 +517,11 @@ public:
     int add(int a, int b) {
         return a + b;
     }
-    
+
     double add(double a, double b) {
         return a + b;
     }
-    
+
     int add(int a, int b, int c) {
         return a + b + c;
     }
@@ -551,10 +552,10 @@ public:
 int main() {
     Animal* ptr;
     Dog d;
-    
+
     ptr = &d;
     ptr->makeSound();  // Calls Animal::makeSound() - Wrong!
-    
+
     return 0;
 }
 ```
@@ -609,16 +610,16 @@ public:
 
 int main() {
     Animal* ptr;
-    
+
     Dog d;
     Cat c;
-    
+
     ptr = &d;
     ptr->makeSound();  // Calls Dog::makeSound() - Correct!
-    
+
     ptr = &c;
     ptr->makeSound();  // Calls Cat::makeSound() - Correct!
-    
+
     return 0;
 }
 ```
@@ -741,7 +742,7 @@ public:
     // Pure virtual functions
     virtual double getArea() = 0;
     virtual double getPerimeter() = 0;
-    
+
     // Regular virtual function
     virtual void display() {
         cout << "This is a shape" << endl;
@@ -755,11 +756,11 @@ private:
 
 public:
     Circle(double r) : radius(r) { }
-    
+
     double getArea() override {
         return 3.14159 * radius * radius;
     }
-    
+
     double getPerimeter() override {
         return 2 * 3.14159 * radius;
     }
@@ -771,11 +772,11 @@ private:
 
 public:
     Rectangle(double l, double w) : length(l), width(w) { }
-    
+
     double getArea() override {
         return length * width;
     }
-    
+
     double getPerimeter() override {
         return 2 * (length + width);
     }
@@ -783,21 +784,21 @@ public:
 
 int main() {
     // Shape s;  // Error! Cannot instantiate abstract class
-    
+
     Shape* shapes[2];
-    
+
     shapes[0] = new Circle(5.0);
     shapes[1] = new Rectangle(4.0, 6.0);
-    
+
     for (int i = 0; i < 2; i++) {
         cout << "Area: " << shapes[i]->getArea() << endl;
         cout << "Perimeter: " << shapes[i]->getPerimeter() << endl;
         cout << "---" << endl;
     }
-    
+
     delete shapes[0];
     delete shapes[1];
-    
+
     return 0;
 }
 ```
@@ -857,7 +858,7 @@ private:
 
 public:
     Complex(double r = 0, double i = 0) : real(r), imag(i) { }
-    
+
     // Overload + operator
     Complex operator+(const Complex& c) {
         Complex temp;
@@ -865,7 +866,7 @@ public:
         temp.imag = imag + c.imag;
         return temp;
     }
-    
+
     // Overload - operator
     Complex operator-(const Complex& c) {
         Complex temp;
@@ -873,7 +874,7 @@ public:
         temp.imag = imag - c.imag;
         return temp;
     }
-    
+
     void display() {
         cout << real;
         if (imag >= 0)
@@ -886,15 +887,15 @@ public:
 int main() {
     Complex c1(3.0, 4.0);
     Complex c2(1.0, 2.0);
-    
+
     Complex c3 = c1 + c2;  // Calls c1.operator+(c2)
     Complex c4 = c1 - c2;
-    
+
     cout << "c1: "; c1.display();
     cout << "c2: "; c2.display();
     cout << "c3 (c1 + c2): "; c3.display();
     cout << "c4 (c1 - c2): "; c4.display();
-    
+
     return 0;
 }
 ```
@@ -927,7 +928,7 @@ private:
 
 public:
     Point(int x = 0, int y = 0) : x(x), y(y) { }
-    
+
     // Friend function to overload <<
     friend ostream& operator<<(ostream& out, const Point& p);
 };
@@ -952,11 +953,11 @@ private:
 
 public:
     Point(int x = 0, int y = 0) : x(x), y(y) { }
-    
+
     bool operator==(const Point& p) const {
         return (x == p.x && y == p.y);
     }
-    
+
     bool operator!=(const Point& p) const {
         return !(*this == p);
     }
@@ -966,11 +967,11 @@ int main() {
     Point p1(3, 4);
     Point p2(3, 4);
     Point p3(5, 6);
-    
+
     if (p1 == p2) {
         cout << "p1 and p2 are equal" << endl;
     }
-    
+
     if (p1 != p3) {
         cout << "p1 and p3 are not equal" << endl;
     }
@@ -986,20 +987,20 @@ private:
 
 public:
     Counter(int c = 0) : count(c) { }
-    
+
     // Prefix increment: ++count
     Counter& operator++() {
         ++count;
         return *this;
     }
-    
+
     // Postfix increment: count++
     Counter operator++(int) {  // int is dummy parameter
         Counter temp = *this;
         count++;
         return temp;
     }
-    
+
     void display() {
         cout << "Count: " << count << endl;
     }
@@ -1007,10 +1008,10 @@ public:
 
 int main() {
     Counter c(5);
-    
+
     ++c;  // Prefix
     c.display();  // 6
-    
+
     c++;  // Postfix
     c.display();  // 7
 }
@@ -1044,7 +1045,7 @@ private:
 
 public:
     Box(double w) : width(w) { }
-    
+
     // Declare friend function
     friend void printWidth(Box& b);
 };
@@ -1079,7 +1080,7 @@ private:
 
 public:
     A(int d) : dataA(d) { }
-    
+
     friend class B;  // B is friend of A
 };
 
@@ -1093,7 +1094,7 @@ public:
 int main() {
     A objA(42);
     B objB;
-    
+
     objB.display(objA);
 }
 ```
@@ -1133,11 +1134,11 @@ public:
     Student(string n) : name(n) {
         count++;  // Increment when object created
     }
-    
+
     ~Student() {
         count--;  // Decrement when object destroyed
     }
-    
+
     static int getCount() {  // Static member function
         return count;
     }
@@ -1148,19 +1149,19 @@ int Student::count = 0;
 
 int main() {
     cout << "Initial count: " << Student::getCount() << endl;
-    
+
     Student s1("Alice");
     Student s2("Bob");
-    
+
     cout << "After creating 2 students: " << Student::getCount() << endl;
-    
+
     {
         Student s3("Charlie");
         cout << "After creating 3rd student: " << Student::getCount() << endl;
     }  // s3 destroyed here
-    
+
     cout << "After s3 destroyed: " << Student::getCount() << endl;
-    
+
     return 0;
 }
 ```
@@ -1254,7 +1255,7 @@ public:
     void setChildName(string name) {
         childName = name;
     }
-    
+
     void display() {
         cout << "Father: " << fatherName << endl;
         cout << "Mother: " << motherName << endl;
@@ -1264,13 +1265,13 @@ public:
 
 int main() {
     Child c;
-    
+
     c.setFatherName("John");
     c.setMotherName("Mary");
     c.setChildName("Tom");
-    
+
     c.display();
-    
+
     return 0;
 }
 ```
@@ -1328,15 +1329,15 @@ protected:
 
 public:
     Employee(string n, int i, double sal) : name(n), id(i), baseSalary(sal) { }
-    
+
     virtual double calculateSalary() = 0;  // Pure virtual
-    
+
     virtual void display() {
         cout << "Name: " << name << endl;
         cout << "ID: " << id << endl;
         cout << "Base Salary: $" << baseSalary << endl;
     }
-    
+
     virtual ~Employee() { }
 };
 
@@ -1345,13 +1346,13 @@ private:
     double bonus;
 
 public:
-    Manager(string n, int i, double sal, double b) 
+    Manager(string n, int i, double sal, double b)
         : Employee(n, i, sal), bonus(b) { }
-    
+
     double calculateSalary() override {
         return baseSalary + bonus;
     }
-    
+
     void display() override {
         Employee::display();
         cout << "Bonus: $" << bonus << endl;
@@ -1365,13 +1366,13 @@ private:
     double projectBonus;
 
 public:
-    Engineer(string n, int i, double sal, int projects) 
+    Engineer(string n, int i, double sal, int projects)
         : Employee(n, i, sal), projectsCompleted(projects), projectBonus(500.0) { }
-    
+
     double calculateSalary() override {
         return baseSalary + (projectsCompleted * projectBonus);
     }
-    
+
     void display() override {
         Employee::display();
         cout << "Projects Completed: " << projectsCompleted << endl;
@@ -1385,13 +1386,13 @@ private:
     double commissionRate;
 
 public:
-    Salesperson(string n, int i, double sal, double sales) 
+    Salesperson(string n, int i, double sal, double sales)
         : Employee(n, i, sal), salesAmount(sales), commissionRate(0.05) { }
-    
+
     double calculateSalary() override {
         return baseSalary + (salesAmount * commissionRate);
     }
-    
+
     void display() override {
         Employee::display();
         cout << "Sales Amount: $" << salesAmount << endl;
@@ -1402,21 +1403,21 @@ public:
 
 int main() {
     Employee* employees[3];
-    
+
     employees[0] = new Manager("Alice Johnson", 101, 5000.0, 2000.0);
     employees[1] = new Engineer("Bob Smith", 102, 4000.0, 5);
     employees[2] = new Salesperson("Charlie Brown", 103, 3000.0, 50000.0);
-    
+
     for (int i = 0; i < 3; i++) {
         cout << "\n=== Employee " << (i + 1) << " ===" << endl;
         employees[i]->display();
     }
-    
+
     // Clean up
     for (int i = 0; i < 3; i++) {
         delete employees[i];
     }
-    
+
     return 0;
 }
 ```
@@ -1435,13 +1436,13 @@ protected:
 
 public:
     Shape(string c = "White") : color(c) { }
-    
+
     virtual double getArea() = 0;
     virtual double getPerimeter() = 0;
     virtual void display() = 0;
-    
+
     virtual ~Shape() { }
-    
+
     string getColor() const { return color; }
     void setColor(string c) { color = c; }
 };
@@ -1453,15 +1454,15 @@ private:
 
 public:
     Circle(double r, string c = "White") : Shape(c), radius(r) { }
-    
+
     double getArea() override {
         return PI * radius * radius;
     }
-    
+
     double getPerimeter() override {
         return 2 * PI * radius;
     }
-    
+
     void display() override {
         cout << "Circle:" << endl;
         cout << "  Color: " << color << endl;
@@ -1476,17 +1477,17 @@ private:
     double length, width;
 
 public:
-    Rectangle(double l, double w, string c = "White") 
+    Rectangle(double l, double w, string c = "White")
         : Shape(c), length(l), width(w) { }
-    
+
     double getArea() override {
         return length * width;
     }
-    
+
     double getPerimeter() override {
         return 2 * (length + width);
     }
-    
+
     void display() override {
         cout << "Rectangle:" << endl;
         cout << "  Color: " << color << endl;
@@ -1504,16 +1505,16 @@ private:
 public:
     Triangle(double s1, double s2, double s3, string c = "White")
         : Shape(c), side1(s1), side2(s2), side3(s3) { }
-    
+
     double getArea() override {
         double s = (side1 + side2 + side3) / 2;  // Semi-perimeter
         return sqrt(s * (s - side1) * (s - side2) * (s - side3));
     }
-    
+
     double getPerimeter() override {
         return side1 + side2 + side3;
     }
-    
+
     void display() override {
         cout << "Triangle:" << endl;
         cout << "  Color: " << color << endl;
@@ -1525,26 +1526,26 @@ public:
 
 int main() {
     vector<Shape*> shapes;
-    
+
     shapes.push_back(new Circle(5.0, "Red"));
     shapes.push_back(new Rectangle(4.0, 6.0, "Blue"));
     shapes.push_back(new Triangle(3.0, 4.0, 5.0, "Green"));
-    
+
     double totalArea = 0;
-    
+
     for (Shape* shape : shapes) {
         shape->display();
         totalArea += shape->getArea();
         cout << endl;
     }
-    
+
     cout << "Total area of all shapes: " << totalArea << endl;
-    
+
     // Clean up
     for (Shape* shape : shapes) {
         delete shape;
     }
-    
+
     return 0;
 }
 ```
@@ -1564,34 +1565,34 @@ protected:
     static int accountCount;
 
 public:
-    Account(string accNum, string name, double bal) 
+    Account(string accNum, string name, double bal)
         : accountNumber(accNum), holderName(name), balance(bal) {
         accountCount++;
     }
-    
+
     virtual ~Account() {
         accountCount--;
     }
-    
+
     virtual void deposit(double amount) {
         if (amount > 0) {
             balance += amount;
             cout << "Deposited: $" << amount << endl;
         }
     }
-    
+
     virtual bool withdraw(double amount) = 0;  // Pure virtual
-    
+
     virtual void display() {
         cout << "Account Number: " << accountNumber << endl;
         cout << "Holder Name: " << holderName << endl;
         cout << "Balance: $" << balance << endl;
     }
-    
+
     static int getAccountCount() {
         return accountCount;
     }
-    
+
     double getBalance() const { return balance; }
 };
 
@@ -1605,32 +1606,32 @@ private:
 
 public:
     SavingsAccount(string accNum, string name, double bal, double rate)
-        : Account(accNum, name, bal), interestRate(rate), 
+        : Account(accNum, name, bal), interestRate(rate),
           withdrawalLimit(3), withdrawalCount(0) { }
-    
+
     bool withdraw(double amount) override {
         if (withdrawalCount >= withdrawalLimit) {
             cout << "Withdrawal limit reached!" << endl;
             return false;
         }
-        
+
         if (amount > 0 && amount <= balance) {
             balance -= amount;
             withdrawalCount++;
             cout << "Withdrawn: $" << amount << endl;
             return true;
         }
-        
+
         cout << "Invalid withdrawal amount!" << endl;
         return false;
     }
-    
+
     void addInterest() {
         double interest = balance * interestRate / 100;
         balance += interest;
         cout << "Interest added: $" << interest << endl;
     }
-    
+
     void display() override {
         cout << "\n=== Savings Account ===" << endl;
         Account::display();
@@ -1646,28 +1647,28 @@ private:
 public:
     CheckingAccount(string accNum, string name, double bal, double overdraft)
         : Account(accNum, name, bal), overdraftLimit(overdraft) { }
-    
+
     bool withdraw(double amount) override {
         if (amount > 0 && amount <= balance + overdraftLimit) {
             balance -= amount;
             cout << "Withdrawn: $" << amount << endl;
-            
+
             if (balance < 0) {
                 cout << "Warning: Using overdraft!" << endl;
             }
-            
+
             return true;
         }
-        
+
         cout << "Withdrawal exceeds limit!" << endl;
         return false;
     }
-    
+
     void display() override {
         cout << "\n=== Checking Account ===" << endl;
         Account::display();
         cout << "Overdraft Limit: $" << overdraftLimit << endl;
-        
+
         if (balance < 0) {
             cout << "Overdraft Used: $" << (-balance) << endl;
         }
@@ -1676,22 +1677,22 @@ public:
 
 int main() {
     cout << "Total accounts: " << Account::getAccountCount() << endl;
-    
+
     SavingsAccount savings("SAV001", "Alice", 1000.0, 3.5);
     CheckingAccount checking("CHK001", "Bob", 500.0, 200.0);
-    
+
     cout << "\nTotal accounts: " << Account::getAccountCount() << endl;
-    
+
     savings.deposit(500);
     savings.withdraw(200);
     savings.addInterest();
     savings.display();
-    
+
     checking.deposit(300);
     checking.withdraw(600);
     checking.withdraw(300);
     checking.display();
-    
+
     return 0;
 }
 ```

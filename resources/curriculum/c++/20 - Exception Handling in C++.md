@@ -55,7 +55,7 @@ int main() {
         cout << "Error: " << e.what() << endl;
         // Program continues gracefully
     }
-    
+
     cout << "Program continues..." << endl;
     return 0;
 }
@@ -103,15 +103,15 @@ int main() {
         int age;
         cout << "Enter your age: ";
         cin >> age;
-        
+
         if (age < 0) {
             throw invalid_argument("Age cannot be negative!");
         }
-        
+
         if (age < 18) {
             throw runtime_error("You must be 18 or older!");
         }
-        
+
         cout << "Access granted!" << endl;
     }
     catch (const invalid_argument& e) {
@@ -120,7 +120,7 @@ int main() {
     catch (const runtime_error& e) {
         cout << "Error: " << e.what() << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -178,22 +178,22 @@ void processArray(vector<int>& arr, int index, int value) {
     if (index < 0) {
         throw invalid_argument("Index cannot be negative");
     }
-    
+
     if (index >= arr.size()) {
         throw out_of_range("Index out of bounds");
     }
-    
+
     if (value < 0) {
         throw domain_error("Value cannot be negative");
     }
-    
+
     arr[index] = value;
     cout << "Value set successfully!" << endl;
 }
 
 int main() {
     vector<int> numbers = {1, 2, 3, 4, 5};
-    
+
     try {
         processArray(numbers, 2, 100);   // OK
         processArray(numbers, -1, 50);   // Throws invalid_argument
@@ -207,7 +207,7 @@ int main() {
     catch (const domain_error& e) {
         cout << "Domain error: " << e.what() << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -337,7 +337,7 @@ private:
 
 public:
     MyException(const string& msg) : message(msg) {}
-    
+
     const char* what() const noexcept override {
         return message.c_str();
     }
@@ -350,7 +350,7 @@ int main() {
     catch (const MyException& e) {
         cout << "Caught: " << e.what() << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -366,12 +366,12 @@ private:
 public:
     FileException(const string& msg, const string& file, int code)
         : runtime_error(msg), filename(file), errorCode(code) {}
-    
+
     string getFilename() const { return filename; }
     int getErrorCode() const { return errorCode; }
-    
+
     string getFullMessage() const {
-        return string(what()) + " (File: " + filename + 
+        return string(what()) + " (File: " + filename +
                ", Code: " + to_string(errorCode) + ")";
     }
 };
@@ -407,7 +407,7 @@ int main() {
     catch (const invalid_argument& e) {
         cout << "Error: " << e.what() << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -538,10 +538,10 @@ Outer caught: Error in inner function
 // Bad - Resource leak if exception occurs
 void badFileHandling() {
     ofstream* file = new ofstream("data.txt");
-    
+
     // If exception thrown here, file never closed/deleted!
     throw runtime_error("Error!");
-    
+
     file->close();
     delete file;  // Never reached
 }
@@ -549,10 +549,10 @@ void badFileHandling() {
 // Good - RAII ensures cleanup
 void goodFileHandling() {
     ofstream file("data.txt");  // RAII object
-    
+
     // If exception thrown, destructor still called
     throw runtime_error("Error!");
-    
+
 }  // Destructor automatically closes file
 ```
 
@@ -571,14 +571,14 @@ public:
         }
         cout << "File opened" << endl;
     }
-    
+
     ~FileHandler() {
         if (file.is_open()) {
             file.close();
             cout << "File closed" << endl;
         }
     }
-    
+
     void write(const string& data) {
         file << data;
     }
@@ -594,7 +594,7 @@ int main() {
         cout << "Caught: " << e.what() << endl;
     }
     // Destructor called here - file closed automatically
-    
+
     return 0;
 }
 ```
@@ -628,12 +628,12 @@ private:
 public:
     void resize(int newSize) {
         int* newData = new int[newSize];  // May throw bad_alloc
-        
+
         // Copy old data
         for (int i = 0; i < min(size, newSize); i++) {
             newData[i] = data[i];
         }
-        
+
         delete[] data;
         data = newData;
         size = newSize;
@@ -652,13 +652,13 @@ private:
 public:
     void resize(int newSize) {
         int* newData = new int[newSize];  // May throw
-        
+
         try {
             // Copy old data
             for (int i = 0; i < min(size, newSize); i++) {
                 newData[i] = data[i];
             }
-            
+
             // Only commit if successful
             delete[] data;
             data = newData;
@@ -693,40 +693,40 @@ public:
         }
         return result;
     }
-    
+
     double subtract(double a, double b) {
         return add(a, -b);
     }
-    
+
     double multiply(double a, double b) {
         if (a == 0 || b == 0) return 0;
-        
+
         double result = a * b;
         if (!isfinite(result)) {
             throw overflow_error("Multiplication overflow");
         }
         return result;
     }
-    
+
     double divide(double a, double b) {
         if (b == 0) {
             throw invalid_argument("Division by zero");
         }
-        
+
         double result = a / b;
         if (!isfinite(result)) {
             throw overflow_error("Division overflow");
         }
         return result;
     }
-    
+
     double squareRoot(double value) {
         if (value < 0) {
             throw domain_error("Cannot calculate square root of negative number");
         }
         return sqrt(value);
     }
-    
+
     double power(double base, double exponent) {
         double result = pow(base, exponent);
         if (!isfinite(result)) {
@@ -738,7 +738,7 @@ public:
 
 int main() {
     Calculator calc;
-    
+
     try {
         cout << "10 / 2 = " << calc.divide(10, 2) << endl;
         cout << "10 / 0 = " << calc.divide(10, 0) << endl;  // Throws
@@ -746,7 +746,7 @@ int main() {
     catch (const invalid_argument& e) {
         cout << "Error: " << e.what() << endl;
     }
-    
+
     try {
         cout << "sqrt(16) = " << calc.squareRoot(16) << endl;
         cout << "sqrt(-4) = " << calc.squareRoot(-4) << endl;  // Throws
@@ -754,7 +754,7 @@ int main() {
     catch (const domain_error& e) {
         cout << "Error: " << e.what() << endl;
     }
-    
+
     try {
         cout << "2^10 = " << calc.power(2, 10) << endl;
         cout << "999^999 = " << calc.power(999, 999) << endl;  // Throws
@@ -762,7 +762,7 @@ int main() {
     catch (const overflow_error& e) {
         cout << "Error: " << e.what() << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -780,57 +780,57 @@ class FileManager {
 public:
     static string readFile(const string& filename) {
         ifstream file(filename);
-        
+
         if (!file.is_open()) {
             throw runtime_error("Cannot open file: " + filename);
         }
-        
+
         string content;
         string line;
-        
+
         while (getline(file, line)) {
             content += line + "\n";
         }
-        
+
         if (file.bad()) {
             throw runtime_error("Error reading file: " + filename);
         }
-        
+
         return content;
     }
-    
+
     static void writeFile(const string& filename, const string& content) {
         ofstream file(filename);
-        
+
         if (!file.is_open()) {
             throw runtime_error("Cannot create file: " + filename);
         }
-        
+
         file << content;
-        
+
         if (file.fail()) {
             throw runtime_error("Error writing to file: " + filename);
         }
-        
+
         cout << "File written successfully: " << filename << endl;
     }
-    
+
     static void appendFile(const string& filename, const string& content) {
         ofstream file(filename, ios::app);
-        
+
         if (!file.is_open()) {
             throw runtime_error("Cannot open file for appending: " + filename);
         }
-        
+
         file << content;
-        
+
         if (file.fail()) {
             throw runtime_error("Error appending to file: " + filename);
         }
-        
+
         cout << "Content appended successfully: " << filename << endl;
     }
-    
+
     static void copyFile(const string& source, const string& destination) {
         try {
             string content = readFile(source);
@@ -847,25 +847,25 @@ int main() {
     try {
         // Write file
         FileManager::writeFile("test.txt", "Hello, World!\n");
-        
+
         // Read file
         string content = FileManager::readFile("test.txt");
         cout << "File content:\n" << content << endl;
-        
+
         // Append to file
         FileManager::appendFile("test.txt", "New line added!\n");
-        
+
         // Copy file
         FileManager::copyFile("test.txt", "test_copy.txt");
-        
+
         // Try to read non-existent file
         FileManager::readFile("nonexistent.txt");
-        
+
     }
     catch (const runtime_error& e) {
         cout << "Error: " << e.what() << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -887,10 +887,10 @@ public:
     InsufficientFundsException(double bal, double amt)
         : runtime_error("Insufficient funds"),
           balance(bal), amount(amt) {}
-    
+
     double getBalance() const { return balance; }
     double getAmount() const { return amount; }
-    
+
     string getDetails() const {
         return "Attempted to withdraw $" + to_string(amount) +
                " but balance is only $" + to_string(balance);
@@ -906,48 +906,48 @@ private:
 public:
     BankAccount(string accNum, string name, double initialBalance)
         : accountNumber(accNum), holderName(name), balance(initialBalance) {
-        
+
         if (initialBalance < 0) {
             throw invalid_argument("Initial balance cannot be negative");
         }
     }
-    
+
     void deposit(double amount) {
         if (amount <= 0) {
             throw invalid_argument("Deposit amount must be positive");
         }
-        
+
         balance += amount;
         cout << "Deposited: $" << amount << endl;
         cout << "New balance: $" << balance << endl;
     }
-    
+
     void withdraw(double amount) {
         if (amount <= 0) {
             throw invalid_argument("Withdrawal amount must be positive");
         }
-        
+
         if (amount > balance) {
             throw InsufficientFundsException(balance, amount);
         }
-        
+
         balance -= amount;
         cout << "Withdrawn: $" << amount << endl;
         cout << "New balance: $" << balance << endl;
     }
-    
+
     void transfer(BankAccount& destination, double amount) {
         if (amount <= 0) {
             throw invalid_argument("Transfer amount must be positive");
         }
-        
+
         if (amount > balance) {
             throw InsufficientFundsException(balance, amount);
         }
-        
+
         // Strong exception guarantee
         double tempBalance = balance;
-        
+
         try {
             balance -= amount;
             destination.deposit(amount);
@@ -959,11 +959,11 @@ public:
             throw;
         }
     }
-    
+
     double getBalance() const {
         return balance;
     }
-    
+
     void displayInfo() const {
         cout << "\n=== Account Information ===" << endl;
         cout << "Account: " << accountNumber << endl;
@@ -976,22 +976,22 @@ int main() {
     try {
         BankAccount account1("ACC001", "John Doe", 1000.0);
         BankAccount account2("ACC002", "Jane Smith", 500.0);
-        
+
         account1.displayInfo();
-        
+
         // Valid operations
         account1.deposit(500);
         account1.withdraw(200);
-        
+
         // Transfer
         account1.transfer(account2, 300);
-        
+
         account1.displayInfo();
         account2.displayInfo();
-        
+
         // This will throw InsufficientFundsException
         account1.withdraw(2000);
-        
+
     }
     catch (const InsufficientFundsException& e) {
         cout << "\nInsufficient Funds Error:" << endl;
@@ -1003,7 +1003,7 @@ int main() {
     catch (const exception& e) {
         cout << "\nUnexpected Error: " << e.what() << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1015,96 +1015,94 @@ int main() {
 ### ✅ DO:
 
 1. **Catch by const reference**
-    
-    ```cpp
-    catch (const exception& e) {
-        // Best practice
-    }
-    ```
-    
+
+   ```cpp
+   catch (const exception& e) {
+       // Best practice
+   }
+   ```
+
 2. **Use standard exceptions when appropriate**
-    
-    ```cpp
-    throw invalid_argument("Invalid input");
-    throw out_of_range("Index out of bounds");
-    ```
-    
+
+   ```cpp
+   throw invalid_argument("Invalid input");
+   throw out_of_range("Index out of bounds");
+   ```
+
 3. **Provide meaningful error messages**
-    
-    ```cpp
-    throw runtime_error("Cannot open file: " + filename);
-    ```
-    
+
+   ```cpp
+   throw runtime_error("Cannot open file: " + filename);
+   ```
+
 4. **Use RAII for resource management**
-    
-    ```cpp
-    {
-        ifstream file("data.txt");  // RAII
-        // File automatically closed
-    }
-    ```
-    
+
+   ```cpp
+   {
+       ifstream file("data.txt");  // RAII
+       // File automatically closed
+   }
+   ```
+
 5. **Catch specific exceptions first**
-    
-    ```cpp
-    catch (const out_of_range& e) { }
-    catch (const exception& e) { }  // More general last
-    ```
-    
+
+   ```cpp
+   catch (const out_of_range& e) { }
+   catch (const exception& e) { }  // More general last
+   ```
+
 6. **Use noexcept for functions that don't throw**
-    
-    ```cpp
-    void safeFunction() noexcept {
-        // Guaranteed not to throw
-    }
-    ```
-    
+
+   ```cpp
+   void safeFunction() noexcept {
+       // Guaranteed not to throw
+   }
+   ```
 
 ### ❌ DON'T:
 
 1. **Don't catch by value**
-    
-    ```cpp
-    // catch (exception e) { }  // Makes copy - inefficient
-    ```
-    
+
+   ```cpp
+   // catch (exception e) { }  // Makes copy - inefficient
+   ```
+
 2. **Don't throw in destructors**
-    
-    ```cpp
-    ~MyClass() {
-        // throw runtime_error("Error");  // Never do this!
-    }
-    ```
-    
+
+   ```cpp
+   ~MyClass() {
+       // throw runtime_error("Error");  // Never do this!
+   }
+   ```
+
 3. **Don't swallow exceptions silently**
-    
-    ```cpp
-    try {
-        // code
-    }
-    catch (...) {
-        // Empty - error hidden!
-    }
-    ```
-    
+
+   ```cpp
+   try {
+       // code
+   }
+   catch (...) {
+       // Empty - error hidden!
+   }
+   ```
+
 4. **Don't catch everything without re-throwing**
-    
-    ```cpp
-    catch (...) {
-        cout << "Error" << endl;
-        // Should re-throw or handle properly
-    }
-    ```
-    
+
+   ```cpp
+   catch (...) {
+       cout << "Error" << endl;
+       // Should re-throw or handle properly
+   }
+   ```
+
 5. **Don't use exceptions for control flow**
-    
-    ```cpp
-    // Bad - use if statement instead
-    try {
-        throw true;
-    } catch (bool value) { }
-    ```
-    
+
+   ```cpp
+   // Bad - use if statement instead
+   try {
+       throw true;
+   } catch (bool value) { }
+   ```
 
 ---
 
@@ -1159,9 +1157,9 @@ catch (const exception& e) {
 ```cpp
 void function() {
     int* data = new int[100];
-    
+
     processData(data);  // Might throw!
-    
+
     delete[] data;  // Never reached if exception thrown
 }
 ```
@@ -1171,7 +1169,7 @@ void function() {
 ```cpp
 void function() {
     unique_ptr<int[]> data(new int[100]);  // RAII
-    
+
     processData(data.get());  // Automatically cleaned up
 }
 ```

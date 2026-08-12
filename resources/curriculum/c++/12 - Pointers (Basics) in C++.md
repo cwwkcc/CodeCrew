@@ -128,10 +128,10 @@ using namespace std;
 
 int main() {
     int age = 25;
-    
+
     cout << "Value: " << age << endl;      // 25
     cout << "Address: " << &age << endl;   // 0x7ffd5c2e5a4c (example)
-    
+
     return 0;
 }
 ```
@@ -199,23 +199,22 @@ string* sptr;    // Pointer to a string
 The `*` (asterisk) has **three different meanings** in C++:
 
 1. **Declaration**: Creates a pointer
-    
-    ```cpp
-    int* ptr;  // ptr is a pointer to int
-    ```
-    
+
+   ```cpp
+   int* ptr;  // ptr is a pointer to int
+   ```
+
 2. **Dereference**: Accesses the value at the address
-    
-    ```cpp
-    *ptr = 10;  // Set value at address
-    ```
-    
+
+   ```cpp
+   *ptr = 10;  // Set value at address
+   ```
+
 3. **Multiplication**: Math operation
-    
-    ```cpp
-    int result = 5 * 3;  // Multiplication
-    ```
-    
+
+   ```cpp
+   int result = 5 * 3;  // Multiplication
+   ```
 
 **Context determines meaning!**
 
@@ -268,14 +267,14 @@ using namespace std;
 int main() {
     int num = 42;
     int* ptr;       // Step 1: Declare pointer
-    
+
     ptr = &num;     // Step 2: Assign address
-    
+
     cout << "Value of num: " << num << endl;
     cout << "Address of num: " << &num << endl;
     cout << "Value in ptr: " << ptr << endl;
     cout << "Address of ptr itself: " << &ptr << endl;
-    
+
     return 0;
 }
 ```
@@ -350,15 +349,15 @@ using namespace std;
 int main() {
     int score = 100;
     int* ptr = &score;
-    
+
     cout << "Original score: " << score << endl;        // 100
     cout << "Through pointer: " << *ptr << endl;        // 100
-    
+
     *ptr = 150;  // Change value through pointer
-    
+
     cout << "New score: " << score << endl;             // 150
     cout << "Through pointer: " << *ptr << endl;        // 150
-    
+
     return 0;
 }
 ```
@@ -493,11 +492,11 @@ void doubleValue(int* ptr) {
 
 int main() {
     int num = 5;
-    
+
     cout << "Before: " << num << endl;  // 5
     doubleValue(&num);
     cout << "After: " << num << endl;   // 10
-    
+
     return 0;
 }
 ```
@@ -523,11 +522,11 @@ void swap(int* a, int* b) {
 
 int main() {
     int x = 10, y = 20;
-    
+
     cout << "Before: x=" << x << ", y=" << y << endl;
     swap(&x, &y);
     cout << "After: x=" << x << ", y=" << y << endl;
-    
+
     return 0;
 }
 ```
@@ -772,17 +771,17 @@ void divide(int* a, int* b, int* result) {
 int main() {
     int num1, num2, result;
     int choice;
-    
+
     cout << "Enter first number: ";
     cin >> num1;
-    
+
     cout << "Enter second number: ";
     cin >> num2;
-    
+
     cout << "\n1. Add\n2. Subtract\n3. Multiply\n4. Divide\n";
     cout << "Choice: ";
     cin >> choice;
-    
+
     switch (choice) {
         case 1:
             add(&num1, &num2, &result);
@@ -803,7 +802,7 @@ int main() {
         default:
             cout << "Invalid choice!" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -839,17 +838,17 @@ int findMax(int* arr, int size) {
 
 int main() {
     int numbers[5] = {10, 25, 30, 15, 40};
-    
+
     cout << "Original array: ";
     printArray(numbers, 5);
-    
+
     doubleArray(numbers, 5);
     cout << "After doubling: ";
     printArray(numbers, 5);
-    
+
     int maximum = findMax(numbers, 5);
     cout << "Maximum value: " << maximum << endl;
-    
+
     return 0;
 }
 ```
@@ -876,13 +875,13 @@ void rotateThree(int* a, int* b, int* c) {
 
 int main() {
     int x = 10, y = 20, z = 30;
-    
+
     cout << "Before: x=" << x << ", y=" << y << ", z=" << z << endl;
-    
+
     rotateThree(&x, &y, &z);
-    
+
     cout << "After rotation: x=" << x << ", y=" << y << ", z=" << z << endl;
-    
+
     return 0;
 }
 ```
@@ -1024,72 +1023,70 @@ const int* ptr = &num;  // Pointer to constant
 ### ✅ DO:
 
 1. **Always initialize pointers**
-    
-    ```cpp
-    int* ptr = nullptr;
-    ```
-    
+
+   ```cpp
+   int* ptr = nullptr;
+   ```
+
 2. **Check before dereferencing**
-    
-    ```cpp
-    if (ptr != nullptr) {
-        *ptr = 10;
-    }
-    ```
-    
+
+   ```cpp
+   if (ptr != nullptr) {
+       *ptr = 10;
+   }
+   ```
+
 3. **Use meaningful names**
-    
-    ```cpp
-    int* scorePtr;  // Clear what it points to
-    ```
-    
+
+   ```cpp
+   int* scorePtr;  // Clear what it points to
+   ```
+
 4. **Set to nullptr after delete** (for dynamic memory)
-    
-    ```cpp
-    delete ptr;
-    ptr = nullptr;
-    ```
-    
+
+   ```cpp
+   delete ptr;
+   ptr = nullptr;
+   ```
+
 5. **Use const when appropriate**
-    
-    ```cpp
-    void print(const int* ptr);  // Won't modify
-    ```
-    
+
+   ```cpp
+   void print(const int* ptr);  // Won't modify
+   ```
 
 ### ❌ DON'T:
 
 1. **Don't use uninitialized pointers**
-    
-    ```cpp
-    int* ptr;  // Dangerous!
-    ```
-    
+
+   ```cpp
+   int* ptr;  // Dangerous!
+   ```
+
 2. **Don't dereference nullptr**
-    
-    ```cpp
-    int* ptr = nullptr;
-    *ptr = 10;  // Crash!
-    ```
-    
+
+   ```cpp
+   int* ptr = nullptr;
+   *ptr = 10;  // Crash!
+   ```
+
 3. **Don't return local variable addresses**
-    
-    ```cpp
-    return &localVar;  // Danger!
-    ```
-    
+
+   ```cpp
+   return &localVar;  // Danger!
+   ```
+
 4. **Don't ignore compiler warnings**
-    
-    ```cpp
-    // Fix warnings about pointers!
-    ```
-    
+
+   ```cpp
+   // Fix warnings about pointers!
+   ```
+
 5. **Don't forget to free dynamic memory**
-    
-    ```cpp
-    // Will learn about delete later
-    ```
-    
+
+   ```cpp
+   // Will learn about delete later
+   ```
 
 ---
 

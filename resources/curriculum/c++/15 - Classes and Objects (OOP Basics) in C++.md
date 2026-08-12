@@ -52,7 +52,7 @@ public:
     string name;
     int age;
     double gpa;
-    
+
     void display() {
         cout << name << ", " << age << ", " << gpa << endl;
     }
@@ -86,7 +86,7 @@ You already know structures! Classes are very similar but more powerful.
 struct Student {
     string name;
     int age;
-    
+
     void display() {
         cout << name << ", " << age << endl;
     }
@@ -100,7 +100,7 @@ class Student {
 public:  // Access specifier
     string name;
     int age;
-    
+
     void display() {
         cout << name << ", " << age << endl;
     }
@@ -109,11 +109,11 @@ public:  // Access specifier
 
 ### Key Differences
 
-|Feature|struct|class|
-|---|---|---|
-|**Default access**|public|private|
-|**Common use**|Simple data grouping|Complex objects with behavior|
-|**OOP features**|Limited|Full OOP support|
+| Feature            | struct               | class                         |
+| ------------------ | -------------------- | ----------------------------- |
+| **Default access** | public               | private                       |
+| **Common use**     | Simple data grouping | Complex objects with behavior |
+| **OOP features**   | Limited              | Full OOP support              |
 
 **In C++**: `struct` and `class` are nearly identical. The only difference is default access!
 
@@ -129,7 +129,7 @@ class ClassName {
 public:
     // Data members (variables)
     dataType memberVariable;
-    
+
     // Member functions (methods)
     returnType memberFunction() {
         // Function body
@@ -145,12 +145,12 @@ public:
     // Data members
     double length;
     double width;
-    
+
     // Member functions
     double getArea() {
         return length * width;
     }
-    
+
     double getPerimeter() {
         return 2 * (length + width);
     }
@@ -178,7 +178,7 @@ int main() {
     Student student1;
     Student student2;
     Student student3;
-    
+
     return 0;
 }
 ```
@@ -211,7 +211,7 @@ public:
     string name;
     int age;
     double gpa;
-    
+
     void display() {
         cout << "Name: " << name << endl;
         cout << "Age: " << age << endl;
@@ -222,15 +222,15 @@ public:
 int main() {
     // Create object
     Student student1;
-    
+
     // Set values
     student1.name = "Alice";
     student1.age = 20;
     student1.gpa = 3.8;
-    
+
     // Use member function
     student1.display();
-    
+
     return 0;
 }
 ```
@@ -282,7 +282,7 @@ protected:
 class Student {
 public:
     string name;  // Public - accessible from anywhere
-    
+
     void display() {
         cout << name << endl;
     }
@@ -306,7 +306,7 @@ public:
     void setBalance(double b) {
         balance = b;  // OK - inside class
     }
-    
+
     double getBalance() {
         return balance;  // OK - inside class
     }
@@ -335,7 +335,7 @@ public:
             balance += amount;
         }
     }
-    
+
     void withdraw(double amount) {
         if (amount > 0 && amount <= balance) {  // Safety check
             balance -= amount;
@@ -360,7 +360,7 @@ class Rectangle {
 public:
     double length;
     double width;
-    
+
     // Function defined inside class
     double getArea() {
         return length * width;
@@ -375,7 +375,7 @@ class Rectangle {
 public:
     double length;
     double width;
-    
+
     // Function declaration
     double getArea();
     double getPerimeter();
@@ -454,7 +454,7 @@ class Student {
 public:
     string name;
     int age;
-    
+
     // Default constructor
     Student() {
         name = "Unknown";
@@ -478,7 +478,7 @@ public:
     string name;
     int age;
     double gpa;
-    
+
     // Parameterized constructor
     Student(string n, int a, double g) {
         name = n;
@@ -501,21 +501,21 @@ public:
     string name;
     int age;
     double gpa;
-    
+
     // Default constructor
     Student() {
         name = "Unknown";
         age = 0;
         gpa = 0.0;
     }
-    
+
     // Constructor with name only
     Student(string n) {
         name = n;
         age = 0;
         gpa = 0.0;
     }
-    
+
     // Constructor with all parameters
     Student(string n, int a, double g) {
         name = n;
@@ -539,7 +539,7 @@ public:
     string name;
     int age;
     double gpa;
-    
+
     // Using initialization list (more efficient)
     Student(string n, int a, double g) : name(n), age(a), gpa(g) {
         // Constructor body (optional)
@@ -562,7 +562,7 @@ public:
     ClassName() {
         cout << "Object created!" << endl;
     }
-    
+
     // Destructor - same name with ~ prefix, no parameters
     ~ClassName() {
         cout << "Object destroyed!" << endl;
@@ -579,11 +579,11 @@ using namespace std;
 class Student {
 public:
     string name;
-    
+
     Student(string n) : name(n) {
         cout << name << " enrolled!" << endl;
     }
-    
+
     ~Student() {
         cout << name << " graduated!" << endl;
     }
@@ -592,9 +592,9 @@ public:
 int main() {
     Student s1("Alice");
     Student s2("Bob");
-    
+
     cout << "Program running..." << endl;
-    
+
     return 0;
 }  // Destructors called here automatically
 ```
@@ -646,7 +646,7 @@ public:
     void setName(string n) {
         name = n;
     }
-    
+
     void setAge(int a) {
         if (a > 0 && a < 120) {  // Validation
             age = a;
@@ -654,7 +654,7 @@ public:
             cout << "Invalid age!" << endl;
         }
     }
-    
+
     void setGPA(double g) {
         if (g >= 0.0 && g <= 4.0) {  // Validation
             gpa = g;
@@ -662,16 +662,16 @@ public:
             cout << "Invalid GPA!" << endl;
         }
     }
-    
+
     // Getters (accessors)
     string getName() {
         return name;
     }
-    
+
     int getAge() {
         return age;
     }
-    
+
     double getGPA() {
         return gpa;
     }
@@ -679,14 +679,14 @@ public:
 
 int main() {
     Student s;
-    
+
     s.setName("Alice");
     s.setAge(20);     // OK
     s.setGPA(3.8);    // OK
-    
+
     s.setAge(-5);     // Rejected - Invalid!
     s.setGPA(10.0);   // Rejected - Invalid!
-    
+
     cout << s.getName() << endl;
 }
 ```
@@ -710,7 +710,7 @@ private:
 public:
     void setLength(double l) { length = l; }
     void setWidth(double w) { width = w; }
-    
+
     // Computed getter - calculates area
     double getArea() {
         return length * width;
@@ -815,7 +815,7 @@ public:
         holderName = name;
         balance = initialBalance;
     }
-    
+
     // Deposit money
     void deposit(double amount) {
         if (amount > 0) {
@@ -826,7 +826,7 @@ public:
             cout << "Invalid deposit amount!" << endl;
         }
     }
-    
+
     // Withdraw money
     void withdraw(double amount) {
         if (amount > 0 && amount <= balance) {
@@ -839,7 +839,7 @@ public:
             cout << "Invalid withdrawal amount!" << endl;
         }
     }
-    
+
     // Display account info
     void displayInfo() {
         cout << "\n=== Account Information ===" << endl;
@@ -847,7 +847,7 @@ public:
         cout << "Holder Name: " << holderName << endl;
         cout << "Balance: $" << balance << endl;
     }
-    
+
     // Getter for balance
     double getBalance() {
         return balance;
@@ -857,15 +857,15 @@ public:
 int main() {
     // Create account
     BankAccount account("ACC001", "John Doe", 1000.0);
-    
+
     account.displayInfo();
-    
+
     account.deposit(500);
     account.withdraw(200);
     account.withdraw(2000);  // Insufficient funds
-    
+
     account.displayInfo();
-    
+
     return 0;
 }
 ```
@@ -892,43 +892,43 @@ public:
         age = 0;
         gpa = 0.0;
     }
-    
+
     Student(int i, string n, int a, double g) {
         id = i;
         name = n;
         age = a;
         gpa = g;
     }
-    
+
     // Setters with validation
     void setID(int i) {
         if (i > 0) {
             id = i;
         }
     }
-    
+
     void setName(string n) {
         name = n;
     }
-    
+
     void setAge(int a) {
         if (a > 0 && a < 100) {
             age = a;
         }
     }
-    
+
     void setGPA(double g) {
         if (g >= 0.0 && g <= 4.0) {
             gpa = g;
         }
     }
-    
+
     // Getters
     int getID() { return id; }
     string getName() { return name; }
     int getAge() { return age; }
     double getGPA() { return gpa; }
-    
+
     // Member functions
     void display() {
         cout << "\n=== Student Information ===" << endl;
@@ -937,7 +937,7 @@ public:
         cout << "Age: " << age << endl;
         cout << "GPA: " << gpa << endl;
     }
-    
+
     char getGrade() {
         if (gpa >= 3.7) return 'A';
         else if (gpa >= 3.0) return 'B';
@@ -945,7 +945,7 @@ public:
         else if (gpa >= 1.0) return 'D';
         else return 'F';
     }
-    
+
     bool isPassing() {
         return gpa >= 2.0;
     }
@@ -956,22 +956,22 @@ int main() {
     Student s1(101, "Alice Johnson", 20, 3.8);
     Student s2(102, "Bob Smith", 21, 2.5);
     Student s3;  // Default constructor
-    
+
     s3.setID(103);
     s3.setName("Charlie Brown");
     s3.setAge(19);
     s3.setGPA(3.2);
-    
+
     // Display students
     s1.display();
     cout << "Grade: " << s1.getGrade() << endl;
     cout << "Status: " << (s1.isPassing() ? "Passing" : "Failing") << endl;
-    
+
     s2.display();
     cout << "Grade: " << s2.getGrade() << endl;
-    
+
     s3.display();
-    
+
     return 0;
 }
 ```
@@ -992,16 +992,16 @@ public:
     Rectangle() : length(1.0), width(1.0) {
         cout << "Rectangle created with default size" << endl;
     }
-    
+
     Rectangle(double l, double w) : length(l), width(w) {
         cout << "Rectangle created: " << l << "x" << w << endl;
     }
-    
+
     // Destructor
     ~Rectangle() {
         cout << "Rectangle destroyed" << endl;
     }
-    
+
     // Setters
     void setLength(double l) {
         if (l > 0) {
@@ -1010,7 +1010,7 @@ public:
             cout << "Invalid length!" << endl;
         }
     }
-    
+
     void setWidth(double w) {
         if (w > 0) {
             width = w;
@@ -1018,24 +1018,24 @@ public:
             cout << "Invalid width!" << endl;
         }
     }
-    
+
     // Getters
     double getLength() { return length; }
     double getWidth() { return width; }
-    
+
     // Computed properties
     double getArea() {
         return length * width;
     }
-    
+
     double getPerimeter() {
         return 2 * (length + width);
     }
-    
+
     bool isSquare() {
         return length == width;
     }
-    
+
     // Display
     void display() {
         cout << "\n=== Rectangle Info ===" << endl;
@@ -1050,13 +1050,13 @@ public:
 int main() {
     Rectangle r1;
     r1.display();
-    
+
     Rectangle r2(5.0, 3.0);
     r2.display();
-    
+
     Rectangle r3(4.0, 4.0);
     r3.display();
-    
+
     return 0;
 }
 ```
@@ -1078,7 +1078,7 @@ public:
     Circle(double r = 1.0) {
         setRadius(r);
     }
-    
+
     // Setter with validation
     void setRadius(double r) {
         if (r > 0) {
@@ -1088,25 +1088,25 @@ public:
             radius = 1.0;
         }
     }
-    
+
     // Getter
     double getRadius() {
         return radius;
     }
-    
+
     // Computed properties
     double getArea() {
         return PI * radius * radius;
     }
-    
+
     double getCircumference() {
         return 2 * PI * radius;
     }
-    
+
     double getDiameter() {
         return 2 * radius;
     }
-    
+
     // Display
     void display() {
         cout << "\n=== Circle Information ===" << endl;
@@ -1120,13 +1120,13 @@ public:
 int main() {
     Circle c1(5.0);
     c1.display();
-    
+
     Circle c2;  // Default radius = 1.0
     c2.display();
-    
+
     c2.setRadius(10.0);
     c2.display();
-    
+
     return 0;
 }
 ```
@@ -1242,7 +1242,7 @@ class Student {
 public:
     string name;
     int age;
-    
+
     Student() {  // Constructor initializes
         name = "Unknown";
         age = 0;
@@ -1305,7 +1305,7 @@ public:
     void setName(string n) {
         name = n;
     }
-    
+
     string getName() const {  // const function
         return name;
     }
@@ -1338,7 +1338,7 @@ public:
     Student() {
         scores = new int[10];
     }
-    
+
     ~Student() {
         delete[] scores;  // Clean up!
     }
@@ -1352,82 +1352,80 @@ public:
 ### ✅ DO:
 
 1. **Use meaningful class names**
-    
-    ```cpp
-    class BankAccount { };  // Good
-    class BA { };           // Bad
-    ```
-    
+
+   ```cpp
+   class BankAccount { };  // Good
+   class BA { };           // Bad
+   ```
+
 2. **Make data members private**
-    
-    ```cpp
-    class Student {
-    private:
-        string name;  // Protected data
-    public:
-        void setName(string n) { name = n; }
-    };
-    ```
-    
+
+   ```cpp
+   class Student {
+   private:
+       string name;  // Protected data
+   public:
+       void setName(string n) { name = n; }
+   };
+   ```
+
 3. **Provide constructors**
-    
-    ```cpp
-    class Student {
-    public:
-        Student() { /* initialize */ }
-    };
-    ```
-    
+
+   ```cpp
+   class Student {
+   public:
+       Student() { /* initialize */ }
+   };
+   ```
+
 4. **Use initialization lists**
-    
-    ```cpp
-    Student(string n, int a) : name(n), age(a) { }
-    ```
-    
+
+   ```cpp
+   Student(string n, int a) : name(n), age(a) { }
+   ```
+
 5. **Validate in setters**
-    
-    ```cpp
-    void setAge(int a) {
-        if (a > 0) age = a;
-    }
-    ```
-    
+
+   ```cpp
+   void setAge(int a) {
+       if (a > 0) age = a;
+   }
+   ```
+
 6. **Use const for functions that don't modify**
-    
-    ```cpp
-    double getArea() const {
-        return length * width;
-    }
-    ```
-    
+
+   ```cpp
+   double getArea() const {
+       return length * width;
+   }
+   ```
 
 ### ❌ DON'T:
 
 1. **Don't make everything public**
-    
-    ```cpp
-    // Bad - no encapsulation
-    class Student {
-    public:
-        string name;
-        int age;
-    };
-    ```
-    
+
+   ```cpp
+   // Bad - no encapsulation
+   class Student {
+   public:
+       string name;
+       int age;
+   };
+   ```
+
 2. **Don't forget destructors for dynamic memory**
-    
-    ```cpp
-    ~Student() {
-        delete[] dynamicArray;
-    }
-    ```
-    
+
+   ```cpp
+   ~Student() {
+       delete[] dynamicArray;
+   }
+   ```
+
 3. **Don't use global variables instead of class members**
-    
+
 4. **Don't create objects unnecessarily**
-    
+
 5. **Don't expose implementation details**
-    
 
 ---
 
@@ -1515,10 +1513,10 @@ Create a shopping system with:
 class ClassName {
 private:
     // Private members
-    
+
 public:
     // Public members
-    
+
 protected:
     // Protected members
 };  // Semicolon!

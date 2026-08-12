@@ -176,7 +176,7 @@ struct Student {
 
 int main() {
     Student s1;
-    
+
     s1.name = "Alice";
     s1.age = 20;
     s1.gpa = 3.8;
@@ -247,7 +247,7 @@ struct Student {
 
 int main() {
     Student s1 = {"Alice", 20, 3.8};
-    
+
     cout << "Name: " << s1.name << endl;   // Alice
     cout << "Age: " << s1.age << endl;     // 20
     cout << "GPA: " << s1.gpa << endl;     // 3.8
@@ -303,28 +303,28 @@ struct Student {
 int main() {
     // Create and initialize a student
     Student student1;
-    
+
     cout << "=== Student Registration ===" << endl;
-    
+
     cout << "Enter name: ";
     getline(cin, student1.name);
-    
+
     cout << "Enter age: ";
     cin >> student1.age;
-    
+
     cout << "Enter student ID: ";
     cin >> student1.id;
-    
+
     cout << "Enter GPA: ";
     cin >> student1.gpa;
-    
+
     // Display student information
     cout << "\n=== Student Information ===" << endl;
     cout << "Name: " << student1.name << endl;
     cout << "Age: " << student1.age << " years old" << endl;
     cout << "ID: " << student1.id << endl;
     cout << "GPA: " << student1.gpa << endl;
-    
+
     return 0;
 }
 ```
@@ -347,7 +347,7 @@ struct Student {
 int main() {
     // Array of 3 students
     Student students[3];
-    
+
     // Or initialize directly
     Student students[3] = {
         {"Alice", 20, 3.8},
@@ -411,23 +411,23 @@ struct Student {
 int main() {
     const int SIZE = 3;
     Student students[SIZE];
-    
+
     // Input student data
     cout << "=== Enter Student Information ===" << endl;
     for (int i = 0; i < SIZE; i++) {
         cout << "\nStudent " << (i + 1) << ":" << endl;
-        
+
         cin.ignore();  // Clear buffer (if needed)
         cout << "Name: ";
         getline(cin, students[i].name);
-        
+
         cout << "Age: ";
         cin >> students[i].age;
-        
+
         cout << "GPA: ";
         cin >> students[i].gpa;
     }
-    
+
     // Display all students
     cout << "\n=== Class Roster ===" << endl;
     for (int i = 0; i < SIZE; i++) {
@@ -436,7 +436,7 @@ int main() {
         cout << "  Age: " << students[i].age << " years" << endl;
         cout << "  GPA: " << students[i].gpa << endl;
     }
-    
+
     // Find student with highest GPA
     int topIndex = 0;
     for (int i = 1; i < SIZE; i++) {
@@ -444,11 +444,11 @@ int main() {
             topIndex = i;
         }
     }
-    
+
     cout << "\n=== Top Student ===" << endl;
-    cout << students[topIndex].name << " with GPA: " 
+    cout << students[topIndex].name << " with GPA: "
          << students[topIndex].gpa << endl;
-    
+
     return 0;
 }
 ```
@@ -509,7 +509,7 @@ void updateGPA(Student& s, double newGPA) {
 int main() {
     Student s1 = {"Alice", 20, 3.8};
     cout << "Old GPA: " << s1.gpa << endl;  // 3.8
-    
+
     updateGPA(s1, 4.0);
     cout << "New GPA: " << s1.gpa << endl;  // 4.0
 }
@@ -548,17 +548,17 @@ struct Student {
 // Function to input student data
 Student inputStudent() {
     Student s;
-    
+
     cin.ignore();
     cout << "Enter name: ";
     getline(cin, s.name);
-    
+
     cout << "Enter age: ";
     cin >> s.age;
-    
+
     cout << "Enter GPA: ";
     cin >> s.gpa;
-    
+
     return s;
 }
 
@@ -581,14 +581,14 @@ void updateGPA(Student& s, double newGPA) {
 
 int main() {
     Student student1 = inputStudent();
-    
+
     cout << "\n=== Student Information ===" << endl;
     displayStudent(student1);
-    
+
     if (isHonors(student1)) {
         cout << "\nCongratulations! You made the honors list!" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -620,13 +620,13 @@ struct Person {
 ```cpp
 int main() {
     Person person1;
-    
+
     person1.name = "Alice";
     person1.age = 20;
     person1.birthDate.day = 15;
     person1.birthDate.month = 5;
     person1.birthDate.year = 2004;
-    
+
     cout << person1.name << " was born on "
          << person1.birthDate.day << "/"
          << person1.birthDate.month << "/"
@@ -693,9 +693,9 @@ int main() {
         {"123 Main St", "New York", "10001"},
         75000.00
     };
-    
+
     displayEmployee(emp1);
-    
+
     return 0;
 }
 ```
@@ -716,10 +716,10 @@ struct Student {
 int main() {
     Student s1 = {"Alice", 20, 3.8};
     Student* ptr = &s1;  // Pointer to structure
-    
+
     // Method 1: Using (*ptr).member
     cout << (*ptr).name << endl;  // Alice
-    
+
     // Method 2: Using ptr->member (preferred)
     cout << ptr->name << endl;    // Alice
     cout << ptr->age << endl;     // 20
@@ -846,22 +846,22 @@ int main() {
         {"To Kill a Mockingbird", "Harper Lee", 324, 14.99, false},
         {"The Great Gatsby", "F. Scott Fitzgerald", 180, 12.99, true}
     };
-    
+
     cout << "=== Library Catalog ===" << endl;
     for (int i = 0; i < LIBRARY_SIZE; i++) {
         cout << "\nBook " << (i + 1) << ":" << endl;
         displayBook(library[i]);
     }
-    
+
     // Search for available books
     cout << "\n=== Available Books ===" << endl;
     for (int i = 0; i < LIBRARY_SIZE; i++) {
         if (library[i].available) {
-            cout << "- " << library[i].title << " by " 
+            cout << "- " << library[i].title << " by "
                  << library[i].author << endl;
         }
     }
-    
+
     return 0;
 }
 ```
@@ -886,25 +886,25 @@ void addProduct(Product inventory[], int& count, int maxSize) {
         cout << "Inventory full!" << endl;
         return;
     }
-    
+
     Product newProduct;
-    
+
     cout << "Enter Product ID: ";
     cin >> newProduct.id;
-    
+
     cin.ignore();
     cout << "Enter Product Name: ";
     getline(cin, newProduct.name);
-    
+
     cout << "Enter Quantity: ";
     cin >> newProduct.quantity;
-    
+
     cout << "Enter Price: $";
     cin >> newProduct.price;
-    
+
     inventory[count] = newProduct;
     count++;
-    
+
     cout << "Product added successfully!" << endl;
 }
 
@@ -913,26 +913,26 @@ void displayInventory(const Product inventory[], int count) {
         cout << "Inventory is empty!" << endl;
         return;
     }
-    
+
     cout << fixed << setprecision(2);
     cout << "\n=== Inventory ===" << endl;
-    cout << setw(5) << "ID" << setw(20) << "Name" 
-         << setw(10) << "Qty" << setw(10) << "Price" 
+    cout << setw(5) << "ID" << setw(20) << "Name"
+         << setw(10) << "Qty" << setw(10) << "Price"
          << setw(12) << "Total" << endl;
     cout << string(57, '-') << endl;
-    
+
     double grandTotal = 0;
     for (int i = 0; i < count; i++) {
         double total = inventory[i].quantity * inventory[i].price;
         grandTotal += total;
-        
+
         cout << setw(5) << inventory[i].id
              << setw(20) << inventory[i].name
              << setw(10) << inventory[i].quantity
              << setw(10) << inventory[i].price
              << setw(12) << total << endl;
     }
-    
+
     cout << string(57, '-') << endl;
     cout << "Grand Total: $" << grandTotal << endl;
 }
@@ -942,7 +942,7 @@ int main() {
     Product inventory[MAX_PRODUCTS];
     int productCount = 0;
     int choice;
-    
+
     do {
         cout << "\n=== Inventory System ===" << endl;
         cout << "1. Add Product" << endl;
@@ -950,26 +950,26 @@ int main() {
         cout << "3. Exit" << endl;
         cout << "Choice: ";
         cin >> choice;
-        
+
         switch (choice) {
             case 1:
                 addProduct(inventory, productCount, MAX_PRODUCTS);
                 break;
-            
+
             case 2:
                 displayInventory(inventory, productCount);
                 break;
-            
+
             case 3:
                 cout << "Goodbye!" << endl;
                 break;
-            
+
             default:
                 cout << "Invalid choice!" << endl;
         }
-        
+
     } while (choice != 3);
-    
+
     return 0;
 }
 ```
@@ -1007,23 +1007,23 @@ void assignGrade(Student& s) {
 
 Student inputStudent() {
     Student s;
-    
+
     cin.ignore();
     cout << "Enter student name: ";
     getline(cin, s.name);
-    
+
     cout << "Enter student ID: ";
     cin >> s.id;
-    
+
     cout << "Enter 5 test scores:" << endl;
     for (int i = 0; i < 5; i++) {
         cout << "  Test " << (i + 1) << ": ";
         cin >> s.scores[i];
     }
-    
+
     calculateAverage(s);
     assignGrade(s);
-    
+
     return s;
 }
 
@@ -1043,23 +1043,23 @@ void displayStudent(const Student& s) {
 
 int main() {
     int numStudents;
-    
+
     cout << "How many students? ";
     cin >> numStudents;
-    
+
     Student* students = new Student[numStudents];
-    
+
     for (int i = 0; i < numStudents; i++) {
         cout << "\n--- Student " << (i + 1) << " ---" << endl;
         students[i] = inputStudent();
     }
-    
+
     for (int i = 0; i < numStudents; i++) {
         displayStudent(students[i]);
     }
-    
+
     delete[] students;
-    
+
     return 0;
 }
 ```
@@ -1134,8 +1134,8 @@ if (s1.name == s2.name && s1.age == s2.age && s1.gpa == s2.gpa) {
 
 // Or write a function
 bool areEqual(const Student& s1, const Student& s2) {
-    return s1.name == s2.name && 
-           s1.age == s2.age && 
+    return s1.name == s2.name &&
+           s1.age == s2.age &&
            s1.gpa == s2.gpa;
 }
 ```
@@ -1230,82 +1230,80 @@ void func(Student& s) {  // Remove const if you need to modify
 ### ✅ DO:
 
 1. **Use meaningful names**
-    
-    ```cpp
-    struct Student { ... };  // Good
-    struct S { ... };        // Bad
-    ```
-    
+
+   ```cpp
+   struct Student { ... };  // Good
+   struct S { ... };        // Bad
+   ```
+
 2. **Initialize structures**
-    
-    ```cpp
-    Student s1 = {"Alice", 20, 3.8};  // Good
-    ```
-    
+
+   ```cpp
+   Student s1 = {"Alice", 20, 3.8};  // Good
+   ```
+
 3. **Pass by const reference for read-only**
-    
-    ```cpp
-    void display(const Student& s);
-    ```
-    
+
+   ```cpp
+   void display(const Student& s);
+   ```
+
 4. **Pass by reference to modify**
-    
-    ```cpp
-    void update(Student& s);
-    ```
-    
+
+   ```cpp
+   void update(Student& s);
+   ```
+
 5. **Use descriptive member names**
-    
-    ```cpp
-    struct Student {
-        string fullName;  // Clear
-        int studentAge;   // Clear
-    };
-    ```
-    
+
+   ```cpp
+   struct Student {
+       string fullName;  // Clear
+       int studentAge;   // Clear
+   };
+   ```
+
 6. **Group related data**
-    
-    ```cpp
-    struct Address {
-        string street;
-        string city;
-        string zip;
-    };  // Related fields together
-    ```
-    
+
+   ```cpp
+   struct Address {
+       string street;
+       string city;
+       string zip;
+   };  // Related fields together
+   ```
 
 ### ❌ DON'T:
 
 1. **Don't forget semicolon**
-    
-    ```cpp
-    struct Student { ... };  // Semicolon required
-    ```
-    
+
+   ```cpp
+   struct Student { ... };  // Semicolon required
+   ```
+
 2. **Don't use structures for unrelated data**
-    
-    ```cpp
-    struct Random {
-        string name;
-        int temperature;
-        bool flag;
-    };  // These aren't related!
-    ```
-    
+
+   ```cpp
+   struct Random {
+       string name;
+       int temperature;
+       bool flag;
+   };  // These aren't related!
+   ```
+
 3. **Don't compare structures directly**
-    
-    ```cpp
-    if (s1 == s2) { }  // Won't work
-    ```
-    
+
+   ```cpp
+   if (s1 == s2) { }  // Won't work
+   ```
+
 4. **Don't modify const parameters**
-    
-    ```cpp
-    void func(const Student& s) {
-        s.gpa = 4.0;  // Error!
-    }
-    ```
-    
+
+   ```cpp
+   void func(const Student& s) {
+       s.gpa = 4.0;  // Error!
+   }
+   ```
 
 ---
 

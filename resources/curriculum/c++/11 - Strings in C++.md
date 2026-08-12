@@ -359,7 +359,7 @@ bool caseInsensitiveCompare(string str1, string str2) {
     // Convert both to lowercase
     transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
     transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
-    
+
     return str1 == str2;
 }
 
@@ -603,13 +603,13 @@ string reverseString(string str) {
 string reverseString2(string str) {
     int left = 0;
     int right = str.length() - 1;
-    
+
     while (left < right) {
         swap(str[left], str[right]);
         left++;
         right--;
     }
-    
+
     return str;
 }
 ```
@@ -654,10 +654,10 @@ using namespace std;
 
 int main() {
     string input;
-    
+
     cout << "Enter a number: ";
     cin >> input;
-    
+
     try {
         int number = stoi(input);
         cout << "You entered: " << number << endl;
@@ -668,7 +668,7 @@ int main() {
     catch (out_of_range&) {
         cout << "Error: Number too large!" << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -716,11 +716,11 @@ bool isPalindrome(string str) {
             cleaned += tolower(c);
         }
     }
-    
+
     // Compare with reverse
     string reversed = cleaned;
     reverse(reversed.begin(), reversed.end());
-    
+
     return cleaned == reversed;
 }
 
@@ -728,7 +728,7 @@ int main() {
     cout << isPalindrome("radar") << endl;        // 1 (true)
     cout << isPalindrome("hello") << endl;        // 0 (false)
     cout << isPalindrome("A man a plan a canal Panama") << endl;  // 1
-    
+
     return 0;
 }
 ```
@@ -739,7 +739,7 @@ int main() {
 bool isPalindrome2(string str) {
     int left = 0;
     int right = str.length() - 1;
-    
+
     while (left < right) {
         if (str[left] != str[right]) {
             return false;
@@ -747,7 +747,7 @@ bool isPalindrome2(string str) {
         left++;
         right--;
     }
-    
+
     return true;
 }
 ```
@@ -762,10 +762,10 @@ using namespace std;
 void countVowelsConsonants(string str) {
     int vowels = 0;
     int consonants = 0;
-    
+
     for (char c : str) {
         c = tolower(c);
-        
+
         if (c >= 'a' && c <= 'z') {
             if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
                 vowels++;
@@ -774,7 +774,7 @@ void countVowelsConsonants(string str) {
             }
         }
     }
-    
+
     cout << "Vowels: " << vowels << endl;
     cout << "Consonants: " << consonants << endl;
 }
@@ -784,7 +784,7 @@ int main() {
     // Output:
     // Vowels: 3
     // Consonants: 7
-    
+
     return 0;
 }
 ```
@@ -795,7 +795,7 @@ int main() {
 int countWords(string str) {
     int count = 0;
     bool inWord = false;
-    
+
     for (char c : str) {
         if (c == ' ' || c == '\t' || c == '\n') {
             inWord = false;
@@ -804,7 +804,7 @@ int countWords(string str) {
             inWord = true;
         }
     }
-    
+
     return count;
 }
 
@@ -818,13 +818,13 @@ cout << "Words: " << countWords(text) << endl;  // 5
 ```cpp
 string removeSpaces(string str) {
     string result = "";
-    
+
     for (char c : str) {
         if (c != ' ') {
             result += c;
         }
     }
-    
+
     return result;
 }
 
@@ -854,15 +854,15 @@ string reverseWords(string str) {
     stringstream ss(str);
     vector<string> words;
     string word;
-    
+
     // Extract words
     while (ss >> word) {
         words.push_back(word);
     }
-    
+
     // Reverse words vector
     reverse(words.begin(), words.end());
-    
+
     // Combine back
     string result = "";
     for (int i = 0; i < words.size(); i++) {
@@ -871,7 +871,7 @@ string reverseWords(string str) {
             result += " ";
         }
     }
-    
+
     return result;
 }
 
@@ -891,14 +891,14 @@ bool isAnagram(string str1, string str2) {
     // Remove spaces and convert to lowercase
     str1.erase(remove(str1.begin(), str1.end(), ' '), str1.end());
     str2.erase(remove(str2.begin(), str2.end(), ' '), str2.end());
-    
+
     transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
     transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
-    
+
     // Sort and compare
     sort(str1.begin(), str1.end());
     sort(str2.begin(), str2.end());
-    
+
     return str1 == str2;
 }
 
@@ -915,13 +915,13 @@ cout << isAnagram("hello", "world") << endl;    // 0 (false)
 string findLongestWord(string str) {
     stringstream ss(str);
     string word, longest = "";
-    
+
     while (ss >> word) {
         if (word.length() > longest.length()) {
             longest = word;
         }
     }
-    
+
     return longest;
 }
 
@@ -950,14 +950,14 @@ void analyzeText(string text) {
     int special = 0;
     int vowels = 0;
     int consonants = 0;
-    
+
     for (char c : text) {
         characters++;
-        
+
         if (isalpha(c)) {
             letters++;
             char lower = tolower(c);
-            if (lower == 'a' || lower == 'e' || lower == 'i' || 
+            if (lower == 'a' || lower == 'e' || lower == 'i' ||
                 lower == 'o' || lower == 'u') {
                 vowels++;
             } else {
@@ -971,7 +971,7 @@ void analyzeText(string text) {
             special++;
         }
     }
-    
+
     cout << "=== Text Analysis ===" << endl;
     cout << "Total characters: " << characters << endl;
     cout << "Letters: " << letters << endl;
@@ -984,12 +984,12 @@ void analyzeText(string text) {
 
 int main() {
     string text;
-    
+
     cout << "Enter text: ";
     getline(cin, text);
-    
+
     analyzeText(text);
-    
+
     return 0;
 }
 ```
@@ -1028,7 +1028,7 @@ bool hasDigit(string pwd) {
 
 bool hasSpecialChar(string pwd) {
     string special = "!@#$%^&*()_+-=[]{}|;:,.<>?";
-    
+
     for (char c : pwd) {
         if (special.find(c) != string::npos) {
             return true;
@@ -1039,39 +1039,39 @@ bool hasSpecialChar(string pwd) {
 
 int calculateStrength(string pwd) {
     int strength = 0;
-    
+
     if (hasMinLength(pwd, 8)) strength += 20;
     if (hasMinLength(pwd, 12)) strength += 10;
     if (hasUpperCase(pwd)) strength += 20;
     if (hasLowerCase(pwd)) strength += 20;
     if (hasDigit(pwd)) strength += 15;
     if (hasSpecialChar(pwd)) strength += 15;
-    
+
     return strength;
 }
 
 int main() {
     string password;
-    
+
     do {
         cout << "\nCreate a password: ";
         cin >> password;
-        
+
         cout << "\n--- Password Requirements ---" << endl;
-        cout << (hasMinLength(password, 8) ? "✓" : "✗") 
+        cout << (hasMinLength(password, 8) ? "✓" : "✗")
              << " At least 8 characters" << endl;
-        cout << (hasUpperCase(password) ? "✓" : "✗") 
+        cout << (hasUpperCase(password) ? "✓" : "✗")
              << " Contains uppercase letter" << endl;
-        cout << (hasLowerCase(password) ? "✓" : "✗") 
+        cout << (hasLowerCase(password) ? "✓" : "✗")
              << " Contains lowercase letter" << endl;
-        cout << (hasDigit(password) ? "✓" : "✗") 
+        cout << (hasDigit(password) ? "✓" : "✗")
              << " Contains digit" << endl;
-        cout << (hasSpecialChar(password) ? "✓" : "✗") 
+        cout << (hasSpecialChar(password) ? "✓" : "✗")
              << " Contains special character" << endl;
-        
+
         int strength = calculateStrength(password);
         cout << "\nStrength: " << strength << "/100 ";
-        
+
         if (strength >= 80) {
             cout << "(Strong)" << endl;
         } else if (strength >= 60) {
@@ -1079,16 +1079,16 @@ int main() {
         } else {
             cout << "(Weak)" << endl;
         }
-        
+
         if (strength < 80) {
             cout << "\nPassword not strong enough. Try again!" << endl;
         } else {
             cout << "\nPassword accepted!" << endl;
             break;
         }
-        
+
     } while (true);
-    
+
     return 0;
 }
 ```
@@ -1102,7 +1102,7 @@ using namespace std;
 
 string encrypt(string text, int shift) {
     string result = "";
-    
+
     for (char c : text) {
         if (isalpha(c)) {
             char base = isupper(c) ? 'A' : 'a';
@@ -1110,7 +1110,7 @@ string encrypt(string text, int shift) {
         }
         result += c;
     }
-    
+
     return result;
 }
 
@@ -1122,20 +1122,20 @@ int main() {
     string message;
     int shift;
     int choice;
-    
+
     cout << "=== Caesar Cipher ===" << endl;
     cout << "1. Encrypt" << endl;
     cout << "2. Decrypt" << endl;
     cout << "Choice: ";
     cin >> choice;
-    
+
     cin.ignore();
     cout << "Enter message: ";
     getline(cin, message);
-    
+
     cout << "Enter shift (1-25): ";
     cin >> shift;
-    
+
     string result;
     if (choice == 1) {
         result = encrypt(message, shift);
@@ -1144,7 +1144,7 @@ int main() {
         result = decrypt(message, shift);
         cout << "\nDecrypted: " << result << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1167,52 +1167,52 @@ bool isPalindrome(string str);
 int main() {
     string text;
     int choice;
-    
+
     cout << "Enter a string: ";
     getline(cin, text);
-    
+
     do {
         displayMenu();
         cout << "Choice: ";
         cin >> choice;
-        
+
         switch (choice) {
             case 1:
                 cout << "Reversed: " << reverseString(text) << endl;
                 break;
-            
+
             case 2:
                 cout << "Uppercase: " << toUpperCase(text) << endl;
                 break;
-            
+
             case 3:
                 cout << "Lowercase: " << toLowerCase(text) << endl;
                 break;
-            
+
             case 4:
                 cout << "Length: " << text.length() << endl;
                 break;
-            
+
             case 5:
                 cout << "Vowels: " << countVowels(text) << endl;
                 break;
-            
+
             case 6:
                 cout << "Palindrome: " << (isPalindrome(text) ? "Yes" : "No") << endl;
                 break;
-            
+
             case 7:
                 cout << "Goodbye!" << endl;
                 break;
-            
+
             default:
                 cout << "Invalid choice!" << endl;
         }
-        
+
         cout << endl;
-        
+
     } while (choice != 7);
-    
+
     return 0;
 }
 
@@ -1260,10 +1260,10 @@ bool isPalindrome(string str) {
             cleaned += tolower(c);
         }
     }
-    
+
     string reversed = cleaned;
     reverse(reversed.begin(), reversed.end());
-    
+
     return cleaned == reversed;
 }
 ```

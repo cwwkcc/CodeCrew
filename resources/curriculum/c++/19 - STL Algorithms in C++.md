@@ -120,14 +120,14 @@ using namespace std;
 
 int main() {
     vector<int> numbers = {5, 2, 8, 1, 9, 3};
-    
+
     sort(numbers.begin(), numbers.end());
-    
+
     for (int num : numbers) {
         cout << num << " ";
     }
     // Output: 1 2 3 5 8 9
-    
+
     return 0;
 }
 ```
@@ -160,9 +160,9 @@ int main() {
         {"Bob", 3.5},
         {"Charlie", 3.9}
     };
-    
+
     sort(students.begin(), students.end(), compareByGPA);
-    
+
     for (const auto& s : students) {
         cout << s.name << ": " << s.gpa << endl;
     }
@@ -170,7 +170,7 @@ int main() {
     // Charlie: 3.9
     // Alice: 3.8
     // Bob: 3.5
-    
+
     return 0;
 }
 ```
@@ -763,24 +763,24 @@ public:
     void addGrade(double grade) {
         grades.push_back(grade);
     }
-    
+
     void displayStatistics() {
         if (grades.empty()) {
             cout << "No grades entered!" << endl;
             return;
         }
-        
+
         // Sort grades
         vector<double> sorted = grades;
         sort(sorted.begin(), sorted.end());
-        
+
         // Calculate statistics
         double sum = accumulate(grades.begin(), grades.end(), 0.0);
         double average = sum / grades.size();
-        
+
         double highest = *max_element(grades.begin(), grades.end());
         double lowest = *min_element(grades.begin(), grades.end());
-        
+
         // Median
         double median;
         if (sorted.size() % 2 == 0) {
@@ -788,11 +788,11 @@ public:
         } else {
             median = sorted[sorted.size()/2];
         }
-        
+
         // Count passing (>= 60)
         int passing = count_if(grades.begin(), grades.end(),
                               [](double g) { return g >= 60; });
-        
+
         // Display
         cout << fixed << setprecision(2);
         cout << "\n=== Grade Statistics ===" << endl;
@@ -801,9 +801,9 @@ public:
         cout << "Median: " << median << endl;
         cout << "Highest: " << highest << endl;
         cout << "Lowest: " << lowest << endl;
-        cout << "Passing: " << passing << " (" 
+        cout << "Passing: " << passing << " ("
              << (passing * 100.0 / grades.size()) << "%)" << endl;
-        
+
         // Grade distribution
         cout << "\n=== Grade Distribution ===" << endl;
         cout << "A (90-100): " << count_if(grades.begin(), grades.end(),
@@ -817,11 +817,11 @@ public:
         cout << "F (<60): " << count_if(grades.begin(), grades.end(),
                                        [](double g) { return g < 60; }) << endl;
     }
-    
+
     void displaySortedGrades() {
         vector<double> sorted = grades;
         sort(sorted.begin(), sorted.end(), greater<double>());
-        
+
         cout << "\n=== Sorted Grades (Descending) ===" << endl;
         for (double grade : sorted) {
             cout << grade << " ";
@@ -832,7 +832,7 @@ public:
 
 int main() {
     GradeAnalyzer analyzer;
-    
+
     // Add sample grades
     analyzer.addGrade(85.5);
     analyzer.addGrade(92.0);
@@ -842,10 +842,10 @@ int main() {
     analyzer.addGrade(72.5);
     analyzer.addGrade(91.0);
     analyzer.addGrade(55.0);
-    
+
     analyzer.displayStatistics();
     analyzer.displaySortedGrades();
-    
+
     return 0;
 }
 ```
@@ -868,29 +868,29 @@ public:
     void setText(string t) {
         text = t;
     }
-    
+
     void toUpperCase() {
         transform(text.begin(), text.end(), text.begin(), ::toupper);
         cout << "Uppercase: " << text << endl;
     }
-    
+
     void toLowerCase() {
         transform(text.begin(), text.end(), text.begin(), ::tolower);
         cout << "Lowercase: " << text << endl;
     }
-    
+
     void reverseText() {
         reverse(text.begin(), text.end());
         cout << "Reversed: " << text << endl;
     }
-    
+
     void removeDuplicates() {
         sort(text.begin(), text.end());
         auto newEnd = unique(text.begin(), text.end());
         text.erase(newEnd, text.end());
         cout << "Unique characters: " << text << endl;
     }
-    
+
     void countVowels() {
         int count = count_if(text.begin(), text.end(),
                             [](char c) {
@@ -900,28 +900,28 @@ public:
                             });
         cout << "Vowels: " << count << endl;
     }
-    
+
     void countDigits() {
         int count = count_if(text.begin(), text.end(), ::isdigit);
         cout << "Digits: " << count << endl;
     }
-    
+
     void removeSpaces() {
         auto newEnd = remove(text.begin(), text.end(), ' ');
         text.erase(newEnd, text.end());
         cout << "Without spaces: " << text << endl;
     }
-    
+
     void isPalindrome() {
         string temp = text;
         // Remove spaces and convert to lowercase
         auto newEnd = remove(temp.begin(), temp.end(), ' ');
         temp.erase(newEnd, temp.end());
         transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
-        
+
         string reversed = temp;
         reverse(reversed.begin(), reversed.end());
-        
+
         if (temp == reversed) {
             cout << "\"" << text << "\" is a palindrome!" << endl;
         } else {
@@ -933,23 +933,23 @@ public:
 int main() {
     TextProcessor processor;
     string input;
-    
+
     cout << "Enter text: ";
     getline(cin, input);
-    
+
     processor.setText(input);
-    
+
     cout << "\n=== Text Analysis ===" << endl;
     processor.countVowels();
     processor.countDigits();
     processor.isPalindrome();
-    
+
     cout << "\n=== Transformations ===" << endl;
     processor.toUpperCase();
     processor.toLowerCase();
     processor.reverseText();
     processor.removeSpaces();
-    
+
     return 0;
 }
 ```
@@ -971,7 +971,7 @@ public:
     void setData(vector<int> d) {
         data = d;
     }
-    
+
     void displayData(string label = "Data") {
         cout << label << ": ";
         for (int n : data) {
@@ -979,58 +979,58 @@ public:
         }
         cout << endl;
     }
-    
+
     void sortData() {
         sort(data.begin(), data.end());
         displayData("Sorted");
     }
-    
+
     void filterEven() {
         vector<int> evens;
         copy_if(data.begin(), data.end(), back_inserter(evens),
                 [](int n) { return n % 2 == 0; });
-        
+
         cout << "Even numbers: ";
         for (int n : evens) {
             cout << n << " ";
         }
         cout << endl;
     }
-    
+
     void filterOdd() {
         vector<int> odds;
         copy_if(data.begin(), data.end(), back_inserter(odds),
                 [](int n) { return n % 2 != 0; });
-        
+
         cout << "Odd numbers: ";
         for (int n : odds) {
             cout << n << " ";
         }
         cout << endl;
     }
-    
+
     void square() {
         transform(data.begin(), data.end(), data.begin(),
                  [](int n) { return n * n; });
         displayData("Squared");
     }
-    
+
     void removeNegatives() {
         auto newEnd = remove_if(data.begin(), data.end(),
                                [](int n) { return n < 0; });
         data.erase(newEnd, data.end());
         displayData("Without negatives");
     }
-    
+
     void statistics() {
         if (data.empty()) return;
-        
+
         int sum = accumulate(data.begin(), data.end(), 0);
         int product = accumulate(data.begin(), data.end(), 1,
                                 [](int a, int b) { return a * b; });
-        
+
         auto [minIt, maxIt] = minmax_element(data.begin(), data.end());
-        
+
         cout << "\n=== Statistics ===" << endl;
         cout << "Sum: " << sum << endl;
         cout << "Product: " << product << endl;
@@ -1042,19 +1042,19 @@ public:
 
 int main() {
     DataProcessor processor;
-    
+
     vector<int> data = {5, -2, 8, 1, -9, 3, 7, -4, 6, 10};
-    
+
     processor.setData(data);
     processor.displayData("Original");
-    
+
     processor.statistics();
     processor.filterEven();
     processor.filterOdd();
     processor.removeNegatives();
     processor.sortData();
     processor.square();
-    
+
     return 0;
 }
 ```
@@ -1063,22 +1063,22 @@ int main() {
 
 ## Algorithm Complexity Reference
 
-|Algorithm|Time Complexity|Notes|
-|---|---|---|
-|**sort**|O(n log n)|Average case|
-|**stable_sort**|O(n log n)|Maintains order|
-|**partial_sort**|O(n log k)|k = elements to sort|
-|**find**|O(n)|Linear search|
-|**binary_search**|O(log n)|Requires sorted range|
-|**count**|O(n)|Linear scan|
-|**accumulate**|O(n)|Linear scan|
-|**reverse**|O(n)|Linear|
-|**unique**|O(n)|Adjacent duplicates|
-|**transform**|O(n)|Applies function|
-|**copy**|O(n)|Linear copy|
-|**fill**|O(n)|Linear fill|
-|**min_element**|O(n)|Linear scan|
-|**max_element**|O(n)|Linear scan|
+| Algorithm         | Time Complexity | Notes                 |
+| ----------------- | --------------- | --------------------- |
+| **sort**          | O(n log n)      | Average case          |
+| **stable_sort**   | O(n log n)      | Maintains order       |
+| **partial_sort**  | O(n log k)      | k = elements to sort  |
+| **find**          | O(n)            | Linear search         |
+| **binary_search** | O(log n)        | Requires sorted range |
+| **count**         | O(n)            | Linear scan           |
+| **accumulate**    | O(n)            | Linear scan           |
+| **reverse**       | O(n)            | Linear                |
+| **unique**        | O(n)            | Adjacent duplicates   |
+| **transform**     | O(n)            | Applies function      |
+| **copy**          | O(n)            | Linear copy           |
+| **fill**          | O(n)            | Linear fill           |
+| **min_element**   | O(n)            | Linear scan           |
+| **max_element**   | O(n)            | Linear scan           |
 
 ---
 
@@ -1087,72 +1087,70 @@ int main() {
 ### ✅ DO:
 
 1. **Use algorithms instead of manual loops**
-    
-    ```cpp
-    // Good
-    sort(v.begin(), v.end());
-    
-    // Avoid
-    // Manual bubble sort...
-    ```
-    
+
+   ```cpp
+   // Good
+   sort(v.begin(), v.end());
+
+   // Avoid
+   // Manual bubble sort...
+   ```
+
 2. **Use lambdas for simple conditions**
-    
-    ```cpp
-    auto it = find_if(v.begin(), v.end(),
-                      [](int n) { return n > 10; });
-    ```
-    
+
+   ```cpp
+   auto it = find_if(v.begin(), v.end(),
+                     [](int n) { return n > 10; });
+   ```
+
 3. **Use back_inserter for dynamic insertion**
-    
-    ```cpp
-    copy_if(source.begin(), source.end(), back_inserter(dest),
-            [](int n) { return n % 2 == 0; });
-    ```
-    
+
+   ```cpp
+   copy_if(source.begin(), source.end(), back_inserter(dest),
+           [](int n) { return n % 2 == 0; });
+   ```
+
 4. **Chain algorithms when appropriate**
-    
-    ```cpp
-    sort(v.begin(), v.end());
-    auto newEnd = unique(v.begin(), v.end());
-    v.erase(newEnd, v.end());
-    ```
-    
+
+   ```cpp
+   sort(v.begin(), v.end());
+   auto newEnd = unique(v.begin(), v.end());
+   v.erase(newEnd, v.end());
+   ```
+
 5. **Use auto for iterators**
-    
-    ```cpp
-    auto it = find(v.begin(), v.end(), 42);
-    ```
-    
+
+   ```cpp
+   auto it = find(v.begin(), v.end(), 42);
+   ```
 
 ### ❌ DON'T:
 
 1. **Don't forget to erase after remove**
-    
-    ```cpp
-    // Wrong
-    remove(v.begin(), v.end(), 5);
-    
-    // Correct
-    v.erase(remove(v.begin(), v.end(), 5), v.end());
-    ```
-    
+
+   ```cpp
+   // Wrong
+   remove(v.begin(), v.end(), 5);
+
+   // Correct
+   v.erase(remove(v.begin(), v.end(), 5), v.end());
+   ```
+
 2. **Don't use algorithms on unsorted ranges when sorted required**
-    
-    ```cpp
-    // Wrong - binary_search requires sorted range
-    binary_search(unsorted.begin(), unsorted.end(), 5);
-    ```
-    
+
+   ```cpp
+   // Wrong - binary_search requires sorted range
+   binary_search(unsorted.begin(), unsorted.end(), 5);
+   ```
+
 3. **Don't modify container while iterating**
-    
-    ```cpp
-    // Dangerous
-    for (auto it = v.begin(); it != v.end(); ++it) {
-        v.push_back(*it);  // Invalidates iterators!
-    }
-    ```
-    
+
+   ```cpp
+   // Dangerous
+   for (auto it = v.begin(); it != v.end(); ++it) {
+       v.push_back(*it);  // Invalidates iterators!
+   }
+   ```
 
 ---
 
