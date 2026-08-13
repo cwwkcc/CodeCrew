@@ -138,18 +138,18 @@ string phone(string p); // Unclear action
 
 ### Common Verb Conventions
 
-|Verb|Meaning|Example|
-|---|---|---|
-|`get`|Return a value|`getName()`|
-|`set`|Assign a value|`setName()`|
-|`is/has`|Return boolean|`isValid()`, `hasChildren()`|
-|`calculate`|Compute and return|`calculateTotal()`|
-|`validate`|Check validity|`validateInput()`|
-|`process`|Perform operation|`processPayment()`|
-|`create`|Construct object|`createUser()`|
-|`delete/remove`|Delete item|`deleteRecord()`|
-|`find/search`|Locate item|`findById()`|
-|`update`|Modify existing|`updateStatus()`|
+| Verb            | Meaning            | Example                      |
+| --------------- | ------------------ | ---------------------------- |
+| `get`           | Return a value     | `getName()`                  |
+| `set`           | Assign a value     | `setName()`                  |
+| `is/has`        | Return boolean     | `isValid()`, `hasChildren()` |
+| `calculate`     | Compute and return | `calculateTotal()`           |
+| `validate`      | Check validity     | `validateInput()`            |
+| `process`       | Perform operation  | `processPayment()`           |
+| `create`        | Construct object   | `createUser()`               |
+| `delete/remove` | Delete item        | `deleteRecord()`             |
+| `find/search`   | Locate item        | `findById()`                 |
+| `update`        | Modify existing    | `updateStatus()`             |
 
 ---
 
@@ -374,13 +374,13 @@ private:
 
 public:
     BankAccount(string number) : balance(0.0), accountNumber(number) {}
-    
+
     void deposit(double amount) {
         if (amount > 0) {
             balance += amount;
         }
     }
-    
+
     bool withdraw(double amount) {
         if (amount > 0 && amount <= balance) {
             balance -= amount;
@@ -393,7 +393,7 @@ public:
 int main() {
     BankAccount account("ACC001");
     account.deposit(1000);
-    
+
     return 0;
 }
 ```
@@ -427,7 +427,7 @@ retryCount++;        // Retry due to timeout
 int findMajorityElement(vector<int>& nums) {
     int candidate = 0;
     int count = 0;
-    
+
     // Find candidate
     for (int num : nums) {
         if (count == 0) {
@@ -435,7 +435,7 @@ int findMajorityElement(vector<int>& nums) {
         }
         count += (num == candidate) ? 1 : -1;
     }
-    
+
     return candidate;
 }
 ```
@@ -458,7 +458,7 @@ int findMajorityElement(vector<int>& nums) {
 ```cpp
 /**
  * Calculates the monthly payment for a loan.
- * 
+ *
  * @param principal The loan amount
  * @param annualRate The annual interest rate (e.g., 0.05 for 5%)
  * @param years The loan term in years
@@ -469,10 +469,10 @@ double calculateMonthlyPayment(double principal, double annualRate, int years) {
     if (principal < 0 || annualRate < 0 || years <= 0) {
         throw invalid_argument("Invalid loan parameters");
     }
-    
+
     double monthlyRate = annualRate / 12;
     int numPayments = years * 12;
-    
+
     return (principal * monthlyRate) / (1 - pow(1 + monthlyRate, -numPayments));
 }
 ```
@@ -482,10 +482,10 @@ double calculateMonthlyPayment(double principal, double annualRate, int years) {
 ```cpp
 /**
  * Represents a bank account with basic operations.
- * 
+ *
  * This class provides functionality for deposits, withdrawals,
  * and balance inquiries. All monetary values are in USD.
- * 
+ *
  * Example usage:
  *     BankAccount account("ACC001", 1000.0);
  *     account.deposit(500.0);
@@ -563,8 +563,8 @@ void processOrder(Order& order) {
 
 ```cpp
 // ❌ Bad - Too many parameters
-void createUser(string name, string email, string phone, 
-                string address, string city, string state, 
+void createUser(string name, string email, string phone,
+                string address, string city, string state,
                 string zip, int age, bool active) { }
 
 // ✅ Good - Use structure
@@ -645,7 +645,7 @@ public:
             balance += amount;
         }
     }
-    
+
     double getBalance() const {
         return balance;
     }
@@ -665,21 +665,21 @@ public:
     MyClass();
     MyClass(int value);
     ~MyClass();
-    
+
     // 2. Public member functions
     void doSomething();
     int getValue() const;
-    
+
     // 3. Operator overloads
     MyClass& operator=(const MyClass& other);
-    
+
 protected:
     // Protected members
-    
+
 private:
     // 4. Private member functions
     void helperFunction();
-    
+
     // 5. Private member variables
     int value_;
     string name_;
@@ -703,7 +703,7 @@ public:
     string getName() const { return name; }
     double getGPA() const { return gpa; }
     bool isPassing() const { return gpa >= 2.0; }
-    
+
     // Non-const member functions can modify
     void setName(const string& newName) { name = newName; }
     void setGPA(double newGPA) { gpa = newGPA; }
@@ -745,7 +745,7 @@ private:
     double gpa;
 
 public:
-    Student(string n, int a, double g) 
+    Student(string n, int a, double g)
         : name(n), age(a), gpa(g) {  // Direct initialization
         // Constructor body
     }
@@ -786,11 +786,11 @@ void processPayment(double amount) {
     if (amount <= 0) {
         throw invalid_argument("Amount must be positive");
     }
-    
+
     if (amount > balance) {
         throw runtime_error("Insufficient funds");
     }
-    
+
     balance -= amount;
 }
 ```
@@ -812,13 +812,13 @@ public:
             throw runtime_error("Cannot open file: " + filename);
         }
     }
-    
+
     ~FileHandler() {
         if (file.is_open()) {
             file.close();
         }
     }
-    
+
     void write(const string& data) {
         file << data;
     }
@@ -906,13 +906,13 @@ public:
     ~Buffer() {
         delete[] data;
     }
-    
+
     // Copy constructor
     Buffer(const Buffer& other) : size(other.size) {
         data = new int[size];
         copy(other.data, other.data + size, data);
     }
-    
+
     // Copy assignment
     Buffer& operator=(const Buffer& other) {
         if (this != &other) {
@@ -994,7 +994,7 @@ class Derived : public Base {
 public:
     // ✅ Good - Explicit override
     void display() override { }
-    
+
     // Compiler catches mistakes
     // void displya() override { }  // Error - typo caught!
 };
@@ -1141,11 +1141,11 @@ public:
     void deposit(double amount);
     void withdraw(double amount);
     double getBalance() const;
-    
+
     // Transaction history
     void addTransaction(const Transaction& t);
     vector<Transaction> getHistory() const;
-    
+
     // Account management
     void close();
     bool isActive() const;
@@ -1223,7 +1223,7 @@ void processOrder(Order order) {
     if (!order.hasItems()) return;
     if (!order.customer.isActive()) return;
     if (order.total <= 0) return;
-    
+
     if (processPayment(order)) {
         shipOrder(order);
     }
@@ -1236,7 +1236,7 @@ void processOrder(Order order) {
 
 ```cpp
 // ❌ Bad
-void createAccount(string name, string email, string phone, 
+void createAccount(string name, string email, string phone,
                    string address, string city, string state,
                    string zip, int age, bool premium);
 
@@ -1311,12 +1311,12 @@ public:
         validateAge(studentAge);
         validateGPA(studentGPA);
     }
-    
+
     // Getters
     string getName() const { return name; }
     int getAge() const { return age; }
     double getGPA() const { return gpa; }
-    
+
     /**
      * Displays student information in a readable format.
      */
@@ -1332,7 +1332,7 @@ private:
             throw invalid_argument("Invalid age");
         }
     }
-    
+
     void validateGPA(double gpa) const {
         if (gpa < 0.0 || gpa > 4.0) {
             throw invalid_argument("GPA must be between 0.0 and 4.0");
@@ -1349,7 +1349,7 @@ int main() {
         cerr << "Error: " << e.what() << endl;
         return 1;
     }
-    
+
     return 0;
 }
 ```

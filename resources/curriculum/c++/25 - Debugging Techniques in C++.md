@@ -121,7 +121,7 @@ void fixBug() {
 void processArray(int arr[], int size) {
     // Assumption: size is correct
     // Reality: size might be wrong!
-    
+
     // Add verification
     if (size <= 0 || size > MAX_SIZE) {
         cerr << "Invalid size: " << size << endl;
@@ -261,15 +261,15 @@ using namespace std;
 
 int factorial(int n) {
     cout << "DEBUG: factorial called with n = " << n << endl;  // Debug print
-    
+
     if (n <= 1) {
         cout << "DEBUG: base case reached" << endl;
         return 1;
     }
-    
+
     int result = n * factorial(n - 1);
     cout << "DEBUG: returning " << result << " for n = " << n << endl;
-    
+
     return result;
 }
 
@@ -305,12 +305,12 @@ Result: 120
 ```cpp
 void processData(vector<int>& data) {
     cout << "ENTER processData: size = " << data.size() << endl;
-    
+
     // Function logic
     for (int& value : data) {
         value *= 2;
     }
-    
+
     cout << "EXIT processData" << endl;
 }
 ```
@@ -319,11 +319,11 @@ void processData(vector<int>& data) {
 
 ```cpp
 void calculateDiscount(double price, double discount) {
-    cout << "BEFORE: price = " << price 
+    cout << "BEFORE: price = " << price
          << ", discount = " << discount << endl;
-    
+
     double finalPrice = price * (1.0 - discount);
-    
+
     cout << "AFTER: finalPrice = " << finalPrice << endl;
 }
 ```
@@ -361,7 +361,7 @@ debugVector(numbers, "numbers");  // numbers = [1, 2, 3, 4, 5]
 int main() {
     int x = 42;
     DEBUG_PRINT("x = " << x);  // Only prints if DEBUG defined
-    
+
     return 0;
 }
 
@@ -562,13 +562,13 @@ void setAge(int age) {
 void processArray(const vector<int>& arr) {
     // Precondition: array is not empty
     assert(!arr.empty());
-    
+
     // Process array
     int sum = 0;
     for (int value : arr) {
         sum += value;
     }
-    
+
     // Postcondition: sum should be positive (if all values positive)
     // This would only be true if we know all values are positive
     // assert(sum > 0);  // Use carefully - depends on data
@@ -582,13 +582,13 @@ int divide(int a, int b) {
 int main() {
     vector<int> numbers = {1, 2, 3};
     processArray(numbers);  // OK
-    
+
     vector<int> empty;
     // processArray(empty);  // Assertion fails!
-    
+
     int result = divide(10, 2);   // OK
     // result = divide(10, 0);    // Assertion fails!
-    
+
     return 0;
 }
 ```
@@ -627,7 +627,7 @@ switch (status) {
     case ACTIVE: break;
     case INACTIVE: break;
     case PENDING: break;
-    default: 
+    default:
         assert(false);  // Should never reach here
 }
 ```
@@ -710,28 +710,28 @@ private:
     LogLevel minLevel;
 
 public:
-    Logger(const string& filename, LogLevel level = INFO) 
+    Logger(const string& filename, LogLevel level = INFO)
         : minLevel(level) {
         logFile.open(filename, ios::app);
     }
-    
+
     ~Logger() {
         logFile.close();
     }
-    
+
     void log(LogLevel level, const string& message) {
         if (level < minLevel) return;
-        
+
         string levelStr = getLevelString(level);
         string timestamp = getTimestamp();
-        
-        string logMessage = "[" + timestamp + "] " + 
+
+        string logMessage = "[" + timestamp + "] " +
                            levelStr + ": " + message;
-        
+
         cout << logMessage << endl;
         logFile << logMessage << endl;
     }
-    
+
     void debug(const string& message) { log(DEBUG, message); }
     void info(const string& message) { log(INFO, message); }
     void warning(const string& message) { log(WARNING, message); }
@@ -747,11 +747,11 @@ private:
             default: return "UNKNOWN";
         }
     }
-    
+
     string getTimestamp() {
         time_t now = time(nullptr);
         char buffer[80];
-        strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", 
+        strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S",
                  localtime(&now));
         return string(buffer);
     }
@@ -760,12 +760,12 @@ private:
 // Usage
 int main() {
     Logger logger("app.log", DEBUG);
-    
+
     logger.debug("Starting application");
     logger.info("Processing data");
     logger.warning("Low memory");
     logger.error("Failed to connect to database");
-    
+
     return 0;
 }
 ```
@@ -783,13 +783,13 @@ int main() {
 
 ## Log Levels
 
-|Level|Purpose|When to Use|
-|---|---|---|
-|**DEBUG**|Detailed diagnostic info|Development, troubleshooting|
-|**INFO**|General informational|Normal operations, milestones|
-|**WARNING**|Potential issues|Deprecated features, recoverable errors|
-|**ERROR**|Error events|Operation failures, exceptions|
-|**CRITICAL**|Severe errors|System failures, data corruption|
+| Level        | Purpose                  | When to Use                             |
+| ------------ | ------------------------ | --------------------------------------- |
+| **DEBUG**    | Detailed diagnostic info | Development, troubleshooting            |
+| **INFO**     | General informational    | Normal operations, milestones           |
+| **WARNING**  | Potential issues         | Deprecated features, recoverable errors |
+| **ERROR**    | Error events             | Operation failures, exceptions          |
+| **CRITICAL** | Severe errors            | System failures, data corruption        |
 
 ---
 
@@ -898,7 +898,7 @@ long long factorial(int n) {
     if (n > 20) {  // factorial(21) overflows long long
         throw overflow_error("Factorial too large");
     }
-    
+
     long long result = 1;
     for (int i = 2; i <= n; i++) {
         result *= i;
@@ -995,11 +995,11 @@ int main() {
 ==12345== HEAP SUMMARY:
 ==12345==     in use at exit: 400 bytes in 1 blocks
 ==12345==   total heap usage: 1 allocs, 0 frees, 400 bytes allocated
-==12345== 
+==12345==
 ==12345== 400 bytes in 1 blocks are definitely lost
 ==12345==    at 0x...: operator new[](unsigned long)
 ==12345==    by 0x...: main (leak.cpp:2)
-==12345== 
+==12345==
 ==12345== LEAK SUMMARY:
 ==12345==    definitely lost: 400 bytes in 1 blocks
 ```
@@ -1033,9 +1033,9 @@ void complexFunction() {
 // Bug somewhere in 1000-line function
 void massiveFunction() {
     // ... 500 lines ...
-    
+
     cout << "Checkpoint 1" << endl;  // Bug before or after?
-    
+
     // ... 500 lines ...
 }
 
@@ -1055,12 +1055,12 @@ void massiveFunction() {
 void processNumbers(vector<int>& numbers) {
     // "And it sorts them..."
     sort(numbers.begin(), numbers.end());
-    
+
     // "Then it doubles each value..."
     for (int& num : numbers) {
         num *= 2;
     }
-    
+
     // "Wait... I'm modifying while iterating..."
     // "That's the bug!"
 }
@@ -1083,18 +1083,18 @@ void complexCalculation(int a, int b, int c, int d) {
 void complexCalculation(int a, int b, int c, int d) {
     int part1 = a * b;
     cout << "part1 = " << part1 << endl;
-    
+
     int part2 = c * d;
     cout << "part2 = " << part2 << endl;
-    
+
     int numerator = part1 + part2;
     cout << "numerator = " << numerator << endl;
-    
+
     int denominator = (a + b) - (c - d);
     cout << "denominator = " << denominator << endl;
-    
+
     // Aha! Denominator is zero!
-    
+
     return numerator / denominator;
 }
 ```
@@ -1244,13 +1244,13 @@ public:
         file.open(filename);
         if (!file) throw runtime_error("Cannot open file");
     }
-    
+
     ~FileHandler() {
         if (file.is_open()) {
             file.close();
         }
     }
-    
+
     void write(const string& data) {
         file << data;
     }
@@ -1307,16 +1307,16 @@ void processData() {
 
 ## Debugging Tools Summary
 
-|Tool|Purpose|When to Use|
-|---|---|---|
-|**Compiler warnings**|Catch potential issues|Always enabled|
-|**Print statements**|Quick value inspection|Simple bugs|
-|**GDB/LLDB**|Interactive debugging|Complex bugs, crashes|
-|**Assertions**|Verify assumptions|Development|
-|**Logging**|Track execution|Production, long-running|
-|**Valgrind**|Memory errors|Memory leaks, invalid access|
-|**Static analyzers**|Code analysis|Before committing|
-|**Profilers**|Performance issues|Optimization|
+| Tool                  | Purpose                | When to Use                  |
+| --------------------- | ---------------------- | ---------------------------- |
+| **Compiler warnings** | Catch potential issues | Always enabled               |
+| **Print statements**  | Quick value inspection | Simple bugs                  |
+| **GDB/LLDB**          | Interactive debugging  | Complex bugs, crashes        |
+| **Assertions**        | Verify assumptions     | Development                  |
+| **Logging**           | Track execution        | Production, long-running     |
+| **Valgrind**          | Memory errors          | Memory leaks, invalid access |
+| **Static analyzers**  | Code analysis          | Before committing            |
+| **Profilers**         | Performance issues     | Optimization                 |
 
 ---
 

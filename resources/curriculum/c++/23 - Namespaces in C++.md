@@ -89,11 +89,11 @@ namespace NamespaceName {
 
 namespace Math {
     const double PI = 3.14159;
-    
+
     double square(double x) {
         return x * x;
     }
-    
+
     double cube(double x) {
         return x * x * x;
     }
@@ -103,7 +103,7 @@ int main() {
     std::cout << "PI = " << Math::PI << std::endl;
     std::cout << "Square of 5 = " << Math::square(5) << std::endl;
     std::cout << "Cube of 3 = " << Math::cube(3) << std::endl;
-    
+
     return 0;
 }
 ```
@@ -133,7 +133,7 @@ int main() {
     //  |         |                    |
     //  |         └─── cout object     └─── endl manipulator
     //  └─── std namespace
-    
+
     return 0;
 }
 ```
@@ -158,14 +158,14 @@ int main() {
 int main() {
     std::string name = "Alice";
     std::vector<int> numbers = {1, 2, 3, 4, 5};
-    
+
     std::cout << "Name: " << name << std::endl;
-    
+
     for (int num : numbers) {
         std::cout << num << " ";
     }
     std::cout << std::endl;
-    
+
     return 0;
 }
 ```
@@ -196,10 +196,10 @@ using std::string;
 int main() {
     string name = "Alice";
     cout << "Name: " << name << endl;
-    
+
     // Still need std:: for others
     std::vector<int> numbers = {1, 2, 3};
-    
+
     return 0;
 }
 ```
@@ -228,14 +228,14 @@ using namespace std;
 int main() {
     string name = "Alice";
     vector<int> numbers = {1, 2, 3, 4, 5};
-    
+
     cout << "Name: " << name << endl;
-    
+
     for (int num : numbers) {
         cout << num << " ";
     }
     cout << endl;
-    
+
     return 0;
 }
 ```
@@ -265,7 +265,7 @@ int main() {
 namespace MathUtils {
     const double PI = 3.14159265359;
     const double E = 2.71828182846;
-    
+
     double square(double x);
     double cube(double x);
     double power(double base, int exponent);
@@ -283,19 +283,19 @@ namespace MathUtils {
     double square(double x) {
         return x * x;
     }
-    
+
     double cube(double x) {
         return x * x * x;
     }
-    
+
     double power(double base, int exponent) {
         return std::pow(base, exponent);
     }
-    
+
     double circleArea(double radius) {
         return PI * radius * radius;
     }
-    
+
     double circleCircumference(double radius) {
         return 2 * PI * radius;
     }
@@ -309,11 +309,11 @@ namespace MathUtils {
 
 int main() {
     using namespace MathUtils;  // OK in .cpp file
-    
+
     std::cout << "PI = " << PI << std::endl;
     std::cout << "Square of 5 = " << square(5) << std::endl;
     std::cout << "Circle area (radius 3) = " << circleArea(3) << std::endl;
-    
+
     return 0;
 }
 ```
@@ -351,37 +351,37 @@ namespace StringUtils {
         std::transform(result.begin(), result.end(), result.begin(), ::toupper);
         return result;
     }
-    
+
     std::string toLowerCase(const std::string& str) {
         std::string result = str;
         std::transform(result.begin(), result.end(), result.begin(), ::tolower);
         return result;
     }
-    
+
     std::string trim(const std::string& str) {
         size_t first = str.find_first_not_of(" \t\n\r");
         if (first == std::string::npos) return "";
-        
+
         size_t last = str.find_last_not_of(" \t\n\r");
         return str.substr(first, last - first + 1);
     }
-    
+
     std::vector<std::string> split(const std::string& str, char delimiter) {
         std::vector<std::string> tokens;
         std::stringstream ss(str);
         std::string token;
-        
+
         while (std::getline(ss, token, delimiter)) {
             tokens.push_back(token);
         }
-        
+
         return tokens;
     }
-    
+
     bool startsWith(const std::string& str, const std::string& prefix) {
         return str.substr(0, prefix.length()) == prefix;
     }
-    
+
     bool endsWith(const std::string& str, const std::string& suffix) {
         if (suffix.length() > str.length()) return false;
         return str.substr(str.length() - suffix.length()) == suffix;
@@ -397,21 +397,21 @@ namespace StringUtils {
 
 int main() {
     using namespace StringUtils;
-    
+
     std::string text = "  Hello, World!  ";
-    
+
     std::cout << "Original: '" << text << "'" << std::endl;
     std::cout << "Uppercase: " << toUpperCase(text) << std::endl;
     std::cout << "Trimmed: '" << trim(text) << "'" << std::endl;
-    
+
     std::string data = "apple,banana,cherry";
     auto parts = split(data, ',');
-    
+
     std::cout << "Split result:" << std::endl;
     for (const auto& part : parts) {
         std::cout << "  - " << part << std::endl;
     }
-    
+
     return 0;
 }
 ```
@@ -442,7 +442,7 @@ namespace Company {
 int main() {
     Company::Product::Version::Application app;
     app.run();
-    
+
     return 0;
 }
 ```
@@ -466,7 +466,7 @@ namespace Company::Product::Version {
 int main() {
     Company::Product::Version::Application app;
     app.run();
-    
+
     return 0;
 }
 ```
@@ -488,7 +488,7 @@ namespace Graphics {
             Circle(double r) : radius(r) {}
             double area() const;
         };
-        
+
         class Rectangle {
         private:
             double width, height;
@@ -497,12 +497,12 @@ namespace Graphics {
             double area() const;
         };
     }
-    
+
     namespace Colors {
         struct Color {
             int r, g, b;
         };
-        
+
         const Color RED = {255, 0, 0};
         const Color GREEN = {0, 255, 0};
         const Color BLUE = {0, 0, 255};
@@ -513,9 +513,9 @@ namespace Graphics {
 int main() {
     Graphics::Shapes::Circle circle(5.0);
     Graphics::Shapes::Rectangle rect(4.0, 6.0);
-    
+
     auto color = Graphics::Colors::RED;
-    
+
     return 0;
 }
 ```
@@ -539,14 +539,14 @@ namespace Company::Product::Version::Module {
 int main() {
     // Long way
     Company::Product::Version::Module::Widget w1;
-    
+
     // Create alias
     namespace CPM = Company::Product::Version::Module;
-    
+
     // Short way
     CPM::Widget w2;
     w2.display();
-    
+
     return 0;
 }
 ```
@@ -571,7 +571,7 @@ fs::path myPath = "/home/user/file.txt";
 // file1.cpp
 namespace {
     int secretValue = 42;  // Only visible in file1.cpp
-    
+
     void helperFunction() {
         std::cout << "Helper in file1" << std::endl;
     }
@@ -630,7 +630,7 @@ namespace MyLibrary {
             std::cout << "Version 2 implementation" << std::endl;
         }
     }
-    
+
     namespace v1 {  // Old version
         void doSomething() {
             std::cout << "Version 1 implementation" << std::endl;
@@ -642,7 +642,7 @@ int main() {
     MyLibrary::doSomething();       // Calls v2 (inline)
     MyLibrary::v1::doSomething();   // Calls v1 explicitly
     MyLibrary::v2::doSomething();   // Calls v2 explicitly
-    
+
     return 0;
 }
 ```
@@ -676,7 +676,7 @@ namespace MyLibrary {
     private:
         std::string name;  // ✅ Use std:: prefix
         std::vector<int> data;
-        
+
     public:
         MyClass(const std::string& n);
         void display() const;
@@ -733,19 +733,19 @@ namespace GameEngine {
         class Texture { /* ... */ };
         class Shader { /* ... */ };
     }
-    
+
     namespace Physics {
         class RigidBody { /* ... */ };
         class Collider { /* ... */ };
         class PhysicsWorld { /* ... */ };
     }
-    
+
     namespace Audio {
         class AudioSource { /* ... */ };
         class AudioListener { /* ... */ };
         class AudioClip { /* ... */ };
     }
-    
+
     namespace Input {
         class Keyboard { /* ... */ };
         class Mouse { /* ... */ };
@@ -756,12 +756,12 @@ namespace GameEngine {
 // Usage
 int main() {
     namespace GE = GameEngine;  // Alias
-    
+
     GE::Graphics::Renderer renderer;
     GE::Physics::RigidBody body;
     GE::Audio::AudioSource audio;
     GE::Input::Keyboard keyboard;
-    
+
     return 0;
 }
 ```
@@ -777,25 +777,25 @@ namespace Acme {
         class Customer { /* ... */ };
         class Invoice { /* ... */ };
     }
-    
+
     namespace Inventory {
         class Product { /* ... */ };
         class Warehouse { /* ... */ };
         class Stock { /* ... */ };
     }
-    
+
     namespace HR {
         class Employee { /* ... */ };
         class Department { /* ... */ };
         class Payroll { /* ... */ };
     }
-    
+
     namespace Utils {
         namespace Date {
             class DateTime { /* ... */ };
             class Calendar { /* ... */ };
         }
-        
+
         namespace String {
             std::string trim(const std::string& s);
             std::string toUpper(const std::string& s);
@@ -817,12 +817,12 @@ namespace Utils {
         std::string readFile(const std::string& path);
         void writeFile(const std::string& path, const std::string& content);
     }
-    
+
     namespace String {
         std::string trim(const std::string& str);
         std::vector<std::string> split(const std::string& str, char delim);
     }
-    
+
     namespace Math {
         double clamp(double value, double min, double max);
         int randomInt(int min, int max);
@@ -840,12 +840,12 @@ namespace Constants {
         constexpr double GRAVITY = 9.81;
         constexpr double SPEED_OF_LIGHT = 299792458.0;
     }
-    
+
     namespace Math {
         constexpr double PI = 3.14159265359;
         constexpr double E = 2.71828182846;
     }
-    
+
     namespace Config {
         const int MAX_PLAYERS = 64;
         const int DEFAULT_PORT = 8080;
@@ -867,13 +867,13 @@ namespace MyLibrary {
             // Implementation
             return 0;
         }
-        
+
         bool validateInput(const std::string& input) {
             // Implementation
             return true;
         }
     }
-    
+
     // Public API
     void publicFunction(const std::string& data) {
         if (!validateInput(data)) return;  // Use internal helper
@@ -915,7 +915,7 @@ namespace MyCompany::MyProject {
     void print();
     void process();
     void calculate();
-    
+
     class Data { };
     class Manager { };
 }
@@ -934,87 +934,85 @@ namespace MyCompany::MyProject {
 ### ✅ DO:
 
 1. **Use namespaces to organize code**
-    
-    ```cpp
-    namespace MyProject {
-        // Your code
-    }
-    ```
-    
+
+   ```cpp
+   namespace MyProject {
+       // Your code
+   }
+   ```
+
 2. **Use std:: in headers**
-    
-    ```cpp
-    // MyClass.h
-    std::string getName() const;  // ✅ Explicit
-    ```
-    
+
+   ```cpp
+   // MyClass.h
+   std::string getName() const;  // ✅ Explicit
+   ```
+
 3. **Use fully qualified names when ambiguous**
-    
-    ```cpp
-    std::string name = "Alice";  // Clear
-    ```
-    
+
+   ```cpp
+   std::string name = "Alice";  // Clear
+   ```
+
 4. **Create namespace aliases for long names**
-    
-    ```cpp
-    namespace fs = std::filesystem;
-    ```
-    
+
+   ```cpp
+   namespace fs = std::filesystem;
+   ```
+
 5. **Use anonymous namespaces for internal helpers**
-    
-    ```cpp
-    namespace {
-        void internalHelper() { }
-    }
-    ```
-    
+
+   ```cpp
+   namespace {
+       void internalHelper() { }
+   }
+   ```
+
 6. **Nest namespaces logically**
-    
-    ```cpp
-    namespace Company::Product::Module {
-        // Related functionality
-    }
-    ```
-    
+
+   ```cpp
+   namespace Company::Product::Module {
+       // Related functionality
+   }
+   ```
 
 ---
 
 ### ❌ DON'T:
 
 1. **Never use `using namespace` in headers**
-    
-    ```cpp
-    // ❌ MyClass.h
-    using namespace std;  // NEVER!
-    ```
-    
+
+   ```cpp
+   // ❌ MyClass.h
+   using namespace std;  // NEVER!
+   ```
+
 2. **Don't pollute global namespace**
-    
-    ```cpp
-    // ❌ Bad
-    void myFunction();  // Global
-    
-    // ✅ Good
-    namespace MyLib {
-        void myFunction();
-    }
-    ```
-    
+
+   ```cpp
+   // ❌ Bad
+   void myFunction();  // Global
+
+   // ✅ Good
+   namespace MyLib {
+       void myFunction();
+   }
+   ```
+
 3. **Don't create deeply nested namespaces unnecessarily**
-    
-    ```cpp
-    // ❌ Overkill
-    namespace A::B::C::D::E::F::G {
-        void function();
-    }
-    ```
-    
+
+   ```cpp
+   // ❌ Overkill
+   namespace A::B::C::D::E::F::G {
+       void function();
+   }
+   ```
+
 4. **Don't use `using namespace std;` in production headers**
-    
-    ```cpp
-    // ❌ Avoid in professional code
-    ```
-    
+
+   ```cpp
+   // ❌ Avoid in professional code
+   ```
 
 ---
 
@@ -1048,10 +1046,10 @@ namespace MyLibrary::Core {
     private:
         std::string name;
         bool running;
-        
+
     public:
         Application(const std::string& appName);
-        
+
         void start();
         void stop();
         bool isRunning() const;
@@ -1083,7 +1081,7 @@ namespace MyLibrary::Utils {
 
 namespace MyLibrary::Math {
     constexpr double PI = 3.14159265359;
-    
+
     double square(double x);
     double sqrt(double x);
     double clamp(double value, double min, double max);
@@ -1104,15 +1102,15 @@ namespace ML = MyLibrary;  // Alias
 int main() {
     ML::Core::Application app("My Application");
     app.start();
-    
+
     std::string text = "  Hello, World!  ";
     std::string trimmed = ML::Utils::trim(text);
-    
+
     double value = ML::Math::square(5.0);
-    
+
     std::cout << "Trimmed: " << trimmed << std::endl;
     std::cout << "Squared: " << value << std::endl;
-    
+
     return 0;
 }
 ```
@@ -1142,14 +1140,14 @@ int main() {
 
 ### Best Practices Summary
 
-|Context|Recommendation|
-|---|---|
-|**Header files**|Always use `std::` prefix|
-|**Source files**|Can use `using namespace`|
-|**Global namespace**|Avoid polluting it|
-|**Nested namespaces**|Use for organization, not excessively|
-|**Library code**|Always use namespaces|
-|**Internal helpers**|Use anonymous namespaces|
+| Context               | Recommendation                        |
+| --------------------- | ------------------------------------- |
+| **Header files**      | Always use `std::` prefix             |
+| **Source files**      | Can use `using namespace`             |
+| **Global namespace**  | Avoid polluting it                    |
+| **Nested namespaces** | Use for organization, not excessively |
+| **Library code**      | Always use namespaces                 |
+| **Internal helpers**  | Use anonymous namespaces              |
 
 ---
 

@@ -150,17 +150,17 @@ public:
     // Constructors
     Student();
     Student(string n, int a, double g);
-    
+
     // Getters
     string getName() const;
     int getAge() const;
     double getGPA() const;
-    
+
     // Setters
     void setName(string n);
     void setAge(int a);
     void setGPA(double g);
-    
+
     // Other functions
     void display() const;
     bool isPassing() const;
@@ -190,7 +190,7 @@ Student::Student() : name("Unknown"), age(0), gpa(0.0) {
 }
 
 // Parameterized constructor
-Student::Student(string n, int a, double g) 
+Student::Student(string n, int a, double g)
     : name(n), age(a), gpa(g) {
 }
 
@@ -256,15 +256,15 @@ int main() {
     // Create students using the Student class
     Student s1("Alice", 20, 3.8);
     Student s2("Bob", 21, 2.5);
-    
+
     // Use the methods
     s1.display();
     cout << "Passing: " << (s1.isPassing() ? "Yes" : "No") << endl;
     cout << endl;
-    
+
     s2.display();
     cout << "Passing: " << (s2.isPassing() ? "Yes" : "No") << endl;
-    
+
     return 0;
 }
 ```
@@ -406,11 +406,11 @@ private:
 
 public:
     BankAccount(const std::string& accNum, double initialBalance = 0.0);
-    
+
     // Getters
     std::string getAccountNumber() const;
     double getBalance() const;
-    
+
     // Operations
     void deposit(double amount);
     void withdraw(double amount);
@@ -450,7 +450,7 @@ void BankAccount::deposit(double amount) {
     if (amount <= 0) {
         throw invalid_argument("Deposit amount must be positive");
     }
-    
+
     balance += amount;
     transactions.push_back(Transaction("Deposit", amount, balance));
     cout << "Deposited: $" << amount << endl;
@@ -460,11 +460,11 @@ void BankAccount::withdraw(double amount) {
     if (amount <= 0) {
         throw invalid_argument("Withdrawal amount must be positive");
     }
-    
+
     if (amount > balance) {
         throw runtime_error("Insufficient funds");
     }
-    
+
     balance -= amount;
     transactions.push_back(Transaction("Withdrawal", amount, balance));
     cout << "Withdrawn: $" << amount << endl;
@@ -503,9 +503,9 @@ private:
 
 public:
     Transaction(const std::string& t, double amt, double balance);
-    
+
     void display() const;
-    
+
     // Getters
     std::string getType() const;
     double getAmount() const;
@@ -526,7 +526,7 @@ using namespace std;
 
 Transaction::Transaction(const string& t, double amt, double balance)
     : type(t), amount(amt), balanceAfter(balance) {
-    
+
     // Generate timestamp
     time_t now = time(nullptr);
     char buffer[26];
@@ -536,8 +536,8 @@ Transaction::Transaction(const string& t, double amt, double balance)
 }
 
 void Transaction::display() const {
-    cout << timestamp << " | " 
-         << type << ": $" << amount 
+    cout << timestamp << " | "
+         << type << ": $" << amount
          << " | Balance: $" << balanceAfter << endl;
 }
 
@@ -570,12 +570,12 @@ private:
 
 public:
     Customer(const std::string& name, const std::string& id);
-    
+
     void addAccount(const BankAccount& account);
     BankAccount* findAccount(const std::string& accountNumber);
-    
+
     void displayInfo() const;
-    
+
     std::string getName() const;
     std::string getCustomerId() const;
 };
@@ -614,7 +614,7 @@ void Customer::displayInfo() const {
     cout << "Name: " << name << endl;
     cout << "Customer ID: " << customerId << endl;
     cout << "Number of Accounts: " << accounts.size() << endl;
-    
+
     for (const auto& account : accounts) {
         account.displayInfo();
     }
@@ -645,18 +645,18 @@ int main() {
     try {
         // Create customer
         Customer customer("John Doe", "CUST001");
-        
+
         // Create accounts
         BankAccount checking("CHK001", 1000.0);
         BankAccount savings("SAV001", 5000.0);
-        
+
         // Add accounts to customer
         customer.addAccount(checking);
         customer.addAccount(savings);
-        
+
         // Display customer info
         customer.displayInfo();
-        
+
         // Perform operations on checking account
         BankAccount* chk = customer.findAccount("CHK001");
         if (chk) {
@@ -664,14 +664,14 @@ int main() {
             chk->withdraw(200);
             chk->displayTransactions();
         }
-        
+
         cout << "\nProgram completed successfully!" << endl;
-        
+
     } catch (const exception& e) {
         cerr << "Error: " << e.what() << endl;
         return 1;
     }
-    
+
     return 0;
 }
 ```
@@ -856,18 +856,18 @@ namespace Utils {
         transform(result.begin(), result.end(), result.begin(), ::toupper);
         return result;
     }
-    
+
     string toLowerCase(const string& str) {
         string result = str;
         transform(result.begin(), result.end(), result.begin(), ::tolower);
         return result;
     }
-    
+
     bool isValidEmail(const string& email) {
-        return email.find('@') != string::npos && 
+        return email.find('@') != string::npos &&
                email.find('.') != string::npos;
     }
-    
+
     double roundToTwoDecimals(double value) {
         return round(value * 100.0) / 100.0;
     }
@@ -948,108 +948,106 @@ public:
 ### ✅ DO:
 
 1. **Use include guards or #pragma once**
-    
-    ```cpp
-    #pragma once
-    // or
-    #ifndef MYCLASS_H
-    #define MYCLASS_H
-    // ...
-    #endif
-    ```
-    
+
+   ```cpp
+   #pragma once
+   // or
+   #ifndef MYCLASS_H
+   #define MYCLASS_H
+   // ...
+   #endif
+   ```
+
 2. **Forward declarations when possible**
-    
-    ```cpp
-    // Instead of #include "BigClass.h"
-    class BigClass;  // Forward declaration
-    
-    class MyClass {
-        BigClass* ptr;  // Pointer only needs forward declaration
-    };
-    ```
-    
+
+   ```cpp
+   // Instead of #include "BigClass.h"
+   class BigClass;  // Forward declaration
+
+   class MyClass {
+       BigClass* ptr;  // Pointer only needs forward declaration
+   };
+   ```
+
 3. **Include only what you need**
-    
-    ```cpp
-    // ✅ Good
-    #include <string>
-    #include "MyClass.h"
-    
-    // ❌ Bad
-    #include <bits/stdc++.h>  // Includes everything!
-    ```
-    
+
+   ```cpp
+   // ✅ Good
+   #include <string>
+   #include "MyClass.h"
+
+   // ❌ Bad
+   #include <bits/stdc++.h>  // Includes everything!
+   ```
+
 4. **Use quotes for your headers, angle brackets for system headers**
-    
-    ```cpp
-    #include <iostream>      // System header
-    #include "MyClass.h"     // Your header
-    ```
-    
+
+   ```cpp
+   #include <iostream>      // System header
+   #include "MyClass.h"     // Your header
+   ```
+
 5. **Keep headers minimal**
-    
-    ```cpp
-    // Header: Declarations only
-    // Source: Implementations
-    ```
-    
+
+   ```cpp
+   // Header: Declarations only
+   // Source: Implementations
+   ```
 
 ---
 
 ### ❌ DON'T:
 
 1. **Don't put `using namespace std;` in headers**
-    
-    ```cpp
-    // ❌ Bad - Pollutes namespace for all files
-    // MyClass.h
-    using namespace std;
-    
-    // ✅ Good - Use std:: prefix in headers
-    std::string getName() const;
-    ```
-    
+
+   ```cpp
+   // ❌ Bad - Pollutes namespace for all files
+   // MyClass.h
+   using namespace std;
+
+   // ✅ Good - Use std:: prefix in headers
+   std::string getName() const;
+   ```
+
 2. **Don't include .cpp files**
-    
-    ```cpp
-    // ❌ Wrong
-    #include "MyClass.cpp"
-    
-    // ✅ Correct
-    #include "MyClass.h"
-    ```
-    
+
+   ```cpp
+   // ❌ Wrong
+   #include "MyClass.cpp"
+
+   // ✅ Correct
+   #include "MyClass.h"
+   ```
+
 3. **Don't define functions in headers (except inline/template)**
-    
-    ```cpp
-    // ❌ Bad - Definition in header
-    // MyClass.h
-    void display() {
-        cout << "Hello" << endl;
-    }
-    
-    // ✅ Good - Declaration in header, definition in .cpp
-    // MyClass.h
-    void display();
-    
-    // MyClass.cpp
-    void display() {
-        cout << "Hello" << endl;
-    }
-    ```
-    
+
+   ```cpp
+   // ❌ Bad - Definition in header
+   // MyClass.h
+   void display() {
+       cout << "Hello" << endl;
+   }
+
+   // ✅ Good - Declaration in header, definition in .cpp
+   // MyClass.h
+   void display();
+
+   // MyClass.cpp
+   void display() {
+       cout << "Hello" << endl;
+   }
+   ```
+
 4. **Don't create circular dependencies**
-    
-    ```cpp
-    // ❌ Bad
-    // A.h includes B.h
-    // B.h includes A.h
-    // Circular dependency!
-    
-    // ✅ Good - Use forward declarations
-    ```
-    
+
+   ```cpp
+   // ❌ Bad
+   // A.h includes B.h
+   // B.h includes A.h
+   // Circular dependency!
+
+   // ✅ Good - Use forward declarations
+   ```
 
 ---
 
@@ -1146,15 +1144,15 @@ private:
     bool available;
 
 public:
-    Book(const std::string& title, const std::string& author, 
+    Book(const std::string& title, const std::string& author,
          const std::string& isbn);
-    
+
     // Getters
     std::string getTitle() const;
     std::string getAuthor() const;
     std::string getISBN() const;
     bool isAvailable() const;
-    
+
     // Operations
     void checkOut();
     void returnBook();
@@ -1181,12 +1179,12 @@ private:
 
 public:
     Member(const std::string& name, const std::string& id);
-    
+
     // Getters
     std::string getName() const;
     std::string getMemberId() const;
     const std::vector<std::string>& getBorrowedBooks() const;
-    
+
     // Operations
     void borrowBook(const std::string& isbn);
     void returnBook(const std::string& isbn);
@@ -1212,17 +1210,17 @@ private:
 
 public:
     Library();
-    
+
     // Book operations
     void addBook(const Book& book);
     Book* findBook(const std::string& isbn);
     void displayAllBooks() const;
-    
+
     // Member operations
     void addMember(const Member& member);
     Member* findMember(const std::string& memberId);
     void displayAllMembers() const;
-    
+
     // Transaction operations
     bool checkOutBook(const std::string& memberId, const std::string& isbn);
     bool returnBook(const std::string& memberId, const std::string& isbn);

@@ -165,7 +165,7 @@ int main() {
     double area = PI * radius * radius;
     int array[MAX_SIZE];
     cout << COMPANY_NAME << endl;
-    
+
     return 0;
 }
 ```
@@ -177,7 +177,7 @@ int main() {
     double area = 3.14159 * radius * radius;
     int array[100];
     cout << "Acme Corp" << endl;
-    
+
     return 0;
 }
 ```
@@ -217,7 +217,7 @@ int main() {
     int result = SQUARE(5);        // Expands to ((5) * (5))
     int larger = MAX(10, 20);      // Expands to ((10) > (20) ? (10) : (20))
     int absolute = ABS(-15);       // Expands to ((-15) < 0 ? -(-15) : (-15))
-    
+
     return 0;
 }
 ```
@@ -293,12 +293,12 @@ constexpr auto square(T x) {
 int main() {
     string text = STRINGIFY(Hello World);
     // Expands to: "Hello World"
-    
+
     int age = 25;
     PRINT_VAR(age);
     // Expands to: cout << "age" << " = " << age << endl
     // Output: age = 25
-    
+
     return 0;
 }
 ```
@@ -315,11 +315,11 @@ int main() {
 int main() {
     int CONCAT(var, 123) = 42;
     // Expands to: int var123 = 42;
-    
+
     cout << CONCAT(var, 123) << endl;
     // Expands to: cout << var123 << endl
     // Output: 42
-    
+
     return 0;
 }
 ```
@@ -337,7 +337,7 @@ int main() {
 int main() {
     LOG("Value: %d\n", 42);
     LOG("Name: %s, Age: %d\n", "Alice", 25);
-    
+
     return 0;
 }
 ```
@@ -464,10 +464,10 @@ int x = TEMP_VALUE;  // x = 100
 
 int main() {
     LOG("Starting program");  // Only in debug builds
-    
+
     int value = 10;
     ASSERT(value > 0);  // Only checked in debug builds
-    
+
     return 0;
 }
 ```
@@ -653,7 +653,7 @@ int main() {
     cout << "Date: " << __DATE__ << endl;
     cout << "Time: " << __TIME__ << endl;
     cout << "Function: " << __func__ << endl;  // C++11
-    
+
     return 0;
 }
 ```
@@ -793,7 +793,7 @@ int main() {
     SWAP(x, y);
     cout << "x = " << x << ", y = " << y << endl;
     // Output: x = 10, y = 5
-    
+
     return 0;
 }
 ```
@@ -817,7 +817,7 @@ int main() {
     int value = 42;
     DEBUG_PRINT(value);  // Only in debug builds
     DEBUG_MSG("Starting calculation");
-    
+
     return 0;
 }
 ```
@@ -842,7 +842,7 @@ int main() {
 int main() {
     int age = -5;
     ASSERT(age >= 0, "Age cannot be negative");
-    
+
     return 0;
 }
 ```
@@ -858,7 +858,7 @@ int main() {
 
 class NonCopyable {
     DISABLE_COPY(NonCopyable)
-    
+
 public:
     NonCopyable() = default;
 };
@@ -866,7 +866,7 @@ public:
 int main() {
     NonCopyable obj1;
     // NonCopyable obj2 = obj1;  // Error! Copy disabled
-    
+
     return 0;
 }
 ```
@@ -1073,26 +1073,26 @@ int main() {
     cout << "Application Version: " << VERSION_STRING << endl;
     cout << "Platform: " << PLATFORM << endl;
     cout << "Path Separator: " << PATH_SEPARATOR << endl;
-    
+
     LOG("Application started");
-    
+
     #if FEATURE_LOGGING
         cout << "Logging feature enabled" << endl;
     #endif
-    
+
     #if FEATURE_NETWORKING
         cout << "Networking feature enabled" << endl;
     #endif
-    
+
     #if FEATURE_DATABASE
         cout << "Database feature enabled" << endl;
     #else
         cout << "Database feature disabled" << endl;
     #endif
-    
+
     int value = 10;
     ASSERT(value > 0);
-    
+
     return 0;
 }
 ```
@@ -1129,12 +1129,12 @@ int main() {
 
 ### Modern C++ Alternatives
 
-|Old (Preprocessor)|Modern (C++)|
-|---|---|
-|`#define MAX 100`|`constexpr int MAX = 100;`|
-|`#define SQUARE(x)`|`template<typename T> T square(T x)`|
-|`#define DEBUG_LOG`|`if constexpr` with logging|
-|Macro constants|`enum class` or `constexpr`|
+| Old (Preprocessor)  | Modern (C++)                         |
+| ------------------- | ------------------------------------ |
+| `#define MAX 100`   | `constexpr int MAX = 100;`           |
+| `#define SQUARE(x)` | `template<typename T> T square(T x)` |
+| `#define DEBUG_LOG` | `if constexpr` with logging          |
+| Macro constants     | `enum class` or `constexpr`          |
 
 ---
 

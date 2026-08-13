@@ -36,12 +36,12 @@ int main() {
 ```cpp
 int main() {
     int score = 1000;
-    
+
     // Save to file
     ofstream file("score.txt");
     file << score;
     file.close();
-    
+
     // Even after program ends, score.txt still has 1000!
     return 0;
 }
@@ -104,23 +104,23 @@ using namespace std;
 int main() {
     // Create and open file for writing
     ofstream outFile("message.txt");
-    
+
     // Check if file opened successfully
     if (!outFile) {
         cout << "Error opening file!" << endl;
         return 1;
     }
-    
+
     // Write to file
     outFile << "Hello, File!" << endl;
     outFile << "This is line 2" << endl;
     outFile << "This is line 3" << endl;
-    
+
     // Close file
     outFile.close();
-    
+
     cout << "Data written to file successfully!" << endl;
-    
+
     return 0;
 }
 ```
@@ -196,13 +196,13 @@ int main() {
     ofstream file1("log.txt");
     file1 << "First entry" << endl;
     file1.close();
-    
+
     // Append new content
     ofstream file2("log.txt", ios::app);
     file2 << "Second entry" << endl;
     file2 << "Third entry" << endl;
     file2.close();
-    
+
     return 0;
 }
 ```
@@ -239,22 +239,22 @@ using namespace std;
 int main() {
     // Open file for reading
     ifstream inFile("message.txt");
-    
+
     // Check if file exists
     if (!inFile) {
         cout << "Error: File not found!" << endl;
         return 1;
     }
-    
+
     // Read and display content
     string line;
     while (getline(inFile, line)) {
         cout << line << endl;
     }
-    
+
     // Close file
     inFile.close();
-    
+
     return 0;
 }
 ```
@@ -406,26 +406,26 @@ using namespace std;
 int main() {
     // Write to file
     fstream file("data.txt", ios::out);
-    
+
     if (!file) {
         cout << "Error opening file!" << endl;
         return 1;
     }
-    
+
     file << "Hello, World!" << endl;
     file << "Line 2" << endl;
     file.close();
-    
+
     // Read from file
     file.open("data.txt", ios::in);
-    
+
     string line;
     while (getline(file, line)) {
         cout << line << endl;
     }
-    
+
     file.close();
-    
+
     return 0;
 }
 ```
@@ -517,21 +517,21 @@ struct Student {
 
 int main() {
     Student s1 = {"Alice", 20, 3.8};
-    
+
     // Write structure to file
     ofstream outFile("student.dat", ios::binary);
-    
+
     if (!outFile) {
         cout << "Error opening file!" << endl;
         return 1;
     }
-    
+
     outFile.write((char*)&s1, sizeof(Student));
-    
+
     outFile.close();
-    
+
     cout << "Student data saved!" << endl;
-    
+
     return 0;
 }
 ```
@@ -573,15 +573,15 @@ int main() {
         {"Bob", 21, 3.5},
         {"Charlie", 19, 3.9}
     };
-    
+
     ofstream outFile("students.dat", ios::binary);
-    
+
     for (int i = 0; i < 3; i++) {
         outFile.write((char*)&students[i], sizeof(Student));
     }
-    
+
     outFile.close();
-    
+
     return 0;
 }
 ```
@@ -617,46 +617,46 @@ using namespace std;
 
 void writeNote() {
     ofstream file("notes.txt", ios::app);
-    
+
     if (!file) {
         cout << "Error opening file!" << endl;
         return;
     }
-    
+
     cin.ignore();
     cout << "Enter your note: ";
     string note;
     getline(cin, note);
-    
+
     file << note << endl;
     file.close();
-    
+
     cout << "Note saved!" << endl;
 }
 
 void readNotes() {
     ifstream file("notes.txt");
-    
+
     if (!file) {
         cout << "No notes found!" << endl;
         return;
     }
-    
+
     cout << "\n=== Your Notes ===" << endl;
     string line;
     int count = 1;
-    
+
     while (getline(file, line)) {
         cout << count << ". " << line << endl;
         count++;
     }
-    
+
     file.close();
 }
 
 int main() {
     int choice;
-    
+
     do {
         cout << "\n=== Note Taking App ===" << endl;
         cout << "1. Add Note" << endl;
@@ -664,26 +664,26 @@ int main() {
         cout << "3. Exit" << endl;
         cout << "Choice: ";
         cin >> choice;
-        
+
         switch (choice) {
             case 1:
                 writeNote();
                 break;
-            
+
             case 2:
                 readNotes();
                 break;
-            
+
             case 3:
                 cout << "Goodbye!" << endl;
                 break;
-            
+
             default:
                 cout << "Invalid choice!" << endl;
         }
-        
+
     } while (choice != 3);
-    
+
     return 0;
 }
 ```
@@ -706,55 +706,55 @@ struct Student {
 
 void addStudent() {
     Student s;
-    
+
     cout << "Enter Student ID: ";
     cin >> s.id;
-    
+
     cin.ignore();
     cout << "Enter Name: ";
     cin.getline(s.name, 50);
-    
+
     cout << "Enter Age: ";
     cin >> s.age;
-    
+
     cout << "Enter GPA: ";
     cin >> s.gpa;
-    
+
     ofstream file("students.dat", ios::binary | ios::app);
-    
+
     if (!file) {
         cout << "Error opening file!" << endl;
         return;
     }
-    
+
     file.write((char*)&s, sizeof(Student));
     file.close();
-    
+
     cout << "Student added successfully!" << endl;
 }
 
 void displayAllStudents() {
     ifstream file("students.dat", ios::binary);
-    
+
     if (!file) {
         cout << "No records found!" << endl;
         return;
     }
-    
+
     Student s;
-    
+
     cout << "\n=== Student Records ===" << endl;
-    cout << setw(5) << "ID" << setw(20) << "Name" 
+    cout << setw(5) << "ID" << setw(20) << "Name"
          << setw(5) << "Age" << setw(8) << "GPA" << endl;
     cout << string(38, '-') << endl;
-    
+
     while (file.read((char*)&s, sizeof(Student))) {
         cout << setw(5) << s.id
              << setw(20) << s.name
              << setw(5) << s.age
              << setw(8) << fixed << setprecision(2) << s.gpa << endl;
     }
-    
+
     file.close();
 }
 
@@ -762,17 +762,17 @@ void searchStudent() {
     int searchId;
     cout << "Enter Student ID to search: ";
     cin >> searchId;
-    
+
     ifstream file("students.dat", ios::binary);
-    
+
     if (!file) {
         cout << "No records found!" << endl;
         return;
     }
-    
+
     Student s;
     bool found = false;
-    
+
     while (file.read((char*)&s, sizeof(Student))) {
         if (s.id == searchId) {
             cout << "\n=== Student Found ===" << endl;
@@ -784,17 +784,17 @@ void searchStudent() {
             break;
         }
     }
-    
+
     if (!found) {
         cout << "Student not found!" << endl;
     }
-    
+
     file.close();
 }
 
 int main() {
     int choice;
-    
+
     do {
         cout << "\n=== Student Management System ===" << endl;
         cout << "1. Add Student" << endl;
@@ -803,30 +803,30 @@ int main() {
         cout << "4. Exit" << endl;
         cout << "Choice: ";
         cin >> choice;
-        
+
         switch (choice) {
             case 1:
                 addStudent();
                 break;
-            
+
             case 2:
                 displayAllStudents();
                 break;
-            
+
             case 3:
                 searchStudent();
                 break;
-            
+
             case 4:
                 cout << "Goodbye!" << endl;
                 break;
-            
+
             default:
                 cout << "Invalid choice!" << endl;
         }
-        
+
     } while (choice != 4);
-    
+
     return 0;
 }
 ```
@@ -841,41 +841,41 @@ using namespace std;
 
 void saveScore(int score) {
     ofstream file("highscore.txt");
-    
+
     if (!file) {
         cout << "Error saving score!" << endl;
         return;
     }
-    
+
     file << score;
     file.close();
-    
+
     cout << "Score saved: " << score << endl;
 }
 
 int loadScore() {
     ifstream file("highscore.txt");
-    
+
     if (!file) {
         return 0;  // No previous score
     }
-    
+
     int score;
     file >> score;
     file.close();
-    
+
     return score;
 }
 
 int main() {
     int highScore = loadScore();
     int currentScore;
-    
+
     cout << "Current High Score: " << highScore << endl;
-    
+
     cout << "Enter your score: ";
     cin >> currentScore;
-    
+
     if (currentScore > highScore) {
         cout << "New High Score!" << endl;
         saveScore(currentScore);
@@ -883,7 +883,7 @@ int main() {
         cout << "Score: " << currentScore << endl;
         cout << "High Score remains: " << highScore << endl;
     }
-    
+
     return 0;
 }
 ```
@@ -904,41 +904,41 @@ struct Contact {
 
 void addContact() {
     Contact c;
-    
+
     cin.ignore();
     cout << "Enter Name: ";
     cin.getline(c.name, 50);
-    
+
     cout << "Enter Phone: ";
     cin.getline(c.phone, 15);
-    
+
     cout << "Enter Email: ";
     cin.getline(c.email, 50);
-    
+
     ofstream file("contacts.dat", ios::binary | ios::app);
-    
+
     if (!file) {
         cout << "Error saving contact!" << endl;
         return;
     }
-    
+
     file.write((char*)&c, sizeof(Contact));
     file.close();
-    
+
     cout << "Contact added!" << endl;
 }
 
 void displayContacts() {
     ifstream file("contacts.dat", ios::binary);
-    
+
     if (!file) {
         cout << "No contacts found!" << endl;
         return;
     }
-    
+
     Contact c;
     int count = 1;
-    
+
     cout << "\n=== Contacts ===" << endl;
     while (file.read((char*)&c, sizeof(Contact))) {
         cout << "\nContact " << count << ":" << endl;
@@ -947,27 +947,27 @@ void displayContacts() {
         cout << "Email: " << c.email << endl;
         count++;
     }
-    
+
     file.close();
 }
 
 void searchContact() {
     string searchName;
-    
+
     cin.ignore();
     cout << "Enter name to search: ";
     getline(cin, searchName);
-    
+
     ifstream file("contacts.dat", ios::binary);
-    
+
     if (!file) {
         cout << "No contacts found!" << endl;
         return;
     }
-    
+
     Contact c;
     bool found = false;
-    
+
     while (file.read((char*)&c, sizeof(Contact))) {
         if (searchName == c.name) {
             cout << "\n=== Contact Found ===" << endl;
@@ -978,17 +978,17 @@ void searchContact() {
             break;
         }
     }
-    
+
     if (!found) {
         cout << "Contact not found!" << endl;
     }
-    
+
     file.close();
 }
 
 int main() {
     int choice;
-    
+
     do {
         cout << "\n=== Contact Manager ===" << endl;
         cout << "1. Add Contact" << endl;
@@ -997,30 +997,30 @@ int main() {
         cout << "4. Exit" << endl;
         cout << "Choice: ";
         cin >> choice;
-        
+
         switch (choice) {
             case 1:
                 addContact();
                 break;
-            
+
             case 2:
                 displayContacts();
                 break;
-            
+
             case 3:
                 searchContact();
                 break;
-            
+
             case 4:
                 cout << "Goodbye!" << endl;
                 break;
-            
+
             default:
                 cout << "Invalid choice!" << endl;
         }
-        
+
     } while (choice != 4);
-    
+
     return 0;
 }
 ```
@@ -1183,84 +1183,82 @@ while (getline(file, line)) {  // Reads until failure
 ### ✅ DO:
 
 1. **Always include <fstream>**
-    
-    ```cpp
-    #include <fstream>
-    ```
-    
+
+   ```cpp
+   #include <fstream>
+   ```
+
 2. **Check if file opened successfully**
-    
-    ```cpp
-    if (!file) {
-        // Handle error
-    }
-    ```
-    
+
+   ```cpp
+   if (!file) {
+       // Handle error
+   }
+   ```
+
 3. **Close files when done**
-    
-    ```cpp
-    file.close();
-    ```
-    
+
+   ```cpp
+   file.close();
+   ```
+
 4. **Use appropriate file mode**
-    
-    ```cpp
-    ofstream file("data.txt", ios::app);  // Append
-    ```
-    
+
+   ```cpp
+   ofstream file("data.txt", ios::app);  // Append
+   ```
+
 5. **Use binary mode for structures**
-    
-    ```cpp
-    ofstream file("data.dat", ios::binary);
-    ```
-    
+
+   ```cpp
+   ofstream file("data.dat", ios::binary);
+   ```
+
 6. **Use meaningful file names**
-    
-    ```cpp
-    ofstream file("student_records.dat");  // Clear
-    ```
-    
+
+   ```cpp
+   ofstream file("student_records.dat");  // Clear
+   ```
 
 ### ❌ DON'T:
 
 1. **Don't forget to close files**
-    
-    ```cpp
-    // file.close();  // Don't forget!
-    ```
-    
+
+   ```cpp
+   // file.close();  // Don't forget!
+   ```
+
 2. **Don't ignore file errors**
-    
-    ```cpp
-    ofstream file("data.txt");
-    // Check if opened!
-    ```
-    
+
+   ```cpp
+   ofstream file("data.txt");
+   // Check if opened!
+   ```
+
 3. **Don't mix text and binary modes**
-    
-    ```cpp
-    // Pick one and stick with it
-    ```
-    
+
+   ```cpp
+   // Pick one and stick with it
+   ```
+
 4. **Don't hardcode file paths unnecessarily**
-    
-    ```cpp
-    // string filename = "data.txt";  // Better
-    ```
-    
+
+   ```cpp
+   // string filename = "data.txt";  // Better
+   ```
 
 ---
 
 ## File Handling Summary Table
 
-|Operation|Class|Mode|Example|
-|---|---|---|---|
-|Write (overwrite)|ofstream|ios::out|`ofstream file("data.txt");`|
-|Write (append)|ofstream|ios::app|`ofstream file("data.txt", ios::app);`|
-|Read|ifstream|ios::in|`ifstream file("data.txt");`|
-|Read & Write|fstream|ios::in \| ios::out|`fstream file("data.txt", ios::in \| ios::out);`|
-|Binary write|ofstream|ios::binary|`ofstream file("data.dat", ios::binary);`|
-|Binary read|ifstream|ios::binary|`ifstream file("data.dat", ios::binary);`|
+| Operation         | Class    | Mode                | Example                                          |
+| ----------------- | -------- | ------------------- | ------------------------------------------------ |
+| Write (overwrite) | ofstream | ios::out            | `ofstream file("data.txt");`                     |
+| Write (append)    | ofstream | ios::app            | `ofstream file("data.txt", ios::app);`           |
+| Read              | ifstream | ios::in             | `ifstream file("data.txt");`                     |
+| Read & Write      | fstream  | ios::in \| ios::out | `fstream file("data.txt", ios::in \| ios::out);` |
+| Binary write      | ofstream | ios::binary         | `ofstream file("data.dat", ios::binary);`        |
+| Binary read       | ifstream | ios::binary         | `ifstream file("data.dat", ios::binary);`        |
 
 ---
 
