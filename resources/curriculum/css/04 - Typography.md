@@ -26,9 +26,11 @@ Font names with spaces must be quoted.
 
 ```html
 <!-- In <head> — load from Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+  rel="stylesheet"
+/>
 ```
 
 ```css
@@ -37,7 +39,7 @@ Font names with spaces must be quoted.
   font-family: "MyFont";
   src: url("/fonts/myfont.woff2") format("woff2");
   font-weight: 400;
-  font-display: swap;  /* show fallback font while loading */
+  font-display: swap; /* show fallback font while loading */
 }
 ```
 
@@ -46,9 +48,15 @@ Font names with spaces must be quoted.
 ## Font Size
 
 ```css
-h1 { font-size: 2.5rem; }
-p  { font-size: 1rem; }    /* 1rem = root element font size, usually 16px */
-small { font-size: 0.875rem; }
+h1 {
+  font-size: 2.5rem;
+}
+p {
+  font-size: 1rem;
+} /* 1rem = root element font size, usually 16px */
+small {
+  font-size: 0.875rem;
+}
 ```
 
 Prefer `rem` for font sizes — it scales with the user's browser font size preference, making your site more accessible. Avoid `px` for body text.
@@ -58,13 +66,23 @@ Prefer `rem` for font sizes — it scales with the user's browser font size pref
 ## Font Weight
 
 ```css
-p      { font-weight: 400; }   /* normal */
-strong { font-weight: 700; }   /* bold */
-h1     { font-weight: 800; }   /* extra bold */
+p {
+  font-weight: 400;
+} /* normal */
+strong {
+  font-weight: 700;
+} /* bold */
+h1 {
+  font-weight: 800;
+} /* extra bold */
 
 /* Named keywords */
-p { font-weight: normal; }   /* 400 */
-b { font-weight: bold; }     /* 700 */
+p {
+  font-weight: normal;
+} /* 400 */
+b {
+  font-weight: bold;
+} /* 700 */
 ```
 
 Common weights: 100 (Thin), 300 (Light), 400 (Regular), 500 (Medium), 600 (SemiBold), 700 (Bold), 800 (ExtraBold), 900 (Black). Only weights the font file actually includes will render correctly — others are simulated.
@@ -74,8 +92,12 @@ Common weights: 100 (Thin), 300 (Light), 400 (Regular), 500 (Medium), 600 (SemiB
 ## Font Style
 
 ```css
-em     { font-style: italic; }
-normal { font-style: normal; }
+em {
+  font-style: italic;
+}
+normal {
+  font-style: normal;
+}
 ```
 
 ---
@@ -85,9 +107,15 @@ normal { font-style: normal; }
 The vertical space between lines of text. One of the most impactful properties for readability:
 
 ```css
-body { line-height: 1.6; }   /* unitless — relative to font-size. Preferred. */
-h1   { line-height: 1.2; }   /* tighter for large headings */
-p    { line-height: 1.7; }   /* comfortable for body text */
+body {
+  line-height: 1.6;
+} /* unitless — relative to font-size. Preferred. */
+h1 {
+  line-height: 1.2;
+} /* tighter for large headings */
+p {
+  line-height: 1.7;
+} /* comfortable for body text */
 ```
 
 Use a unitless value (no px, no rem) — it scales proportionally with the font size of that element and its children.
@@ -97,9 +125,15 @@ Use a unitless value (no px, no rem) — it scales proportionally with the font 
 ## Letter and Word Spacing
 
 ```css
-h1      { letter-spacing: 0.05em; }   /* slightly spread out */
-.mono   { letter-spacing: -0.02em; }  /* slightly tighter */
-p       { word-spacing: 0.1em; }
+h1 {
+  letter-spacing: 0.05em;
+} /* slightly spread out */
+.mono {
+  letter-spacing: -0.02em;
+} /* slightly tighter */
+p {
+  word-spacing: 0.1em;
+}
 ```
 
 ---
@@ -107,10 +141,18 @@ p       { word-spacing: 0.1em; }
 ## Text Alignment
 
 ```css
-p    { text-align: left; }    /* default for LTR languages */
-h1   { text-align: center; }
-.num { text-align: right; }   /* numbers in tables */
-p    { text-align: justify; } /* spread to fill the line — use carefully */
+p {
+  text-align: left;
+} /* default for LTR languages */
+h1 {
+  text-align: center;
+}
+.num {
+  text-align: right;
+} /* numbers in tables */
+p {
+  text-align: justify;
+} /* spread to fill the line — use carefully */
 ```
 
 ---
@@ -118,11 +160,21 @@ p    { text-align: justify; } /* spread to fill the line — use carefully */
 ## Text Decoration
 
 ```css
-a         { text-decoration: none; }              /* remove underline */
-a:hover   { text-decoration: underline; }
-del       { text-decoration: line-through; }
-.dotted   { text-decoration: underline dotted; }
-.coloured { text-decoration: underline wavy red; }
+a {
+  text-decoration: none;
+} /* remove underline */
+a:hover {
+  text-decoration: underline;
+}
+del {
+  text-decoration: line-through;
+}
+.dotted {
+  text-decoration: underline dotted;
+}
+.coloured {
+  text-decoration: underline wavy red;
+}
 ```
 
 ---
@@ -130,9 +182,15 @@ del       { text-decoration: line-through; }
 ## Text Transform
 
 ```css
-h2       { text-transform: uppercase; }
-.sub     { text-transform: lowercase; }
-.name    { text-transform: capitalize; }  /* first letter of each word */
+h2 {
+  text-transform: uppercase;
+}
+.sub {
+  text-transform: lowercase;
+}
+.name {
+  text-transform: capitalize;
+} /* first letter of each word */
 ```
 
 ---
@@ -143,9 +201,9 @@ Controls what happens when text is too long for its container:
 
 ```css
 .truncate {
-  white-space: nowrap;      /* prevent line breaks */
-  overflow: hidden;          /* hide overflow */
-  text-overflow: ellipsis;   /* show … at the end */
+  white-space: nowrap; /* prevent line breaks */
+  overflow: hidden; /* hide overflow */
+  text-overflow: ellipsis; /* show … at the end */
 }
 ```
 
@@ -154,10 +212,18 @@ Controls what happens when text is too long for its container:
 ## White Space
 
 ```css
-p    { white-space: normal; }     /* default — collapses whitespace, wraps */
-pre  { white-space: pre; }        /* preserves whitespace and newlines, no wrap */
-code { white-space: pre-wrap; }   /* preserves whitespace and newlines, wraps */
-.nowrap { white-space: nowrap; }  /* no wrapping */
+p {
+  white-space: normal;
+} /* default — collapses whitespace, wraps */
+pre {
+  white-space: pre;
+} /* preserves whitespace and newlines, no wrap */
+code {
+  white-space: pre-wrap;
+} /* preserves whitespace and newlines, wraps */
+.nowrap {
+  white-space: nowrap;
+} /* no wrapping */
 ```
 
 ---
@@ -185,8 +251,39 @@ h1 {
 ```css
 /* style  variant  weight  size/line-height  family */
 body {
-  font: 400 1rem/1.6 "Inter", sans-serif;
+  font:
+    400 1rem/1.6 "Inter",
+    sans-serif;
 }
 ```
 
 The shorthand requires at minimum `font-size` and `font-family`. It resets all other font properties to their defaults — use it carefully.
+---
+
+## Common Mistakes
+
+```css
+/* WRONG: font-size in px — ignores the user's browser zoom/font-size
+   preference, which some low-vision users rely on heavily */
+body {
+  font-size: 16px;
+}
+h1 {
+  font-size: 32px;
+}
+
+/* CORRECT: rem scales with the user's root font-size setting */
+html {
+  font-size: 100%;
+} /* respects the browser/OS default, usually 16px */
+body {
+  font-size: 1rem;
+}
+h1 {
+  font-size: 2rem;
+}
+```
+
+- **Never setting `line-height`.** The browser default (roughly 1.15–1.2 depending on the font) is noticeably cramped for body text. `1.5`–`1.6` for paragraphs is a far more comfortable reading rhythm — a one-line change with an outsized effect on how "designed" a page feels.
+- **Loading a huge webfont file for a page that's 90% plain text.** A `font-display: swap` declaration (so text renders immediately in a fallback font, then swaps once the webfont loads) prevents the "invisible text" flash that hurts perceived performance.
+- **Not setting a fallback font stack.** `font-family: "Custom Font";` with nothing after it means a slow connection or failed font load shows the browser's ugliest default serif. Always chain a few reasonable fallbacks: `font-family: "Custom Font", Georgia, serif;`.

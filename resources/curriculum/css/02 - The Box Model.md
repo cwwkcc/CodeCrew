@@ -56,7 +56,9 @@ By default, `width` and `height` set the size of the **content area only**. Padd
 Apply it globally at the start of every stylesheet:
 
 ```css
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 ```
@@ -122,13 +124,13 @@ border-bottom: 3px double green;
 
 /* Individual properties */
 border-width: 2px;
-border-style: solid;   /* solid, dashed, dotted, double, none */
+border-style: solid; /* solid, dashed, dotted, double, none */
 border-color: navy;
 
 /* Rounded corners */
-border-radius: 8px;               /* all corners */
-border-radius: 8px 0 8px 0;       /* top-left, top-right, bottom-right, bottom-left */
-border-radius: 50%;               /* circle (on a square element) */
+border-radius: 8px; /* all corners */
+border-radius: 8px 0 8px 0; /* top-left, top-right, bottom-right, bottom-left */
+border-radius: 50%; /* circle (on a square element) */
 ```
 
 ---
@@ -139,7 +141,7 @@ border-radius: 50%;               /* circle (on a square element) */
 /* Same shorthand rules as padding */
 margin: 20px;
 margin: 10px 20px;
-margin: 10px auto;    /* auto centres a block element horizontally */
+margin: 10px auto; /* auto centres a block element horizontally */
 
 /* Individual sides */
 margin-top: 10px;
@@ -155,8 +157,12 @@ Margin can be negative — pulling an element toward its neighbour.
 When two block elements are stacked vertically, their margins merge (collapse) into a single margin equal to the **larger** of the two. This does not happen with padding.
 
 ```css
-.first  { margin-bottom: 30px; }
-.second { margin-top: 20px; }
+.first {
+  margin-bottom: 30px;
+}
+.second {
+  margin-top: 20px;
+}
 /* gap between them = 30px, not 50px */
 ```
 
@@ -171,7 +177,7 @@ Similar to border but does not take up space in the layout — it is drawn on to
 ```css
 button:focus {
   outline: 2px solid blue;
-  outline-offset: 4px;  /* space between element edge and outline */
+  outline-offset: 4px; /* space between element edge and outline */
 }
 ```
 
@@ -183,11 +189,11 @@ button:focus {
 
 How an element participates in layout is controlled by `display`. Covered in full in Module 06, but the two you need to know now:
 
-|Value|Behaviour|
-|---|---|
-|`block`|Full width, stacks vertically, respects width/height/margin|
-|`inline`|Flows with text, ignores width/height, horizontal margins only|
-|`inline-block`|Flows with text but respects width/height and all margins|
+| Value          | Behaviour                                                      |
+| -------------- | -------------------------------------------------------------- |
+| `block`        | Full width, stacks vertically, respects width/height/margin    |
+| `inline`       | Flows with text, ignores width/height, horizontal margins only |
+| `inline-block` | Flows with text but respects width/height and all margins      |
 
 ---
 
@@ -196,3 +202,34 @@ How an element participates in layout is controlled by `display`. Covered in ful
 Every browser has developer tools (F12 or right-click → Inspect). The Elements panel shows the box model of any selected element visually — margins in orange, borders in yellow, padding in green, content in blue. You will use this constantly.
 
 Always open DevTools when debugging layout issues.
+---
+
+## Common Mistakes
+
+```css
+/* WRONG: content-box (the default) — padding and border ADD to the
+   width you set, so a 300px box with 20px padding renders at 340px */
+.card {
+  width: 300px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  /* actual rendered width: 300 + 20*2 + 1*2 = 342px */
+}
+
+/* CORRECT: border-box makes width the FINAL rendered width, padding
+   and border are subtracted from the content area instead of added on */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.card {
+  width: 300px; /* this is now the true, final width — 300px, period */
+  padding: 20px;
+  border: 1px solid #ccc;
+}
+```
+
+- **Not setting `box-sizing: border-box` globally.** This single line prevents the majority of "why is this 40px wider than I set it to" bugs. It's so close to universally correct that most modern resets include it as the very first rule.
+- **Forgetting margin collapse.** Vertical margins between adjacent block siblings (and between a parent and its first/last child, under some conditions) collapse to the _larger_ of the two values, not their sum. Two stacked elements with `margin-bottom: 20px` and `margin-top: 20px` end up with 20px between them, not 40px — surprising the first time you hit it.

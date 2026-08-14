@@ -18,7 +18,7 @@ CSS is not a programming language. It is a set of rules. Each rule tells the bro
 
 ```html
 <head>
-  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/main.css" />
 </head>
 ```
 
@@ -29,7 +29,9 @@ The CSS lives in a separate file. The browser downloads it once and caches it �
 ```html
 <head>
   <style>
-    p { color: red; }
+    p {
+      color: red;
+    }
   </style>
 </head>
 ```
@@ -91,7 +93,9 @@ The cascade considers three factors in this order:
 `!important` overrides everything. It is a last resort, not a tool — overusing it is a sign of poorly structured CSS.
 
 ```css
-p { color: red !important; }  /* wins against everything else */
+p {
+  color: red !important;
+} /* wins against everything else */
 ```
 
 ### 2. Specificity
@@ -110,9 +114,15 @@ Specificity is calculated as a score with three components: **(ID, Class, Elemen
 | Inline `style=""`                       | 1, 0, 0, 0 (always wins) |
 
 ```css
-p { color: blue; }           /* 0,0,1 — loses */
-.intro { color: green; }     /* 0,1,0 — wins */
-#main p { color: red; }      /* 1,0,1 — wins over both above */
+p {
+  color: blue;
+} /* 0,0,1 — loses */
+.intro {
+  color: green;
+} /* 0,1,0 — wins */
+#main p {
+  color: red;
+} /* 1,0,1 — wins over both above */
 ```
 
 ### 3. Source Order
@@ -120,8 +130,12 @@ p { color: blue; }           /* 0,0,1 — loses */
 If two rules have equal specificity, the one that appears **later** in the stylesheet wins.
 
 ```css
-p { color: blue; }
-p { color: red; }  /* wins — comes later */
+p {
+  color: blue;
+}
+p {
+  color: red;
+} /* wins — comes later */
 ```
 
 ---
@@ -136,8 +150,10 @@ Some CSS properties are _inherited_ — child elements automatically receive the
 
 ```html
 <div style="color: navy;">
-  <p>This paragraph is navy</p>        <!-- inherits color from div -->
-  <p style="color: red;">This is red</p>  <!-- overrides with own value -->
+  <p>This paragraph is navy</p>
+  <!-- inherits color from div -->
+  <p style="color: red;">This is red</p>
+  <!-- overrides with own value -->
 </div>
 ```
 
@@ -147,7 +163,7 @@ You can force inheritance on a non-inherited property using the keyword `inherit
 
 ```css
 .child {
-  border: inherit;  /* takes the border value from its parent */
+  border: inherit; /* takes the border value from its parent */
 }
 ```
 
@@ -169,7 +185,9 @@ Because different browsers have slightly different default stylesheets, many dev
 
 ```css
 /* Minimal modern reset */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -190,3 +208,25 @@ A more complete option is [modern-normalize](https://github.com/sindresorhus/mod
 | Specificity         | How precisely a selector targets elements — more specific wins         |
 | Inheritance         | Child elements automatically receive some property values from parents |
 | Browser defaults    | The starting stylesheet every browser applies before yours             |
+
+---
+
+## Common Mistakes
+
+```css
+/* WRONG: reaching for !important to "win" instead of fixing specificity */
+.card p {
+  color: navy !important;
+}
+
+/* CORRECT: understand why it's losing, fix the actual specificity */
+.card p {
+  color: navy;
+} /* if this loses, the winning rule is more specific
+                                — raise this rule's specificity instead of
+                                overriding with !important */
+```
+
+- **Fighting the cascade with `!important` instead of understanding it.** Every `!important` you add makes the _next_ override need its own `!important`, and specificity wars escalate fast. Treat it as a last resort for third-party CSS you can't edit — never a first response to "my style isn't applying."
+- **Assuming inline `style=""` and internal `<style>` blocks behave the same as an external stylesheet.** They don't share caching, and inline styles have specificity so high that almost nothing in your stylesheet can override them without `!important`.
+- **Forgetting a rule is inherited when it shouldn't be, or isn't when it should be.** `color` cascades down through nested elements; `border` does not. When a child element "isn't getting" a style you set on the parent, check this table before assuming a bug.

@@ -12,10 +12,18 @@
 | `none`         | Removed from layout entirely (not just invisible — takes no space) |
 
 ```css
-span    { display: block; }         /* make inline elements stack */
-div     { display: inline; }        /* make block elements flow in text */
-button  { display: inline-block; }  /* flow inline but control size */
-.hidden { display: none; }          /* remove from page */
+span {
+  display: block;
+} /* make inline elements stack */
+div {
+  display: inline;
+} /* make block elements flow in text */
+button {
+  display: inline-block;
+} /* flow inline but control size */
+.hidden {
+  display: none;
+} /* remove from page */
 ```
 
 ### Inner Display Values
@@ -31,8 +39,12 @@ These turn the element into a container with a special layout algorithm for chil
 ### `visibility: hidden` vs `display: none`
 
 ```css
-.invisible { visibility: hidden; } /* hidden but still takes up space */
-.removed   { display: none; }      /* hidden and takes no space */
+.invisible {
+  visibility: hidden;
+} /* hidden but still takes up space */
+.removed {
+  display: none;
+} /* hidden and takes no space */
 ```
 
 ---
@@ -61,8 +73,8 @@ The element stays in normal flow but can be shifted with `top/right/bottom/left`
 ```css
 .shifted {
   position: relative;
-  top: 10px;    /* move down 10px from its normal position */
-  left: 20px;   /* move right 20px from its normal position */
+  top: 10px; /* move down 10px from its normal position */
+  left: 20px; /* move right 20px from its normal position */
 }
 ```
 
@@ -74,7 +86,7 @@ Removed from normal flow entirely — other elements act as if it does not exist
 
 ```css
 .parent {
-  position: relative;  /* makes this the containing block */
+  position: relative; /* makes this the containing block */
 }
 
 .badge {
@@ -105,7 +117,7 @@ A hybrid: behaves like `relative` until it hits a scroll threshold, then behaves
 ```css
 th {
   position: sticky;
-  top: 0;  /* sticks when it reaches the top of the scroll container */
+  top: 0; /* sticks when it reaches the top of the scroll container */
   background: white;
 }
 ```
@@ -135,9 +147,18 @@ These properties only work on positioned elements (anything except `static`). Th
 Controls stacking order of positioned elements. Higher value = on top:
 
 ```css
-.modal   { position: fixed; z-index: 1000; }
-.tooltip { position: absolute; z-index: 100; }
-.navbar  { position: sticky; z-index: 50; }
+.modal {
+  position: fixed;
+  z-index: 1000;
+}
+.tooltip {
+  position: absolute;
+  z-index: 100;
+}
+.navbar {
+  position: sticky;
+  z-index: 50;
+}
 ```
 
 `z-index` only works on positioned elements. Default is `auto` (stacks in document order).
@@ -149,13 +170,24 @@ Controls stacking order of positioned elements. Higher value = on top:
 Controls what happens when content is too large for its container:
 
 ```css
-.box { overflow: visible; }  /* default — content spills out */
-.box { overflow: hidden; }   /* content is clipped */
-.box { overflow: scroll; }   /* always show scrollbars */
-.box { overflow: auto; }     /* only show scrollbars when needed */
+.box {
+  overflow: visible;
+} /* default — content spills out */
+.box {
+  overflow: hidden;
+} /* content is clipped */
+.box {
+  overflow: scroll;
+} /* always show scrollbars */
+.box {
+  overflow: auto;
+} /* only show scrollbars when needed */
 
 /* Control axes independently */
-.box { overflow-x: hidden; overflow-y: auto; }
+.box {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 ```
 
 ---
@@ -165,9 +197,46 @@ Controls what happens when content is too large for its container:
 `float` was the original CSS layout tool, now replaced by Flexbox and Grid. You will encounter it in older codebases:
 
 ```css
-img { float: left; }   /* text wraps around the image */
-img { float: right; }
-div { clear: both; }   /* next element does not wrap around floated elements */
+img {
+  float: left;
+} /* text wraps around the image */
+img {
+  float: right;
+}
+div {
+  clear: both;
+} /* next element does not wrap around floated elements */
 ```
 
 Do not use `float` for layout. Use it only for its original purpose — wrapping text around an image or figure.
+---
+
+## Common Mistakes
+
+```css
+/* WRONG: position: absolute with no positioned ancestor — the element
+   positions itself relative to the whole document (or nearest
+   positioned ancestor further up than intended), not the "obvious" parent */
+.dropdown {
+  position: relative;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+}
+/* forgot position: relative on .dropdown → menu jumps to the page's edge */
+
+/* CORRECT: the parent that should "contain" the absolute child needs
+   position: relative (or any value other than static) */
+.dropdown {
+  position: relative;
+} /* now a real positioning context */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+```
+
+- **Reaching for `position: fixed` when `sticky` is what's wanted.** `fixed` is always relative to the viewport, ignoring its parent's scroll — a "sticky" header that should stop scrolling once it reaches the top of its own section (not the whole page) needs `position: sticky; top: 0;`, not `fixed`.
+- **Confusing `display: none` and `visibility: hidden`.** `display: none` removes the element from layout entirely — surrounding elements collapse into its space, and it's invisible to screen readers. `visibility: hidden` keeps its layout space reserved and is still technically in the accessibility tree in some browsers. They solve different problems; picking the wrong one either breaks layout or leaves an invisible-but-still-occupying-space gap.
