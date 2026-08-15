@@ -5,13 +5,20 @@ Pseudo-classes select elements based on their state or position in the document.
 ## State Pseudo-classes
 
 ```css
-:hover        { }   /* pointer is over the element */
-:focus        { }   /* element has keyboard focus */
-:focus-within { }   /* element or any descendant has focus */
-:focus-visible{ }   /* focus via keyboard only — not from mouse click */
-:active       { }   /* element is being clicked/pressed */
-:visited      { }   /* link that the user has already visited */
-:target       { }   /* element whose id matches the current URL fragment */
+:hover {
+} /* pointer is over the element */
+:focus {
+} /* element has keyboard focus */
+:focus-within {
+} /* element or any descendant has focus */
+:focus-visible {
+} /* focus via keyboard only — not from mouse click */
+:active {
+} /* element is being clicked/pressed */
+:visited {
+} /* link that the user has already visited */
+:target {
+} /* element whose id matches the current URL fragment */
 ```
 
 ### `:focus` vs `:focus-visible`
@@ -69,19 +76,32 @@ Matches an element when its `id` equals the URL fragment (`#section-name`):
 ## Form State Pseudo-classes
 
 ```css
-:checked          { }  /* checked checkbox or radio */
-:disabled         { }  /* element has the disabled attribute */
-:enabled          { }  /* element does NOT have disabled */
-:required         { }  /* input with required attribute */
-:optional         { }  /* input without required */
-:valid            { }  /* input currently passing validation */
-:invalid          { }  /* input currently failing validation */
-:in-range         { }  /* number/range input within min/max */
-:out-of-range     { }  /* number/range input outside min/max */
-:placeholder-shown{ }  /* input currently showing its placeholder */
-:read-only        { }  /* input with readonly attribute */
-:read-write       { }  /* input without readonly (editable) */
-:indeterminate    { }  /* checkbox in indeterminate state */
+:checked {
+} /* checked checkbox or radio */
+:disabled {
+} /* element has the disabled attribute */
+:enabled {
+} /* element does NOT have disabled */
+:required {
+} /* input with required attribute */
+:optional {
+} /* input without required */
+:valid {
+} /* input currently passing validation */
+:invalid {
+} /* input currently failing validation */
+:in-range {
+} /* number/range input within min/max */
+:out-of-range {
+} /* number/range input outside min/max */
+:placeholder-shown {
+} /* input currently showing its placeholder */
+:read-only {
+} /* input with readonly attribute */
+:read-write {
+} /* input without readonly (editable) */
+:indeterminate {
+} /* checkbox in indeterminate state */
 ```
 
 ```css
@@ -115,33 +135,50 @@ input[type="checkbox"]:checked + label {
 ### Child-based
 
 ```css
-:first-child          { }  /* first child among all siblings */
-:last-child           { }  /* last child */
-:nth-child(n)         { }  /* nth child (1-indexed) */
-:nth-last-child(n)    { }  /* nth from the end */
-:only-child           { }  /* the only child of its parent */
+:first-child {
+} /* first child among all siblings */
+:last-child {
+} /* last child */
+:nth-child(n) {
+} /* nth child (1-indexed) */
+:nth-last-child(n) {
+} /* nth from the end */
+:only-child {
+} /* the only child of its parent */
 ```
 
 ### Type-based
 
 ```css
-:first-of-type        { }  /* first sibling of this tag type */
-:last-of-type         { }  /* last sibling of this tag type */
-:nth-of-type(n)       { }  /* nth sibling of this type */
-:nth-last-of-type(n)  { }  /* nth from the end of this type */
-:only-of-type         { }  /* only sibling of this type */
+:first-of-type {
+} /* first sibling of this tag type */
+:last-of-type {
+} /* last sibling of this tag type */
+:nth-of-type(n) {
+} /* nth sibling of this type */
+:nth-last-of-type(n) {
+} /* nth from the end of this type */
+:only-of-type {
+} /* only sibling of this type */
 ```
 
 ### `:nth-child()` Formula — `An + B`
 
 ```css
-:nth-child(2)    { }   /* only the 2nd item */
-:nth-child(odd)  { }   /* 1, 3, 5, 7... */
-:nth-child(even) { }   /* 2, 4, 6, 8... */
-:nth-child(3n)   { }   /* every 3rd: 3, 6, 9, 12... */
-:nth-child(3n+1) { }   /* 1, 4, 7, 10... */
-:nth-child(n+4)  { }   /* 4th item and all after it */
-:nth-child(-n+3) { }   /* only the first 3 items */
+:nth-child(2) {
+} /* only the 2nd item */
+:nth-child(odd) {
+} /* 1, 3, 5, 7... */
+:nth-child(even) {
+} /* 2, 4, 6, 8... */
+:nth-child(3n) {
+} /* every 3rd: 3, 6, 9, 12... */
+:nth-child(3n + 1) {
+} /* 1, 4, 7, 10... */
+:nth-child(n + 4) {
+} /* 4th item and all after it */
+:nth-child(-n + 3) {
+} /* only the first 3 items */
 ```
 
 ```css
@@ -165,7 +202,9 @@ li:last-child {
 
 ```css
 /* Hide empty elements entirely */
-p:empty { display: none; }
+p:empty {
+  display: none;
+}
 
 /* Show a placeholder message when a list is empty */
 ul:empty::before {
@@ -182,13 +221,19 @@ ul:empty::before {
 
 ```css
 /* Everything except .active */
-li:not(.active) { opacity: 0.6; }
+li:not(.active) {
+  opacity: 0.6;
+}
 
 /* Multiple exclusions */
-li:not(.active):not(:last-child) { border-bottom: 1px solid #eee; }
+li:not(.active):not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
 
 /* Modern — comma-separated list */
-li:not(.active, .disabled) { opacity: 0.6; }
+li:not(.active, .disabled) {
+  opacity: 0.6;
+}
 ```
 
 ### `:is()` — Grouping
@@ -197,10 +242,17 @@ Matches any selector in the list. Uses the **highest specificity** of any item i
 
 ```css
 /* Instead of writing this: */
-h1 a, h2 a, h3 a, h4 a { color: inherit; }
+h1 a,
+h2 a,
+h3 a,
+h4 a {
+  color: inherit;
+}
 
 /* Write this: */
-:is(h1, h2, h3, h4) a { color: inherit; }
+:is(h1, h2, h3, h4) a {
+  color: inherit;
+}
 
 /* Complex selectors */
 :is(article, section, aside) :is(h2, h3) {
@@ -274,25 +326,33 @@ These create virtual child elements at the start or end of an element's content.
 
 ```css
 /* Decorative quote marks */
-blockquote::before { content: '"'; font-size: 4em; color: #ccc; }
-blockquote::after  { content: '"'; font-size: 4em; color: #ccc; }
+blockquote::before {
+  content: '"';
+  font-size: 4em;
+  color: #ccc;
+}
+blockquote::after {
+  content: '"';
+  font-size: 4em;
+  color: #ccc;
+}
 
 /* Required field asterisk */
 label.required::after {
-  content: ' *';
+  content: " *";
   color: crimson;
 }
 
 /* Clearfix (less needed now with flexbox/grid) */
 .clearfix::after {
-  content: '';
+  content: "";
   display: block;
   clear: both;
 }
 
 /* Badge / counter */
 .notification::after {
-  content: attr(data-count);  /* reads from HTML attribute */
+  content: attr(data-count); /* reads from HTML attribute */
   background: crimson;
   color: white;
   border-radius: 50%;
@@ -356,7 +416,7 @@ li::marker {
 
 /* Custom marker character */
 ul li::marker {
-  content: '→ ';
+  content: "→ ";
 }
 
 ol li::marker {
@@ -406,7 +466,7 @@ dialog::backdrop {
 
 /* Active nav link indicator */
 nav a.active::after {
-  content: '';
+  content: "";
   display: block;
   height: 2px;
   background: royalblue;
@@ -415,7 +475,7 @@ nav a.active::after {
 
 /* External link icon */
 a[href^="https://"]::after {
-  content: ' ↗';
+  content: " ↗";
   font-size: 0.75em;
   opacity: 0.6;
 }

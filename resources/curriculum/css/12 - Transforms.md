@@ -7,50 +7,53 @@ The `transform` property moves, scales, rotates, or skews an element visually wi
 ### Translate — Move
 
 ```css
-transform: translateX(50px);        /* move right */
-transform: translateX(-50px);       /* move left */
-transform: translateY(20px);        /* move down */
-transform: translateY(-20px);       /* move up */
+transform: translateX(50px); /* move right */
+transform: translateX(-50px); /* move left */
+transform: translateY(20px); /* move down */
+transform: translateY(-20px); /* move up */
 
 /* Both axes at once */
-transform: translate(50px, -20px);  /* right 50px, up 20px */
+transform: translate(50px, -20px); /* right 50px, up 20px */
 
 /* Percentage — relative to the element's own dimensions */
-transform: translate(-50%, -50%);   /* move left by half own width, up by half own height */
-transform: translateX(100%);        /* slide off screen to the right */
+transform: translate(
+  -50%,
+  -50%
+); /* move left by half own width, up by half own height */
+transform: translateX(100%); /* slide off screen to the right */
 ```
 
 ### Scale — Resize
 
 ```css
-transform: scale(1.5);       /* 150% — grow */
-transform: scale(0.8);       /* 80% — shrink */
-transform: scaleX(2);        /* stretch horizontally only */
-transform: scaleY(0.5);      /* squish vertically only */
-transform: scale(1.2, 0.9);  /* different X and Y */
-transform: scaleX(-1);       /* flip horizontally — mirror */
+transform: scale(1.5); /* 150% — grow */
+transform: scale(0.8); /* 80% — shrink */
+transform: scaleX(2); /* stretch horizontally only */
+transform: scaleY(0.5); /* squish vertically only */
+transform: scale(1.2, 0.9); /* different X and Y */
+transform: scaleX(-1); /* flip horizontally — mirror */
 ```
 
 ### Rotate
 
 ```css
-transform: rotate(45deg);    /* clockwise */
-transform: rotate(-90deg);   /* counter-clockwise */
-transform: rotate(0.5turn);  /* half turn = 180deg */
-transform: rotate(1turn);    /* full rotation */
+transform: rotate(45deg); /* clockwise */
+transform: rotate(-90deg); /* counter-clockwise */
+transform: rotate(0.5turn); /* half turn = 180deg */
+transform: rotate(1turn); /* full rotation */
 
 /* 3D rotation */
-transform: rotateX(30deg);   /* tilt top toward viewer */
-transform: rotateY(60deg);   /* spin around vertical axis */
-transform: rotateZ(45deg);   /* same as rotate() */
+transform: rotateX(30deg); /* tilt top toward viewer */
+transform: rotateY(60deg); /* spin around vertical axis */
+transform: rotateZ(45deg); /* same as rotate() */
 ```
 
 ### Skew
 
 ```css
-transform: skewX(10deg);          /* slant along X axis */
-transform: skewY(5deg);           /* slant along Y axis */
-transform: skew(10deg, 5deg);     /* both axes */
+transform: skewX(10deg); /* slant along X axis */
+transform: skewY(5deg); /* slant along Y axis */
+transform: skew(10deg, 5deg); /* both axes */
 ```
 
 ---
@@ -76,11 +79,11 @@ These produce different results. Swap the order to see the difference.
 The pivot point for rotations and scales. Default is `50% 50%` (the element's centre):
 
 ```css
-transform-origin: center;        /* 50% 50% — default */
-transform-origin: top left;      /* 0 0 — top-left corner */
+transform-origin: center; /* 50% 50% — default */
+transform-origin: top left; /* 0 0 — top-left corner */
 transform-origin: bottom center; /* 50% 100% — bottom edge */
-transform-origin: 0 0;           /* explicit top-left */
-transform-origin: 20px 40px;     /* specific offset */
+transform-origin: 0 0; /* explicit top-left */
+transform-origin: 20px 40px; /* specific offset */
 ```
 
 ```css
@@ -130,11 +133,11 @@ Centre an absolutely positioned element of unknown size:
 
 ```css
 .scene {
-  perspective: 800px;   /* typical range: 400px – 1200px */
+  perspective: 800px; /* typical range: 400px – 1200px */
 }
 
 .card {
-  transform-style: preserve-3d;  /* children also exist in 3D space */
+  transform-style: preserve-3d; /* children also exist in 3D space */
   transition: transform 0.6s ease;
 }
 
@@ -176,22 +179,22 @@ Centre an absolutely positioned element of unknown size:
 .face {
   position: absolute;
   inset: 0;
-  backface-visibility: hidden;   /* hide when rotated past 90deg */
+  backface-visibility: hidden; /* hide when rotated past 90deg */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .back {
-  transform: rotateY(180deg);   /* pre-rotate so it faces backward at start */
+  transform: rotateY(180deg); /* pre-rotate so it faces backward at start */
 }
 ```
 
 ### `backface-visibility`
 
 ```css
-backface-visibility: hidden;   /* face disappears when rotated away from viewer */
-backface-visibility: visible;  /* face stays visible (default) */
+backface-visibility: hidden; /* face disappears when rotated away from viewer */
+backface-visibility: visible; /* face stays visible (default) */
 ```
 
 ---
@@ -201,14 +204,22 @@ backface-visibility: visible;  /* face stays visible (default) */
 ```css
 /* Slow — triggers layout recalculation on every frame */
 @keyframes move-bad {
-  from { left: 0; }
-  to   { left: 200px; }
+  from {
+    left: 0;
+  }
+  to {
+    left: 200px;
+  }
 }
 
 /* Fast — handled entirely by GPU, no layout recalculation */
 @keyframes move-good {
-  from { transform: translateX(0); }
-  to   { transform: translateX(200px); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(200px);
+  }
 }
 ```
 
@@ -260,3 +271,26 @@ Animating `top`, `left`, `width`, or `height` forces the browser to recalculate 
 
 ---
 
+---
+
+## Common Mistakes
+
+```css
+/* WRONG: forgetting transform-origin changes the pivot point —
+   a rotation looks correct in one context and wrong in another
+   because the default origin (center) wasn't what was assumed */
+.corner-ribbon {
+  transform: rotate(-45deg); /* rotates around its own center by default —
+                                    for a corner ribbon you usually want it
+                                    to pivot from a corner instead */
+}
+
+/* CORRECT: set the pivot point explicitly for the effect you actually want */
+.corner-ribbon {
+  transform-origin: top left;
+  transform: rotate(-45deg);
+}
+```
+
+- **Not realizing `transform` doesn't affect document flow.** Moving an element with `transform: translateX(50px)` shifts it visually but leaves a "hole" where it used to be and doesn't push neighboring elements — this is often exactly what you want (it's why transforms are cheap to animate) but surprising the first time, if you expected it to behave like changing `margin-left`.
+- **Chaining multiple transforms in separate declarations instead of one.** `transform: rotate(10deg); transform: scale(1.1);` — the second line **replaces** the first rather than adding to it. Multiple transforms must be combined in a single declaration: `transform: rotate(10deg) scale(1.1);`.

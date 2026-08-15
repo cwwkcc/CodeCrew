@@ -9,7 +9,7 @@ A responsive website adapts its layout and appearance to fit the screen it is vi
 Before any CSS, make sure the HTML has this in `<head>`. Without it, mobile browsers zoom out and render the page at ~980px:
 
 ```html
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 ```
 
 ---
@@ -26,12 +26,17 @@ A media query applies a block of CSS only when a condition is true:
 
 /* Minimum width — styles apply from this width upward */
 @media (min-width: 768px) {
-  .container { display: grid; grid-template-columns: 1fr 1fr; }
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 /* Maximum width — styles apply up to this width */
 @media (max-width: 767px) {
-  nav { flex-direction: column; }
+  nav {
+    flex-direction: column;
+  }
 }
 
 /* Range (modern syntax) */
@@ -46,17 +51,25 @@ A media query applies a block of CSS only when a condition is true:
 
 /* Screen vs print */
 @media print {
-  .no-print { display: none; }
+  .no-print {
+    display: none;
+  }
 }
 
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
-  body { background: #111; color: #f0f0f0; }
+  body {
+    background: #111;
+    color: #f0f0f0;
+  }
 }
 
 /* Reduced motion (accessibility) */
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 ```
 
@@ -98,12 +111,12 @@ A media query applies a block of CSS only when a condition is true:
 
 These are conventions, not rules. Choose breakpoints based on your content, not device sizes:
 
-|Name|Width|Typical use|
-|---|---|---|
-|Mobile|< 640px|Single column, stacked layout|
-|Tablet|640px – 1023px|Two columns, simplified nav|
-|Desktop|≥ 1024px|Multi-column, full navigation|
-|Wide|≥ 1280px|Constrain max-width, add side margins|
+| Name    | Width          | Typical use                           |
+| ------- | -------------- | ------------------------------------- |
+| Mobile  | < 640px        | Single column, stacked layout         |
+| Tablet  | 640px – 1023px | Two columns, simplified nav           |
+| Desktop | ≥ 1024px       | Multi-column, full navigation         |
+| Wide    | ≥ 1280px       | Constrain max-width, add side margins |
 
 ---
 
@@ -119,7 +132,9 @@ Beyond breakpoints, make elements naturally fluid:
 }
 
 /* Fluid typography */
-h1 { font-size: clamp(1.75rem, 5vw, 3.5rem); }
+h1 {
+  font-size: clamp(1.75rem, 5vw, 3.5rem);
+}
 
 /* Responsive grid without media queries */
 .card-grid {
@@ -130,3 +145,38 @@ h1 { font-size: clamp(1.75rem, 5vw, 3.5rem); }
 ```
 
 ---
+
+---
+
+## Common Mistakes
+
+```css
+/* WRONG: desktop-first — write the complex layout, then override it
+   downward for mobile; the mobile styles end up fighting the desktop ones */
+.card {
+  display: flex;
+  width: 33%;
+}
+@media (max-width: 768px) {
+  .card {
+    display: block;
+    width: 100%;
+  }
+}
+
+/* CORRECT: mobile-first — the simple, single-column layout is the
+   default; complexity is added as screen space becomes available */
+.card {
+  display: block;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .card {
+    display: flex;
+    width: 33%;
+  }
+}
+```
+
+- **Choosing breakpoints based on specific devices** (`@media (max-width: 375px)` for "iPhone SE") **instead of where your own content breaks.** Device sizes change every year; resize the browser window yourself and add a breakpoint exactly where the layout starts to look cramped or awkward, regardless of what device that corresponds to.
+- **Only testing by resizing a desktop browser window.** Desktop resize simulates viewport width but not touch targets, real font rendering, or actual mobile Safari/Chrome quirks (see Module 05's `100vh` note). Use browser DevTools' device emulation _and_ a real phone before calling a layout "responsive."

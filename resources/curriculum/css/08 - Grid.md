@@ -42,15 +42,15 @@ The `fr` unit means "fraction of remaining space". `1fr 1fr 1fr` divides the ava
 ### `grid-template-rows`
 
 ```css
-grid-template-rows: auto 1fr auto;  /* header | content | footer */
+grid-template-rows: auto 1fr auto; /* header | content | footer */
 grid-template-rows: 60px 1fr 40px;
 ```
 
 ### `gap`
 
 ```css
-gap: 1rem;           /* same gap between all rows and columns */
-gap: 1rem 2rem;      /* row-gap  column-gap */
+gap: 1rem; /* same gap between all rows and columns */
+gap: 1rem 2rem; /* row-gap  column-gap */
 row-gap: 1rem;
 column-gap: 2rem;
 ```
@@ -98,8 +98,8 @@ Grid lines are numbered from 1. A 3-column grid has 4 vertical lines (1, 2, 3, 4
 
 ```css
 .item {
-  grid-column: 1 / 3;   /* from line 1 to line 3 — spans 2 columns */
-  grid-row: 2 / 4;      /* from line 2 to line 4 — spans 2 rows */
+  grid-column: 1 / 3; /* from line 1 to line 3 — spans 2 columns */
+  grid-row: 2 / 4; /* from line 2 to line 4 — spans 2 rows */
 }
 ```
 
@@ -107,13 +107,13 @@ Grid lines are numbered from 1. A 3-column grid has 4 vertical lines (1, 2, 3, 4
 
 ```css
 .item {
-  grid-column: 1 / span 2;  /* start at line 1, span 2 columns */
-  grid-row: span 3;          /* span 3 rows, wherever the auto-placement puts it */
+  grid-column: 1 / span 2; /* start at line 1, span 2 columns */
+  grid-row: span 3; /* span 3 rows, wherever the auto-placement puts it */
 }
 
 /* Full width */
 .item {
-  grid-column: 1 / -1;  /* -1 means the last line */
+  grid-column: 1 / -1; /* -1 means the last line */
 }
 ```
 
@@ -134,10 +134,18 @@ A visual way to define the layout:
     "footer  footer";
 }
 
-header  { grid-area: header; }
-.sidebar { grid-area: sidebar; }
-main    { grid-area: main; }
-footer  { grid-area: footer; }
+header {
+  grid-area: header;
+}
+.sidebar {
+  grid-area: sidebar;
+}
+main {
+  grid-area: main;
+}
+footer {
+  grid-area: footer;
+}
 ```
 
 Each string in `grid-template-areas` represents a row. Each word names a cell. Use `.` for an empty cell. All rows must have the same number of cells.
@@ -158,11 +166,13 @@ justify-items: start | end | center | stretch;
 align-items: start | end | center | stretch;
 
 /* Align the whole grid inside the container */
-justify-content: start | end | center | space-between | space-around | space-evenly;
-align-content: start | end | center | space-between | space-around | space-evenly;
+justify-content: start | end | center | space-between | space-around |
+  space-evenly;
+align-content: start | end | center | space-between | space-around |
+  space-evenly;
 
 /* Shorthand */
-place-items: center;            /* align-items: center + justify-items: center */
+place-items: center; /* align-items: center + justify-items: center */
 place-content: center;
 ```
 
@@ -170,9 +180,9 @@ place-content: center;
 
 ```css
 .item {
-  justify-self: end;    /* override horizontal alignment for this item */
-  align-self: center;   /* override vertical alignment for this item */
-  place-self: center;   /* shorthand */
+  justify-self: end; /* override horizontal alignment for this item */
+  align-self: center; /* override vertical alignment for this item */
+  place-self: center; /* shorthand */
 }
 ```
 
@@ -192,14 +202,14 @@ grid-template-columns: minmax(150px, 1fr) minmax(150px, 2fr);
 
 ## When to Use Grid vs Flexbox
 
-|Scenario|Use|
-|---|---|
-|Overall page layout|Grid|
-|Items in a row or column that need to be flexible|Flexbox|
-|Two-dimensional alignment (rows AND columns together)|Grid|
-|A single row of items (nav, buttons)|Flexbox|
-|Cards that should wrap responsively|Either — Grid with `auto-fit` is cleaner|
-|Centering one element|Flexbox (`justify-content: center + align-items: center`)|
+| Scenario                                              | Use                                                       |
+| ----------------------------------------------------- | --------------------------------------------------------- |
+| Overall page layout                                   | Grid                                                      |
+| Items in a row or column that need to be flexible     | Flexbox                                                   |
+| Two-dimensional alignment (rows AND columns together) | Grid                                                      |
+| A single row of items (nav, buttons)                  | Flexbox                                                   |
+| Cards that should wrap responsively                   | Either — Grid with `auto-fit` is cleaner                  |
+| Centering one element                                 | Flexbox (`justify-content: center + align-items: center`) |
 
 They are not competing tools — use both. A grid layout can contain flex containers inside its cells.
 
@@ -241,3 +251,30 @@ body {
   gap: 2rem;
 }
 ```
+
+---
+
+## Common Mistakes
+
+```css
+/* WRONG: grid-template-areas with mismatched quotes/columns —
+   this fails to apply at all, often silently, with no console error */
+.layout {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "sidebar main main"; /* 3 cells on this row vs 2 on the row above */
+}
+
+/* CORRECT: every quoted row must have the same number of cells */
+.layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-template-areas:
+    "header header"
+    "sidebar main";
+}
+```
+
+- **Confusing `fr` units with percentages.** `fr` distributes _remaining_ space after fixed-size tracks are subtracted; `1fr 1fr` isn't "50%/50% of the container" if there's also a fixed 200px column in the mix — it's 50/50 of whatever space is left over.
+- **Not distinguishing implicit from explicit grid tracks.** Items placed beyond your `grid-template-columns`/`rows` definition still render — the browser silently creates _implicit_ tracks sized by `grid-auto-rows`/`grid-auto-columns` (default: content size). This is usually what causes an "extra" row that doesn't match the sizing of the rest of the grid.

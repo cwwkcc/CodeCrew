@@ -29,10 +29,10 @@ Declare the `transition` on the element in its **default state**, not inside `:h
 
 ```css
 .card {
-  transition-property:        transform, box-shadow;
-  transition-duration:        0.2s, 0.3s;
+  transition-property: transform, box-shadow;
+  transition-duration: 0.2s, 0.3s;
   transition-timing-function: ease, ease-out;
-  transition-delay:           0s, 0.05s;
+  transition-delay: 0s, 0.05s;
 }
 ```
 
@@ -41,24 +41,24 @@ The shorthand for multiple properties:
 ```css
 .card {
   transition:
-    transform   0.2s ease,
-    box-shadow  0.3s ease-out 0.05s;  /* property  duration  timing  delay */
+    transform 0.2s ease,
+    box-shadow 0.3s ease-out 0.05s; /* property  duration  timing  delay */
 }
 ```
 
 ### `transition-property`
 
 ```css
-transition-property: color;                     /* single property */
+transition-property: color; /* single property */
 transition-property: color, transform, opacity; /* multiple */
-transition-property: all;                       /* everything — convenient but use carefully */
+transition-property: all; /* everything — convenient but use carefully */
 ```
 
 ### `transition-duration`
 
 ```css
-transition-duration: 300ms;   /* milliseconds */
-transition-duration: 0.3s;    /* seconds — same result */
+transition-duration: 300ms; /* milliseconds */
+transition-duration: 0.3s; /* seconds — same result */
 ```
 
 Typical ranges:
@@ -71,15 +71,15 @@ Typical ranges:
 
 Controls the speed curve:
 
-|Value|Behaviour|
-|---|---|
-|`ease`|Slow start, fast middle, slow end (default)|
-|`linear`|Constant speed throughout|
-|`ease-in`|Slow start, fast finish|
-|`ease-out`|Fast start, slow finish — feels natural for things leaving the screen|
-|`ease-in-out`|Slow at both ends|
-|`cubic-bezier(x1,y1,x2,y2)`|Custom curve|
-|`steps(n)`|Discrete jumps — useful for sprite animations|
+| Value                       | Behaviour                                                             |
+| --------------------------- | --------------------------------------------------------------------- |
+| `ease`                      | Slow start, fast middle, slow end (default)                           |
+| `linear`                    | Constant speed throughout                                             |
+| `ease-in`                   | Slow start, fast finish                                               |
+| `ease-out`                  | Fast start, slow finish — feels natural for things leaving the screen |
+| `ease-in-out`               | Slow at both ends                                                     |
+| `cubic-bezier(x1,y1,x2,y2)` | Custom curve                                                          |
+| `steps(n)`                  | Discrete jumps — useful for sprite animations                         |
 
 ```css
 /* Custom springy curve */
@@ -91,16 +91,24 @@ transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
 Wait before the transition begins:
 
 ```css
-transition: color 0.3s ease 0.1s;   /* wait 0.1s, then animate over 0.3s */
+transition: color 0.3s ease 0.1s; /* wait 0.1s, then animate over 0.3s */
 ```
 
 Useful for staggering multiple elements:
 
 ```css
-.menu li:nth-child(1) { transition-delay: 0ms; }
-.menu li:nth-child(2) { transition-delay: 50ms; }
-.menu li:nth-child(3) { transition-delay: 100ms; }
-.menu li:nth-child(4) { transition-delay: 150ms; }
+.menu li:nth-child(1) {
+  transition-delay: 0ms;
+}
+.menu li:nth-child(2) {
+  transition-delay: 50ms;
+}
+.menu li:nth-child(3) {
+  transition-delay: 100ms;
+}
+.menu li:nth-child(4) {
+  transition-delay: 150ms;
+}
 ```
 
 ---
@@ -136,7 +144,9 @@ background-image  /* no interpolation between two images */
 .tooltip {
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
 }
 
 .tooltip.visible {
@@ -155,31 +165,40 @@ a {
   color: royalblue;
   transition: color 0.15s ease;
 }
-a:hover { color: navy; }
-
+a:hover {
+  color: navy;
+}
 
 /* Card lift on hover */
 .card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-
 /* Button press */
 .btn {
-  transition: transform 0.1s ease, background 0.2s ease;
+  transition:
+    transform 0.1s ease,
+    background 0.2s ease;
 }
-.btn:hover  { background: royalblue; }
-.btn:active { transform: scale(0.97); }
-
+.btn:hover {
+  background: royalblue;
+}
+.btn:active {
+  transform: scale(0.97);
+}
 
 /* Input focus ring */
 input {
   border: 1px solid #ccc;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 input:focus {
   border-color: royalblue;
@@ -187,14 +206,21 @@ input:focus {
   outline: none;
 }
 
-
 /* Hamburger → close icon */
 .bar {
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
-.open .bar-middle  { opacity: 0; }
-.open .bar-top     { transform: rotate(45deg)  translate(5px, 5px); }
-.open .bar-bottom  { transform: rotate(-45deg) translate(5px, -5px); }
+.open .bar-middle {
+  opacity: 0;
+}
+.open .bar-top {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.open .bar-bottom {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
 ```
 
 ---
@@ -213,10 +239,14 @@ Use sparingly — it consumes memory. Only add it when you have a real performan
 
 ```css
 /* Good — only on elements about to animate */
-.modal-entering { will-change: opacity, transform; }
+.modal-entering {
+  will-change: opacity, transform;
+}
 
 /* Bad — applied globally */
-* { will-change: transform; }   /* wastes memory */
+* {
+  will-change: transform;
+} /* wastes memory */
 ```
 
 ---
@@ -231,7 +261,7 @@ Always respect the user's motion preference:
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
-    animation-duration:  0.01ms !important;
+    animation-duration: 0.01ms !important;
   }
 }
 ```
@@ -242,12 +272,51 @@ Users who enable "Reduce Motion" in their OS have motion sensitivity, vestibular
 
 ## Transitions vs Animations — When to Use Which
 
-||Transitions|Animations|
-|---|---|---|
-|Trigger|Requires a state change (hover, focus, class toggle)|Run automatically|
-|Steps|Two states only: A → B|Unlimited keyframes|
-|Direction|Reverses automatically|Requires `animation-direction`|
-|Use for|Hover effects, UI state changes|Looping, multi-step motion, entrance/exit sequences|
+|           | Transitions                                          | Animations                                          |
+| --------- | ---------------------------------------------------- | --------------------------------------------------- |
+| Trigger   | Requires a state change (hover, focus, class toggle) | Run automatically                                   |
+| Steps     | Two states only: A → B                               | Unlimited keyframes                                 |
+| Direction | Reverses automatically                               | Requires `animation-direction`                      |
+| Use for   | Hover effects, UI state changes                      | Looping, multi-step motion, entrance/exit sequences |
 
 ---
 
+---
+
+## Common Mistakes
+
+```css
+/* WRONG: transitioning "all" — the browser has to watch every animatable
+   property for changes, which is wasteful and can transition properties
+   you never meant to (e.g. a color change you forgot was there) */
+.card {
+  transition: all 0.3s ease;
+}
+
+/* CORRECT: name exactly what should transition */
+.card {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* WRONG: transitioning properties that trigger layout recalculation —
+   janky on lower-powered devices */
+.card:hover {
+  top: -4px;
+}
+.card {
+  transition: top 0.3s ease;
+}
+
+/* CORRECT: transform doesn't trigger layout, only compositing —
+   much smoother, especially on mobile */
+.card:hover {
+  transform: translateY(-4px);
+}
+.card {
+  transition: transform 0.3s ease;
+}
+```
+
+`top`/`left`/`width`/`height` all force the browser to recompute layout on every frame of the transition. `transform` and `opacity` are handled by the compositor and can often run on the GPU — the same visual effect (a card lifting on hover) runs dramatically smoother written as a `transform` than as a `top` change, even though they can look identical at rest.
