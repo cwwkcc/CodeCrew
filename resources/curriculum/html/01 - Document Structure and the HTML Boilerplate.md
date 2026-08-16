@@ -4,8 +4,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page Title</title>
   </head>
   <body>
@@ -36,13 +36,13 @@ The root element of every HTML document. There is exactly one, and every other e
 
 The `lang` attribute declares the document's primary language using a [BCP 47 language tag](https://www.ietf.org/rfc/bcp/bcp47.txt):
 
-|Language|Tag|
-|---|---|
-|English|`en`|
-|Sinhala|`si`|
-|Tamil|`ta`|
-|French (Canada)|`fr-CA`|
-|Chinese (Simplified)|`zh-Hans`|
+| Language             | Tag       |
+| -------------------- | --------- |
+| English              | `en`      |
+| Sinhala              | `si`      |
+| Tamil                | `ta`      |
+| French (Canada)      | `fr-CA`   |
+| Chinese (Simplified) | `zh-Hans` |
 
 **Why it matters:** Screen readers use `lang` to select the correct pronunciation engine. Search engines use it for language targeting. CSS `hyphens: auto` uses it for hyphenation dictionaries. Omitting it is an accessibility defect.
 
@@ -109,10 +109,10 @@ Every browser has an error-recovery algorithm for malformed HTML, but you should
 
 Every element has a defined _content model_ — what kinds of children it is allowed to have. The two most important categories:
 
-|Category|Description|Examples|
-|---|---|---|
-|**Block-level** (flow content)|Takes up full width, stacks vertically|`<div>`, `<p>`, `<h1>`–`<h6>`, `<ul>`, `<table>`|
-|**Inline** (phrasing content)|Flows within text|`<span>`, `<a>`, `<strong>`, `<em>`, `<img>`|
+| Category                       | Description                            | Examples                                         |
+| ------------------------------ | -------------------------------------- | ------------------------------------------------ |
+| **Block-level** (flow content) | Takes up full width, stacks vertically | `<div>`, `<p>`, `<h1>`–`<h6>`, `<ul>`, `<table>` |
+| **Inline** (phrasing content)  | Flows within text                      | `<span>`, `<a>`, `<strong>`, `<em>`, `<img>`     |
 
 Critical rule: **block elements may not be nested inside inline elements.**
 
@@ -143,12 +143,18 @@ Comments are useful for section markers and TODO notes. They are sent to the cli
 Some elements have no content and no closing tag:
 
 ```html
-<br>      <!-- line break -->
-<hr>      <!-- thematic break / horizontal rule -->
-<img>     <!-- image -->
-<input>   <!-- form field -->
-<meta>    <!-- metadata -->
-<link>    <!-- external resource link -->
+<br />
+<!-- line break -->
+<hr />
+<!-- thematic break / horizontal rule -->
+<img />
+<!-- image -->
+<input />
+<!-- form field -->
+<meta />
+<!-- metadata -->
+<link />
+<!-- external resource link -->
 ```
 
 In HTML5 these are written without a slash. The XHTML-style self-closing slash (`<br />`) is valid but unnecessary in HTML.
@@ -157,11 +163,35 @@ In HTML5 these are written without a slash. The XHTML-style self-closing slash (
 
 ## Summary
 
-|Line|Purpose|
-|---|---|
-|`<!DOCTYPE html>`|Activates standards mode|
-|`<html lang="...">`|Root element; declares document language|
-|`<meta charset="UTF-8">`|Declares UTF-8 encoding — must be first in head|
-|`<meta name="viewport" ...>`|Correct scaling on mobile devices|
-|`<title>`|Names the document everywhere it appears|
-|`<body>`|Contains all visible content|
+| Line                         | Purpose                                         |
+| ---------------------------- | ----------------------------------------------- |
+| `<!DOCTYPE html>`            | Activates standards mode                        |
+| `<html lang="...">`          | Root element; declares document language        |
+| `<meta charset="UTF-8">`     | Declares UTF-8 encoding — must be first in head |
+| `<meta name="viewport" ...>` | Correct scaling on mobile devices               |
+| `<title>`                    | Names the document everywhere it appears        |
+| `<body>`                     | Contains all visible content                    |
+
+---
+
+## Common Mistakes
+
+```html
+<!-- WRONG: charset after title — browser may have already
+     guessed an encoding and misread the title's non-ASCII characters -->
+<head>
+  <title>Café Menu</title>
+  <meta charset="UTF-8" />
+</head>
+
+<!-- CORRECT: charset first, before anything with text content -->
+<head>
+  <meta charset="UTF-8" />
+  <title>Café Menu</title>
+</head>
+```
+
+- **Forgetting the viewport meta tag.** This is the single most common reason a page "looks fine on my laptop" and is unreadably tiny on a phone during testing.
+- **Closing tags out of order.** `<div><p>Text</div></p>` will often _look_ fine because browsers silently repair broken nesting — but you're relying on error-recovery, not on your markup being correct. Always close in reverse of the order you opened.
+- **Block elements inside inline elements**, most often `<div>` or `<p>` nested inside `<a>` or `<span>`. The browser will move things around to make it valid, and the result is rarely what you intended.
+- **Skipping `<!DOCTYPE html>` or adding whitespace/comments before it.** Either one silently drops the page into quirks mode, and everything downstream (CSS box model, `vh` units, `<table>` layout) starts behaving like it's 1999.

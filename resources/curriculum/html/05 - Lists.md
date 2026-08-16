@@ -56,20 +56,21 @@ The browser numbers items automatically starting from 1.
 </ol>
 ```
 
-|`type` value|Marker style|
-|---|---|
-|`1`|Numbers — 1, 2, 3 (default)|
-|`a`|Lowercase letters — a, b, c|
-|`A`|Uppercase letters — A, B, C|
-|`i`|Lowercase roman — i, ii, iii|
-|`I`|Uppercase roman — I, II, III|
+| `type` value | Marker style                 |
+| ------------ | ---------------------------- |
+| `1`          | Numbers — 1, 2, 3 (default)  |
+| `a`          | Lowercase letters — a, b, c  |
+| `A`          | Uppercase letters — A, B, C  |
+| `i`          | Lowercase roman — i, ii, iii |
+| `I`          | Uppercase roman — I, II, III |
 
 ### Overriding a Specific Item's Number
 
 ```html
 <ol>
   <li>Item one</li>
-  <li value="10">Jump to ten</li>   <!-- continues: 10, 11, 12... -->
+  <li value="10">Jump to ten</li>
+  <!-- continues: 10, 11, 12... -->
   <li>Item eleven</li>
 </ol>
 ```
@@ -86,7 +87,9 @@ For term–definition pairs — glossaries, FAQs, key–value displays:
   <dd>Central Processing Unit — executes program instructions.</dd>
 
   <dt>RAM</dt>
-  <dd>Random Access Memory — volatile short-term storage for running programs.</dd>
+  <dd>
+    Random Access Memory — volatile short-term storage for running programs.
+  </dd>
 
   <!-- One term, multiple definitions -->
   <dt>HTTP</dt>
@@ -110,14 +113,16 @@ Lists nest by placing the child list **inside** a `<li>` element, not after it:
 
 ```html
 <ul>
-  <li>Frontend
+  <li>
+    Frontend
     <ul>
       <li>HTML</li>
       <li>CSS</li>
       <li>JavaScript</li>
     </ul>
   </li>
-  <li>Backend
+  <li>
+    Backend
     <ul>
       <li>Node.js</li>
       <li>Databases</li>
@@ -162,18 +167,19 @@ This is semantically correct — a navigation menu _is_ a list of links. Screen 
   <li>Item</li>
 </ul>
 
-
 <!-- WRONG — nested list placed after </li>, outside the parent item -->
 <ul>
   <li>Parent</li>
-  <ul>              <!-- this <ul> is a sibling of <li>, not a child -->
+  <ul>
+    <!-- this <ul> is a sibling of <li>, not a child -->
     <li>Child</li>
   </ul>
 </ul>
 
 <!-- RIGHT — nested list goes inside the <li> -->
 <ul>
-  <li>Parent
+  <li>
+    Parent
     <ul>
       <li>Child</li>
     </ul>
@@ -182,3 +188,38 @@ This is semantically correct — a navigation menu _is_ a list of links. Screen 
 ```
 
 ---
+
+---
+
+## Common Mistakes
+
+```html
+<!-- WRONG: divs styled to look like a list — no semantic meaning,
+     no list-item announcements for screen readers, no keyboard list navigation -->
+<div class="nav-list">
+  <div class="nav-item">Home</div>
+  <div class="nav-item">About</div>
+</div>
+
+<!-- CORRECT: an actual list, styled however you like with CSS -->
+<ul class="nav-list">
+  <li class="nav-item">Home</li>
+  <li class="nav-item">About</li>
+</ul>
+
+<!-- WRONG: <ol> used where sequence has no meaning -->
+<ol>
+  <li>Football</li>
+  <li>Chess</li>
+  <li>Debate</li>
+</ol>
+
+<!-- CORRECT: use <ul> unless the order is actually meaningful (steps, rankings) -->
+<ul>
+  <li>Football</li>
+  <li>Chess</li>
+  <li>Debate</li>
+</ul>
+```
+
+Rule of thumb: if you'd say "first... then... then..." out loud when reading the items, it's `<ol>`. If you'd say "these include...", it's `<ul>`. A navigation menu, a set of clubs, a list of features — almost always `<ul>`.

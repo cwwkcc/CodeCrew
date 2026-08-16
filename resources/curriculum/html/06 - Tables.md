@@ -6,7 +6,9 @@ Tables are for **tabular data** — information that has a meaningful row/column
 
 ```html
 <table>
-  <caption>Q3 Sales by Region (units)</caption>
+  <caption>
+    Q3 Sales by Region (units)
+  </caption>
   <thead>
     <tr>
       <th scope="col">Region</th>
@@ -44,16 +46,16 @@ Tables are for **tabular data** — information that has a meaningful row/column
 
 ## Element Reference
 
-|Element|Purpose|
-|---|---|
-|`<table>`|Root container|
-|`<caption>`|Table title — must be first child of `<table>`|
-|`<thead>`|Header row group|
-|`<tbody>`|Body row group (can be multiple)|
-|`<tfoot>`|Footer row group|
-|`<tr>`|Table row|
-|`<th>`|Header cell — carries semantic weight|
-|`<td>`|Data cell|
+| Element     | Purpose                                        |
+| ----------- | ---------------------------------------------- |
+| `<table>`   | Root container                                 |
+| `<caption>` | Table title — must be first child of `<table>` |
+| `<thead>`   | Header row group                               |
+| `<tbody>`   | Body row group (can be multiple)               |
+| `<tfoot>`   | Footer row group                               |
+| `<tr>`      | Table row                                      |
+| `<th>`      | Header cell — carries semantic weight          |
+| `<td>`      | Data cell                                      |
 
 ---
 
@@ -61,12 +63,12 @@ Tables are for **tabular data** — information that has a meaningful row/column
 
 The `scope` attribute tells assistive technology which cells a header applies to:
 
-|Value|Meaning|
-|---|---|
-|`scope="col"`|Header for its column|
-|`scope="row"`|Header for its row|
-|`scope="colgroup"`|Header spans multiple columns|
-|`scope="rowgroup"`|Header spans multiple rows|
+| Value              | Meaning                       |
+| ------------------ | ----------------------------- |
+| `scope="col"`      | Header for its column         |
+| `scope="row"`      | Header for its row            |
+| `scope="colgroup"` | Header spans multiple columns |
+| `scope="rowgroup"` | Header spans multiple rows    |
 
 ---
 
@@ -74,7 +76,9 @@ The `scope` attribute tells assistive technology which cells a header applies to
 
 ```html
 <table>
-  <caption>Exam Schedule</caption>
+  <caption>
+    Exam Schedule
+  </caption>
   <thead>
     <tr>
       <th scope="col">Subject</th>
@@ -127,8 +131,10 @@ Allow you to apply attributes to whole columns without repeating on every cell:
 ```html
 <table>
   <colgroup>
-    <col span="1">           <!-- label column -->
-    <col span="3">           <!-- data columns -->
+    <col span="1" />
+    <!-- label column -->
+    <col span="3" />
+    <!-- data columns -->
   </colgroup>
   ...
 </table>
@@ -146,3 +152,32 @@ For very complex tables where `scope` is insufficient, use `headers` + `id`:
 ```
 
 This explicitly associates a data cell with multiple headers.
+---
+
+## Common Mistakes
+
+```html
+<!-- WRONG: table used for page layout — a pre-CSS habit -->
+<table>
+  <tr>
+    <td width="200">Sidebar content</td>
+    <td>Main content</td>
+  </tr>
+</table>
+
+<!-- CORRECT: layout is CSS's job (Flexbox/Grid), tables are for tabular data only -->
+<div style="display: flex;">
+  <aside>Sidebar content</aside>
+  <main>Main content</main>
+</div>
+
+<!-- WRONG: header cells with no scope — ambiguous which axis they label
+     once the table gets more than 2-3 columns -->
+<th>Region</th>
+
+<!-- CORRECT: scope makes the relationship explicit for assistive tech -->
+<th scope="col">Region</th>
+```
+
+- **Skipping `<caption>`.** A sighted user has the surrounding page context to guess what a table is about; a screen reader user hears the table announced with no title unless `<caption>` is present.
+- **Using `<th>` only for visual boldness.** If a cell is bold because it's a header, use `<th>`. If it's bold for another reason, that's a CSS `font-weight` decision on a `<td>`, not a semantic choice.

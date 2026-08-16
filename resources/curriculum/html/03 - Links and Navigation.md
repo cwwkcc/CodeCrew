@@ -14,15 +14,15 @@ The `<a>` element is the hyperlink — the mechanism that connects the web. Ever
 
 ## `href` Values
 
-|Type|Syntax|Use|
-|---|---|---|
-|Absolute URL|Full URL with scheme|External sites|
-|Root-relative|Starts with `/`|Same site, from root|
-|Relative|No leading `/`|Same site, relative to current file|
-|Fragment|`#id`|Jump to element on same page|
-|`mailto:`|`mailto:user@example.com`|Open email client|
-|`tel:`|`tel:+94712345678`|Dial a phone number|
-|`download`|Any URL + `download` attr|Trigger file download|
+| Type          | Syntax                    | Use                                 |
+| ------------- | ------------------------- | ----------------------------------- |
+| Absolute URL  | Full URL with scheme      | External sites                      |
+| Root-relative | Starts with `/`           | Same site, from root                |
+| Relative      | No leading `/`            | Same site, relative to current file |
+| Fragment      | `#id`                     | Jump to element on same page        |
+| `mailto:`     | `mailto:user@example.com` | Open email client                   |
+| `tel:`        | `tel:+94712345678`        | Dial a phone number                 |
+| `download`    | Any URL + `download` attr | Trigger file download               |
 
 ```html
 <!-- Absolute — full URL -->
@@ -63,12 +63,12 @@ The `download` attribute works only for same-origin URLs (files on the same webs
 </a>
 ```
 
-|Value|Behaviour|
-|---|---|
-|`_self`|Same tab (default)|
-|`_blank`|New tab or window|
-|`_parent`|Parent frame (used with iframes)|
-|`_top`|Top-level frame, breaks out of all iframes|
+| Value     | Behaviour                                  |
+| --------- | ------------------------------------------ |
+| `_self`   | Same tab (default)                         |
+| `_blank`  | New tab or window                          |
+| `_parent` | Parent frame (used with iframes)           |
+| `_top`    | Top-level frame, breaks out of all iframes |
 
 **Always add `rel="noopener noreferrer"` when using `target="_blank"`** on external links. Without it, the opened page can access and manipulate the original tab — a security risk. This is important to know even if you don't yet understand exactly how it works.
 
@@ -134,7 +134,9 @@ A breadcrumb shows the path from home to the current page. Use `<ol>` (ordered �
     <li><a href="/">Home</a></li>
     <li><a href="/courses">Courses</a></li>
     <li><a href="/courses/javascript">JavaScript</a></li>
-    <li><a href="/courses/javascript/closures" aria-current="page">Closures</a></li>
+    <li>
+      <a href="/courses/javascript/closures" aria-current="page">Closures</a>
+    </li>
   </ol>
 </nav>
 ```
@@ -147,10 +149,10 @@ A breadcrumb shows the path from home to the current page. Use `<ol>` (ordered �
 
 This is one of the most common mistakes in HTML:
 
-|Element|Use for|
-|---|---|
-|`<a href>`|**Navigation** — takes the user to a URL|
-|`<button>`|**Actions** — does something on the page (submit form, open modal, toggle menu)|
+| Element    | Use for                                                                         |
+| ---------- | ------------------------------------------------------------------------------- |
+| `<a href>` | **Navigation** — takes the user to a URL                                        |
+| `<button>` | **Actions** — does something on the page (submit form, open modal, toggle menu) |
 
 ```html
 <!-- RIGHT — link navigates somewhere -->
@@ -171,16 +173,16 @@ Using `<a href="#">` as a button breaks keyboard navigation and screen reader an
 
 These are two completely different elements that share nothing in common except the word "link":
 
-|Element|Where|Purpose|
-|---|---|---|
-|`<a href>`|`<body>`|A clickable link for users|
-|`<link rel href>`|`<head>`|Connects resources (stylesheets, icons) — not visible to users|
+| Element           | Where    | Purpose                                                        |
+| ----------------- | -------- | -------------------------------------------------------------- |
+| `<a href>`        | `<body>` | A clickable link for users                                     |
+| `<link rel href>` | `<head>` | Connects resources (stylesheets, icons) — not visible to users |
 
 ```html
 <head>
   <!-- These are <link> elements — not clickable, not for users -->
-  <link rel="stylesheet" href="/styles.css">
-  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="/favicon.ico" />
 </head>
 
 <body>
@@ -190,3 +192,33 @@ These are two completely different elements that share nothing in common except 
 ```
 
 ---
+
+---
+
+## Common Mistakes
+
+```html
+<!-- WRONG: opens a new tab with access back to the original page via window.opener -->
+<a href="https://example.com" target="_blank">External site</a>
+
+<!-- CORRECT: rel="noopener noreferrer" blocks that access -->
+<a href="https://example.com" target="_blank" rel="noopener noreferrer"
+  >External site</a
+>
+
+<!-- WRONG: meaningless link text — useless out of context, and screen reader
+     users often browse a page's links as a standalone list -->
+<a href="/report.pdf">Click here</a> to read the report.
+
+<!-- CORRECT: the link text alone describes the destination -->
+Read the <a href="/report.pdf">Q3 sales report</a>.
+
+<!-- WRONG: href="#" used as a JS-hook placeholder — jumps the page to the
+     top and adds a bogus entry in browser history -->
+<a href="#" onclick="openModal()">Settings</a>
+
+<!-- CORRECT: a real button for a real action, styled to look like a link if needed -->
+<button type="button" onclick="openModal()">Settings</button>
+```
+
+A quick test: if you removed the surrounding sentence and only kept the link text, would it still make sense? "Click here" and "read more" fail that test; "the Q3 sales report" passes it.

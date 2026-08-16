@@ -42,15 +42,15 @@ The browser reads those tags and knows: "this text is a paragraph." It does not 
 
 ## A Brief History
 
-|Year|Event|
-|---|---|
-|1991|Tim Berners-Lee proposes HTML at CERN. First version has ~18 tags.|
-|1995|HTML 2.0 — first formal specification.|
-|1997|HTML 4.0 — tables, forms, frames, internationalisation.|
-|1998|XHTML 1.0 — HTML rewritten as strict XML.|
-|2008|HTML5 draft published by WHATWG.|
-|2014|HTML5 becomes a W3C Recommendation.|
-|2019|WHATWG's HTML Living Standard becomes the single authoritative spec.|
+| Year | Event                                                                |
+| ---- | -------------------------------------------------------------------- |
+| 1991 | Tim Berners-Lee proposes HTML at CERN. First version has ~18 tags.   |
+| 1995 | HTML 2.0 — first formal specification.                               |
+| 1997 | HTML 4.0 — tables, forms, frames, internationalisation.              |
+| 1998 | XHTML 1.0 — HTML rewritten as strict XML.                            |
+| 2008 | HTML5 draft published by WHATWG.                                     |
+| 2014 | HTML5 becomes a W3C Recommendation.                                  |
+| 2019 | WHATWG's HTML Living Standard becomes the single authoritative spec. |
 
 There is no "HTML6." The spec is now a _living standard_ — it evolves continuously. Always reference [html.spec.whatwg.org](https://html.spec.whatwg.org/) for authoritative answers.
 
@@ -66,17 +66,25 @@ Understanding that HTML produces a _tree_ (not a flat list of tags) is essential
 
 ## Key Terms
 
-|Term|Meaning|
-|---|---|
-|**Element**|A complete unit: opening tag + content + closing tag. e.g. `<p>Hello</p>`|
-|**Tag**|The angle-bracket notation that delimits an element. e.g. `<p>` or `</p>`|
-|**Attribute**|Extra information inside an opening tag. e.g. `href="..."` in `<a href="...">`|
-|**Void element**|An element with no closing tag and no content. e.g. `<br>`, `<img>`|
-|**DOM**|The in-memory tree the browser builds from parsed HTML|
-|**Semantic HTML**|Using elements for their meaning, not their default appearance|
+| Term              | Meaning                                                                        |
+| ----------------- | ------------------------------------------------------------------------------ |
+| **Element**       | A complete unit: opening tag + content + closing tag. e.g. `<p>Hello</p>`      |
+| **Tag**           | The angle-bracket notation that delimits an element. e.g. `<p>` or `</p>`      |
+| **Attribute**     | Extra information inside an opening tag. e.g. `href="..."` in `<a href="...">` |
+| **Void element**  | An element with no closing tag and no content. e.g. `<br>`, `<img>`            |
+| **DOM**           | The in-memory tree the browser builds from parsed HTML                         |
+| **Semantic HTML** | Using elements for their meaning, not their default appearance                 |
 
 ---
 
 ## What You Will Build by the End of This Curriculum
 
 A fully valid, accessible, semantic HTML document that a browser, a screen reader, a search engine crawler, and a fellow developer can all understand perfectly — with zero CSS and zero JavaScript.
+---
+
+## Common Mistakes
+
+- **Treating "the internet" and "the web" as the same thing.** The internet is the physical network (cables, routers, ISPs). The web is one application that runs on top of it — email, DNS, and file transfer are other applications on the same internet that have nothing to do with HTML.
+- **Assuming every request repeats every step.** In practice the browser caches DNS lookups, reuses TCP/TLS connections (keep-alive), and caches static assets. The first request to a domain is the slow one; the rest are cheap. This is _why_ performance advice later in the curriculum (fewer domains, CDNs, caching headers) works.
+- **Thinking HTML "runs."** HTML has no logic, no variables, no conditionals. If you catch yourself wanting an `if` statement in a `.html` file, that's JavaScript's job, not HTML's.
+- **Writing markup for how it looks in one browser.** The request–response cycle and DOM tree are the same everywhere, but rendering isn't guaranteed pixel-identical across browsers. Semantic HTML is the one part of the stack that behaves the most consistently — another reason to lean on it.
