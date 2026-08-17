@@ -62,8 +62,11 @@ A native HTML accordion with no JavaScript required:
 ```html
 <details>
   <summary>What is the difference between TCP and UDP?</summary>
-  <p>TCP provides reliable, ordered, error-checked delivery of a stream of bytes.
-     UDP is connectionless and provides no delivery guarantees, but has lower latency.</p>
+  <p>
+    TCP provides reliable, ordered, error-checked delivery of a stream of bytes.
+    UDP is connectionless and provides no delivery guarantees, but has lower
+    latency.
+  </p>
 </details>
 ```
 
@@ -94,7 +97,8 @@ Machine-readable date and time:
 ```html
 <time datetime="2025-08-15">Independence Day</time>
 <time datetime="2025-08-15T09:00:00+05:30">9 AM IST</time>
-<time datetime="PT2H30M">two and a half hours</time>  <!-- duration -->
+<time datetime="PT2H30M">two and a half hours</time>
+<!-- duration -->
 ```
 
 The `datetime` attribute uses ISO 8601 format. Search engines and calendar apps can parse this to extract dates.
@@ -103,13 +107,51 @@ The `datetime` attribute uses ISO 8601 format. Search engines and calendar apps 
 
 ## Text-Level Semantic Elements
 
-|Element|Meaning|
-|---|---|
-|`<address>`|Contact info for nearest article or body|
-|`<cite>`|Title of a work being referenced|
-|`<blockquote cite="URL">`|Extended quotation|
-|`<ins datetime>`|Inserted content (tracked change)|
-|`<del datetime>`|Deleted content (tracked change)|
-|`<ruby>`, `<rt>`, `<rp>`|Ruby annotation (East Asian typography)|
-|`<bdi>`|Bi-directional isolation (for user-generated text)|
-|`<bdo dir>`|Override text directionality|
+| Element                   | Meaning                                            |
+| ------------------------- | -------------------------------------------------- |
+| `<address>`               | Contact info for nearest article or body           |
+| `<cite>`                  | Title of a work being referenced                   |
+| `<blockquote cite="URL">` | Extended quotation                                 |
+| `<ins datetime>`          | Inserted content (tracked change)                  |
+| `<del datetime>`          | Deleted content (tracked change)                   |
+| `<ruby>`, `<rt>`, `<rp>`  | Ruby annotation (East Asian typography)            |
+| `<bdi>`                   | Bi-directional isolation (for user-generated text) |
+| `<bdo dir>`               | Override text directionality                       |
+
+---
+
+## Common Mistakes
+
+```html
+<!-- WRONG: "div soup" — every element is a div with a class name
+     doing the job a real element already does -->
+<div class="header">
+  <div class="nav">...</div>
+</div>
+<div class="main-content">
+  <div class="post">...</div>
+</div>
+<div class="footer">...</div>
+
+<!-- CORRECT: the elements that already mean this -->
+<header>
+  <nav>...</nav>
+</header>
+<main>
+  <article>...</article>
+</main>
+<footer>...</footer>
+
+<!-- WRONG: <section> used as a generic wrapper with no heading —
+     a <section> without a heading has no clear identity for assistive tech -->
+<section class="card">
+  <p>Some text with no heading above it.</p>
+</section>
+
+<!-- CORRECT: if there's no heading, it's probably just a <div> -->
+<div class="card">
+  <p>Some text with no heading above it.</p>
+</div>
+```
+
+The test for `<section>` vs `<div>`: would this chunk show up in a table of contents? If yes, it's a `<section>` (and needs a heading). If it's purely a styling/grouping container with no independent identity, it's a `<div>` — and that's fine. Not everything needs to be semantic; over-semanticizing is its own kind of mistake.

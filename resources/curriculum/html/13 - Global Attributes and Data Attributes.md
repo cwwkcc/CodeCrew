@@ -4,22 +4,22 @@ Global attributes are available on every HTML element regardless of type. Data a
 
 ## Global Attributes
 
-|Attribute|Purpose|
-|---|---|
-|`id`|Unique identifier within the document|
-|`class`|Space-separated CSS class names|
-|`lang`|Language of this element's content|
-|`dir`|Text direction: `ltr`, `rtl`, `auto`|
-|`title`|Advisory tooltip text|
-|`hidden`|Hides the element from rendering and assistive technology|
-|`tabindex`|Keyboard tab order|
-|`contenteditable`|Makes the element editable by the user|
-|`draggable`|Marks the element as draggable|
-|`spellcheck`|Enable or disable spell checking|
-|`translate`|Whether to translate this content: `yes` / `no`|
-|`accesskey`|Keyboard shortcut (use carefully — conflicts with OS shortcuts)|
-|`style`|Inline CSS (prefer external stylesheets)|
-|`slot`|Used with Web Components|
+| Attribute         | Purpose                                                         |
+| ----------------- | --------------------------------------------------------------- |
+| `id`              | Unique identifier within the document                           |
+| `class`           | Space-separated CSS class names                                 |
+| `lang`            | Language of this element's content                              |
+| `dir`             | Text direction: `ltr`, `rtl`, `auto`                            |
+| `title`           | Advisory tooltip text                                           |
+| `hidden`          | Hides the element from rendering and assistive technology       |
+| `tabindex`        | Keyboard tab order                                              |
+| `contenteditable` | Makes the element editable by the user                          |
+| `draggable`       | Marks the element as draggable                                  |
+| `spellcheck`      | Enable or disable spell checking                                |
+| `translate`       | Whether to translate this content: `yes` / `no`                 |
+| `accesskey`       | Keyboard shortcut (use carefully — conflicts with OS shortcuts) |
+| `style`           | Inline CSS (prefer external stylesheets)                        |
+| `slot`            | Used with Web Components                                        |
 
 ---
 
@@ -65,14 +65,12 @@ Declares the language of an element's content. Screen readers use it to select t
 ```html
 <!-- Document language on <html> -->
 <html lang="en">
+  <!-- Override for a specific phrase -->
+  <p>The phrase <span lang="fr">c'est la vie</span> means "that's life".</p>
 
-<!-- Override for a specific phrase -->
-<p>
-  The phrase <span lang="fr">c'est la vie</span> means "that's life".
-</p>
-
-<!-- Sinhala content -->
-<p lang="si">ආයුබෝවන්</p>
+  <!-- Sinhala content -->
+  <p lang="si">ආයුබෝවන්</p>
+</html>
 ```
 
 ---
@@ -87,9 +85,7 @@ Text direction:
 <p dir="auto">Let the browser detect direction</p>
 
 <!-- Override for a specific word in a bidirectional paragraph -->
-<p>
-  The Arabic word <span dir="rtl" lang="ar">مرحبا</span> means "hello".
-</p>
+<p>The Arabic word <span dir="rtl" lang="ar">مرحبا</span> means "hello".</p>
 ```
 
 ---
@@ -136,12 +132,12 @@ Controls whether and where an element appears in the keyboard Tab sequence:
 <div role="button" tabindex="0" onclick="handleClick()">Custom widget</div>
 ```
 
-|Value|Effect|
-|---|---|
-|Not present|Uses natural focusability (buttons, links, inputs are natively focusable)|
-|`0`|Adds element to tab order at its natural DOM position|
-|`-1`|Removed from tab order; can be focused via JavaScript|
-|Positive (`1`, `2`, ...)|Avoid — overrides natural order and causes confusing navigation|
+| Value                    | Effect                                                                    |
+| ------------------------ | ------------------------------------------------------------------------- |
+| Not present              | Uses natural focusability (buttons, links, inputs are natively focusable) |
+| `0`                      | Adds element to tab order at its natural DOM position                     |
+| `-1`                     | Removed from tab order; can be focused via JavaScript                     |
+| Positive (`1`, `2`, ...) | Avoid — overrides natural order and causes confusing navigation           |
 
 ---
 
@@ -150,9 +146,7 @@ Controls whether and where an element appears in the keyboard Tab sequence:
 Makes an element's content editable in the browser, like a simple text area:
 
 ```html
-<div contenteditable="true">
-  Click here to edit this text.
-</div>
+<div contenteditable="true">Click here to edit this text.</div>
 
 <!-- Prevent editing -->
 <div contenteditable="false">Read only.</div>
@@ -179,7 +173,8 @@ Images and links are draggable by default. Other elements are not.
 
 ```html
 <textarea spellcheck="true">Check my spelling.</textarea>
-<textarea spellcheck="false">No spell checking here — e.g. code editor.</textarea>
+<textarea spellcheck="false">
+No spell checking here — e.g. code editor.</textarea>
 ```
 
 Useful to disable in elements that contain code, passwords, or structured data where spell check would flag valid content as errors.
@@ -233,12 +228,7 @@ Data attributes are primarily read by CSS and JavaScript, but they also encode m
 <button data-state="idle">Save</button>
 
 <!-- Configuration for a component -->
-<div
-  data-carousel
-  data-autoplay="true"
-  data-interval="3000"
-  data-loop="true"
->
+<div data-carousel data-autoplay="true" data-interval="3000" data-loop="true">
   ...
 </div>
 ```
@@ -247,12 +237,22 @@ Data attributes are primarily read by CSS and JavaScript, but they also encode m
 
 ```css
 /* Style based on data attribute value */
-[data-role="admin"]  { font-weight: 700; color: crimson; }
-[data-state="loading"] { opacity: 0.6; cursor: wait; }
-[data-state="error"]   { border-color: crimson; }
+[data-role="admin"] {
+  font-weight: 700;
+  color: crimson;
+}
+[data-state="loading"] {
+  opacity: 0.6;
+  cursor: wait;
+}
+[data-state="error"] {
+  border-color: crimson;
+}
 
 /* Any element that has this attribute, regardless of value */
-[data-tooltip] { cursor: help; }
+[data-tooltip] {
+  cursor: help;
+}
 ```
 
 ### Naming Convention
@@ -273,3 +273,23 @@ The `dataset` API converts kebab-case to camelCase automatically.
 
 ---
 
+---
+
+## Common Mistakes
+
+```html
+<!-- WRONG: data-* attribute used as a CSS styling hook instead of a class —
+     mixes "data for JS" with "hooks for CSS", and both get harder to find -->
+<div data-card="highlighted">...</div>
+<style>
+  [data-card="highlighted"] {
+    border: 2px solid gold;
+  }
+</style>
+
+<!-- CORRECT: class for styling, data-* reserved for values JS actually reads -->
+<div class="card card--highlighted" data-student-id="4521">...</div>
+```
+
+- **Overusing `tabindex`.** A positive `tabindex` value (`tabindex="1"`, `tabindex="2"`...) creates a custom tab order that's almost always more confusing than the document's natural order. `tabindex="0"` (make focusable, natural order) and `tabindex="-1"` (focusable only via JS, e.g. after opening a modal) cover nearly every real use case.
+- **Reading `dataset` values and forgetting they're always strings.** `element.dataset.maxValue` returns `"100"`, not `100` — a common source of `"10" + 1 === "101"` bugs when a data attribute is used in arithmetic without converting it first.

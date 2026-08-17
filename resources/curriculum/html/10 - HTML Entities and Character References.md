@@ -13,10 +13,10 @@ HTML uses `<`, `>`, and `&` as syntax characters. To display them as literal tex
 <p>If x &lt; 10 and y &gt; 5, then proceed.</p>
 
 <!-- " must be escaped inside double-quoted attribute values -->
-<input value="She said &quot;hello&quot;">
+<input value='She said "hello"' />
 
 <!-- ' must be escaped inside single-quoted attribute values -->
-<input value='It&apos;s working'>
+<input value="It's working" />
 ```
 
 Any other character — if your file is saved as UTF-8 — can be written directly.
@@ -25,45 +25,45 @@ Any other character — if your file is saved as UTF-8 — can be written direct
 
 ## Named Character References
 
-|Display|Entity|Description|
-|---|---|---|
-|`<`|`&lt;`|Less-than sign|
-|`>`|`&gt;`|Greater-than sign|
-|`&`|`&amp;`|Ampersand|
-|`"`|`&quot;`|Double quote|
-|`'`|`&apos;`|Apostrophe|
-||`&nbsp;`|Non-breaking space|
-|`©`|`&copy;`|Copyright|
-|`®`|`&reg;`|Registered trademark|
-|`™`|`&trade;`|Trademark|
-|`—`|`&mdash;`|Em dash|
-|`–`|`&ndash;`|En dash|
-|`…`|`&hellip;`|Ellipsis|
-|`→`|`&rarr;`|Right arrow|
-|`←`|`&larr;`|Left arrow|
-|`↑`|`&uarr;`|Up arrow|
-|`↓`|`&darr;`|Down arrow|
-|`×`|`&times;`|Multiplication sign|
-|`÷`|`&divide;`|Division sign|
-|`±`|`&plusmn;`|Plus-minus|
-|`°`|`&deg;`|Degree sign|
-|`½`|`&frac12;`|One half|
-|`¼`|`&frac14;`|One quarter|
-|`¾`|`&frac34;`|Three quarters|
-|`€`|`&euro;`|Euro sign|
-|`£`|`&pound;`|Pound sign|
-|`¥`|`&yen;`|Yen sign|
-|`•`|`&bull;`|Bullet|
-|`"`|`&ldquo;`|Left double quote|
-|`"`|`&rdquo;`|Right double quote|
-|`'`|`&lsquo;`|Left single quote|
-|`'`|`&rsquo;`|Right single quote|
-|`∞`|`&infin;`|Infinity|
-|`≠`|`&ne;`|Not equal to|
-|`≤`|`&le;`|Less than or equal to|
-|`≥`|`&ge;`|Greater than or equal to|
-|`π`|`&pi;`|Greek pi|
-|`√`|`&radic;`|Square root|
+| Display | Entity     | Description              |
+| ------- | ---------- | ------------------------ |
+| `<`     | `&lt;`     | Less-than sign           |
+| `>`     | `&gt;`     | Greater-than sign        |
+| `&`     | `&amp;`    | Ampersand                |
+| `"`     | `&quot;`   | Double quote             |
+| `'`     | `&apos;`   | Apostrophe               |
+|         | `&nbsp;`   | Non-breaking space       |
+| `©`     | `&copy;`   | Copyright                |
+| `®`     | `&reg;`    | Registered trademark     |
+| `™`     | `&trade;`  | Trademark                |
+| `—`     | `&mdash;`  | Em dash                  |
+| `–`     | `&ndash;`  | En dash                  |
+| `…`     | `&hellip;` | Ellipsis                 |
+| `→`     | `&rarr;`   | Right arrow              |
+| `←`     | `&larr;`   | Left arrow               |
+| `↑`     | `&uarr;`   | Up arrow                 |
+| `↓`     | `&darr;`   | Down arrow               |
+| `×`     | `&times;`  | Multiplication sign      |
+| `÷`     | `&divide;` | Division sign            |
+| `±`     | `&plusmn;` | Plus-minus               |
+| `°`     | `&deg;`    | Degree sign              |
+| `½`     | `&frac12;` | One half                 |
+| `¼`     | `&frac14;` | One quarter              |
+| `¾`     | `&frac34;` | Three quarters           |
+| `€`     | `&euro;`   | Euro sign                |
+| `£`     | `&pound;`  | Pound sign               |
+| `¥`     | `&yen;`    | Yen sign                 |
+| `•`     | `&bull;`   | Bullet                   |
+| `"`     | `&ldquo;`  | Left double quote        |
+| `"`     | `&rdquo;`  | Right double quote       |
+| `'`     | `&lsquo;`  | Left single quote        |
+| `'`     | `&rsquo;`  | Right single quote       |
+| `∞`     | `&infin;`  | Infinity                 |
+| `≠`     | `&ne;`     | Not equal to             |
+| `≤`     | `&le;`     | Less than or equal to    |
+| `≥`     | `&ge;`     | Greater than or equal to |
+| `π`     | `&pi;`     | Greek pi                 |
+| `√`     | `&radic;`  | Square root              |
 
 ---
 
@@ -72,14 +72,20 @@ Any other character — if your file is saved as UTF-8 — can be written direct
 Any Unicode character can be referenced by its code point — decimal or hexadecimal:
 
 ```html
-&#169;      <!-- © — decimal -->
-&#x00A9;    <!-- © — hexadecimal (U+00A9) -->
+&#169;
+<!-- © — decimal -->
+&#x00A9;
+<!-- © — hexadecimal (U+00A9) -->
 
-&#8364;     <!-- € — decimal -->
-&#x20AC;    <!-- € — hexadecimal -->
+&#8364;
+<!-- € — decimal -->
+&#x20AC;
+<!-- € — hexadecimal -->
 
-&#128512;   <!-- 😀 — emoji, decimal -->
-&#x1F600;   <!-- 😀 — emoji, hexadecimal -->
+&#128512;
+<!-- 😀 — emoji, decimal -->
+&#x1F600;
+<!-- 😀 — emoji, hexadecimal -->
 ```
 
 The hex form is more common since Unicode documentation uses hex (U+00A9, U+20AC, etc.).
@@ -124,7 +130,7 @@ Inside attribute values, be more careful:
 
 ```html
 <!-- Double-quoted attribute — escape " inside it -->
-<meta name="description" content="She said &quot;hello&quot;.">
+<meta name="description" content='She said "hello".' />
 
 <!-- URL attribute — escape & inside it -->
 <a href="/search?lang=si&amp;q=hello">Search</a>
@@ -155,3 +161,24 @@ The browser renders this as:
 ---
 
 _Next: [The `<head>` Element and Metadata](https://claude.ai/chat/11%20-%20The%20head%20Element%20and%20Metadata.md)_
+---
+
+## Common Mistakes
+
+```html
+<!-- WRONG: raw < in text content — the browser tries to parse it as
+     the start of a tag and the rest of the sentence can disappear -->
+<p>To create a tag, type < followed by the element name.</p>
+
+<!-- CORRECT: escape it as an entity -->
+<p>To create a tag, type &lt; followed by the element name.</p>
+
+<!-- WRONG: raw & followed by something that looks like an entity name —
+     browsers may try (and fail) to resolve it -->
+<p>Terms & Conditions</p>
+
+<!-- CORRECT -->
+<p>Terms &amp; Conditions</p>
+```
+
+The three characters that actually need escaping in normal text content are `<`, `>`, and `&` — everything else (curly quotes, em dashes, accented letters) can usually just be typed directly since modern files are UTF-8 by default (see Module 01's `<meta charset="UTF-8">`). Reach for a named entity like `&copy;` or `&mdash;` mainly when you can't easily type the character itself, not as a blanket habit for every non-ASCII symbol.

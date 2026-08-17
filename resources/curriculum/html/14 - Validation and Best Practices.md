@@ -34,55 +34,59 @@ The best day-to-day reference is **MDN Web Docs** at [developer.mozilla.org](htt
 ```html
 <!-- ERROR: Unclosed element -->
 <div>
-  <p>Text
+  <p>
+    Text
 
-<!-- FIX -->
-<div>
-  <p>Text</p>
+    <!-- FIX -->
+  </p>
+
+  <div>
+    <p>Text</p>
+  </div>
+
+  <!-- ERROR: Duplicate id -->
+  <div id="header">...</div>
+  <div id="header">...</div>
+  <!-- two elements with the same id -->
+
+  <!-- FIX: ids must be unique -->
+  <div id="site-header">...</div>
+  <div id="page-header">...</div>
+
+  <!-- ERROR: <li> not inside <ul>, <ol>, or <menu> -->
+  <div>
+    <li>Item</li>
+  </div>
+
+  <!-- FIX -->
+  <ul>
+    <li>Item</li>
+  </ul>
+
+  <!-- ERROR: Block element inside inline element -->
+  <a href="/page">
+    <div>Click here</div>
+    <!-- <div> is block, cannot be inside <a> normally -->
+  </a>
+
+  <!-- FIX: use a block-level link or CSS -->
+  <a href="/page" style="display: block">Click here</a>
+
+  <!-- ERROR: Obsolete attributes -->
+  <table border="1" cellpadding="5">
+    <!-- deprecated attributes -->
+
+    <!-- FIX: use CSS instead -->
+    <table class="data-table">
+      <!-- ERROR: Missing required attribute -->
+      <img src="photo.jpg" />
+      <!-- missing alt -->
+
+      <!-- FIX -->
+      <img src="photo.jpg" alt="Description of photo" />
+    </table>
+  </table>
 </div>
-
-
-<!-- ERROR: Duplicate id -->
-<div id="header">...</div>
-<div id="header">...</div>   <!-- two elements with the same id -->
-
-<!-- FIX: ids must be unique -->
-<div id="site-header">...</div>
-<div id="page-header">...</div>
-
-
-<!-- ERROR: <li> not inside <ul>, <ol>, or <menu> -->
-<div>
-  <li>Item</li>
-</div>
-
-<!-- FIX -->
-<ul>
-  <li>Item</li>
-</ul>
-
-
-<!-- ERROR: Block element inside inline element -->
-<a href="/page">
-  <div>Click here</div>   <!-- <div> is block, cannot be inside <a> normally -->
-</a>
-
-<!-- FIX: use a block-level link or CSS -->
-<a href="/page" style="display: block">Click here</a>
-
-
-<!-- ERROR: Obsolete attributes -->
-<table border="1" cellpadding="5">    <!-- deprecated attributes -->
-
-<!-- FIX: use CSS instead -->
-<table class="data-table">
-
-
-<!-- ERROR: Missing required attribute -->
-<img src="photo.jpg">    <!-- missing alt -->
-
-<!-- FIX -->
-<img src="photo.jpg" alt="Description of photo">
 ```
 
 ---
@@ -95,10 +99,12 @@ The best day-to-day reference is **MDN Web Docs** at [developer.mozilla.org](htt
 <!-- Every HTML file should start with these four lines -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Descriptive Page Title — Site Name</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Descriptive Page Title — Site Name</title>
+  </head>
+</html>
 ```
 
 - [ ] `<!DOCTYPE html>` is the very first line — no whitespace before it
@@ -167,15 +173,22 @@ The best day-to-day reference is **MDN Web Docs** at [developer.mozilla.org](htt
 
 ```html
 <!-- Don't use presentational HTML attributes -->
-<font size="5" color="red">Big red text</font>   <!-- obsolete -->
-<b>Bold</b>           <!-- use <strong> for important text, or CSS font-weight -->
-<i>Italic</i>         <!-- use <em> for emphasis, or CSS font-style -->
-<br><br><br>          <!-- don't use line breaks for spacing — use CSS margin/padding -->
-<hr>                  <!-- only use <hr> for thematic breaks, not visual dividers -->
-<center>Content</center>  <!-- obsolete — use CSS text-align or flexbox -->
+<font size="5" color="red">Big red text</font>
+<!-- obsolete -->
+<b>Bold</b>
+<!-- use <strong> for important text, or CSS font-weight -->
+<i>Italic</i>
+<!-- use <em> for emphasis, or CSS font-style -->
+<br /><br /><br />
+<!-- don't use line breaks for spacing — use CSS margin/padding -->
+<hr />
+<!-- only use <hr> for thematic breaks, not visual dividers -->
+<center>Content</center>
+<!-- obsolete — use CSS text-align or flexbox -->
 
 <!-- Don't write inline styles for layout -->
-<div style="float: left; margin: 10px; font-size: 14px;">...</div>  <!-- hard to maintain -->
+<div style="float: left; margin: 10px; font-size: 14px;">...</div>
+<!-- hard to maintain -->
 
 <!-- Don't use tables for layout -->
 <table>
@@ -194,13 +207,37 @@ The best day-to-day reference is **MDN Web Docs** at [developer.mozilla.org](htt
 
 ## Useful Tools
 
-|Tool|Use|
-|---|---|
-|[validator.w3.org](https://validator.w3.org/)|Validate HTML syntax|
-|[developer.mozilla.org](https://developer.mozilla.org/)|Element and attribute reference|
-|Browser DevTools → Lighthouse|Accessibility, performance, SEO audit|
-|Browser DevTools → Accessibility tree|See what screen readers see|
-|[wave.webaim.org](https://wave.webaim.org/)|Accessibility evaluation|
-|HTMLHint (VS Code extension)|Inline HTML linting|
+| Tool                                                    | Use                                   |
+| ------------------------------------------------------- | ------------------------------------- |
+| [validator.w3.org](https://validator.w3.org/)           | Validate HTML syntax                  |
+| [developer.mozilla.org](https://developer.mozilla.org/) | Element and attribute reference       |
+| Browser DevTools → Lighthouse                           | Accessibility, performance, SEO audit |
+| Browser DevTools → Accessibility tree                   | See what screen readers see           |
+| [wave.webaim.org](https://wave.webaim.org/)             | Accessibility evaluation              |
+| HTMLHint (VS Code extension)                            | Inline HTML linting                   |
 
 ---
+
+---
+
+## Automating Validation in CI
+
+Running the validator by hand before every deploy doesn't scale once a project has more than a couple of pages. A cheap way to make it automatic:
+
+```yaml
+# .github/workflows/html-validate.yml
+name: HTML Validate
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install -g html-validate
+      - run: html-validate "**/*.html"
+```
+
+This fails the build the same way a broken test would — a missing `alt`, a duplicate `id`, or an unclosed tag gets caught in the pull request instead of on the live site. For a framework-rendered site (Next.js, React) rather than static `.html` files, the equivalent is running Lighthouse CI or `axe-core` against the built output, since there's no static markup to lint directly.
