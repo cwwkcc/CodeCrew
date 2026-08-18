@@ -55,8 +55,8 @@ This three-phase approach is why:
 
 ```javascript
 // app.js
-import { greet } from './utils.js';
-greet('Ashan');
+import { greet } from "./utils.js";
+greet("Ashan");
 ```
 
 - `type="module"` is required — without it, `import` is a syntax error
@@ -77,13 +77,13 @@ Or use the `.mjs` extension for individual module files.
 
 ```javascript
 // Works in Node.js ESM
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 // __dirname is not available in ESM — reconstruct it
 const __filename = fileURLToPath(import.meta.url);
-const __dirname  = path.dirname(__filename);
+const __dirname = path.dirname(__filename);
 ```
 
 ---
@@ -94,14 +94,26 @@ const __dirname  = path.dirname(__filename);
 
 ```javascript
 // Export at declaration
-export const API_URL = 'https://api.paideon.lk';
-export function greet(name) { return `Hello, ${name}`; }
-export class User { constructor(name) { this.name = name; } }
+export const API_URL = "https://api.paideon.lk";
+export function greet(name) {
+  return `Hello, ${name}`;
+}
+export class User {
+  constructor(name) {
+    this.name = name;
+  }
+}
 
 // Export at the bottom (preferred — all exports visible in one place)
-const API_URL = 'https://api.paideon.lk';
-function greet(name) { return `Hello, ${name}`; }
-class User { constructor(name) { this.name = name; } }
+const API_URL = "https://api.paideon.lk";
+function greet(name) {
+  return `Hello, ${name}`;
+}
+class User {
+  constructor(name) {
+    this.name = name;
+  }
+}
 
 export { API_URL, greet, User };
 
@@ -132,23 +144,23 @@ Aggregate and re-export from an index file:
 
 ```javascript
 // src/utils/index.js — barrel file
-export { formatDate }   from './date.js';
-export { slugify }      from './string.js';
-export { debounce }     from './function.js';
+export { formatDate } from "./date.js";
+export { slugify } from "./string.js";
+export { debounce } from "./function.js";
 
 // Re-export everything
-export * from './date.js';
+export * from "./date.js";
 
 // Re-export default as named
-export { default as DateUtils } from './date.js';
+export { default as DateUtils } from "./date.js";
 
 // Re-export and rename
-export { formatDate as format } from './date.js';
+export { formatDate as format } from "./date.js";
 ```
 
 ```javascript
 // Consumers import from one place
-import { formatDate, slugify, debounce } from './utils';
+import { formatDate, slugify, debounce } from "./utils";
 ```
 
 ---
@@ -157,43 +169,43 @@ import { formatDate, slugify, debounce } from './utils';
 
 ```javascript
 // Named imports
-import { greet, User } from './utils.js';
+import { greet, User } from "./utils.js";
 
 // Named import with rename
-import { greet as sayHello } from './utils.js';
+import { greet as sayHello } from "./utils.js";
 
 // Default import (name is arbitrary)
-import greet from './utils.js';
-import MyGreeter from './utils.js';   // same thing, different name
+import greet from "./utils.js";
+import MyGreeter from "./utils.js"; // same thing, different name
 
 // Default + named in one line
-import greet, { API_URL, User } from './utils.js';
+import greet, { API_URL, User } from "./utils.js";
 
 // Namespace import — all named exports in one object
-import * as Utils from './utils.js';
-Utils.greet('Ashan');
+import * as Utils from "./utils.js";
+Utils.greet("Ashan");
 Utils.API_URL;
 
 // Side-effect only import — run the module, import nothing
-import './polyfills.js';
-import './register-service-worker.js';
+import "./polyfills.js";
+import "./register-service-worker.js";
 ```
 
 ### File Extensions and Resolution
 
 ```javascript
 // In browsers — must include extension
-import { greet } from './utils.js';     // works
-import { greet } from './utils';        // fails in browser
+import { greet } from "./utils.js"; // works
+import { greet } from "./utils"; // fails in browser
 
 // In Node.js with bundlers (Vite, webpack) — extension optional
-import { greet } from './utils';        // bundler resolves it
+import { greet } from "./utils"; // bundler resolves it
 
 // Node built-ins with node: prefix (recommended in Node ESM)
-import { readFile } from 'node:fs/promises';
+import { readFile } from "node:fs/promises";
 
 // Package imports
-import React from 'react';             // resolves to node_modules/react
+import React from "react"; // resolves to node_modules/react
 ```
 
 ---
@@ -207,17 +219,21 @@ No matter how many files import the same module, it runs exactly once. The same 
 ```javascript
 // counter.js
 let count = 0;
-export function increment() { count++; }
-export function getCount() { return count; }
+export function increment() {
+  count++;
+}
+export function getCount() {
+  return count;
+}
 
 // a.js
-import { increment } from './counter.js';
-increment();  // count is now 1
+import { increment } from "./counter.js";
+increment(); // count is now 1
 
 // b.js
-import { increment, getCount } from './counter.js';
-increment();  // count is now 2
-console.log(getCount());   // 2 — same counter module
+import { increment, getCount } from "./counter.js";
+increment(); // count is now 2
+console.log(getCount()); // 2 — same counter module
 ```
 
 This is useful for shared state (like singletons) but also a potential source of bugs if you expect isolation.
@@ -229,13 +245,15 @@ ES module exports are **live bindings** — not copies of values. When the expor
 ```javascript
 // counter.js
 export let count = 0;
-export function increment() { count++; }
+export function increment() {
+  count++;
+}
 
 // main.js
-import { count, increment } from './counter.js';
-console.log(count);   // 0
+import { count, increment } from "./counter.js";
+console.log(count); // 0
 increment();
-console.log(count);   // 1 — live binding, reflects the update
+console.log(count); // 1 — live binding, reflects the update
 ```
 
 This is different from CommonJS, where `module.exports = value` exports a copy.
@@ -248,27 +266,27 @@ Static `import` statements are resolved at parse time. Dynamic `import()` is a f
 
 ```javascript
 // Load a module only when needed
-const { greet } = await import('./utils.js');
-greet('Ashan');
+const { greet } = await import("./utils.js");
+greet("Ashan");
 
 // In an event handler — lazy load a heavy feature
-button.addEventListener('click', async () => {
-  const { renderChart } = await import('./chart.js');
+button.addEventListener("click", async () => {
+  const { renderChart } = await import("./chart.js");
   renderChart(data);
 });
 
 // Conditional loading
 const module = await import(
-  isDevelopment ? './dev-tools.js' : './prod-logger.js'
+  isDevelopment ? "./dev-tools.js" : "./prod-logger.js"
 );
 ```
 
 Dynamic import returns a Promise that resolves to the module's namespace object (all named exports + `default`):
 
 ```javascript
-const module = await import('./utils.js');
-module.greet('Ashan');
-module.default('Ashan');    // access default export
+const module = await import("./utils.js");
+module.greet("Ashan");
+module.default("Ashan"); // access default export
 ```
 
 ### Code Splitting with Dynamic Import
@@ -277,17 +295,17 @@ Bundlers (Vite, webpack) treat each dynamic import as a split point and create a
 
 ```javascript
 // React lazy loading — component loads only when rendered
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense } from "react";
 
-const Dashboard = lazy(() => import('./pages/Dashboard'));
-const Profile   = lazy(() => import('./pages/Profile'));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 function App() {
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile"   element={<Profile />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Suspense>
   );
@@ -317,19 +335,19 @@ Map bare specifiers to URLs — enables package imports in the browser without a
 
 ```html
 <script type="importmap">
-{
-  "imports": {
-    "react":     "https://esm.sh/react@18",
-    "react-dom": "https://esm.sh/react-dom@18",
-    "lodash":    "https://esm.sh/lodash@4",
-    "./utils":   "/src/utils/index.js"
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18",
+      "react-dom": "https://esm.sh/react-dom@18",
+      "lodash": "https://esm.sh/lodash@4",
+      "./utils": "/src/utils/index.js"
+    }
   }
-}
 </script>
 
 <script type="module">
-  import React from 'react';       // resolves to esm.sh URL
-  import _ from 'lodash';
+  import React from "react"; // resolves to esm.sh URL
+  import _ from "lodash";
 </script>
 ```
 
@@ -337,26 +355,26 @@ Map bare specifiers to URLs — enables package imports in the browser without a
 
 ## 7. CommonJS vs ES Modules
 
-||CommonJS (CJS)|ES Modules (ESM)|
-|---|---|---|
-|Syntax|`require()` / `module.exports`|`import` / `export`|
-|Loading|Synchronous|Asynchronous|
-|Analysis|Runtime|Static (parse time)|
-|Exports|Copies of values|Live bindings|
-|Tree-shaking|No|Yes|
-|Default in|Node.js (legacy)|Browsers + modern Node|
-|File extension|`.js` / `.cjs`|`.js` (with `"type":"module"`) / `.mjs`|
+|                | CommonJS (CJS)                 | ES Modules (ESM)                        |
+| -------------- | ------------------------------ | --------------------------------------- |
+| Syntax         | `require()` / `module.exports` | `import` / `export`                     |
+| Loading        | Synchronous                    | Asynchronous                            |
+| Analysis       | Runtime                        | Static (parse time)                     |
+| Exports        | Copies of values               | Live bindings                           |
+| Tree-shaking   | No                             | Yes                                     |
+| Default in     | Node.js (legacy)               | Browsers + modern Node                  |
+| File extension | `.js` / `.cjs`                 | `.js` (with `"type":"module"`) / `.mjs` |
 
 ```javascript
 // CommonJS
-const fs      = require('fs');
-const { join } = require('path');
+const fs = require("fs");
+const { join } = require("path");
 module.exports = { greet };
 module.exports.greet = greet;
 
 // ESM
-import fs              from 'node:fs';
-import { join }        from 'node:path';
+import fs from "node:fs";
+import { join } from "node:path";
 export { greet };
 export default greet;
 ```
@@ -365,14 +383,14 @@ export default greet;
 
 ```javascript
 // ESM can import CJS (Node.js)
-import _ from 'lodash';                // lodash is CJS — works, gets module.exports as default
-import { merge } from 'lodash';        // may or may not work — depends on the package
+import _ from "lodash"; // lodash is CJS — works, gets module.exports as default
+import { merge } from "lodash"; // may or may not work — depends on the package
 
 // CJS cannot natively require() ESM
-const { greet } = require('./esm-module.mjs');  // ERROR — CJS cannot require ESM
+const { greet } = require("./esm-module.mjs"); // ERROR — CJS cannot require ESM
 
 // Workaround — dynamic import in CJS
-const { greet } = await import('./esm-module.mjs');
+const { greet } = await import("./esm-module.mjs");
 ```
 
 ---
@@ -409,19 +427,19 @@ After tree shaking, `slugify`, `debounce`, and `throttle` are NOT included in th
 
 ```javascript
 // BAD — named import from barrel that re-exports a side-effectful module
-import { Button } from '@mui/material';
+import { Button } from "@mui/material";
 // Bundler may import the entire library if it cannot determine
 // what else gets imported or if any module has side effects
 
 // GOOD — direct path import (always tree-shakes cleanly)
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 
 // BAD — dynamic property access defeats tree shaking
-import * as Utils from './utils';
-const fn = Utils[userInput];   // bundler cannot know which exports are used
+import * as Utils from "./utils";
+const fn = Utils[userInput]; // bundler cannot know which exports are used
 
 // BAD — CJS module — cannot tree-shake
-const { formatDate } = require('./utils');
+const { formatDate } = require("./utils");
 ```
 
 ### `sideEffects` in package.json
@@ -448,12 +466,12 @@ A circular dependency is when A imports B and B imports A. ES modules handle thi
 
 ```javascript
 // a.js
-import { b } from './b.js';
-export const a = 'A: ' + b;
+import { b } from "./b.js";
+export const a = "A: " + b;
 
 // b.js
-import { a } from './a.js';
-export const b = 'B: ' + a;
+import { a } from "./a.js";
+export const b = "B: " + a;
 ```
 
 In ESM, the bindings exist before evaluation. When `b.js` runs and tries to read `a`, the binding exists but has not been evaluated yet — it is `undefined` at that moment. The value fills in later.
@@ -463,18 +481,20 @@ In ESM, the bindings exist before evaluation. When `b.js` runs and tries to read
 ```javascript
 // Option 1 — extract shared code into a third module
 // shared.js
-export const BASE = 'base';
+export const BASE = "base";
 
 // a.js
-import { BASE } from './shared.js';
+import { BASE } from "./shared.js";
 
 // b.js
-import { BASE } from './shared.js';
+import { BASE } from "./shared.js";
 
 // Option 2 — delay access using a function
 // a.js
-import { getB } from './b.js';
-export function getA() { return 'A: ' + getB(); }
+import { getB } from "./b.js";
+export function getA() {
+  return "A: " + getB();
+}
 // The function is not called until after both modules are evaluated
 ```
 
@@ -499,14 +519,14 @@ src/
 
 ```javascript
 // utils/index.js
-export { formatDate, parseDate }     from './date.js';
-export { slugify, truncate }         from './string.js';
-export { clamp, lerp, formatNumber } from './number.js';
+export { formatDate, parseDate } from "./date.js";
+export { slugify, truncate } from "./string.js";
+export { clamp, lerp, formatNumber } from "./number.js";
 ```
 
 ```javascript
 // Consumer
-import { formatDate, slugify } from './utils';
+import { formatDate, slugify } from "./utils";
 // instead of: import { formatDate } from './utils/date'
 //             import { slugify } from './utils/string'
 ```
@@ -517,10 +537,14 @@ A module runs once — use this for shared state:
 
 ```javascript
 // store.js — a simple shared store
-const state = { user: null, theme: 'light' };
+const state = { user: null, theme: "light" };
 
-export function getState() { return { ...state }; }
-export function setState(updates) { Object.assign(state, updates); }
+export function getState() {
+  return { ...state };
+}
+export function setState(updates) {
+  Object.assign(state, updates);
+}
 ```
 
 ### Lazy Module Cache
@@ -532,7 +556,7 @@ let _heavyModule = null;
 
 async function getHeavyModule() {
   if (!_heavyModule) {
-    _heavyModule = await import('./heavy.js');
+    _heavyModule = await import("./heavy.js");
   }
   return _heavyModule;
 }
@@ -543,14 +567,14 @@ async function getHeavyModule() {
 Module-specific metadata:
 
 ```javascript
-import.meta.url       // absolute URL of the current module file
-import.meta.env       // Vite/bundler environment variables
-import.meta.env.DEV   // true in development
-import.meta.env.PROD  // true in production
-import.meta.env.VITE_API_URL  // custom env var (must start with VITE_)
+import.meta.url; // absolute URL of the current module file
+import.meta.env; // Vite/bundler environment variables
+import.meta.env.DEV; // true in development
+import.meta.env.PROD; // true in production
+import.meta.env.VITE_API_URL; // custom env var (must start with VITE_)
 
 // Resolve a path relative to the current module
-new URL('./assets/icon.svg', import.meta.url).href
+new URL("./assets/icon.svg", import.meta.url).href;
 ```
 
 ---

@@ -42,9 +42,9 @@ const dog = {
 // Link dog to animal — dog's prototype is animal
 Object.setPrototypeOf(dog, animal);
 
-dog.bark();     // "woof!" — found on dog directly
-dog.breathe();  // "inhale... exhale..." — not on dog, found on animal via prototype chain
-dog.fly();      // TypeError: dog.fly is not a function — not found anywhere in the chain
+dog.bark(); // "woof!" — found on dog directly
+dog.breathe(); // "inhale... exhale..." — not on dog, found on animal via prototype chain
+dog.fly(); // TypeError: dog.fly is not a function — not found anywhere in the chain
 ```
 
 ---
@@ -76,13 +76,13 @@ When you access dog.fly():
 
 ```javascript
 const obj = {};
-obj.toString();      // "[object Object]"
+obj.toString(); // "[object Object]"
 obj.hasOwnProperty; // function — from Object.prototype
-obj.valueOf();       // the object itself — from Object.prototype
+obj.valueOf(); // the object itself — from Object.prototype
 
 // Proving the chain:
-Object.getPrototypeOf(obj) === Object.prototype;   // true
-Object.getPrototypeOf(Object.prototype) === null;  // true — end of chain
+Object.getPrototypeOf(obj) === Object.prototype; // true
+Object.getPrototypeOf(Object.prototype) === null; // true — end of chain
 ```
 
 ---
@@ -97,11 +97,11 @@ This is the **instance's link** to its prototype. Every object has it. It's th
 
 ```javascript
 const dog = {};
-dog.__proto__ === Object.prototype;  // true
+dog.__proto__ === Object.prototype; // true
 
 // Modern equivalent (prefer these over __proto__):
-Object.getPrototypeOf(dog) === Object.prototype;  // true
-Object.setPrototypeOf(dog, animal);               // sets the prototype
+Object.getPrototypeOf(dog) === Object.prototype; // true
+Object.setPrototypeOf(dog, animal); // sets the prototype
 ```
 
 `__proto__` is a legacy accessor property. Use `Object.getPrototypeOf` and `Object.setPrototypeOf` in production code.
@@ -115,7 +115,7 @@ function Dog(name) {
   this.name = name;
 }
 
-Dog.prototype.bark = function() {
+Dog.prototype.bark = function () {
   return `${this.name} says woof!`;
 };
 
@@ -127,8 +127,8 @@ const rex = new Dog("Rex");
 // 3. Calls Dog() with `this` = the new object
 // 4. Returns the new object
 
-rex.__proto__ === Dog.prototype;  // true
-rex.bark();                        // "Rex says woof!" — found on Dog.prototype
+rex.__proto__ === Dog.prototype; // true
+rex.bark(); // "Rex says woof!" — found on Dog.prototype
 ```
 
 ```
@@ -149,22 +149,24 @@ rex (instance)                               │
 ```javascript
 const base = {
   type: "base",
-  greet() { return "Hello from base"; },
+  greet() {
+    return "Hello from base";
+  },
 };
 
 const child = Object.create(base);
-child.type = "child";  // shadows base.type
+child.type = "child"; // shadows base.type
 
 const grandchild = Object.create(child);
 
 // Lookups on grandchild:
-grandchild.type;    // "child" — found on child (shadows base.type)
+grandchild.type; // "child" — found on child (shadows base.type)
 grandchild.greet(); // "Hello from base" — walks up: grandchild → child → base ✓
 
 // Setting a property always sets it on the object DIRECTLY
-grandchild.type = "grandchild";  // does NOT modify child.type
-grandchild.type;    // "grandchild" — own property
-child.type;         // "child" — unchanged
+grandchild.type = "grandchild"; // does NOT modify child.type
+grandchild.type; // "grandchild" — own property
+child.type; // "child" — unchanged
 ```
 
 ### Shadowing
@@ -176,12 +178,12 @@ function Animal(name) {
   this.name = name;
 }
 
-Animal.prototype.toString = function() {
+Animal.prototype.toString = function () {
   return `Animal: ${this.name}`;
 };
 
 const cat = new Animal("Whiskers");
-cat.toString();  // "Animal: Whiskers" — shadows Object.prototype.toString
+cat.toString(); // "Animal: Whiskers" — shadows Object.prototype.toString
 
 // Prototype chain lookup order:
 // 1. cat's own properties
@@ -198,20 +200,26 @@ cat.toString();  // "Animal: Whiskers" — shadows Object.prototype.toString
 
 ```javascript
 const vehicleProto = {
-  start() { return `${this.make} ${this.model} starting...`; },
-  stop()  { return `${this.make} ${this.model} stopping`; },
+  start() {
+    return `${this.make} ${this.model} starting...`;
+  },
+  stop() {
+    return `${this.make} ${this.model} stopping`;
+  },
 };
 
 const carProto = Object.create(vehicleProto);
-carProto.honk = function() { return "beep!"; };
+carProto.honk = function () {
+  return "beep!";
+};
 
 // Creating instances
 const myCar = Object.create(carProto);
 myCar.make = "Toyota";
 myCar.model = "Corolla";
 
-myCar.start();  // "Toyota Corolla starting..."  — from vehicleProto
-myCar.honk();   // "beep!"                       — from carProto
+myCar.start(); // "Toyota Corolla starting..."  — from vehicleProto
+myCar.honk(); // "beep!"                       — from carProto
 ```
 
 ```javascript
@@ -219,7 +227,7 @@ myCar.honk();   // "beep!"                       — from carProto
 // Creates an object with NO prototype chain
 const pureMap = Object.create(null);
 pureMap.key = "value";
-pureMap.toString;  // undefined — no Object.prototype methods!
+pureMap.toString; // undefined — no Object.prototype methods!
 
 // Useful as a clean key-value store with no inherited properties
 // (avoids issues where "constructor", "toString" etc. are valid keys)
@@ -241,22 +249,22 @@ function Person(name, email) {
 
 // Methods are added to .prototype — shared by all instances
 // NOT added to `this` — that would create a new function per instance
-Person.prototype.greet = function() {
+Person.prototype.greet = function () {
   return `Hi, I'm ${this.name}`;
 };
 
-Person.prototype.toJSON = function() {
+Person.prototype.toJSON = function () {
   return { name: this.name, email: this.email };
 };
 
 const alice = new Person("Alice", "alice@example.com");
-const bob   = new Person("Bob",   "bob@example.com");
+const bob = new Person("Bob", "bob@example.com");
 
-alice.greet();  // "Hi, I'm Alice"
-bob.greet();    // "Hi, I'm Bob"
+alice.greet(); // "Hi, I'm Alice"
+bob.greet(); // "Hi, I'm Bob"
 
 // Both instances share the SAME greet function from Person.prototype
-alice.greet === bob.greet;  // true — same function reference
+alice.greet === bob.greet; // true — same function reference
 ```
 
 ### What `new` Actually Does
@@ -281,7 +289,7 @@ function new_simulation(Constructor, ...args) {
 
 ```javascript
 // If you forget `new`:
-const alice = Person("Alice", "alice@example.com");  // No `new`
+const alice = Person("Alice", "alice@example.com"); // No `new`
 // `this` inside Person becomes the global object (or undefined in strict mode)
 // `alice` is undefined — Person() returns nothing
 // window.name = "Alice"  ← global pollution (in sloppy mode)!
@@ -289,7 +297,7 @@ const alice = Person("Alice", "alice@example.com");  // No `new`
 // Defensive pattern for forgetting new (older code):
 function Person(name) {
   if (!(this instanceof Person)) {
-    return new Person(name);  // called without new — fix it
+    return new Person(name); // called without new — fix it
   }
   this.name = name;
 }
@@ -322,11 +330,12 @@ function Animal(name) {
   this.name = name;
 }
 
-Animal.prototype.speak = function() {
+Animal.prototype.speak = function () {
   return `${this.name} makes a sound`;
 };
 
-Animal.create = function(name) {  // static → on the constructor, not prototype
+Animal.create = function (name) {
+  // static → on the constructor, not prototype
   return new Animal(name);
 };
 ```
@@ -334,13 +343,17 @@ Animal.create = function(name) {  // static → on the constructor, not prototyp
 ```javascript
 // Proving they're the same:
 class Dog {
-  constructor(name) { this.name = name; }
-  bark() { return "woof!"; }
+  constructor(name) {
+    this.name = name;
+  }
+  bark() {
+    return "woof!";
+  }
 }
 
-typeof Dog;                             // "function" — class IS a function
-Dog.prototype.bark;                     // function — method is on prototype
-Object.getPrototypeOf(Dog.prototype);   // Object.prototype
+typeof Dog; // "function" — class IS a function
+Dog.prototype.bark; // function — method is on prototype
+Object.getPrototypeOf(Dog.prototype); // Object.prototype
 ```
 
 ### Class Fields (ES2022)
@@ -359,13 +372,13 @@ class Counter {
   }
 
   getSecret() {
-    return this.#secret;  // accessible inside the class
+    return this.#secret; // accessible inside the class
   }
 }
 
 const c = new Counter();
-c.count;    // 0 — accessible
-c.#secret;  // SyntaxError — genuinely private, not just convention
+c.count; // 0 — accessible
+c.#secret; // SyntaxError — genuinely private, not just convention
 ```
 
 ---
@@ -385,7 +398,7 @@ class Animal {
 
 class Dog extends Animal {
   constructor(name, breed) {
-    super(name);  // MUST call super() before using `this`
+    super(name); // MUST call super() before using `this`
     this.breed = breed;
   }
 
@@ -416,13 +429,13 @@ rex (Dog instance)
 ```javascript
 const rex = new Dog("Rex", "Labrador");
 
-rex.speak();     // "Rex barks"            — Dog.prototype.speak
-rex.describe();  // "Rex makes a sound and is a Labrador" — super.speak() → Animal.prototype.speak
-rex.toString();  // "[object Object]"       — Object.prototype.toString
+rex.speak(); // "Rex barks"            — Dog.prototype.speak
+rex.describe(); // "Rex makes a sound and is a Labrador" — super.speak() → Animal.prototype.speak
+rex.toString(); // "[object Object]"       — Object.prototype.toString
 
-rex instanceof Dog;     // true
-rex instanceof Animal;  // true — checks the entire prototype chain
-rex instanceof Object;  // true — always true for objects
+rex instanceof Dog; // true
+rex instanceof Animal; // true — checks the entire prototype chain
+rex instanceof Object; // true — always true for objects
 ```
 
 ---
@@ -435,24 +448,24 @@ const child = Object.create(parent);
 child.own = true;
 
 // `in` operator — checks the ENTIRE prototype chain
-"own"       in child;  // true — own property
-"inherited" in child;  // true — found on parent
-"missing"   in child;  // false — not found anywhere
+"own" in child; // true — own property
+"inherited" in child; // true — found on parent
+"missing" in child; // false — not found anywhere
 
 // hasOwnProperty — checks ONLY own properties (not the chain)
-child.hasOwnProperty("own");        // true
-child.hasOwnProperty("inherited");  // false — it's on parent, not child
-child.hasOwnProperty("missing");    // false
+child.hasOwnProperty("own"); // true
+child.hasOwnProperty("inherited"); // false — it's on parent, not child
+child.hasOwnProperty("missing"); // false
 
 // Modern equivalent: Object.hasOwn (ES2022 — avoids edge cases)
-Object.hasOwn(child, "own");        // true
-Object.hasOwn(child, "inherited");  // false
+Object.hasOwn(child, "own"); // true
+Object.hasOwn(child, "inherited"); // false
 
 // Why Object.hasOwn is safer:
-const obj = Object.create(null);  // no prototype — no hasOwnProperty!
+const obj = Object.create(null); // no prototype — no hasOwnProperty!
 obj.key = "value";
-obj.hasOwnProperty("key");       // TypeError — hasOwnProperty doesn't exist
-Object.hasOwn(obj, "key");       // true — works on null-prototype objects
+obj.hasOwnProperty("key"); // TypeError — hasOwnProperty doesn't exist
+Object.hasOwn(obj, "key"); // true — works on null-prototype objects
 ```
 
 ### Iterating: for...in and Own Properties
@@ -465,19 +478,19 @@ child.c = 3;
 
 // for...in iterates ALL enumerable properties, including inherited
 for (const key in child) {
-  console.log(key);  // b, c, a (order may vary; `a` is from parent)
+  console.log(key); // b, c, a (order may vary; `a` is from parent)
 }
 
 // To iterate only own properties:
 for (const key in child) {
   if (Object.hasOwn(child, key)) {
-    console.log(key);  // b, c (only own)
+    console.log(key); // b, c (only own)
   }
 }
 
 // Or use Object.keys — always only own enumerable properties
-Object.keys(child);    // ["b", "c"]
-Object.values(child);  // [2, 3]
+Object.keys(child); // ["b", "c"]
+Object.values(child); // [2, 3]
 Object.entries(child); // [["b", 2], ["c", 3]]
 ```
 
@@ -490,17 +503,17 @@ Object.entries(child); // [["b", 2], ["c", 3]]
 ```javascript
 // BUG: array on prototype is SHARED between all instances
 function Team() {}
-Team.prototype.members = [];  // ← this is shared!
+Team.prototype.members = []; // ← this is shared!
 
 const team1 = new Team();
 const team2 = new Team();
 
 team1.members.push("Alice");
-console.log(team2.members);  // ["Alice"] — SAME array!
+console.log(team2.members); // ["Alice"] — SAME array!
 
 // FIX: initialise in constructor
 function Team() {
-  this.members = [];  // each instance gets its OWN array
+  this.members = []; // each instance gets its OWN array
 }
 ```
 
@@ -521,7 +534,7 @@ class Timer {
 const timer = new Timer();
 
 // BUG: `this` is lost when method is passed as a callback
-setTimeout(timer.tick, 1000);  // `this` is undefined (strict) or global
+setTimeout(timer.tick, 1000); // `this` is undefined (strict) or global
 
 // FIX 1: bind
 setTimeout(timer.tick.bind(timer), 1000);
@@ -532,7 +545,8 @@ setTimeout(() => timer.tick(), 1000);
 // FIX 3: class field with arrow function (bound at construction)
 class TimerFixed {
   count = 0;
-  tick = () => {  // arrow function — `this` is lexically bound
+  tick = () => {
+    // arrow function — `this` is lexically bound
     this.count++;
     console.log(this.count);
   };
@@ -552,11 +566,11 @@ class MyArray extends Array {
 }
 
 const arr = new MyArray(1, 2, 3);
-arr.sum();  // 6 ✓
+arr.sum(); // 6 ✓
 
 // But methods that return new arrays return MyArray, not Array:
-const mapped = arr.map(x => x * 2);
-mapped instanceof MyArray;  // true — this is often surprising
+const mapped = arr.map((x) => x * 2);
+mapped instanceof MyArray; // true — this is often surprising
 
 // Most experienced developers avoid extending built-ins
 // Instead, use composition or standalone utility functions:
@@ -579,13 +593,17 @@ Understanding prototypes helps you:
 // Inefficient: new function per instance
 class Bad {
   constructor() {
-    this.greet = function() { return "hello"; };  // new fn for each instance
+    this.greet = function () {
+      return "hello";
+    }; // new fn for each instance
   }
 }
 
 // Efficient: shared via prototype
 class Good {
-  greet() { return "hello"; }  // one function, on prototype
+  greet() {
+    return "hello";
+  } // one function, on prototype
 }
 
 // 1000 instances of Bad = 1000 greet functions in memory
@@ -602,7 +620,7 @@ function isArray(value) {
   // More reliable than instanceof across iframes/realms:
   return Object.prototype.toString.call(value) === "[object Array]";
   // Or simply:
-  return Array.isArray(value);  // ← use this in practice
+  return Array.isArray(value); // ← use this in practice
 }
 ```
 

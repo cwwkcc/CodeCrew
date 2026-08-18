@@ -26,10 +26,10 @@ Every function in JavaScript is a closure. There is no on/off switch — closure
 
 ```javascript
 function makeCounter() {
-  let count = 0;  // this variable lives in makeCounter's scope
+  let count = 0; // this variable lives in makeCounter's scope
 
   function increment() {
-    count++;          // increment "closes over" count
+    count++; // increment "closes over" count
     console.log(count);
   }
 
@@ -98,7 +98,7 @@ function outer() {
   let x = 10;
 
   // This function is a closure — it closes over `x`
-  const inner = function() {
+  const inner = function () {
     return x * 2;
   };
 
@@ -107,14 +107,14 @@ function outer() {
 
 // Arrow functions are closures too
 function makeMultiplier(factor) {
-  return (n) => n * factor;  // closes over `factor`
+  return (n) => n * factor; // closes over `factor`
 }
 
 const double = makeMultiplier(2);
 const triple = makeMultiplier(3);
 
-double(5);  // 10
-triple(5);  // 15
+double(5); // 10
+triple(5); // 15
 // double and triple are separate closures, each with their own `factor`
 ```
 
@@ -154,7 +154,7 @@ Because closures capture **variables** (not values), there's a classic bug tha
 // THE CLASSIC BUG
 for (var i = 0; i < 3; i++) {
   setTimeout(() => {
-    console.log(i);  // you expect 0, 1, 2
+    console.log(i); // you expect 0, 1, 2
   }, 100);
 }
 
@@ -179,7 +179,7 @@ setTimeout fires →  closure 3 reads `i` → 3
 ```javascript
 for (let i = 0; i < 3; i++) {
   setTimeout(() => {
-    console.log(i);  // 0, 1, 2 ✓
+    console.log(i); // 0, 1, 2 ✓
   }, 100);
 }
 // `let` creates a NEW `i` binding for each iteration of the loop
@@ -190,11 +190,12 @@ for (let i = 0; i < 3; i++) {
 
 ```javascript
 for (var i = 0; i < 3; i++) {
-  (function(j) {       // j is a NEW variable per iteration
+  (function (j) {
+    // j is a NEW variable per iteration
     setTimeout(() => {
-      console.log(j);  // 0, 1, 2 ✓
+      console.log(j); // 0, 1, 2 ✓
     }, 100);
-  })(i);               // immediately called with the current value of i
+  })(i); // immediately called with the current value of i
 }
 ```
 
@@ -202,9 +203,9 @@ for (var i = 0; i < 3; i++) {
 
 ```javascript
 for (var i = 0; i < 3; i++) {
-  const captured = i;  // const creates a new binding each iteration
+  const captured = i; // const creates a new binding each iteration
   setTimeout(() => {
-    console.log(captured);  // 0, 1, 2 ✓
+    console.log(captured); // 0, 1, 2 ✓
   }, 100);
 }
 ```
@@ -258,11 +259,11 @@ const session = createUserSession();
 session.login("u123", "eyJhbGc...", 3600_000);
 
 console.log(session.isLoggedIn()); // true
-console.log(session.getToken());   // "eyJhbGc..."
+console.log(session.getToken()); // "eyJhbGc..."
 
 // Cannot access private state directly:
-console.log(session.userId);       // undefined — not exposed
-console.log(session.token);        // undefined — not exposed
+console.log(session.userId); // undefined — not exposed
+console.log(session.token); // undefined — not exposed
 ```
 
 ---
@@ -299,10 +300,14 @@ const required = (value, field) =>
   value == null || value === "" ? `${field} is required` : null;
 
 const minLength = (min) => (value, field) =>
-  value && value.length < min ? `${field} must be at least ${min} characters` : null;
+  value && value.length < min
+    ? `${field} must be at least ${min} characters`
+    : null;
 
 const isEmail = (value, field) =>
-  value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? `${field} must be a valid email` : null;
+  value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+    ? `${field} must be a valid email`
+    : null;
 
 // Create specialised validators — each closes over its own `rules`
 const validateUser = createValidator({
@@ -317,7 +322,11 @@ const validateLoginForm = createValidator({
 });
 
 // Usage
-const result = validateUser({ name: "D", email: "not-email", password: "1234" });
+const result = validateUser({
+  name: "D",
+  email: "not-email",
+  password: "1234",
+});
 console.log(result);
 // {
 //   valid: false,
@@ -337,9 +346,9 @@ Memoisation caches function results — if the same arguments are passed again, 
 
 ```javascript
 function memoize(fn) {
-  const cache = new Map();  // closed over — persists between calls
+  const cache = new Map(); // closed over — persists between calls
 
-  return function(...args) {
+  return function (...args) {
     const key = JSON.stringify(args);
 
     if (cache.has(key)) {
@@ -361,11 +370,11 @@ function fibonacci(n) {
 const memoFib = memoize(fibonacci);
 
 console.time("first");
-memoFib(40);   // computes — slow
-console.timeEnd("first");  // ~1000ms
+memoFib(40); // computes — slow
+console.timeEnd("first"); // ~1000ms
 
 console.time("second");
-memoFib(40);   // returns cached result immediately
+memoFib(40); // returns cached result immediately
 console.timeEnd("second"); // ~0ms
 ```
 
@@ -380,7 +389,7 @@ function createApiClient(baseUrl) {
       const cached = cache.get(cacheKey);
 
       if (cached && Date.now() < cached.expiresAt) {
-        return cached.data;  // return cached, skip network
+        return cached.data; // return cached, skip network
       }
 
       const response = await fetch(`${baseUrl}${endpoint}`);
@@ -401,8 +410,8 @@ function createApiClient(baseUrl) {
 }
 
 const api = createApiClient("https://api.cwwkcc.lk");
-await api.get("/students");   // hits network
-await api.get("/students");   // returns cache — instant
+await api.get("/students"); // hits network
+await api.get("/students"); // returns cache — instant
 ```
 
 ---
@@ -413,7 +422,7 @@ Partial application creates a new function with some arguments pre-filled.
 
 ```javascript
 function partial(fn, ...presetArgs) {
-  return function(...laterArgs) {
+  return function (...laterArgs) {
     return fn(...presetArgs, ...laterArgs);
   };
 }
@@ -430,7 +439,7 @@ async function apiRequest(method, baseUrl, endpoint, data) {
 
 // Specialised functions via partial application
 const getFromApi = partial(apiRequest, "GET", "https://api.example.com");
-const postToApi  = partial(apiRequest, "POST", "https://api.example.com");
+const postToApi = partial(apiRequest, "POST", "https://api.example.com");
 
 // Clean call sites
 await getFromApi("/users");
@@ -441,10 +450,10 @@ function logEvent(level, service, message) {
   console.log(`[${level}] [${service}] ${message}`);
 }
 
-const logInfo  = partial(logEvent, "INFO",  "AuthService");
+const logInfo = partial(logEvent, "INFO", "AuthService");
 const logError = partial(logEvent, "ERROR", "AuthService");
 
-logInfo("User logged in");       // [INFO] [AuthService] User logged in
+logInfo("User logged in"); // [INFO] [AuthService] User logged in
 logError("Token verification failed"); // [ERROR] [AuthService] Token verification failed
 ```
 
@@ -459,18 +468,18 @@ let result = null;
 
 function fetchData() {
   setTimeout(() => {
-    result = "data loaded";  // closure modifies outer `result`
+    result = "data loaded"; // closure modifies outer `result`
   }, 1000);
 }
 
 fetchData();
-console.log(result);  // null — setTimeout hasn't fired yet
+console.log(result); // null — setTimeout hasn't fired yet
 // The closure will update `result` after 1 second
 // but the synchronous code has already moved on
 
 // To use the result:
 setTimeout(() => {
-  console.log(result);  // "data loaded" — this closure runs after the first
+  console.log(result); // "data loaded" — this closure runs after the first
 }, 1500);
 ```
 
@@ -479,11 +488,11 @@ setTimeout(() => {
 async function handleSubmit() {
   const formData = { name: "Alice" };
 
-  await saveToDatabase(formData);  // takes 2 seconds
+  await saveToDatabase(formData); // takes 2 seconds
 
   // By the time this runs, is formData still what we expect?
   // YES — formData is in the closure and hasn't changed
-  console.log("Saved:", formData.name);  // "Alice"
+  console.log("Saved:", formData.name); // "Alice"
 
   // But if formData was a mutable reference shared elsewhere:
   // formData might have been mutated during the await
@@ -509,24 +518,24 @@ function Counter() {
     const interval = setInterval(() => {
       // This closure captured `count` when the effect ran (on mount)
       // `count` is 0 — it never updates inside this closure
-      console.log("count:", count);  // always 0!
-      setCount(count + 1);           // always sets to 0 + 1 = 1
+      console.log("count:", count); // always 0!
+      setCount(count + 1); // always sets to 0 + 1 = 1
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);  // empty deps — effect runs only once → count is stale
+  }, []); // empty deps — effect runs only once → count is stale
 
-  return <div>{count}</div>;  // stuck at 1
+  return <div>{count}</div>; // stuck at 1
 }
 
 // FIX: use the functional update form (doesn't need the current count)
 useEffect(() => {
   const interval = setInterval(() => {
-    setCount(prev => prev + 1);  // `prev` is always the latest value
+    setCount((prev) => prev + 1); // `prev` is always the latest value
   }, 1000);
 
   return () => clearInterval(interval);
-}, []);  // safe to leave empty now
+}, []); // safe to leave empty now
 ```
 
 ### The Stale Closure in useCallback
@@ -541,17 +550,17 @@ function SearchComponent({ onSearch }) {
   // If query changes, the callback is NOT recreated (empty deps)
   // → it always sends the initial empty string
   const handleSubmit = useCallback(() => {
-    onSearch(query);  // query is stale
-  }, []);  // missing dependency!
+    onSearch(query); // query is stale
+  }, []); // missing dependency!
 
   // FIX: include all closed-over values in the deps array
   const handleSubmitFixed = useCallback(() => {
     onSearch(query);
-  }, [query, onSearch]);  // recreated whenever query changes
+  }, [query, onSearch]); // recreated whenever query changes
 
   return (
     <div>
-      <input value={query} onChange={e => setQuery(e.target.value)} />
+      <input value={query} onChange={(e) => setQuery(e.target.value)} />
       <button onClick={handleSubmitFixed}>Search</button>
     </div>
   );
@@ -567,7 +576,7 @@ The `eslint-plugin-react-hooks` rule `exhaustive-deps` warns you when your 
 const [userId, setUserId] = useState(null);
 
 useEffect(() => {
-  fetchUserData(userId);  // closes over userId
+  fetchUserData(userId); // closes over userId
 }, []);
 // ⚠️ Warning: React Hook useEffect has a missing dependency: 'userId'
 // If userId changes, the effect won't re-run → stale userId
@@ -582,7 +591,7 @@ Closures keep their closed-over variables alive as long as the closure itself is
 ```javascript
 // Each call to makeHandler creates a closure that holds `cache`
 function makeHandler(largeConfig) {
-  const cache = buildCache(largeConfig);  // potentially large
+  const cache = buildCache(largeConfig); // potentially large
 
   return function handler(request) {
     // handler closes over `cache`
@@ -599,7 +608,7 @@ for (let i = 0; i < 1000; i++) {
 // handlers array keeps all caches alive as long as it exists
 
 // FIX: discard handlers when done
-handlers.length = 0;  // or handlers.splice(0) — caches can now be GC'd
+handlers.length = 0; // or handlers.splice(0) — caches can now be GC'd
 ```
 
 ```javascript
@@ -608,7 +617,8 @@ handlers.length = 0;  // or handlers.splice(0) — caches can now be GC'd
 // BAD — closes over entire `options` object (even fields not needed)
 function createLogger(options) {
   return function log(message) {
-    if (options.debug) {  // only needs one field
+    if (options.debug) {
+      // only needs one field
       console.log(`[DEBUG] [${options.service}] ${message}`);
     }
   };

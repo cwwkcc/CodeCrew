@@ -25,9 +25,9 @@ When JavaScript throws an error, it creates an `Error` object. The two most im
 ```javascript
 const err = new Error("Something went wrong");
 
-err.message;  // "Something went wrong" — what you passed to the constructor
-err.stack;    // multiline string with the call stack at the point of creation
-err.name;     // "Error" — the type name (overridden in subclasses)
+err.message; // "Something went wrong" — what you passed to the constructor
+err.stack; // multiline string with the call stack at the point of creation
+err.name; // "Error" — the type name (overridden in subclasses)
 ```
 
 The `stack` property is the most useful for debugging:
@@ -106,12 +106,12 @@ try {
 
 ```javascript
 function readFile(path) {
-  const file = openFile(path);  // acquire resource
+  const file = openFile(path); // acquire resource
 
   try {
-    return file.read();         // might throw
+    return file.read(); // might throw
   } finally {
-    file.close();               // ALWAYS closes, even if read() throws
+    file.close(); // ALWAYS closes, even if read() throws
     // Even if there's a `return` in the try block, finally runs first
   }
 }
@@ -121,7 +121,7 @@ function example() {
   try {
     return "from try";
   } finally {
-    console.log("finally runs");  // logs BEFORE the function returns
+    console.log("finally runs"); // logs BEFORE the function returns
   }
 }
 // Console: "finally runs"
@@ -140,7 +140,7 @@ async function fetchUser(id) {
   } catch (err) {
     // Log for debugging, then rethrow so the caller can decide how to handle it
     logger.error("fetchUser failed", { userId: id, error: err.message });
-    throw err;  // rethrow — caller still gets the error
+    throw err; // rethrow — caller still gets the error
   }
 }
 ```
@@ -159,7 +159,9 @@ async function loadConfig(path) {
   } catch (err) {
     if (err instanceof SyntaxError) {
       // JSON was malformed — this is a user/config error
-      throw new Error(`Config file ${path} contains invalid JSON: ${err.message}`);
+      throw new Error(
+        `Config file ${path} contains invalid JSON: ${err.message}`,
+      );
     }
 
     if (err.code === "ENOENT") {
@@ -204,10 +206,10 @@ async function apiCall(url) {
     if (err.status === 429) {
       // Rate limited — wait and retry
       await sleep(5000);
-      return apiCall(url);  // retry once
+      return apiCall(url); // retry once
     }
 
-    throw err;  // other errors — rethrow
+    throw err; // other errors — rethrow
   }
 }
 ```
@@ -223,7 +225,7 @@ Create custom error classes to make errors identifiable, structured, and carryin
 class AppError extends Error {
   constructor(message, options = {}) {
     super(message);
-    this.name = this.constructor.name;  // "ValidationError", not "Error"
+    this.name = this.constructor.name; // "ValidationError", not "Error"
 
     // Capture stack trace, excluding this constructor from it
     if (Error.captureStackTrace) {
@@ -271,7 +273,9 @@ class ForbiddenError extends HttpError {
 // Domain errors (business logic layer)
 class InsufficientStockError extends AppError {
   constructor(productId, requested, available) {
-    super(`Cannot fulfil order: only ${available} units of product ${productId} available (requested ${requested})`);
+    super(
+      `Cannot fulfil order: only ${available} units of product ${productId} available (requested ${requested})`,
+    );
     this.productId = productId;
     this.requested = requested;
     this.available = available;
@@ -342,7 +346,7 @@ async function handleRequest(id) {
     if (err instanceof NotFoundError) {
       return res.status(404).json({ error: err.message });
     }
-    throw err;  // unexpected — let the global handler deal with it
+    throw err; // unexpected — let the global handler deal with it
   }
 }
 ```
@@ -394,15 +398,21 @@ async function loadDashboardRobust(userId) {
 
 ```javascript
 // Errors propagate upward through the await chain
-async function step3() { throw new Error("step3 failed"); }
-async function step2() { await step3(); }  // step3's error propagates
-async function step1() { await step2(); }  // step2's error propagates
+async function step3() {
+  throw new Error("step3 failed");
+}
+async function step2() {
+  await step3();
+} // step3's error propagates
+async function step1() {
+  await step2();
+} // step2's error propagates
 
 async function main() {
   try {
     await step1();
   } catch (err) {
-    console.log(err.message);  // "step3 failed"
+    console.log(err.message); // "step3 failed"
     // stack trace shows: step3 → step2 → step1 → main
   }
 }
@@ -415,26 +425,25 @@ async function main() {
 ```javascript
 // .catch() is equivalent to .then(undefined, onRejected)
 fetch("/api/data")
-  .then(res => res.json())
-  .then(data => processData(data))
-  .catch(err => {
+  .then((res) => res.json())
+  .then((data) => processData(data))
+  .catch((err) => {
     // Catches ANY error from the chain above
     console.error("Pipeline failed:", err);
   });
 
 // Always handle rejections — missing .catch() → unhandled rejection
-fetch("/api/data")
-  .then(res => res.json());
+fetch("/api/data").then((res) => res.json());
 // If fetch fails → unhandled rejection → warning in Node, crash in strict mode
 
 // .finally() for cleanup (runs regardless of success/failure)
 let isLoading = true;
 fetch("/api/data")
-  .then(res => res.json())
-  .then(data => render(data))
-  .catch(err => showError(err))
+  .then((res) => res.json())
+  .then((data) => render(data))
+  .catch((err) => showError(err))
   .finally(() => {
-    isLoading = false;  // always stop the spinner
+    isLoading = false; // always stop the spinner
   });
 ```
 
@@ -462,7 +471,7 @@ async function saveUser(data) {
   try {
     await db.user.create(data);
   } catch (err) {
-    console.log(err);  // logs it, but caller still thinks it succeeded
+    console.log(err); // logs it, but caller still thinks it succeeded
   }
 }
 
@@ -473,7 +482,7 @@ async function saveUser(data) {
     await db.user.create(data);
   } catch (err) {
     logger.error("saveUser failed", { data, error: err.message });
-    throw err;  // caller knows it failed
+    throw err; // caller knows it failed
   }
 }
 
@@ -482,7 +491,8 @@ async function saveUser(data) {
   try {
     await db.user.create(data);
   } catch (err) {
-    if (err.code === "23505") {  // PostgreSQL unique violation
+    if (err.code === "23505") {
+      // PostgreSQL unique violation
       throw new DuplicateEmailError(data.email);
     }
     throw err;
@@ -498,7 +508,7 @@ async function findUser(id) {
       // DB is down — return null and let caller show "try again"
       return null;
     }
-    throw err;  // unexpected — rethrow
+    throw err; // unexpected — rethrow
   }
 }
 ```
@@ -521,9 +531,12 @@ window.addEventListener("error", (event) => {
 
 // Catches unhandled Promise rejections
 window.addEventListener("unhandledrejection", (event) => {
-  const reason = event.reason;  // the rejection value (Error or otherwise)
-  sendErrorReport({ type: "unhandledRejection", error: reason?.stack ?? reason });
-  event.preventDefault();  // suppress "Uncaught (in promise)" in console
+  const reason = event.reason; // the rejection value (Error or otherwise)
+  sendErrorReport({
+    type: "unhandledRejection",
+    error: reason?.stack ?? reason,
+  });
+  event.preventDefault(); // suppress "Uncaught (in promise)" in console
 });
 ```
 
@@ -571,7 +584,7 @@ class Err {
   }
 }
 
-const ok  = (value) => new Ok(value);
+const ok = (value) => new Ok(value);
 const err = (error) => new Err(error);
 
 // Functions return Result instead of throwing
@@ -621,7 +634,7 @@ app.get("/users/:id", (req, res, next) => {
     const user = getUserSync(req.params.id);
     res.json(user);
   } catch (err) {
-    next(err);  // pass to Express error handler
+    next(err); // pass to Express error handler
   }
 });
 
@@ -654,10 +667,12 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({
     error: statusCode < 500 ? err.message : "Internal server error",
     // Only expose details and stack in development
-    ...(isProduction ? {} : {
-      details: err.details,
-      stack: err.stack,
-    }),
+    ...(isProduction
+      ? {}
+      : {
+          details: err.details,
+          stack: err.stack,
+        }),
   });
 });
 ```

@@ -80,10 +80,10 @@ V8 creates internal **hidden classes** to optimise property access on objects.
 // BAD — changes object shape after creation
 function createUser(name, role) {
   const user = {};
-  user.name = name;         // shape 1: { name }
-  user.role = role;         // shape 2: { name, role }
+  user.name = name; // shape 1: { name }
+  user.role = role; // shape 2: { name, role }
   if (role === "admin") {
-    user.permissions = [];  // shape 3: { name, role, permissions }
+    user.permissions = []; // shape 3: { name, role, permissions }
   }
   return user;
 }
@@ -100,7 +100,7 @@ function createUser(name, role) {
 
 // BAD — deleting properties also breaks hidden classes
 const obj = { x: 1, y: 2 };
-delete obj.x;  // V8 has to switch to a "dictionary mode" — much slower
+delete obj.x; // V8 has to switch to a "dictionary mode" — much slower
 // Instead: set to null or undefined if you want to "empty" a property
 obj.x = null;
 ```
@@ -168,7 +168,7 @@ The call stack has a maximum size. If you push too many frames — typically thr
 ```javascript
 // Classic stack overflow: infinite recursion
 function factorial(n) {
-  return n * factorial(n - 1);  // forgot base case
+  return n * factorial(n - 1); // forgot base case
 }
 
 factorial(10000);
@@ -189,7 +189,7 @@ The fix — always have a base case:
 
 ```javascript
 function factorial(n) {
-  if (n <= 1) return 1;           // base case — stops recursion
+  if (n <= 1) return 1; // base case — stops recursion
   return n * factorial(n - 1);
 }
 ```
@@ -241,21 +241,21 @@ Heap stores:  objects, arrays, functions, strings (in V8, strings
 ```javascript
 // Primitives: stored by VALUE on the stack
 let a = 42;
-let b = a;     // b gets a COPY of 42
+let b = a; // b gets a COPY of 42
 b = 100;
 console.log(a); // 42 — a was not affected
 
 // Objects: stored by REFERENCE — pointer on stack, object on heap
 let user1 = { name: "Alice" };
-let user2 = user1;           // user2 gets a COPY of the POINTER
+let user2 = user1; // user2 gets a COPY of the POINTER
 user2.name = "Bob";
-console.log(user1.name);     // "Bob" — both point to same object
+console.log(user1.name); // "Bob" — both point to same object
 
 // To truly copy an object: spread or structuredClone
-let user3 = { ...user1 };    // shallow copy — new object on heap
-let user4 = structuredClone(user1);  // deep copy (nested objects too)
+let user3 = { ...user1 }; // shallow copy — new object on heap
+let user4 = structuredClone(user1); // deep copy (nested objects too)
 user3.name = "Charlie";
-console.log(user1.name);     // "Bob" — user1 unaffected
+console.log(user1.name); // "Bob" — user1 unaffected
 ```
 
 ```
@@ -307,8 +307,8 @@ Phase 2 — Sweep:
 // Example of what GC tracks:
 
 function processOrder(orderId) {
-  const order = fetchOrder(orderId);    // order allocated on heap
-  const total = calculateTotal(order);  // total: number (stack)
+  const order = fetchOrder(orderId); // order allocated on heap
+  const total = calculateTotal(order); // total: number (stack)
   sendConfirmation(order.email, total);
   // function returns — order goes out of scope
   // if nothing else references it, GC will collect it
@@ -347,7 +347,7 @@ A **memory leak** is when memory that should be freed is still referenced — 
 // LEAK: listener added every time modal opens, never removed
 function openModal() {
   const modal = document.getElementById("modal");
-  
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") modal.close();
   });
@@ -358,14 +358,14 @@ function openModal() {
 // FIX: keep a reference to the listener function and remove it
 function openModal() {
   const modal = document.getElementById("modal");
-  
+
   const handleKeydown = (e) => {
     if (e.key === "Escape") {
       modal.close();
       document.removeEventListener("keydown", handleKeydown); // clean up
     }
   };
-  
+
   document.addEventListener("keydown", handleKeydown);
 }
 ```
@@ -376,7 +376,7 @@ function openModal() {
 // LEAK: closure keeps a reference to a large array
 function setup() {
   const largeData = new Array(1_000_000).fill("data"); // 1M items
-  
+
   const button = document.getElementById("btn");
   button.addEventListener("click", () => {
     // This closure captures largeData
@@ -389,11 +389,11 @@ function setup() {
 // FIX: capture only what you need
 function setup() {
   const largeData = new Array(1_000_000).fill("data");
-  const dataSize = largeData.length;  // capture only what's needed
+  const dataSize = largeData.length; // capture only what's needed
   // largeData can now be GC'd after setup() returns
-  
+
   document.getElementById("btn").addEventListener("click", () => {
-    console.log("Clicked, data size:", dataSize);  // uses number, not array
+    console.log("Clicked, data size:", dataSize); // uses number, not array
   });
 }
 ```
@@ -418,7 +418,7 @@ function removeButton() {
 // FIX: null out references when done
 function removeButton() {
   document.body.removeChild(document.getElementById("submit-btn"));
-  elements.button = null;  // now GC can collect it
+  elements.button = null; // now GC can collect it
 }
 ```
 
@@ -427,7 +427,7 @@ function removeButton() {
 ```javascript
 // LEAK: accidental global (missing let/const/var)
 function processData() {
-  result = computeResult();  // no declaration keyword → global variable!
+  result = computeResult(); // no declaration keyword → global variable!
   // `result` is now on the global object (window in browser)
   // Lives for the entire lifetime of the page
 }
@@ -442,7 +442,7 @@ function processData() {
 // LEAK: interval keeps a callback alive indefinitely
 function startPolling() {
   const data = fetchLargeDataset();
-  
+
   setInterval(() => {
     // This closure captures `data`
     // The interval keeps running even if you navigate away
@@ -459,7 +459,7 @@ function startPolling() {
 }
 
 function stopPolling() {
-  clearInterval(intervalId);  // closure and data can now be GC'd
+  clearInterval(intervalId); // closure and data can now be GC'd
 }
 ```
 
@@ -576,7 +576,7 @@ React's `useState` batches state updates. Understanding that React flushes upd
 ```javascript
 // In React 18: multiple state updates in async code are batched
 async function handleClick() {
-  setCount(c => c + 1);
+  setCount((c) => c + 1);
   setName("Alice");
   // Before React 18: two separate re-renders
   // React 18+: batched into one re-render (scheduled as microtask)
@@ -608,7 +608,7 @@ For CPU-intensive work: Web Workers (browser) or Worker threads (Node.js)
 // Blocking the event loop — NEVER do this in production
 function blockFor2Seconds() {
   const end = Date.now() + 2000;
-  while (Date.now() < end) {}  // busy-wait — freezes EVERYTHING
+  while (Date.now() < end) {} // busy-wait — freezes EVERYTHING
   // No clicks, no network responses, no timers fire during this
 }
 
@@ -616,7 +616,7 @@ function blockFor2Seconds() {
 const worker = new Worker("heavy-computation.js");
 worker.postMessage({ data: largeDataset });
 worker.onmessage = (e) => {
-  console.log("Result:", e.data);  // main thread unblocked
+  console.log("Result:", e.data); // main thread unblocked
 };
 ```
 

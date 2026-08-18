@@ -52,7 +52,7 @@ const CartService = (() => {
   // PUBLIC API
   return {
     addItem(product, quantity = 1) {
-      const existing = items.find(i => i.id === product.id);
+      const existing = items.find((i) => i.id === product.id);
       if (existing) {
         existing.quantity += quantity;
       } else {
@@ -61,7 +61,7 @@ const CartService = (() => {
     },
 
     removeItem(productId) {
-      items = items.filter(i => i.id !== productId);
+      items = items.filter((i) => i.id !== productId);
     },
 
     applyDiscountCode(code) {
@@ -74,7 +74,7 @@ const CartService = (() => {
     },
 
     getItems() {
-      return [...items];  // return a copy — can't mutate internal state directly
+      return [...items]; // return a copy — can't mutate internal state directly
     },
 
     clear() {
@@ -87,10 +87,10 @@ const CartService = (() => {
 // Usage
 CartService.addItem({ id: "p1", name: "Book", price: 1500 }, 2);
 CartService.applyDiscountCode("KITS10");
-CartService.getTotal();  // 2700 (3000 * 0.9)
+CartService.getTotal(); // 2700 (3000 * 0.9)
 
-CartService.items;        // undefined — private
-CartService.calculateSubtotal;  // undefined — private
+CartService.items; // undefined — private
+CartService.calculateSubtotal; // undefined — private
 ```
 
 With ES modules (the modern approach), files are modules by default:
@@ -125,13 +125,13 @@ class Database {
 
   constructor() {
     if (Database.#instance) {
-      return Database.#instance;  // return existing instance
+      return Database.#instance; // return existing instance
     }
     Database.#instance = this;
   }
 
   async connect(url) {
-    if (this.#connection) return;  // already connected
+    if (this.#connection) return; // already connected
     this.#connection = await createConnection(url);
   }
 
@@ -151,7 +151,7 @@ class Database {
 // Usage — always the same instance
 const db1 = Database.getInstance();
 const db2 = Database.getInstance();
-db1 === db2;  // true
+db1 === db2; // true
 ```
 
 ```javascript
@@ -178,9 +178,15 @@ class Logger {
     console.log(JSON.stringify(entry));
   }
 
-  info(message, meta)  { this.log("INFO", message, meta); }
-  error(message, meta) { this.log("ERROR", message, meta); }
-  warn(message, meta)  { this.log("WARN", message, meta); }
+  info(message, meta) {
+    this.log("INFO", message, meta);
+  }
+  error(message, meta) {
+    this.log("ERROR", message, meta);
+  }
+  warn(message, meta) {
+    this.log("WARN", message, meta);
+  }
 }
 
 // This is created once when the module is first imported
@@ -205,7 +211,7 @@ class EventEmitter {
       this.#listeners.set(event, new Set());
     }
     this.#listeners.get(event).add(listener);
-    return () => this.off(event, listener);  // return unsubscribe function
+    return () => this.off(event, listener); // return unsubscribe function
   }
 
   once(event, listener) {
@@ -221,7 +227,7 @@ class EventEmitter {
   }
 
   emit(event, ...args) {
-    this.#listeners.get(event)?.forEach(listener => {
+    this.#listeners.get(event)?.forEach((listener) => {
       try {
         listener(...args);
       } catch (err) {
@@ -279,7 +285,7 @@ const unsubscribe = orderService.on("order:cancelled", (order) => {
 });
 
 // Later:
-unsubscribe();  // remove the listener
+unsubscribe(); // remove the listener
 ```
 
 The Observer pattern is the foundation of the DOM event system (`addEventListener`), Node.js's `EventEmitter`, and React's synthetic event system.
@@ -359,7 +365,8 @@ await notification.send();
 function createStorageProvider(type) {
   if (type === "s3") {
     return {
-      upload: (key, data) => s3.putObject({ Bucket: "my-bucket", Key: key, Body: data }),
+      upload: (key, data) =>
+        s3.putObject({ Bucket: "my-bucket", Key: key, Body: data }),
       download: (key) => s3.getObject({ Bucket: "my-bucket", Key: key }),
       delete: (key) => s3.deleteObject({ Bucket: "my-bucket", Key: key }),
       url: (key) => `https://my-bucket.s3.amazonaws.com/${key}`,
@@ -466,8 +473,12 @@ class PaymentService {
 // No changes to PaymentService
 paymentStrategies.crypto = {
   name: "Cryptocurrency",
-  validate(data) { /* ... */ },
-  async process(amount, data) { /* ... */ },
+  validate(data) {
+    /* ... */
+  },
+  async process(amount, data) {
+    /* ... */
+  },
 };
 ```
 
@@ -489,7 +500,7 @@ function createMiddlewareChain() {
   return {
     use(fn) {
       middlewares.push(fn);
-      return this;  // chainable
+      return this; // chainable
     },
 
     async run(context) {
@@ -513,12 +524,12 @@ async function authenticate(ctx, next) {
   if (!token) {
     ctx.status = 401;
     ctx.body = { error: "Unauthorised" };
-    return;  // don't call next() — short-circuit the chain
+    return; // don't call next() — short-circuit the chain
   }
 
   try {
     ctx.user = verifyToken(token);
-    await next();  // continue chain
+    await next(); // continue chain
   } catch {
     ctx.status = 401;
     ctx.body = { error: "Invalid token" };
@@ -528,12 +539,12 @@ async function authenticate(ctx, next) {
 async function rateLimit(ctx, next) {
   const key = `rate:${ctx.user?.id ?? ctx.ip}`;
   const requests = await redis.incr(key);
-  await redis.expire(key, 60);  // 1-minute window
+  await redis.expire(key, 60); // 1-minute window
 
   if (requests > 100) {
     ctx.status = 429;
     ctx.body = { error: "Too many requests" };
-    return;  // short-circuit
+    return; // short-circuit
   }
 
   await next();
@@ -576,7 +587,7 @@ function createValidatedObject(target, validators) {
         if (error) throw new TypeError(`${prop}: ${error}`);
       }
       obj[prop] = value;
-      return true;  // must return true to indicate success
+      return true; // must return true to indicate success
     },
   });
 }
@@ -584,16 +595,26 @@ function createValidatedObject(target, validators) {
 const user = createValidatedObject(
   { name: "", age: 0, email: "" },
   {
-    name: (v) => typeof v !== "string" ? "must be a string" : v.length < 2 ? "too short" : null,
-    age: (v) => typeof v !== "number" ? "must be a number" : v < 0 ? "must be positive" : null,
-    email: (v) => !v.includes("@") ? "must be a valid email" : null,
-  }
+    name: (v) =>
+      typeof v !== "string"
+        ? "must be a string"
+        : v.length < 2
+          ? "too short"
+          : null,
+    age: (v) =>
+      typeof v !== "number"
+        ? "must be a number"
+        : v < 0
+          ? "must be positive"
+          : null,
+    email: (v) => (!v.includes("@") ? "must be a valid email" : null),
+  },
 );
 
-user.name = "Alice";         // ✓
-user.age = 20;               // ✓
+user.name = "Alice"; // ✓
+user.age = 20; // ✓
 user.email = "not-an-email"; // TypeError: email: must be a valid email
-user.name = "A";             // TypeError: name: too short
+user.name = "A"; // TypeError: name: too short
 ```
 
 ```javascript
@@ -607,7 +628,7 @@ function createCachingProxy(target) {
 
       if (typeof value !== "function") return value;
 
-      return function(...args) {
+      return function (...args) {
         const key = `${prop}:${JSON.stringify(args)}`;
 
         if (cache.has(key)) {
@@ -618,7 +639,7 @@ function createCachingProxy(target) {
         const result = value.apply(obj, args);
 
         if (result instanceof Promise) {
-          return result.then(resolved => {
+          return result.then((resolved) => {
             cache.set(key, Promise.resolve(resolved));
             return resolved;
           });
@@ -632,8 +653,8 @@ function createCachingProxy(target) {
 }
 
 const cachedDB = createCachingProxy(db);
-await cachedDB.query("SELECT * FROM students WHERE grade = 12");  // hits DB
-await cachedDB.query("SELECT * FROM students WHERE grade = 12");  // Cache hit
+await cachedDB.query("SELECT * FROM students WHERE grade = 12"); // hits DB
+await cachedDB.query("SELECT * FROM students WHERE grade = 12"); // Cache hit
 ```
 
 ---
@@ -647,8 +668,12 @@ await cachedDB.query("SELECT * FROM students WHERE grade = 12");  // Cache hit
 ```javascript
 // Command interface
 class Command {
-  async execute() { throw new Error("execute() not implemented"); }
-  async undo()    { throw new Error("undo() not implemented"); }
+  async execute() {
+    throw new Error("execute() not implemented");
+  }
+  async undo() {
+    throw new Error("undo() not implemented");
+  }
 }
 
 // Concrete commands
@@ -662,7 +687,7 @@ class CreatePostCommand extends Command {
 
   async execute() {
     const post = await this.postService.create(this.data);
-    this.createdId = post.id;  // remember for undo
+    this.createdId = post.id; // remember for undo
     return post;
   }
 
@@ -684,7 +709,7 @@ class UpdatePostCommand extends Command {
   }
 
   async execute() {
-    this.previousState = await this.postService.findById(this.id);  // save for undo
+    this.previousState = await this.postService.findById(this.id); // save for undo
     return this.postService.update(this.id, this.updates);
   }
 
@@ -703,7 +728,7 @@ class CommandExecutor {
   async execute(command) {
     const result = await command.execute();
     this.#history.push(command);
-    this.#redoStack = [];  // executing a new command clears redo stack
+    this.#redoStack = []; // executing a new command clears redo stack
     return result;
   }
 
@@ -726,12 +751,16 @@ class CommandExecutor {
 // Usage — every action is undoable
 const executor = new CommandExecutor();
 
-const post = await executor.execute(new CreatePostCommand({ title: "Hello" }, postService));
-await executor.execute(new UpdatePostCommand(post.id, { title: "Hello World" }, postService));
+const post = await executor.execute(
+  new CreatePostCommand({ title: "Hello" }, postService),
+);
+await executor.execute(
+  new UpdatePostCommand(post.id, { title: "Hello World" }, postService),
+);
 
-await executor.undo();   // reverts title back to "Hello"
-await executor.undo();   // deletes the post
-await executor.redo();   // re-creates the post
+await executor.undo(); // reverts title back to "Hello"
+await executor.undo(); // deletes the post
+await executor.redo(); // re-creates the post
 ```
 
 ---
@@ -767,7 +796,7 @@ function DataFetcher({ url, renderLoading, renderError, renderData }) {
   const { data, error, isLoading } = useFetch(url);
 
   if (isLoading) return renderLoading();
-  if (error)     return renderError(error);
+  if (error) return renderError(error);
   return renderData(data);
 }
 
@@ -777,7 +806,7 @@ function DataFetcher({ url, renderLoading, renderError, renderData }) {
   renderLoading={() => <Spinner />}
   renderError={(err) => <ErrorBanner message={err.message} />}
   renderData={(students) => <StudentList students={students} />}
-/>
+/>;
 ```
 
 ### Custom Hooks — Module Pattern for logic reuse
@@ -794,21 +823,19 @@ function useCart() {
 
   // Public API — what the component sees
   const addItem = (product, quantity = 1) => {
-    setItems(prev => {
-      const existing = prev.find(i => i.id === product.id);
+    setItems((prev) => {
+      const existing = prev.find((i) => i.id === product.id);
       if (existing) {
-        return prev.map(i => i.id === product.id
-          ? { ...i, quantity: i.quantity + quantity }
-          : i
+        return prev.map((i) =>
+          i.id === product.id ? { ...i, quantity: i.quantity + quantity } : i,
         );
       }
       return [...prev, { ...product, quantity }];
     });
   };
 
-  const total = discountCode === "KITS10"
-    ? calculateSubtotal() * 0.9
-    : calculateSubtotal();
+  const total =
+    discountCode === "KITS10" ? calculateSubtotal() * 0.9 : calculateSubtotal();
 
   return { items, total, addItem, setDiscountCode };
 }

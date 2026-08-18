@@ -28,16 +28,16 @@ const pattern = /hello/;
 const withFlags = /hello/gi;
 
 // Constructor — defined at runtime, useful for dynamic patterns
-const dynamic = new RegExp('hello');
-const fromVar  = new RegExp(userInput, 'i');   // flag as second argument
+const dynamic = new RegExp("hello");
+const fromVar = new RegExp(userInput, "i"); // flag as second argument
 ```
 
 Use the literal syntax unless the pattern needs to be built from a variable.
 
 ```javascript
 // Test if a pattern matches
-/hello/.test('say hello world');   // true
-/hello/.test('say goodbye');       // false
+/hello/.test("say hello world"); // true
+/hello/.test("say goodbye"); // false
 ```
 
 ---
@@ -46,23 +46,23 @@ Use the literal syntax unless the pattern needs to be built from a variable.
 
 Flags modify how the pattern is applied. They go after the closing `/`:
 
-|Flag|Name|Effect|
-|---|---|---|
-|`g`|global|Find all matches, not just the first|
-|`i`|case-insensitive|`A` matches `a`|
-|`m`|multiline|`^` and `$` match start/end of each line|
-|`s`|dotAll|`.` matches newlines too|
-|`u`|unicode|Enable full Unicode support (recommended)|
-|`d`|indices|Include match start/end indices in results|
+| Flag | Name             | Effect                                     |
+| ---- | ---------------- | ------------------------------------------ |
+| `g`  | global           | Find all matches, not just the first       |
+| `i`  | case-insensitive | `A` matches `a`                            |
+| `m`  | multiline        | `^` and `$` match start/end of each line   |
+| `s`  | dotAll           | `.` matches newlines too                   |
+| `u`  | unicode          | Enable full Unicode support (recommended)  |
+| `d`  | indices          | Include match start/end indices in results |
 
 ```javascript
-'Hello HELLO hello'.match(/hello/g)    // ['hello'] — only one, no g
-'Hello HELLO hello'.match(/hello/gi)   // ['Hello', 'HELLO', 'hello']
+"Hello HELLO hello".match(/hello/g); // ['hello'] — only one, no g
+"Hello HELLO hello".match(/hello/gi); // ['Hello', 'HELLO', 'hello']
 
 // m flag — ^ and $ per line
 const text = `first line\nsecond line`;
-text.match(/^\w+/gm)   // ['first', 'second']
-text.match(/^\w+/g)    // ['first'] — without m, ^ only matches string start
+text.match(/^\w+/gm); // ['first', 'second']
+text.match(/^\w+/g); // ['first'] — without m, ^ only matches string start
 ```
 
 ---
@@ -151,14 +151,14 @@ Anchors match a position, not a character:
 
 Control how many times the preceding element repeats:
 
-|Quantifier|Meaning|
-|---|---|
-|`*`|0 or more|
-|`+`|1 or more|
-|`?`|0 or 1 (optional)|
-|`{n}`|Exactly n|
-|`{n,}`|n or more|
-|`{n,m}`|Between n and m|
+| Quantifier | Meaning           |
+| ---------- | ----------------- |
+| `*`        | 0 or more         |
+| `+`        | 1 or more         |
+| `?`        | 0 or 1 (optional) |
+| `{n}`      | Exactly n         |
+| `{n,}`     | n or more         |
+| `{n,m}`    | Between n and m   |
 
 ```javascript
 /go*gle/.test('ggle')    // true — 0 o's
@@ -180,14 +180,14 @@ Control how many times the preceding element repeats:
 By default quantifiers are **greedy** — they match as much as possible. Adding `?` after makes them **lazy** — match as little as possible:
 
 ```javascript
-const html = '<b>bold</b> and <b>more bold</b>';
+const html = "<b>bold</b> and <b>more bold</b>";
 
 // Greedy — matches as much as possible between < and >
-html.match(/<.+>/)    // ['<b>bold</b> and <b>more bold</b>'] — too much
+html.match(/<.+>/); // ['<b>bold</b> and <b>more bold</b>'] — too much
 
 // Lazy — matches as little as possible
-html.match(/<.+?>/)   // ['<b>'] — just the first tag
-html.match(/<.+?>/g)  // ['<b>', '</b>', '<b>', '</b>']
+html.match(/<.+?>/); // ['<b>'] — just the first tag
+html.match(/<.+?>/g); // ['<b>', '</b>', '<b>', '</b>']
 ```
 
 ---
@@ -200,7 +200,7 @@ Groups capture a portion of the match for later use:
 
 ```javascript
 // match() returns [fullMatch, group1, group2, ...]
-const date = '2025-11-15';
+const date = "2025-11-15";
 const result = date.match(/(\d{4})-(\d{2})-(\d{2})/);
 // result[0]  → '2025-11-15'   (full match)
 // result[1]  → '2025'         (group 1)
@@ -211,10 +211,12 @@ const result = date.match(/(\d{4})-(\d{2})-(\d{2})/);
 ### Named Capturing Groups `(?<name> )`
 
 ```javascript
-const result = '2025-11-15'.match(/(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/);
-result.groups.year    // '2025'
-result.groups.month   // '11'
-result.groups.day     // '15'
+const result = "2025-11-15".match(
+  /(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/,
+);
+result.groups.year; // '2025'
+result.groups.month; // '11'
+result.groups.day; // '15'
 ```
 
 ### Non-Capturing Groups `(?: )`
@@ -302,18 +304,18 @@ Look ahead or behind without including the match in the result:
 
 ```javascript
 // Without g flag — returns first match with groups
-'2025-11-15'.match(/(\d{4})-(\d{2})-(\d{2})/)
+"2025-11-15".match(/(\d{4})-(\d{2})-(\d{2})/);
 // ['2025-11-15', '2025', '11', '15', index: 0, ...]
 
 // With g flag — returns all matches, no groups
-'one 1, two 2, three 3'.match(/\d+/g)
+"one 1, two 2, three 3".match(/\d+/g);
 // ['1', '2', '3']
 ```
 
 ### `matchAll()` — Iterator of All Matches with Groups
 
 ```javascript
-const str = 'key1=val1&key2=val2';
+const str = "key1=val1&key2=val2";
 const matches = [...str.matchAll(/(\w+)=(\w+)/g)];
 // matches[0][1]  → 'key1'
 // matches[0][2]  → 'val1'
@@ -322,7 +324,7 @@ const matches = [...str.matchAll(/(\w+)=(\w+)/g)];
 
 // With named groups
 const results = [...str.matchAll(/(?<key>\w+)=(?<value>\w+)/g)];
-results[0].groups   // { key: 'key1', value: 'val1' }
+results[0].groups; // { key: 'key1', value: 'val1' }
 ```
 
 `matchAll()` requires the `g` flag.
@@ -331,44 +333,41 @@ results[0].groups   // { key: 'key1', value: 'val1' }
 
 ```javascript
 // Replace first match
-'hello world'.replace(/o/, '0')           // 'hell0 world'
+"hello world".replace(/o/, "0"); // 'hell0 world'
 
 // Replace all matches (g flag)
-'hello world'.replace(/o/g, '0')          // 'hell0 w0rld'
-'hello world'.replaceAll('o', '0')        // same — replaceAll with string
+"hello world".replace(/o/g, "0"); // 'hell0 w0rld'
+"hello world".replaceAll("o", "0"); // same — replaceAll with string
 
 // Replace with captured groups
-'2025-11-15'.replace(
+"2025-11-15".replace(
   /(\d{4})-(\d{2})-(\d{2})/,
-  '$3/$2/$1'                               // rearrange using $1 $2 $3
-)   // '15/11/2025'
+  "$3/$2/$1", // rearrange using $1 $2 $3
+); // '15/11/2025'
 
 // Replace with named groups
-'2025-11-15'.replace(
-  /(?<y>\d{4})-(?<m>\d{2})-(?<d>\d{2})/,
-  '$<d>/$<m>/$<y>'
-)   // '15/11/2025'
+"2025-11-15".replace(/(?<y>\d{4})-(?<m>\d{2})-(?<d>\d{2})/, "$<d>/$<m>/$<y>"); // '15/11/2025'
 
 // Replace with a function
-'hello world'.replace(/\b\w/g, char => char.toUpperCase())
+"hello world".replace(/\b\w/g, (char) => char.toUpperCase());
 // 'Hello World'
 
 // Remove HTML tags
-'<b>bold</b> text'.replace(/<[^>]+>/g, '')   // 'bold text'
+"<b>bold</b> text".replace(/<[^>]+>/g, ""); // 'bold text'
 ```
 
 ### `search()` — Index of First Match
 
 ```javascript
-'hello world'.search(/world/)   // 6
-'hello world'.search(/xyz/)     // -1
+"hello world".search(/world/); // 6
+"hello world".search(/xyz/); // -1
 ```
 
 ### `split()` — Split by Pattern
 
 ```javascript
-'one  two   three'.split(/\s+/)    // ['one', 'two', 'three']
-'2025-11-15'.split(/[-\/]/)        // ['2025', '11', '15']
+"one  two   three".split(/\s+/); // ['one', 'two', 'three']
+"2025-11-15".split(/[-\/]/); // ['2025', '11', '15']
 ```
 
 ---
@@ -382,15 +381,15 @@ const regex = /\d+/g;
 
 // exec() — returns one match at a time, advances lastIndex
 let match;
-const str = 'room 42, seat 7';
+const str = "room 42, seat 7";
 while ((match = regex.exec(str)) !== null) {
-  console.log(match[0], 'at index', match.index);
+  console.log(match[0], "at index", match.index);
   // '42' at index 5
   // '7' at index 14
 }
 
 // test() — boolean
-regex.test('abc 123')   // true (also advances lastIndex with g flag)
+regex.test("abc 123"); // true (also advances lastIndex with g flag)
 ```
 
 ### The `lastIndex` Trap
@@ -399,13 +398,13 @@ A regex with the `g` flag remembers where it left off via `lastIndex`. Reusing a
 
 ```javascript
 const re = /\d+/g;
-re.test('abc 1');   // true  — lastIndex moves to 6
-re.test('abc 1');   // false — starts searching from index 6, finds nothing
-re.lastIndex = 0;   // reset manually
-re.test('abc 1');   // true again
+re.test("abc 1"); // true  — lastIndex moves to 6
+re.test("abc 1"); // false — starts searching from index 6, finds nothing
+re.lastIndex = 0; // reset manually
+re.test("abc 1"); // true again
 
 // Avoid the trap: create a new regex each time, or use string methods
-'abc 1'.match(/\d+/)   // always starts fresh — no lastIndex issue
+"abc 1".match(/\d+/); // always starts fresh — no lastIndex issue
 ```
 
 ---
@@ -415,22 +414,23 @@ re.test('abc 1');   // true again
 ```javascript
 // Email (reasonable approximation — full RFC 5322 is much more complex)
 const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-email.test('user@example.com')    // true
-email.test('invalid@')            // false
+email.test("user@example.com"); // true
+email.test("invalid@"); // false
 
 // URL
 const url = /^https?:\/\/[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=]+$/i;
 
 // Phone (Sri Lankan — 07X-XXXXXXX)
 const slPhone = /^(?:\+94|0)?7[01245678]\d{7}$/;
-slPhone.test('0771234567')    // true
-slPhone.test('+94771234567')  // true
+slPhone.test("0771234567"); // true
+slPhone.test("+94771234567"); // true
 
 // Postal code (US ZIP)
 const usZip = /^\d{5}(-\d{4})?$/;
 
 // Strong password (min 8 chars, uppercase, lowercase, digit, special char)
-const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const strongPassword =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 // Username (3-20 chars, letters, digits, underscores, hyphens)
 const username = /^[a-zA-Z0-9_-]{3,20}$/;
@@ -440,32 +440,32 @@ const isoDate = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
 // Hex colour
 const hexColor = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-hexColor.test('#ff0000')   // true
-hexColor.test('#fff')      // true
-hexColor.test('ff0000')    // false — missing #
+hexColor.test("#ff0000"); // true
+hexColor.test("#fff"); // true
+hexColor.test("ff0000"); // false — missing #
 
 // Extract all URLs from text
 const urlExtractor = /https?:\/\/[^\s"'<>]+/gi;
 text.match(urlExtractor);
 
 // Strip HTML tags
-str.replace(/<[^>]*>/g, '');
+str.replace(/<[^>]*>/g, "");
 
 // Slug (URL-friendly string)
 function slugify(str) {
   return str
     .toLowerCase()
-    .replace(/[^\w\s-]/g, '')    // remove non-word chars
-    .replace(/[\s_-]+/g, '-')   // spaces and underscores to hyphens
-    .replace(/^-+|-+$/g, '');   // trim leading/trailing hyphens
+    .replace(/[^\w\s-]/g, "") // remove non-word chars
+    .replace(/[\s_-]+/g, "-") // spaces and underscores to hyphens
+    .replace(/^-+|-+$/g, ""); // trim leading/trailing hyphens
 }
-slugify('Hello World! How are you?')   // 'hello-world-how-are-you'
+slugify("Hello World! How are you?"); // 'hello-world-how-are-you'
 
 // Trim whitespace (pre-ES2019 — now use str.trimStart() / str.trimEnd())
-str.replace(/^\s+|\s+$/g, '');
+str.replace(/^\s+|\s+$/g, "");
 
 // Camel case to kebab case
-'camelCaseString'.replace(/([A-Z])/g, '-$1').toLowerCase()
+"camelCaseString".replace(/([A-Z])/g, "-$1").toLowerCase();
 // 'camel-case-string'
 ```
 
