@@ -21,35 +21,37 @@ In JavaScript, functions are values — the same as numbers, strings, and object
 
 ```javascript
 // Store a function in a variable
-const greet = function(name) { return `Hello, ${name}`; };
+const greet = function (name) {
+  return `Hello, ${name}`;
+};
 
 // Store in an object property (method)
 const user = {
   name: "Ashan",
-  greet() { return `Hello, I'm ${this.name}`; },
+  greet() {
+    return `Hello, I'm ${this.name}`;
+  },
 };
 
 // Store in an array
-const handlers = [
-  (x) => x * 2,
-  (x) => x + 10,
-  (x) => x ** 2,
-];
-handlers[0](5);  // 10
+const handlers = [(x) => x * 2, (x) => x + 10, (x) => x ** 2];
+handlers[0](5); // 10
 
 // Pass a function as an argument
 function applyTwice(fn, value) {
   return fn(fn(value));
 }
-applyTwice(x => x * 2, 3);  // 12  (3 → 6 → 12)
+applyTwice((x) => x * 2, 3); // 12  (3 → 6 → 12)
 
 // Return a function from a function
 function makeMultiplier(factor) {
-  return function(n) { return n * factor; };
+  return function (n) {
+    return n * factor;
+  };
 }
 const triple = makeMultiplier(3);
-triple(5);   // 15
-triple(10);  // 30
+triple(5); // 15
+triple(10); // 30
 ```
 
 This is the foundation of functional programming in JavaScript and explains how React hooks, array methods, and event handlers all work.
@@ -67,14 +69,14 @@ You've already seen the built-in higher-order functions: `map`, `filter`, `re
 function retry(fn, maxAttempts, delay) {
   let attempts = 0;
 
-  return async function(...args) {
+  return async function (...args) {
     while (attempts < maxAttempts) {
       try {
         return await fn(...args);
       } catch (err) {
         attempts++;
         if (attempts === maxAttempts) throw err;
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
   };
@@ -84,15 +86,21 @@ const fetchWithRetry = retry(fetchUserData, 3, 1000);
 await fetchWithRetry("u123");
 
 // Composition — apply functions in sequence
-const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x);
-const pipe    = (...fns) => x => fns.reduce((v, f) => f(v), x);
+const compose =
+  (...fns) =>
+  (x) =>
+    fns.reduceRight((v, f) => f(v), x);
+const pipe =
+  (...fns) =>
+  (x) =>
+    fns.reduce((v, f) => f(v), x);
 
 const processName = pipe(
-  s => s.trim(),
-  s => s.toLowerCase(),
-  s => s.replace(/\s+/g, "-"),
+  (s) => s.trim(),
+  (s) => s.toLowerCase(),
+  (s) => s.replace(/\s+/g, "-"),
 );
-processName("  Hello World  ");  // "hello-world"
+processName("  Hello World  "); // "hello-world"
 ```
 
 ### `forEach`
@@ -121,24 +129,32 @@ A closure is a function that remembers the variables from the scope where it was
 
 ```javascript
 function makeCounter(start = 0) {
-  let count = start;  // this variable is "closed over"
+  let count = start; // this variable is "closed over"
 
   return {
-    increment() { return ++count; },
-    decrement() { return --count; },
-    reset()     { count = start; },
-    value()     { return count; },
+    increment() {
+      return ++count;
+    },
+    decrement() {
+      return --count;
+    },
+    reset() {
+      count = start;
+    },
+    value() {
+      return count;
+    },
   };
 }
 
 const counter = makeCounter(10);
-counter.increment();  // 11
-counter.increment();  // 12
-counter.decrement();  // 11
-counter.value();      // 11
+counter.increment(); // 11
+counter.increment(); // 12
+counter.decrement(); // 11
+counter.value(); // 11
 
 // count is private — inaccessible from outside
-counter.count;        // undefined
+counter.count; // undefined
 ```
 
 Closures are used constantly in JavaScript: for data privacy, for factory functions, for event handlers that remember context. The full treatment is in File 08.
@@ -157,20 +173,20 @@ const user = {
     return `Hello, I'm ${this.name}`;
   },
 };
-user.greet();  // "Hello, I'm Ashan" — this = user
+user.greet(); // "Hello, I'm Ashan" — this = user
 
 // 2. Plain function call — `this` is undefined (strict mode) or global
 function standalone() {
   console.log(this);
 }
-standalone();  // undefined (in strict mode / ES modules)
+standalone(); // undefined (in strict mode / ES modules)
 
 // 3. Arrow functions — `this` is inherited from the enclosing scope
 const obj = {
   name: "Ashan",
   greet: () => {
     // Arrow function: this is NOT obj, it's the surrounding scope
-    return `Hello, I'm ${this?.name}`;  // this.name is undefined
+    return `Hello, I'm ${this?.name}`; // this.name is undefined
   },
   greetCorrect() {
     // Regular method — this works
@@ -179,12 +195,12 @@ const obj = {
     return inner();
   },
 };
-obj.greet();         // "Hello, I'm undefined" — arrow ignores obj
-obj.greetCorrect();  // "Inner sees: Ashan" — arrow inherits method's this
+obj.greet(); // "Hello, I'm undefined" — arrow ignores obj
+obj.greetCorrect(); // "Inner sees: Ashan" — arrow inherits method's this
 
 // 4. Context loss — common bug
-const greet = user.greet;  // detached from object
-greet();  // undefined — `this` is no longer `user`
+const greet = user.greet; // detached from object
+greet(); // undefined — `this` is no longer `user`
 
 // Fix: bind, arrow wrapper, or class field arrow (covered in File 09)
 ```
@@ -203,19 +219,19 @@ function greet(greeting, punctuation) {
 const user = { name: "Ashan" };
 
 // call — invoke with explicit this, args passed individually
-greet.call(user, "Hello", "!");      // "Hello, I'm Ashan!"
+greet.call(user, "Hello", "!"); // "Hello, I'm Ashan!"
 
 // apply — invoke with explicit this, args passed as array
-greet.apply(user, ["Hello", "!"]);   // "Hello, I'm Ashan!"
+greet.apply(user, ["Hello", "!"]); // "Hello, I'm Ashan!"
 
 // bind — returns a NEW function with this permanently set
 const boundGreet = greet.bind(user);
-boundGreet("Hey", ".");              // "Hey, I'm Ashan."
+boundGreet("Hey", "."); // "Hey, I'm Ashan."
 
 // bind with pre-filled args (partial application)
 const helloGreet = greet.bind(user, "Hello");
-helloGreet("!");  // "Hello, I'm Ashan!"
-helloGreet("?");  // "Hello, I'm Ashan?"
+helloGreet("!"); // "Hello, I'm Ashan!"
+helloGreet("?"); // "Hello, I'm Ashan?"
 ```
 
 ---
@@ -251,8 +267,8 @@ JSON.stringify(student, ["name", "grade"]);
 
 // JSON.parse — JSON string → JS value
 const parsed = JSON.parse(json);
-parsed.name;         // "Ashan"
-parsed.scores[0];    // 82
+parsed.name; // "Ashan"
+parsed.scores[0]; // 82
 ```
 
 ### What JSON Can and Cannot Represent
@@ -262,17 +278,17 @@ parsed.scores[0];    // 82
 //   strings, numbers, booleans, null, arrays, objects
 
 // JSON does NOT support — these are dropped or converted:
-JSON.stringify({ fn: () => "hello" });       // '{}'  — functions dropped
-JSON.stringify({ date: new Date() });         // '{"date":"2026-03-15T..."}' — Date → string
-JSON.stringify({ undef: undefined });         // '{}'  — undefined dropped
-JSON.stringify({ inf: Infinity });            // '{"inf":null}' — Infinity → null
-JSON.stringify({ nan: NaN });                 // '{"nan":null}' — NaN → null
+JSON.stringify({ fn: () => "hello" }); // '{}'  — functions dropped
+JSON.stringify({ date: new Date() }); // '{"date":"2026-03-15T..."}' — Date → string
+JSON.stringify({ undef: undefined }); // '{}'  — undefined dropped
+JSON.stringify({ inf: Infinity }); // '{"inf":null}' — Infinity → null
+JSON.stringify({ nan: NaN }); // '{"nan":null}' — NaN → null
 
 // Deep clone using JSON (simple but lossy)
 const clone = JSON.parse(JSON.stringify(obj));
 // Loses: functions, undefined, Date objects, Infinity, NaN, Map, Set
 // Use structuredClone() for a proper deep clone
-const betterClone = structuredClone(obj);  // preserves more types
+const betterClone = structuredClone(obj); // preserves more types
 ```
 
 ### Error Handling
@@ -297,9 +313,9 @@ JavaScript's `Date` object is notoriously awkward. Know its quirks.
 
 ```javascript
 // Creating dates
-const now = new Date();                          // current date/time
-const specific = new Date("2026-01-15");         // from ISO string
-const fromMs = new Date(1673740800000);          // from Unix timestamp (ms)
+const now = new Date(); // current date/time
+const specific = new Date("2026-01-15"); // from ISO string
+const fromMs = new Date(1673740800000); // from Unix timestamp (ms)
 const explicit = new Date(2026, 0, 15, 10, 30); // year, month (0-indexed!), day, hour, min
 
 // WARNING: month is 0-indexed
@@ -307,24 +323,24 @@ const explicit = new Date(2026, 0, 15, 10, 30); // year, month (0-indexed!), day
 
 // Getting components
 const d = new Date("2026-03-15T10:30:00");
-d.getFullYear();    // 2026
-d.getMonth();       // 2 (March — 0-indexed!)
-d.getDate();        // 15 (day of month)
-d.getDay();         // 0-6 (0 = Sunday)
-d.getHours();       // 10
-d.getMinutes();     // 30
-d.getSeconds();     // 0
-d.getTime();        // Unix timestamp in milliseconds
-d.toISOString();    // "2026-03-15T10:30:00.000Z" — best for storage
+d.getFullYear(); // 2026
+d.getMonth(); // 2 (March — 0-indexed!)
+d.getDate(); // 15 (day of month)
+d.getDay(); // 0-6 (0 = Sunday)
+d.getHours(); // 10
+d.getMinutes(); // 30
+d.getSeconds(); // 0
+d.getTime(); // Unix timestamp in milliseconds
+d.toISOString(); // "2026-03-15T10:30:00.000Z" — best for storage
 
 // Comparing dates — compare timestamps
 const d1 = new Date("2026-01-01");
 const d2 = new Date("2026-06-01");
-d1 < d2;   // true
-d1.getTime() === d2.getTime();  // false
+d1 < d2; // true
+d1.getTime() === d2.getTime(); // false
 
 // Date arithmetic — work in milliseconds
-const ONE_DAY_MS = 24 * 60 * 60 * 1000;  // 86400000
+const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 86400000
 const tomorrow = new Date(Date.now() + ONE_DAY_MS);
 const daysUntil = (targetDate) => {
   const diff = targetDate.getTime() - Date.now();
@@ -337,11 +353,15 @@ const formatter = new Intl.DateTimeFormat("en-LK", {
   month: "long",
   day: "numeric",
 });
-formatter.format(new Date());  // "March 15, 2026"
+formatter.format(new Date()); // "March 15, 2026"
 
 // Or use toLocaleDateString
-new Date().toLocaleDateString("si-LK");  // Sinhala locale
-new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+new Date().toLocaleDateString("si-LK"); // Sinhala locale
+new Date().toLocaleDateString("en-US", {
+  weekday: "long",
+  month: "long",
+  day: "numeric",
+});
 // "Saturday, March 15"
 
 // For serious date work, use a library like date-fns or Temporal API (upcoming)
@@ -365,9 +385,14 @@ const timerId = setTimeout(() => {
 clearTimeout(timerId);
 
 // With arguments
-setTimeout((name, score) => {
-  console.log(`${name}: ${score}`);
-}, 500, "Ashan", 82);
+setTimeout(
+  (name, score) => {
+    console.log(`${name}: ${score}`);
+  },
+  500,
+  "Ashan",
+  82,
+);
 
 // 0ms delay — runs after current synchronous code completes
 setTimeout(() => console.log("deferred"), 0);
@@ -386,18 +411,18 @@ const intervalId = setInterval(() => {
   console.log(`Tick ${count}`);
 
   if (count >= 5) {
-    clearInterval(intervalId);  // stop after 5 ticks
+    clearInterval(intervalId); // stop after 5 ticks
     console.log("Done");
   }
 }, 1000);
 
 // Real-world: polling for updates
 function startPolling(fetchFn, interval = 30_000) {
-  fetchFn();  // run immediately
+  fetchFn(); // run immediately
 
   const id = setInterval(fetchFn, interval);
 
-  return () => clearInterval(id);  // return a cleanup function
+  return () => clearInterval(id); // return a cleanup function
 }
 
 const stopPolling = startPolling(() => refreshNotifications(), 30_000);
@@ -412,8 +437,8 @@ These are critical patterns for performance with events that fire rapidly (input
 // Debounce — wait until the user stops firing events for N ms
 function debounce(fn, delay) {
   let timerId;
-  return function(...args) {
-    clearTimeout(timerId);  // cancel previous timer
+  return function (...args) {
+    clearTimeout(timerId); // cancel previous timer
     timerId = setTimeout(() => fn.apply(this, args), delay);
   };
 }
@@ -429,7 +454,7 @@ inputElement.addEventListener("input", (e) => search(e.target.value));
 // Throttle — run at most once every N ms
 function throttle(fn, limit) {
   let lastRun = 0;
-  return function(...args) {
+  return function (...args) {
     const now = Date.now();
     if (now - lastRun >= limit) {
       lastRun = now;
@@ -454,16 +479,16 @@ window.addEventListener("scroll", onScroll);
 
 function animate(element) {
   let start = null;
-  const duration = 1000;  // 1 second
+  const duration = 1000; // 1 second
 
   function step(timestamp) {
     if (!start) start = timestamp;
     const progress = Math.min((timestamp - start) / duration, 1);
 
-    element.style.opacity = progress;  // fade in over 1 second
+    element.style.opacity = progress; // fade in over 1 second
 
     if (progress < 1) {
-      requestAnimationFrame(step);     // schedule next frame
+      requestAnimationFrame(step); // schedule next frame
     }
   }
 
@@ -523,4 +548,4 @@ Timers:
 
 ---
 
-_Next: [03 — Modern JavaScript (ES6+)](./03%20-%20Modern%20JavaScript%20\(ES6%2B\).md)_
+_Next: [03 — Modern JavaScript (ES6+)](<./03%20-%20Modern%20JavaScript%20(ES6%2B).md>)_

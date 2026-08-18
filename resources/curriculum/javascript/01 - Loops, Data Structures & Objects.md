@@ -26,27 +26,27 @@ An array is an ordered list of values. Values can be any type, and you can mix t
 const empty = [];
 const numbers = [1, 2, 3, 4, 5];
 const names = ["Ashan", "Dineth", "Kavya"];
-const mixed = [1, "hello", true, null];  // valid, but unusual
+const mixed = [1, "hello", true, null]; // valid, but unusual
 
 // Accessing elements
-numbers[0]      // 1 — zero-indexed
-numbers[4]      // 5
-numbers.at(-1)  // 5 — last element (modern, cleaner)
-numbers.at(-2)  // 4 — second to last
+numbers[0]; // 1 — zero-indexed
+numbers[4]; // 5
+numbers.at(-1); // 5 — last element (modern, cleaner)
+numbers.at(-2); // 4 — second to last
 
 // Modifying
-numbers[0] = 10;           // replace first element
-numbers.push(6);           // add to end → [1, 2, 3, 4, 5, 6]
-numbers.pop();             // remove from end → returns 6
-numbers.unshift(0);        // add to beginning → [0, 1, 2, 3, 4, 5]
-numbers.shift();           // remove from beginning → returns 0
+numbers[0] = 10; // replace first element
+numbers.push(6); // add to end → [1, 2, 3, 4, 5, 6]
+numbers.pop(); // remove from end → returns 6
+numbers.unshift(0); // add to beginning → [0, 1, 2, 3, 4, 5]
+numbers.shift(); // remove from beginning → returns 0
 
 // Length
-numbers.length             // 5
+numbers.length; // 5
 
 // Checking
-Array.isArray(numbers)     // true
-Array.isArray("string")    // false
+Array.isArray(numbers); // true
+Array.isArray("string"); // false
 ```
 
 ### Slicing and Splicing
@@ -55,22 +55,23 @@ Array.isArray("string")    // false
 const arr = [1, 2, 3, 4, 5];
 
 // slice — returns a NEW array (non-destructive)
-arr.slice(1, 3)    // [2, 3] — from index 1, up to (not including) 3
-arr.slice(2)       // [3, 4, 5] — from index 2 to end
-arr.slice(-2)      // [4, 5] — last 2 elements
+arr.slice(1, 3); // [2, 3] — from index 1, up to (not including) 3
+arr.slice(2); // [3, 4, 5] — from index 2 to end
+arr.slice(-2); // [4, 5] — last 2 elements
 // arr is unchanged
 
 // splice — modifies the ORIGINAL array (destructive)
-const removed = arr.splice(1, 2);  // remove 2 elements starting at index 1
+const removed = arr.splice(1, 2); // remove 2 elements starting at index 1
 // arr is now [1, 4, 5], removed is [2, 3]
 
-arr.splice(1, 0, 10, 20);  // insert 10, 20 at index 1 without removing
+arr.splice(1, 0, 10, 20); // insert 10, 20 at index 1 without removing
 // arr is now [1, 10, 20, 4, 5]
 
 // Flattening nested arrays
-[1, [2, 3], [4, [5]]].flat()     // [1, 2, 3, 4, [5]] — one level
-[1, [2, 3], [4, [5]]].flat(2)    // [1, 2, 3, 4, 5] — two levels
-[1, [2, [3, [4]]]].flat(Infinity) // [1, 2, 3, 4] — all levels
+[1, [2, 3], [4, [5]]]
+  .flat() // [1, 2, 3, 4, [5]] — one level
+  [(1, [2, 3], [4, [5]])].flat(2) // [1, 2, 3, 4, 5] — two levels
+  [(1, [2, [3, [4]]])].flat(Infinity); // [1, 2, 3, 4] — all levels
 ```
 
 ---
@@ -81,45 +82,44 @@ These methods return NEW arrays. They don't modify the original.
 
 ```javascript
 const students = [
-  { name: "Ashan",  grade: 11, score: 82 },
+  { name: "Ashan", grade: 11, score: 82 },
   { name: "Dineth", grade: 12, score: 91 },
-  { name: "Kavya",  grade: 11, score: 67 },
-  { name: "Saman",  grade: 12, score: 55 },
+  { name: "Kavya", grade: 11, score: 67 },
+  { name: "Saman", grade: 12, score: 55 },
 ];
 
 // map — transform each element, returns new array of same length
-const names = students.map(s => s.name);
+const names = students.map((s) => s.name);
 // ["Ashan", "Dineth", "Kavya", "Saman"]
 
-const withGrade = students.map(s => ({
+const withGrade = students.map((s) => ({
   ...s,
-  letterGrade: s.score >= 75 ? "A" : s.score >= 65 ? "B" : s.score >= 50 ? "C" : "F",
+  letterGrade:
+    s.score >= 75 ? "A" : s.score >= 65 ? "B" : s.score >= 50 ? "C" : "F",
 }));
 
 // filter — keep only elements that pass a test
-const grade11 = students.filter(s => s.grade === 11);
+const grade11 = students.filter((s) => s.grade === 11);
 // [{ name: "Ashan", ... }, { name: "Kavya", ... }]
 
-const passed = students.filter(s => s.score >= 50);
+const passed = students.filter((s) => s.score >= 50);
 
 // Chaining: filter then map
-const grade11Names = students
-  .filter(s => s.grade === 11)
-  .map(s => s.name);
+const grade11Names = students.filter((s) => s.grade === 11).map((s) => s.name);
 // ["Ashan", "Kavya"]
 
 // flatMap — map then flatten one level
-const words = ["hello world", "foo bar"].flatMap(s => s.split(" "));
+const words = ["hello world", "foo bar"].flatMap((s) => s.split(" "));
 // ["hello", "world", "foo", "bar"]
 
 // sort — MUTATES original, returns the same array (careful!)
 const scores = [82, 91, 67, 55];
-scores.sort((a, b) => a - b);   // ascending: [55, 67, 82, 91]
-scores.sort((a, b) => b - a);   // descending: [91, 82, 67, 55]
+scores.sort((a, b) => a - b); // ascending: [55, 67, 82, 91]
+scores.sort((a, b) => b - a); // descending: [91, 82, 67, 55]
 
 // Sort objects
-students.sort((a, b) => b.score - a.score);  // highest score first
-students.sort((a, b) => a.name.localeCompare(b.name));  // alphabetical
+students.sort((a, b) => b.score - a.score); // highest score first
+students.sort((a, b) => a.name.localeCompare(b.name)); // alphabetical
 
 // To sort without mutating:
 const sorted = [...students].sort((a, b) => b.score - a.score);
@@ -131,37 +131,37 @@ const sorted = [...students].sort((a, b) => b.score - a.score);
 
 ```javascript
 const students = [
-  { name: "Ashan",  grade: 11, score: 82 },
+  { name: "Ashan", grade: 11, score: 82 },
   { name: "Dineth", grade: 12, score: 91 },
-  { name: "Kavya",  grade: 11, score: 67 },
+  { name: "Kavya", grade: 11, score: 67 },
 ];
 
 // find — returns the FIRST element that passes, or undefined
-const topStudent = students.find(s => s.score > 85);
+const topStudent = students.find((s) => s.score > 85);
 // { name: "Dineth", grade: 12, score: 91 }
 
 // findIndex — returns the INDEX of the first match, or -1
-const idx = students.findIndex(s => s.name === "Kavya");
+const idx = students.findIndex((s) => s.name === "Kavya");
 // 2
 
 // findLast / findLastIndex — searches from the end (ES2023)
-const lastGrade11 = students.findLast(s => s.grade === 11);
+const lastGrade11 = students.findLast((s) => s.grade === 11);
 
 // some — true if ANY element passes the test
-students.some(s => s.score > 90);   // true
-students.some(s => s.score > 100);  // false
+students.some((s) => s.score > 90); // true
+students.some((s) => s.score > 100); // false
 
 // every — true if ALL elements pass the test
-students.every(s => s.score >= 50);  // true (all passed)
-students.every(s => s.score >= 70);  // false (Kavya: 67)
+students.every((s) => s.score >= 50); // true (all passed)
+students.every((s) => s.score >= 70); // false (Kavya: 67)
 
 // includes — check if a VALUE is in the array (use with primitives)
-[1, 2, 3].includes(2);       // true
-["a", "b"].includes("c");    // false
+[1, 2, 3].includes(2); // true
+["a", "b"].includes("c"); // false
 
 // indexOf — returns first index of value, or -1
-[1, 2, 3, 2].indexOf(2);     // 1
-[1, 2, 3].indexOf(99);       // -1
+[1, 2, 3, 2].indexOf(2); // 1
+[1, 2, 3].indexOf(99); // -1
 ```
 
 ---
@@ -183,20 +183,23 @@ const avg = scores.reduce((acc, score) => acc + score, 0) / scores.length;
 // 74.6
 
 // Max (though Math.max(...scores) is simpler)
-const max = scores.reduce((acc, score) => score > acc ? score : acc, -Infinity);
+const max = scores.reduce(
+  (acc, score) => (score > acc ? score : acc),
+  -Infinity,
+);
 // 91
 
 // Group by a property
 const students = [
-  { name: "Ashan",  grade: 11 },
+  { name: "Ashan", grade: 11 },
   { name: "Dineth", grade: 12 },
-  { name: "Kavya",  grade: 11 },
-  { name: "Saman",  grade: 12 },
+  { name: "Kavya", grade: 11 },
+  { name: "Saman", grade: 12 },
 ];
 
 const byGrade = students.reduce((groups, student) => {
   const key = student.grade;
-  groups[key] ??= [];         // create array if doesn't exist
+  groups[key] ??= []; // create array if doesn't exist
   groups[key].push(student);
   return groups;
 }, {});
@@ -223,13 +226,13 @@ const userById = students.reduce((map, student) => {
 
 ```javascript
 for (let i = 0; i < 5; i++) {
-  console.log(i);  // 0, 1, 2, 3, 4
+  console.log(i); // 0, 1, 2, 3, 4
 }
 
 // Iterate with index
 const arr = ["a", "b", "c"];
 for (let i = 0; i < arr.length; i++) {
-  console.log(i, arr[i]);  // 0 "a", 1 "b", 2 "c"
+  console.log(i, arr[i]); // 0 "a", 1 "b", 2 "c"
 }
 ```
 
@@ -296,14 +299,14 @@ do {
 for (const student of students) {
   if (student.score > 90) {
     console.log("Found top student:", student.name);
-    break;  // stop looking
+    break; // stop looking
   }
 }
 
 // continue — skip this iteration, continue to next
 for (const student of students) {
-  if (student.grade !== 11) continue;  // skip non-grade-11
-  console.log(student.name);           // only grade 11 students
+  if (student.grade !== 11) continue; // skip non-grade-11
+  console.log(student.name); // only grade 11 students
 }
 ```
 
@@ -329,19 +332,19 @@ const student = {
 };
 
 // Access properties
-student.name            // "Ashan" — dot notation
-student["name"]         // "Ashan" — bracket notation (use when key is dynamic)
-student.address.city    // "Mathugama" — nested access
-student.nonExistent     // undefined — no error
+student.name; // "Ashan" — dot notation
+student["name"]; // "Ashan" — bracket notation (use when key is dynamic)
+student.address.city; // "Mathugama" — nested access
+student.nonExistent; // undefined — no error
 
 // Modify
 student.grade = 12;
-student.email = "ashan@school.lk";  // add new property
-delete student.email;               // remove property (avoid in production)
+student.email = "ashan@school.lk"; // add new property
+delete student.email; // remove property (avoid in production)
 
 // Computed property names
 const field = "score";
-const obj = { [field]: 95 };  // { score: 95 }
+const obj = { [field]: 95 }; // { score: 95 }
 ```
 
 ### Object Methods
@@ -349,9 +352,9 @@ const obj = { [field]: 95 };  // { score: 95 }
 ```javascript
 const student = { name: "Ashan", grade: 11, score: 82 };
 
-Object.keys(student)     // ["name", "grade", "score"]
-Object.values(student)   // ["Ashan", 11, 82]
-Object.entries(student)  // [["name","Ashan"], ["grade",11], ["score",82]]
+Object.keys(student); // ["name", "grade", "score"]
+Object.values(student); // ["Ashan", 11, 82]
+Object.entries(student); // [["name","Ashan"], ["grade",11], ["score",82]]
 
 // Iterating over entries
 for (const [key, value] of Object.entries(student)) {
@@ -365,16 +368,19 @@ const user = Object.assign({}, defaults, { name: "Ashan" });
 
 // Object.freeze — prevent modifications
 const config = Object.freeze({ apiUrl: "https://api.cwwkcc.lk" });
-config.apiUrl = "other";  // silently fails in sloppy mode, throws in strict
-config.apiUrl;            // still "https://api.cwwkcc.lk"
+config.apiUrl = "other"; // silently fails in sloppy mode, throws in strict
+config.apiUrl; // still "https://api.cwwkcc.lk"
 
 // Object.fromEntries — entries array → object
-const entries = [["name", "Ashan"], ["grade", 11]];
-Object.fromEntries(entries)  // { name: "Ashan", grade: 11 }
+const entries = [
+  ["name", "Ashan"],
+  ["grade", 11],
+];
+Object.fromEntries(entries); // { name: "Ashan", grade: 11 }
 
 // Useful pattern: transform object values
 const doubled = Object.fromEntries(
-  Object.entries({ a: 1, b: 2, c: 3 }).map(([k, v]) => [k, v * 2])
+  Object.entries({ a: 1, b: 2, c: 3 }).map(([k, v]) => [k, v * 2]),
 );
 // { a: 2, b: 4, c: 6 }
 ```
@@ -403,7 +409,9 @@ const { name, role = "student" } = student;
 // role = "student" (wasn't in student object)
 
 // Nested
-const { address: { city, district } } = { address: { city: "Mathugama", district: "Kalutara" } };
+const {
+  address: { city, district },
+} = { address: { city: "Mathugama", district: "Kalutara" } };
 // city = "Mathugama", district = "Kalutara"
 
 // Rest — collect remaining properties
@@ -439,7 +447,8 @@ const [a = 0, b = 0, c = 0] = [1, 2];
 // a = 1, b = 2, c = 0
 
 // Swap variables — classic trick
-let x = 1, y = 2;
+let x = 1,
+  y = 2;
 [x, y] = [y, x];
 // x = 2, y = 1
 
@@ -460,9 +469,9 @@ const [min, max] = getRange();
 // Arrays
 const a = [1, 2, 3];
 const b = [4, 5, 6];
-const combined = [...a, ...b];        // [1, 2, 3, 4, 5, 6]
-const withMiddle = [...a, 99, ...b];  // [1, 2, 3, 99, 4, 5, 6]
-const copy = [...a];                  // shallow copy
+const combined = [...a, ...b]; // [1, 2, 3, 4, 5, 6]
+const withMiddle = [...a, 99, ...b]; // [1, 2, 3, 99, 4, 5, 6]
+const copy = [...a]; // shallow copy
 
 // Objects
 const defaults = { role: "student", active: true };
@@ -478,7 +487,7 @@ const updated = { ...student, score: 90 };
 
 // Spread into function call
 const numbers = [3, 1, 4, 1, 5, 9];
-Math.max(...numbers);    // 9 — same as Math.max(3, 1, 4, 1, 5, 9)
+Math.max(...numbers); // 9 — same as Math.max(3, 1, 4, 1, 5, 9)
 ```
 
 ### Rest `...` — collect remaining items
@@ -510,36 +519,36 @@ const map = new Map();
 map.set("name", "Ashan");
 map.set(42, "the answer");
 map.set(true, "boolean key");
-map.set({ id: 1 }, "object key");  // objects as keys!
+map.set({ id: 1 }, "object key"); // objects as keys!
 
 // Get
-map.get("name");   // "Ashan"
-map.get(42);       // "the answer"
+map.get("name"); // "Ashan"
+map.get(42); // "the answer"
 map.get("missing"); // undefined
 
 // Has
-map.has("name");   // true
-map.has("other");  // false
+map.has("name"); // true
+map.has("other"); // false
 
 // Delete
 map.delete("name");
 
 // Size
-map.size           // 3
+map.size; // 3
 
 // Iteration — Map preserves insertion order
 for (const [key, value] of map) {
   console.log(key, value);
 }
 
-map.keys()     // iterable of keys
-map.values()   // iterable of values
-map.entries()  // iterable of [key, value] pairs
+map.keys(); // iterable of keys
+map.values(); // iterable of values
+map.entries(); // iterable of [key, value] pairs
 
 // Create from entries
 const userMap = new Map([
   ["alice", { role: "admin" }],
-  ["bob",   { role: "user" }],
+  ["bob", { role: "user" }],
 ]);
 ```
 
@@ -553,14 +562,14 @@ const userMap = new Map([
 ### `Set` — collection of unique values
 
 ```javascript
-const set = new Set([1, 2, 3, 2, 1]);  // duplicates removed
+const set = new Set([1, 2, 3, 2, 1]); // duplicates removed
 // Set {1, 2, 3}
 
 set.add(4);
-set.add(2);   // already present — no change
-set.has(3);   // true
+set.add(2); // already present — no change
+set.has(3); // true
 set.delete(1);
-set.size;     // 3
+set.size; // 3
 
 // Iteration
 for (const value of set) {
@@ -575,16 +584,16 @@ const unique = [...new Set(withDuplicates)];
 // Check membership efficiently
 // Set.has() is O(1), Array.includes() is O(n)
 const allowedRoles = new Set(["admin", "teacher", "staff"]);
-allowedRoles.has("admin");    // true
-allowedRoles.has("student");  // false
+allowedRoles.has("admin"); // true
+allowedRoles.has("student"); // false
 
 // Set operations
 const a = new Set([1, 2, 3]);
 const b = new Set([2, 3, 4]);
 
-const union        = new Set([...a, ...b]);        // {1, 2, 3, 4}
-const intersection = new Set([...a].filter(x => b.has(x)));  // {2, 3}
-const difference   = new Set([...a].filter(x => !b.has(x))); // {1}
+const union = new Set([...a, ...b]); // {1, 2, 3, 4}
+const intersection = new Set([...a].filter((x) => b.has(x))); // {2, 3}
+const difference = new Set([...a].filter((x) => !b.has(x))); // {1}
 ```
 
 ---

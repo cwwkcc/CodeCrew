@@ -23,7 +23,7 @@ JavaScript is single-threaded. If you write blocking code that waits for somethi
 
 ```javascript
 // BLOCKING — imagine this takes 3 seconds
-const data = readFileFromDisk("data.json");  // blocks EVERYTHING for 3 seconds
+const data = readFileFromDisk("data.json"); // blocks EVERYTHING for 3 seconds
 render(data);
 
 // Meanwhile: user can't click buttons, page can't animate, nothing works
@@ -36,7 +36,7 @@ The solution: instead of waiting, _describe what to do when the result arrives_
 ```javascript
 // NON-BLOCKING — register what to do, keep going
 readFileFromDisk("data.json", (data) => {
-  render(data);  // called when file is ready
+  render(data); // called when file is ready
 });
 // Code continues here immediately, file is loading in the background
 ```
@@ -110,8 +110,9 @@ Once settled (fulfilled or rejected), a Promise cannot change state.
 function readFile(path) {
   return new Promise((resolve, reject) => {
     fs.readFile(path, "utf8", (err, data) => {
-      if (err) reject(err);      // fulfilled with error
-      else resolve(data);        // fulfilled with data
+      if (err)
+        reject(err); // fulfilled with error
+      else resolve(data); // fulfilled with data
     });
   });
 }
@@ -129,21 +130,21 @@ const rejected = Promise.reject(new Error("instant fail"));
 // .finally() — always runs, doesn't affect the chain
 
 readFile("data.json")
-  .then(data => {
-    return JSON.parse(data);  // return value becomes next .then()'s argument
+  .then((data) => {
+    return JSON.parse(data); // return value becomes next .then()'s argument
   })
-  .then(obj => {
-    return fetchDetails(obj.id);  // returning a Promise chains into it
+  .then((obj) => {
+    return fetchDetails(obj.id); // returning a Promise chains into it
   })
-  .then(details => {
+  .then((details) => {
     render(details);
   })
-  .catch(err => {
+  .catch((err) => {
     // Catches errors from ANY step above
     console.error("Pipeline failed:", err);
   })
   .finally(() => {
-    hideSpinner();  // always runs, chain value passes through unchanged
+    hideSpinner(); // always runs, chain value passes through unchanged
   });
 ```
 
@@ -153,20 +154,24 @@ readFile("data.json")
 // .then() can return:
 // 1. A value — next .then() receives it
 Promise.resolve(1)
-  .then(n => n + 1)    // returns 2
-  .then(n => n * 2)    // receives 2, returns 4
-  .then(console.log);  // logs 4
+  .then((n) => n + 1) // returns 2
+  .then((n) => n * 2) // receives 2, returns 4
+  .then(console.log); // logs 4
 
 // 2. A Promise — chain waits for it to resolve
 Promise.resolve("userId")
-  .then(id => fetchUser(id))     // fetchUser returns a Promise
-  .then(user => console.log(user)); // receives the user when fetchUser resolves
+  .then((id) => fetchUser(id)) // fetchUser returns a Promise
+  .then((user) => console.log(user)); // receives the user when fetchUser resolves
 
 // 3. Throw — error propagates to next .catch()
 Promise.resolve("data")
-  .then(data => { throw new Error("bad data"); })
-  .then(() => { /* skipped */ })
-  .catch(err => console.error(err.message));  // "bad data"
+  .then((data) => {
+    throw new Error("bad data");
+  })
+  .then(() => {
+    /* skipped */
+  })
+  .catch((err) => console.error(err.message)); // "bad data"
 ```
 
 ---
@@ -178,15 +183,15 @@ Promise.resolve("data")
 ```javascript
 // An async function always returns a Promise
 async function greet() {
-  return "Hello";  // same as: return Promise.resolve("Hello")
+  return "Hello"; // same as: return Promise.resolve("Hello")
 }
-greet().then(console.log);  // "Hello"
+greet().then(console.log); // "Hello"
 
 // await — pause until a Promise resolves, then unwrap the value
 // Only valid INSIDE an async function
 async function loadDashboard(userId) {
-  const user    = await fetchUser(userId);     // waits for fetchUser
-  const posts   = await fetchPosts(user.id);   // waits for fetchPosts
+  const user = await fetchUser(userId); // waits for fetchUser
+  const posts = await fetchPosts(user.id); // waits for fetchPosts
   const metrics = await fetchMetrics(user.id); // waits for fetchMetrics
 
   return { user, posts, metrics };
@@ -198,7 +203,7 @@ async function loadDashboard(userId) {
 ```javascript
 // In ES modules, await can be used at the top level
 // config.js
-const config = await fetch("/api/config").then(r => r.json());
+const config = await fetch("/api/config").then((r) => r.json());
 export { config };
 // This module won't finish loading until the fetch resolves
 ```
@@ -208,18 +213,18 @@ export { config };
 ```javascript
 // SEQUENTIAL — each waits for the previous (slow if independent)
 async function loadSequential(userId) {
-  const user  = await fetchUser(userId);    // 200ms
-  const posts = await fetchPosts(userId);   // 300ms — starts AFTER user
-  const stats = await fetchStats(userId);   // 100ms — starts AFTER posts
+  const user = await fetchUser(userId); // 200ms
+  const posts = await fetchPosts(userId); // 300ms — starts AFTER user
+  const stats = await fetchStats(userId); // 100ms — starts AFTER posts
   // Total: ~600ms
 }
 
 // PARALLEL — all start at the same time (fast)
 async function loadParallel(userId) {
   const [user, posts, stats] = await Promise.all([
-    fetchUser(userId),     // 200ms
-    fetchPosts(userId),    // 300ms — starts SAME TIME
-    fetchStats(userId),    // 100ms — starts SAME TIME
+    fetchUser(userId), // 200ms
+    fetchPosts(userId), // 300ms — starts SAME TIME
+    fetchStats(userId), // 100ms — starts SAME TIME
   ]);
   // Total: ~300ms (limited by slowest)
 }
@@ -227,8 +232,8 @@ async function loadParallel(userId) {
 // Rule: if operations are INDEPENDENT, run them in parallel
 // If B depends on A's result, they must be sequential
 async function dependent(userId) {
-  const user    = await fetchUser(userId);    // must come first
-  const details = await fetchDetails(user.profileId);  // needs user.profileId
+  const user = await fetchUser(userId); // must come first
+  const details = await fetchDetails(user.profileId); // needs user.profileId
   // These two MUST be sequential
 }
 ```
@@ -248,27 +253,33 @@ async function loadUser(id) {
     return await response.json();
   } catch (err) {
     console.error("Failed to load user:", err.message);
-    return null;  // return a safe default
+    return null; // return a safe default
   }
 }
 
 // Errors propagate upward through await chains
-async function step3() { throw new Error("step3 failed"); }
-async function step2() { return await step3(); }
-async function step1() { return await step2(); }
+async function step3() {
+  throw new Error("step3 failed");
+}
+async function step2() {
+  return await step3();
+}
+async function step1() {
+  return await step2();
+}
 
 async function main() {
   try {
     await step1();
   } catch (err) {
     // Catches step3's error — propagated through step2 and step1
-    console.error(err.message);  // "step3 failed"
+    console.error(err.message); // "step3 failed"
   }
 }
 
 // Async functions that throw become rejected Promises
 const rejected = loadUser("invalid");
-rejected.catch(err => console.error(err));
+rejected.catch((err) => console.error(err));
 // OR use await in try/catch
 ```
 
@@ -281,8 +292,8 @@ async function loadData() {
 }
 
 loadData()
-  .then(data => render(data))
-  .catch(err => showError(err));  // catches thrown errors too
+  .then((data) => render(data))
+  .catch((err) => showError(err)); // catches thrown errors too
 
 // Safe wrapper — never throws, always returns { data } or { error }
 async function safeLoad(fn) {
@@ -319,7 +330,7 @@ const results = await Promise.allSettled([
   fetchConfig(),
 ]);
 
-results.forEach(result => {
+results.forEach((result) => {
   if (result.status === "fulfilled") {
     console.log("Success:", result.value);
   } else {
@@ -332,7 +343,7 @@ results.forEach(result => {
 // Useful for timeouts
 function withTimeout(promise, ms) {
   const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error(`Timed out after ${ms}ms`)), ms)
+    setTimeout(() => reject(new Error(`Timed out after ${ms}ms`)), ms),
   );
   return Promise.race([promise, timeout]);
 }
@@ -366,20 +377,20 @@ if (!response.ok) {
   throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
 }
 
-const students = await response.json();  // parse JSON body
+const students = await response.json(); // parse JSON body
 
 // Other response body methods:
-await response.text();        // plain text
-await response.blob();        // binary data (images, files)
+await response.text(); // plain text
+await response.blob(); // binary data (images, files)
 await response.arrayBuffer(); // raw binary
-await response.formData();    // form data
+await response.formData(); // form data
 
 // Response properties
-response.status;        // 200, 201, 404, 500...
-response.statusText;    // "OK", "Not Found"...
-response.ok;            // true if status 200-299
-response.url;           // final URL (after redirects)
-response.headers.get("content-type");  // read a response header
+response.status; // 200, 201, 404, 500...
+response.statusText; // "OK", "Not Found"...
+response.ok; // true if status 200-299
+response.url; // final URL (after redirects)
+response.headers.get("content-type"); // read a response header
 ```
 
 ### POST, PUT, PATCH, DELETE
@@ -390,7 +401,7 @@ const response = await fetch("/api/students", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${accessToken}`,
+    Authorization: `Bearer ${accessToken}`,
   },
   body: JSON.stringify({
     name: "Ashan",
@@ -409,7 +420,7 @@ await fetch(`/api/students/${id}`, {
 // DELETE
 await fetch(`/api/students/${id}`, {
   method: "DELETE",
-  headers: { "Authorization": `Bearer ${token}` },
+  headers: { Authorization: `Bearer ${token}` },
 });
 
 // File upload with FormData
@@ -439,14 +450,14 @@ try {
   const response = await fetch("/api/slow-endpoint", {
     signal: controller.signal,
   });
-  clearTimeout(timeoutId);  // cancel the timeout if request succeeded
+  clearTimeout(timeoutId); // cancel the timeout if request succeeded
   return await response.json();
 } catch (err) {
   if (err.name === "AbortError") {
     console.log("Request was cancelled");
     return null;
   }
-  throw err;  // rethrow other errors
+  throw err; // rethrow other errors
 }
 
 // Cancel when user navigates away (React pattern)
@@ -464,7 +475,7 @@ useEffect(() => {
 
   load();
 
-  return () => controller.abort();  // cancel on unmount or id change
+  return () => controller.abort(); // cancel on unmount or id change
 }, [id]);
 ```
 
@@ -513,14 +524,16 @@ class ApiClient {
     }
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: response.statusText }));
+      const error = await response
+        .json()
+        .catch(() => ({ message: response.statusText }));
       throw Object.assign(new Error(error.message ?? "Request failed"), {
         status: response.status,
         details: error,
       });
     }
 
-    if (response.status === 204) return null;  // No Content
+    if (response.status === 204) return null; // No Content
     return response.json();
   }
 
@@ -529,15 +542,27 @@ class ApiClient {
     window.location.href = "/login";
   }
 
-  get(endpoint, params, signal)       { return this.#request("GET",    endpoint, { params, signal }); }
-  post(endpoint, body, signal)        { return this.#request("POST",   endpoint, { body, signal }); }
-  put(endpoint, body, signal)         { return this.#request("PUT",    endpoint, { body, signal }); }
-  patch(endpoint, body, signal)       { return this.#request("PATCH",  endpoint, { body, signal }); }
-  delete(endpoint, signal)            { return this.#request("DELETE", endpoint, { signal }); }
+  get(endpoint, params, signal) {
+    return this.#request("GET", endpoint, { params, signal });
+  }
+  post(endpoint, body, signal) {
+    return this.#request("POST", endpoint, { body, signal });
+  }
+  put(endpoint, body, signal) {
+    return this.#request("PUT", endpoint, { body, signal });
+  }
+  patch(endpoint, body, signal) {
+    return this.#request("PATCH", endpoint, { body, signal });
+  }
+  delete(endpoint, signal) {
+    return this.#request("DELETE", endpoint, { signal });
+  }
 }
 
 // Usage
-const api = new ApiClient("https://api.cwwkcc.lk", () => localStorage.getItem("token"));
+const api = new ApiClient("https://api.cwwkcc.lk", () =>
+  localStorage.getItem("token"),
+);
 
 const students = await api.get("/students", { grade: 11, limit: 20 });
 const newStudent = await api.post("/students", { name: "Ashan", grade: 11 });
@@ -562,10 +587,10 @@ async function processSequentially(items) {
 }
 
 // Common mistake: map with async doesn't await each
-const results = await items.map(async item => processItem(item));
+const results = await items.map(async (item) => processItem(item));
 // returns array of Promises, not values!
 // Fix:
-const results = await Promise.all(items.map(item => processItem(item)));
+const results = await Promise.all(items.map((item) => processItem(item)));
 ```
 
 ### Polling
@@ -576,9 +601,9 @@ async function pollUntilComplete(taskId, interval = 2000, maxAttempts = 30) {
     const status = await checkTaskStatus(taskId);
 
     if (status === "complete") return await getTaskResult(taskId);
-    if (status === "failed")   throw new Error(`Task ${taskId} failed`);
+    if (status === "failed") throw new Error(`Task ${taskId} failed`);
 
-    await new Promise(resolve => setTimeout(resolve, interval));
+    await new Promise((resolve) => setTimeout(resolve, interval));
   }
   throw new Error(`Task ${taskId} did not complete in time`);
 }
@@ -594,9 +619,9 @@ async function withRetry(fn, maxAttempts = 3) {
     } catch (err) {
       if (attempt === maxAttempts) throw err;
 
-      const delay = Math.min(1000 * 2 ** attempt, 30_000);  // 2s, 4s, 8s... max 30s
+      const delay = Math.min(1000 * 2 ** attempt, 30_000); // 2s, 4s, 8s... max 30s
       console.warn(`Attempt ${attempt} failed, retrying in ${delay}ms...`);
-      await new Promise(resolve => setTimeout(resolve, delay));
+      await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
 }
@@ -613,7 +638,7 @@ async function withConcurrencyLimit(tasks, limit) {
   const executing = new Set();
 
   for (const task of tasks) {
-    const promise = task().then(result => {
+    const promise = task().then((result) => {
       executing.delete(promise);
       return result;
     });
@@ -622,15 +647,15 @@ async function withConcurrencyLimit(tasks, limit) {
     results.push(promise);
 
     if (executing.size >= limit) {
-      await Promise.race(executing);  // wait for one to finish before starting next
+      await Promise.race(executing); // wait for one to finish before starting next
     }
   }
 
   return Promise.all(results);
 }
 
-const tasks = studentIds.map(id => () => fetchStudentDetails(id));
-const details = await withConcurrencyLimit(tasks, 5);  // max 5 at once
+const tasks = studentIds.map((id) => () => fetchStudentDetails(id));
+const details = await withConcurrencyLimit(tasks, 5); // max 5 at once
 ```
 
 ---

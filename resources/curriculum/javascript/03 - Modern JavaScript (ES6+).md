@@ -23,11 +23,12 @@ Arrow functions are shorter syntax for function expressions, with one important 
 
 ```javascript
 // Syntax forms
-const fn1 = x => x * 2;                    // single param, expression body
-const fn2 = (x, y) => x + y;               // multiple params
-const fn3 = () => "no params";             // no params — parens required
-const fn4 = x => ({ value: x });           // returning object — wrap in ()
-const fn5 = (x) => {                       // full body — need return keyword
+const fn1 = (x) => x * 2; // single param, expression body
+const fn2 = (x, y) => x + y; // multiple params
+const fn3 = () => "no params"; // no params — parens required
+const fn4 = (x) => ({ value: x }); // returning object — wrap in ()
+const fn5 = (x) => {
+  // full body — need return keyword
   const doubled = x * 2;
   return doubled + 1;
 };
@@ -36,13 +37,17 @@ const fn5 = (x) => {                       // full body — need return keyword
 // 1. Object methods (need their own `this`)
 const user = {
   name: "Ashan",
-  greet: () => `Hello ${this?.name}`,   // ✗ this is not user
-  greetCorrect() { return `Hello ${this.name}`; },  // ✓
+  greet: () => `Hello ${this?.name}`, // ✗ this is not user
+  greetCorrect() {
+    return `Hello ${this.name}`;
+  }, // ✓
 };
 
 // 2. Constructors (can't use `new` with arrow functions)
-const Person = (name) => { this.name = name; };
-new Person("Ashan");  // TypeError: Person is not a constructor
+const Person = (name) => {
+  this.name = name;
+};
+new Person("Ashan"); // TypeError: Person is not a constructor
 
 // Arrow functions are perfect for:
 // - Callbacks: array methods, event handlers, setTimeout
@@ -51,7 +56,7 @@ const timer = {
   count: 0,
   start() {
     setInterval(() => {
-      this.count++;                // `this` is the timer object ✓
+      this.count++; // `this` is the timer object ✓
       console.log(this.count);
     }, 1000);
   },
@@ -66,7 +71,7 @@ const timer = {
 // Basic interpolation
 const name = "CWWKCC";
 const year = 1873;
-`${name} was founded in ${year}`;  // any expression works in ${}
+`${name} was founded in ${year}`; // any expression works in ${}
 `2 + 2 = ${2 + 2}`;
 `${isActive ? "Active" : "Inactive"}`;
 
@@ -116,7 +121,9 @@ export function multiply(a, b) {
 
 // Default export — one per file, often the main thing the file provides
 export default class Calculator {
-  add(a, b) { return a + b; }
+  add(a, b) {
+    return a + b;
+  }
 }
 ```
 
@@ -136,15 +143,15 @@ import Calculator, { PI, add } from "./math.js";
 
 // Import everything as a namespace object
 import * as math from "./math.js";
-math.PI;         // 3.14159
-math.add(2, 3);  // 5
-math.default;    // the Calculator class
+math.PI; // 3.14159
+math.add(2, 3); // 5
+math.default; // the Calculator class
 
 // Re-export (barrel file pattern)
 // index.js — re-exports from multiple files as a single module
 export { add, multiply } from "./math.js";
-export { formatDate }   from "./dates.js";
-export { fetchUser }    from "./api.js";
+export { formatDate } from "./dates.js";
+export { fetchUser } from "./api.js";
 // Consumers: import { add, fetchUser } from "./index.js"
 ```
 
@@ -155,15 +162,15 @@ export { fetchUser }    from "./api.js";
 // module.js
 let count = 0;
 export const increment = () => ++count;
-export const getCount  = () => count;
+export const getCount = () => count;
 
 // file1.js
 import { increment } from "./module.js";
-increment();  // count → 1
+increment(); // count → 1
 
 // file2.js — same module instance
 import { getCount } from "./module.js";
-getCount();   // 1 — shared state
+getCount(); // 1 — shared state
 
 // Modules run once — the first time they're imported
 // Subsequent imports get the cached module
@@ -190,7 +197,7 @@ Full depth in File 09 (Prototypes). Here's the syntax you'll use every day.
 ```javascript
 class Animal {
   // Class field (ES2022)
-  #sound = "...";   // private — only accessible inside the class
+  #sound = "..."; // private — only accessible inside the class
 
   constructor(name, species) {
     this.name = name;
@@ -222,7 +229,7 @@ class Dog extends Animal {
   #breed;
 
   constructor(name, breed) {
-    super(name, "Canis lupus familiaris");  // must call super() first
+    super(name, "Canis lupus familiaris"); // must call super() first
     this.#breed = breed;
   }
 
@@ -237,9 +244,9 @@ class Dog extends Animal {
 }
 
 const rex = new Dog("Rex", "Labrador");
-rex.speak();       // "Rex barks!"
-rex.label;         // "Rex (Canis lupus familiaris)"
-rex instanceof Dog;    // true
+rex.speak(); // "Rex barks!"
+rex.label; // "Rex (Canis lupus familiaris)"
+rex instanceof Dog; // true
 rex instanceof Animal; // true
 ```
 
@@ -253,25 +260,26 @@ Symbols are unique, immutable primitive values. They're used as guaranteed-uniqu
 // Every Symbol is unique
 const s1 = Symbol("id");
 const s2 = Symbol("id");
-s1 === s2;  // false
+s1 === s2; // false
 
 // Use as unique object keys — won't clash with other properties
 const ID = Symbol("id");
 const user = {
   name: "Ashan",
-  [ID]: "u-12345",   // symbol key
+  [ID]: "u-12345", // symbol key
 };
-user.name;   // "Ashan"
-user[ID];    // "u-12345"
+user.name; // "Ashan"
+user[ID]; // "u-12345"
 
 // Symbol keys are NOT included in:
-Object.keys(user);           // ["name"] — no symbol keys
-Object.entries(user);        // [["name", "Ashan"]] — no symbol keys
-JSON.stringify(user);        // '{"name":"Ashan"}' — symbol keys dropped
-for (const key in user) {}  // only "name"
+Object.keys(user); // ["name"] — no symbol keys
+Object.entries(user); // [["name", "Ashan"]] — no symbol keys
+JSON.stringify(user); // '{"name":"Ashan"}' — symbol keys dropped
+for (const key in user) {
+} // only "name"
 
 // Retrieve symbols:
-Object.getOwnPropertySymbols(user);  // [Symbol(id)]
+Object.getOwnPropertySymbols(user); // [Symbol(id)]
 ```
 
 ### Well-Known Symbols — Making Objects Behave Like Built-ins
@@ -301,9 +309,9 @@ class Range {
 
 const range = new Range(1, 5);
 for (const n of range) {
-  console.log(n);  // 1, 2, 3, 4, 5
+  console.log(n); // 1, 2, 3, 4, 5
 }
-[...range];         // [1, 2, 3, 4, 5]
+[...range]; // [1, 2, 3, 4, 5]
 
 // Symbol.toPrimitive — control how an object converts to a primitive
 class Money {
@@ -320,9 +328,9 @@ class Money {
 }
 
 const price = new Money(1500, "LKR");
-+price;              // 1500 (number hint)
-`${price}`;          // "1500 LKR" (string hint)
-price + 500;         // 2000 (default hint → number)
++price; // 1500 (number hint)
+`${price}`; // "1500 LKR" (string hint)
+price + 500; // 2000 (default hint → number)
 ```
 
 ---
@@ -335,25 +343,26 @@ An **iterator** is any object with a `next()` method that returns `{ value,
 // Generator function — note the *
 function* count(start, end) {
   for (let i = start; i <= end; i++) {
-    yield i;  // pause here, return i, resume on next call
+    yield i; // pause here, return i, resume on next call
   }
 }
 
 const gen = count(1, 3);
-gen.next();  // { value: 1, done: false }
-gen.next();  // { value: 2, done: false }
-gen.next();  // { value: 3, done: false }
-gen.next();  // { value: undefined, done: true }
+gen.next(); // { value: 1, done: false }
+gen.next(); // { value: 2, done: false }
+gen.next(); // { value: 3, done: false }
+gen.next(); // { value: undefined, done: true }
 
 // Generators are iterable
 for (const n of count(1, 5)) {
-  console.log(n);  // 1, 2, 3, 4, 5
+  console.log(n); // 1, 2, 3, 4, 5
 }
-[...count(1, 5)];  // [1, 2, 3, 4, 5]
+[...count(1, 5)]; // [1, 2, 3, 4, 5]
 
 // Infinite sequence — only compute as needed (lazy)
 function* fibonacci() {
-  let a = 0, b = 1;
+  let a = 0,
+    b = 1;
   while (true) {
     yield a;
     [a, b] = [b, a + b];
@@ -369,7 +378,7 @@ function take(n, iterable) {
   return result;
 }
 
-take(8, fibonacci());  // [0, 1, 1, 2, 3, 5, 8, 13]
+take(8, fibonacci()); // [0, 1, 1, 2, 3, 5, 8, 13]
 ```
 
 Generators underlie async/await under the hood, and are used in state management libraries like Redux Saga.
@@ -387,29 +396,29 @@ const promise = new Promise((resolve, reject) => {
   setTimeout(() => {
     const success = Math.random() > 0.5;
     if (success) {
-      resolve("data loaded");  // fulfilled with a value
+      resolve("data loaded"); // fulfilled with a value
     } else {
-      reject(new Error("load failed"));  // rejected with an error
+      reject(new Error("load failed")); // rejected with an error
     }
   }, 1000);
 });
 
 // Consuming a Promise
 promise
-  .then(value => console.log("Got:", value))    // runs on resolve
-  .catch(err => console.error("Error:", err))   // runs on reject
-  .finally(() => console.log("Always runs"));   // always runs
+  .then((value) => console.log("Got:", value)) // runs on resolve
+  .catch((err) => console.error("Error:", err)) // runs on reject
+  .finally(() => console.log("Always runs")); // always runs
 
 // Chaining — each .then() returns a new Promise
 fetch("/api/user/1")
-  .then(response => response.json())   // parse JSON
-  .then(user => fetchPosts(user.id))   // use result in next call
-  .then(posts => renderPosts(posts))   // use next result
-  .catch(err => showError(err));       // any error in the chain
+  .then((response) => response.json()) // parse JSON
+  .then((user) => fetchPosts(user.id)) // use result in next call
+  .then((posts) => renderPosts(posts)) // use next result
+  .catch((err) => showError(err)); // any error in the chain
 
 // Promise static methods
-Promise.resolve(42);  // immediately fulfilled with 42
-Promise.reject(new Error("nope"));  // immediately rejected
+Promise.resolve(42); // immediately fulfilled with 42
+Promise.reject(new Error("nope")); // immediately rejected
 ```
 
 Full depth (async/await, error handling, all parallel utilities) in File 06.
@@ -422,7 +431,7 @@ Full depth (async/await, error handling, all parallel utilities) in File 06.
 // Object shorthand — when key name = variable name
 const name = "Ashan";
 const grade = 11;
-const student = { name, grade };  // same as { name: name, grade: grade }
+const student = { name, grade }; // same as { name: name, grade: grade }
 
 // Computed property names
 const field = "score";
@@ -432,28 +441,35 @@ const obj = { [field]: 95, [`${field}_max`]: 100 };
 // Optional catch binding (ES2019)
 try {
   JSON.parse(invalid);
-} catch {               // no (err) needed if you don't use the error
+} catch {
+  // no (err) needed if you don't use the error
   return null;
 }
 
 // Object.fromEntries (ES2019)
-const entries = [["a", 1], ["b", 2]];
-Object.fromEntries(entries);  // { a: 1, b: 2 }
+const entries = [
+  ["a", 1],
+  ["b", 2],
+];
+Object.fromEntries(entries); // { a: 1, b: 2 }
 
 // Combine with Map.entries():
-const map = new Map([["x", 10], ["y", 20]]);
-Object.fromEntries(map);  // { x: 10, y: 20 }
+const map = new Map([
+  ["x", 10],
+  ["y", 20],
+]);
+Object.fromEntries(map); // { x: 10, y: 20 }
 
 // Array.from (convert array-like to real array)
-Array.from("hello");          // ["h", "e", "l", "l", "o"]
-Array.from({ length: 5 }, (_, i) => i);  // [0, 1, 2, 3, 4]
-Array.from(new Set([1, 2, 3]));  // [1, 2, 3]
+Array.from("hello"); // ["h", "e", "l", "l", "o"]
+Array.from({ length: 5 }, (_, i) => i); // [0, 1, 2, 3, 4]
+Array.from(new Set([1, 2, 3])); // [1, 2, 3]
 
 // Array.at() (ES2022) — negative indexing
 const arr = [1, 2, 3, 4, 5];
-arr.at(0);    // 1
-arr.at(-1);   // 5 — last element
-arr.at(-2);   // 4
+arr.at(0); // 1
+arr.at(-1); // 5 — last element
+arr.at(-2); // 4
 
 // Array grouping (ES2024)
 const students = [
@@ -461,7 +477,7 @@ const students = [
   { name: "Dineth", grade: 12 },
   { name: "Kavya", grade: 11 },
 ];
-Object.groupBy(students, s => s.grade);
+Object.groupBy(students, (s) => s.grade);
 // { 11: [{name:"Ashan"...}, {name:"Kavya"...}], 12: [{name:"Dineth"...}] }
 ```
 
@@ -474,24 +490,24 @@ These combine logical operators with assignment — extremely useful for default
 ```javascript
 // ??= — assign if null or undefined
 let config = {};
-config.timeout    ??= 5000;   // assigns 5000 (was undefined)
-config.timeout    ??= 3000;   // no change — already 5000
-config.retries    ??= 3;      // assigns 3
-config.debug      ??= false;  // assigns false
+config.timeout ??= 5000; // assigns 5000 (was undefined)
+config.timeout ??= 3000; // no change — already 5000
+config.retries ??= 3; // assigns 3
+config.debug ??= false; // assigns false
 
 // ||= — assign if falsy (null, undefined, 0, "", false, NaN)
 let name = "";
-name ||= "Anonymous";  // assigns "Anonymous" — "" is falsy
+name ||= "Anonymous"; // assigns "Anonymous" — "" is falsy
 
 let count = 0;
-count ||= 10;   // assigns 10 — 0 is falsy (careful! may be unintended)
+count ||= 10; // assigns 10 — 0 is falsy (careful! may be unintended)
 
 // &&= — assign if truthy (update only if value exists)
 let user = { name: "Ashan", role: "student" };
-user.role &&= user.role.toUpperCase();  // user.role is truthy → assigned "STUDENT"
+user.role &&= user.role.toUpperCase(); // user.role is truthy → assigned "STUDENT"
 
 let guest = null;
-guest &&= doSomething();  // guest is null (falsy) → skipped, guest stays null
+guest &&= doSomething(); // guest is null (falsy) → skipped, guest stays null
 ```
 
 ---
@@ -504,8 +520,8 @@ guest &&= doSomething();  // guest is null (falsy) → skipped, guest stays null
 // In Node.js: global
 // In Workers: self
 // globalThis works everywhere
-globalThis.setTimeout;   // the global setTimeout
-globalThis.fetch;         // the global fetch
+globalThis.setTimeout; // the global setTimeout
+globalThis.fetch; // the global fetch
 
 // structuredClone — deep clone almost anything (ES2022)
 const original = {
@@ -515,8 +531,8 @@ const original = {
   nested: { deeply: { value: 42 } },
 };
 const clone = structuredClone(original);
-clone.scores.push(100);    // doesn't affect original
-clone.nested.deeply.value = 99;  // doesn't affect original
+clone.scores.push(100); // doesn't affect original
+clone.nested.deeply.value = 99; // doesn't affect original
 // Also supports: Map, Set, Date, RegExp, ArrayBuffer, and more
 // Does NOT support: functions, DOM nodes, class instances with methods
 
@@ -526,12 +542,12 @@ queueMicrotask(() => {
 });
 
 // crypto.randomUUID — generate a UUID (ES2022, secure)
-crypto.randomUUID();  // "a3b4c5d6-e7f8-1234-5678-abcdef012345"
+crypto.randomUUID(); // "a3b4c5d6-e7f8-1234-5678-abcdef012345"
 
 // AbortController — cancel fetch and other async operations
 const controller = new AbortController();
 
-setTimeout(() => controller.abort(), 3000);  // cancel after 3 seconds
+setTimeout(() => controller.abort(), 3000); // cancel after 3 seconds
 
 try {
   const response = await fetch("/api/slow-endpoint", {

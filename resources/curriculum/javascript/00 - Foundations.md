@@ -38,9 +38,9 @@ Code runs top to bottom, one statement at a time, on a single thread. Asynchrono
 A variable is a named container for a value.
 
 ```javascript
-let age = 20;          // can be reassigned
-const name = "Ashan";  // cannot be reassigned
-var legacy = true;     // old syntax — avoid (explained below)
+let age = 20; // can be reassigned
+const name = "Ashan"; // cannot be reassigned
+var legacy = true; // old syntax — avoid (explained below)
 ```
 
 ### `const` vs `let`
@@ -48,12 +48,12 @@ var legacy = true;     // old syntax — avoid (explained below)
 ```javascript
 // const: the binding cannot be reassigned
 const school = "CWWKCC";
-school = "Other";  // TypeError: Assignment to constant variable
+school = "Other"; // TypeError: Assignment to constant variable
 
 // But if the value is an object, the OBJECT can still be mutated
 const user = { name: "Ashan" };
-user.name = "Dineth";   // ✓ — modifying the object
-user = {};              // TypeError — reassigning the variable
+user.name = "Dineth"; // ✓ — modifying the object
+user = {}; // TypeError — reassigning the variable
 
 // Rule of thumb: use const by default, let when you need to reassign
 ```
@@ -63,21 +63,21 @@ user = {};              // TypeError — reassigning the variable
 ```javascript
 // var is function-scoped, not block-scoped
 if (true) {
-  var x = 10;  // declared inside a block
+  var x = 10; // declared inside a block
 }
-console.log(x);  // 10 — leaked out of the if block!
+console.log(x); // 10 — leaked out of the if block!
 
 if (true) {
   let y = 10;
 }
-console.log(y);  // ReferenceError — y doesn't exist here
+console.log(y); // ReferenceError — y doesn't exist here
 
 // var is also hoisted (declared at the top of the function)
-console.log(z);  // undefined — not an error with var!
+console.log(z); // undefined — not an error with var!
 var z = 5;
 
 // let and const are NOT accessible before their declaration:
-console.log(w);  // ReferenceError
+console.log(w); // ReferenceError
 let w = 5;
 ```
 
@@ -98,15 +98,15 @@ let price = 19.99;
 let negative = -7;
 
 // Special number values:
-Infinity       // 1 / 0
--Infinity      // -1 / 0
-NaN            // "Not a Number" — result of invalid math
-Number.MAX_SAFE_INTEGER  // 9007199254740991 (2^53 - 1)
+Infinity - // 1 / 0
+  Infinity; // -1 / 0
+NaN; // "Not a Number" — result of invalid math
+Number.MAX_SAFE_INTEGER; // 9007199254740991 (2^53 - 1)
 
 // string — text, always immutable
 let greeting = "hello";
-let name = 'world';
-let template = `${greeting}, ${name}`;  // template literal
+let name = "world";
+let template = `${greeting}, ${name}`; // template literal
 
 // boolean
 let isActive = true;
@@ -114,46 +114,46 @@ let isDone = false;
 
 // undefined — variable declared but not assigned
 let x;
-console.log(x);  // undefined
+console.log(x); // undefined
 
 // null — intentional absence of value
-let selectedUser = null;  // "nothing is selected"
+let selectedUser = null; // "nothing is selected"
 
 // symbol — unique, used as object keys (advanced)
 const id = Symbol("id");
 
 // bigint — integers larger than Number.MAX_SAFE_INTEGER
-const huge = 9007199254740992n;  // note the `n` suffix
+const huge = 9007199254740992n; // note the `n` suffix
 ```
 
 ### `object` (stored by reference)
 
 ```javascript
 // Objects, arrays, and functions are all "object" type
-typeof {};           // "object"
-typeof [];           // "object"
-typeof null;         // "object" ← famous JS bug, null is NOT an object
+typeof {}; // "object"
+typeof []; // "object"
+typeof null; // "object" ← famous JS bug, null is NOT an object
 
 // Check for array specifically:
-Array.isArray([]);   // true
+Array.isArray([]); // true
 
 // Check for null specifically:
-someValue === null;  // true
+someValue === null; // true
 ```
 
 ### `typeof` operator
 
 ```javascript
-typeof 42;           // "number"
-typeof "hello";      // "string"
-typeof true;         // "boolean"
-typeof undefined;    // "undefined"
-typeof null;         // "object"  ← the bug
-typeof {};           // "object"
-typeof [];           // "object"
-typeof function(){}; // "function"
-typeof Symbol();     // "symbol"
-typeof 42n;          // "bigint"
+typeof 42; // "number"
+typeof "hello"; // "string"
+typeof true; // "boolean"
+typeof undefined; // "undefined"
+typeof null; // "object"  ← the bug
+typeof {}; // "object"
+typeof []; // "object"
+typeof function () {}; // "function"
+typeof Symbol(); // "symbol"
+typeof 42n; // "bigint"
 ```
 
 ---
@@ -187,16 +187,16 @@ false, 0, "", null, undefined, NaN
 
 ```javascript
 // == (loose equality) — coerces types before comparing
-0 == false    // true  (false → 0)
-"" == false   // true  (both → 0)
-null == undefined  // true (special case)
-1 == "1"      // true  ("1" → 1)
+0 == false; // true  (false → 0)
+"" == false; // true  (both → 0)
+null == undefined; // true (special case)
+1 == "1"; // true  ("1" → 1)
 
 // === (strict equality) — NO coercion, checks type AND value
-0 === false   // false (different types)
-1 === "1"     // false (different types)
-null === undefined  // false (different types)
-1 === 1       // true
+0 === false; // false (different types)
+1 === "1"; // false (different types)
+null === undefined; // false (different types)
+1 === 1; // true
 
 // Always use ===
 // The only acceptable use of == is: someValue == null
@@ -210,50 +210,50 @@ null === undefined  // false (different types)
 ### Arithmetic
 
 ```javascript
-5 + 3    // 8    addition
-5 - 3    // 2    subtraction
-5 * 3    // 15   multiplication
-10 / 3   // 3.333... division (always float)
-10 % 3   // 1    modulo (remainder)
-2 ** 10  // 1024 exponentiation
+5 + 3; // 8    addition
+5 - 3; // 2    subtraction
+5 * 3; // 15   multiplication
+10 / 3; // 3.333... division (always float)
+10 % 3; // 1    modulo (remainder)
+2 ** 10; // 1024 exponentiation
 
 // Increment / decrement
 let x = 5;
-x++;   // post-increment: returns 5, then x becomes 6
-++x;   // pre-increment: x becomes 7, then returns 7
-x--;   // post-decrement
---x;   // pre-decrement
+x++; // post-increment: returns 5, then x becomes 6
+++x; // pre-increment: x becomes 7, then returns 7
+x--; // post-decrement
+--x; // pre-decrement
 ```
 
 ### Assignment
 
 ```javascript
 let x = 10;
-x += 5;    // x = x + 5  → 15
-x -= 3;    // x = x - 3  → 12
-x *= 2;    // x = x * 2  → 24
-x /= 4;    // x = x / 4  → 6
-x **= 2;   // x = x ** 2 → 36
-x %= 10;   // x = x % 10 → 6
+x += 5; // x = x + 5  → 15
+x -= 3; // x = x - 3  → 12
+x *= 2; // x = x * 2  → 24
+x /= 4; // x = x / 4  → 6
+x **= 2; // x = x ** 2 → 36
+x %= 10; // x = x % 10 → 6
 ```
 
 ### Logical
 
 ```javascript
-true && false   // false  — AND: both must be true
-true || false   // true   — OR: at least one must be true
-!true           // false  — NOT: flips the boolean
+true && false; // false  — AND: both must be true
+true || false; // true   — OR: at least one must be true
+!true; // false  — NOT: flips the boolean
 
 // Short-circuit evaluation — critical to understand
 // && returns the first falsy value, or the last value if all truthy
-false && doExpensiveWork()  // doExpensiveWork() is NEVER called
-"hello" && "world"          // "world" (both truthy, returns last)
-0 && "hello"                // 0 (0 is falsy, short-circuits)
+false && doExpensiveWork(); // doExpensiveWork() is NEVER called
+"hello" && "world"; // "world" (both truthy, returns last)
+0 && "hello"; // 0 (0 is falsy, short-circuits)
 
 // || returns the first truthy value, or the last value if all falsy
-null || "default"           // "default"
-"value" || "default"        // "value"
-null || undefined || 0      // 0 (all falsy, returns last)
+null || "default"; // "default"
+"value" || "default"; // "value"
+null || undefined || 0; // 0 (all falsy, returns last)
 
 // Common pattern: default values
 const username = inputValue || "Anonymous";
@@ -265,17 +265,17 @@ const username = inputValue || "Anonymous";
 // ?? returns right side ONLY if left side is null or undefined
 // (unlike || which triggers on ANY falsy value)
 
-null ?? "default"       // "default"
-undefined ?? "default"  // "default"
-0 ?? "default"          // 0      ← 0 is NOT null/undefined
-"" ?? "default"         // ""     ← "" is NOT null/undefined
-false ?? "default"      // false  ← false is NOT null/undefined
+null ?? "default"; // "default"
+undefined ?? "default"; // "default"
+0 ?? "default"; // 0      ← 0 is NOT null/undefined
+"" ?? "default"; // ""     ← "" is NOT null/undefined
+false ?? "default"; // false  ← false is NOT null/undefined
 
 // When to prefer ?? over ||:
 // If 0, "", or false are valid values, use ?? to avoid replacing them
-const count = data.count ?? 0;  // safe: won't replace 0 with 0
+const count = data.count ?? 0; // safe: won't replace 0 with 0
 const count2 = data.count || 0; // unsafe: if data.count is 0, still returns 0
-                                 // (coincidentally fine here, but concept matters)
+// (coincidentally fine here, but concept matters)
 ```
 
 ### Optional Chaining `?.`
@@ -284,16 +284,17 @@ const count2 = data.count || 0; // unsafe: if data.count is 0, still returns 0
 // Safely access nested properties that might be null/undefined
 const user = null;
 
-user.name         // TypeError: Cannot read properties of null
-user?.name        // undefined — no error
+user.name; // TypeError: Cannot read properties of null
+user?.name; // undefined — no error
 
-const street = user?.address?.street?.name;  // undefined — no error
+const street = user?.address?.street?.name; // undefined — no error
 // Without optional chaining:
-const street2 = user && user.address && user.address.street && user.address.street.name;
+const street2 =
+  user && user.address && user.address.street && user.address.street.name;
 
 // Also works for method calls and array access:
-user?.greet()        // undefined if user is null (doesn't call greet)
-arr?.[0]             // undefined if arr is null
+user?.greet(); // undefined if user is null (doesn't call greet)
+arr?.[0]; // undefined if arr is null
 ```
 
 ---
@@ -306,39 +307,40 @@ Strings are immutable sequences of Unicode characters.
 const s = "Hello, World!";
 
 // Length
-s.length           // 13
+s.length; // 13
 
 // Access (read-only — strings are immutable)
-s[0]               // "H"
-s.at(-1)           // "!" — negative index from end
+s[0]; // "H"
+s.at(-1); // "!" — negative index from end
 
 // Searching
-s.includes("World")         // true
-s.startsWith("Hello")       // true
-s.endsWith("!")             // true
-s.indexOf("o")              // 4 (first occurrence)
-s.lastIndexOf("o")          // 8 (last occurrence)
+s.includes("World"); // true
+s.startsWith("Hello"); // true
+s.endsWith("!"); // true
+s.indexOf("o"); // 4 (first occurrence)
+s.lastIndexOf("o"); // 8 (last occurrence)
 
 // Transformation — all return NEW strings (strings are immutable)
-s.toUpperCase()             // "HELLO, WORLD!"
-s.toLowerCase()             // "hello, world!"
-s.trim()                    // removes leading/trailing whitespace
-s.trimStart()               // removes leading whitespace only
-s.trimEnd()                 // removes trailing whitespace only
-s.replace("World", "KITS")  // "Hello, KITS!"
-s.replaceAll("l", "L")      // "HeLLo, WorLd!"
+s.toUpperCase(); // "HELLO, WORLD!"
+s.toLowerCase(); // "hello, world!"
+s.trim(); // removes leading/trailing whitespace
+s.trimStart(); // removes leading whitespace only
+s.trimEnd(); // removes trailing whitespace only
+s.replace("World", "KITS"); // "Hello, KITS!"
+s.replaceAll("l", "L"); // "HeLLo, WorLd!"
 
 // Splitting and joining
-"a,b,c".split(",")          // ["a", "b", "c"]
-["a", "b", "c"].join("-")   // "a-b-c"
+"a,b,c"
+  .split(",") // ["a", "b", "c"]
+  [("a", "b", "c")].join("-"); // "a-b-c"
 
 // Padding
-"5".padStart(3, "0")        // "005"
-"5".padEnd(3, "0")          // "500"
+"5".padStart(3, "0"); // "005"
+"5".padEnd(3, "0"); // "500"
 
 // Substrings
-s.slice(7, 12)              // "World"
-s.slice(-6)                 // "orld!" — from 6 chars before the end
+s.slice(7, 12); // "World"
+s.slice(-6); // "orld!" — from 6 chars before the end
 
 // Template literals — the modern way to compose strings
 const name = "Ashan";
@@ -398,7 +400,7 @@ switch (day) {
   case "Thursday":
   case "Friday":
     console.log("Weekday");
-    break;  // MUST break or falls through to next case
+    break; // MUST break or falls through to next case
   case "Saturday":
   case "Sunday":
     console.log("Weekend");
@@ -414,14 +416,14 @@ switch (day) {
 let config = {};
 
 // ??= assigns only if left side is null or undefined
-config.timeout ??= 5000;    // config.timeout = 5000 (was undefined)
-config.timeout ??= 3000;    // no change — timeout is already 5000
+config.timeout ??= 5000; // config.timeout = 5000 (was undefined)
+config.timeout ??= 3000; // no change — timeout is already 5000
 
 // ||= assigns if left side is falsy
-config.retries ||= 3;       // assigns 3
+config.retries ||= 3; // assigns 3
 
 // &&= assigns if left side is truthy
-config.debug &&= false;     // if debug is truthy, set to false
+config.debug &&= false; // if debug is truthy, set to false
 ```
 
 ---
@@ -437,7 +439,7 @@ function greet(name) {
 }
 
 // Function expression — NOT hoisted
-const greet2 = function(name) {
+const greet2 = function (name) {
   return `Hello, ${name}!`;
 };
 
@@ -445,8 +447,8 @@ const greet2 = function(name) {
 const greet3 = (name) => `Hello, ${name}!`;
 
 // Calling a function
-greet("Ashan");    // "Hello, Ashan!"
-greet3("Dineth");  // "Hello, Dineth!"
+greet("Ashan"); // "Hello, Ashan!"
+greet3("Dineth"); // "Hello, Dineth!"
 ```
 
 ### Parameters
@@ -456,18 +458,18 @@ greet3("Dineth");  // "Hello, Dineth!"
 function createUser(name, role = "student", isActive = true) {
   return { name, role, isActive };
 }
-createUser("Ashan");               // { name: "Ashan", role: "student", isActive: true }
-createUser("Ashan", "teacher");    // { name: "Ashan", role: "teacher", isActive: true }
+createUser("Ashan"); // { name: "Ashan", role: "student", isActive: true }
+createUser("Ashan", "teacher"); // { name: "Ashan", role: "teacher", isActive: true }
 
 // Rest parameters — collects remaining args into an array
 function sum(...numbers) {
   return numbers.reduce((total, n) => total + n, 0);
 }
-sum(1, 2, 3, 4, 5);  // 15
+sum(1, 2, 3, 4, 5); // 15
 
 // Spread operator — expands an array as arguments
 const nums = [1, 2, 3];
-Math.max(...nums);    // 3  (same as Math.max(1, 2, 3))
+Math.max(...nums); // 3  (same as Math.max(1, 2, 3))
 ```
 
 ### Return values
@@ -491,8 +493,8 @@ function getDiscount(price, memberType) {
 
 ```javascript
 // Short syntax when body is a single expression
-const double = x => x * 2;          // single param: no parens needed
-const add = (a, b) => a + b;        // multiple params: parens required
+const double = (x) => x * 2; // single param: no parens needed
+const add = (a, b) => a + b; // multiple params: parens required
 const getObj = () => ({ key: "val" }); // returning object: wrap in ()
 
 // Full body with curly braces
@@ -524,13 +526,13 @@ function outer() {
     // Also has access to outerVar (scope chain)
     const innerVar = "I am in inner";
 
-    console.log(globalVar);  // ✓
-    console.log(outerVar);   // ✓
-    console.log(innerVar);   // ✓
+    console.log(globalVar); // ✓
+    console.log(outerVar); // ✓
+    console.log(innerVar); // ✓
   }
 
   inner();
-  console.log(innerVar);  // ReferenceError — innerVar is not in scope here
+  console.log(innerVar); // ReferenceError — innerVar is not in scope here
 }
 
 // Block scope — let and const are confined to the nearest {}
@@ -538,14 +540,14 @@ function outer() {
   let blockVar = "block";
   const blockConst = "also block";
 }
-console.log(blockVar);   // ReferenceError
+console.log(blockVar); // ReferenceError
 console.log(blockConst); // ReferenceError
 
 // var ignores blocks (function-scoped or global):
 {
   var leaky = "I leak";
 }
-console.log(leaky);  // "I leak" — bad!
+console.log(leaky); // "I leak" — bad!
 ```
 
 ### The Scope Chain
@@ -570,20 +572,20 @@ Hoisting is JavaScript's behaviour of moving declarations to the top of their sc
 
 ```javascript
 // Function declarations are fully hoisted — callable before definition
-sayHello();  // ✓ "Hello!" — works even though defined below
+sayHello(); // ✓ "Hello!" — works even though defined below
 
 function sayHello() {
   console.log("Hello!");
 }
 
 // var declarations are hoisted (but NOT their values)
-console.log(x);  // undefined — declared but not yet assigned
+console.log(x); // undefined — declared but not yet assigned
 var x = 5;
-console.log(x);  // 5
+console.log(x); // 5
 
 // let and const are hoisted but NOT initialised
 // Accessing them before their declaration is a ReferenceError
-console.log(y);  // ReferenceError: Cannot access 'y' before initialisation
+console.log(y); // ReferenceError: Cannot access 'y' before initialisation
 let y = 10;
 // This is called the "Temporal Dead Zone" — the region between the
 // start of the block and the variable's declaration line
@@ -591,9 +593,9 @@ let y = 10;
 
 ```javascript
 // Function expressions are NOT hoisted
-greet();  // TypeError: greet is not a function
+greet(); // TypeError: greet is not a function
 
-const greet = function() {
+const greet = function () {
   console.log("Hello!");
 };
 // (would also fail with `let greet = ...` or `var greet = ...`)

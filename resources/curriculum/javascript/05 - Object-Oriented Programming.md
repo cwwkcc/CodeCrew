@@ -42,14 +42,14 @@ class Student {
 }
 
 // Create instances with `new`
-const ashan  = new Student("Ashan",  11, [82, 91, 78]);
+const ashan = new Student("Ashan", 11, [82, 91, 78]);
 const dineth = new Student("Dineth", 12, [91, 88, 95]);
 
-ashan.name;    // "Ashan"
-dineth.grade;  // 12
+ashan.name; // "Ashan"
+dineth.grade; // 12
 
 // Without new: TypeError
-const bad = Student("Ashan", 11, []);  // TypeError: Class constructor must be called with new
+const bad = Student("Ashan", 11, []); // TypeError: Class constructor must be called with new
 ```
 
 ---
@@ -86,7 +86,7 @@ class Student {
 
   addScore(score) {
     this.scores.push(score);
-    return this;  // return `this` to enable method chaining
+    return this; // return `this` to enable method chaining
   }
 
   toString() {
@@ -95,15 +95,15 @@ class Student {
 }
 
 const ashan = new Student("Ashan", 11, [82, 91, 78]);
-ashan.average();     // 83.67
+ashan.average(); // 83.67
 ashan.letterGrade(); // "A"
-ashan.school;        // "CWWKCC"
+ashan.school; // "CWWKCC"
 
 // Method chaining
 ashan.addScore(88).addScore(95);
-ashan.average();  // now includes 88 and 95
+ashan.average(); // now includes 88 and 95
 
-`${ashan}`;  // "Ashan (Grade 11): A" — toString() is called automatically
+`${ashan}`; // "Ashan (Grade 11): A" — toString() is called automatically
 ```
 
 ---
@@ -114,13 +114,13 @@ Private fields (prefixed with `#`) are only accessible inside the class. They d
 
 ```javascript
 class BankAccount {
-  #balance;       // private field
-  #transactions;  // private field
+  #balance; // private field
+  #transactions; // private field
 
   constructor(owner, initialBalance = 0) {
-    this.owner = owner;              // public
-    this.#balance = initialBalance;  // private
-    this.#transactions = [];         // private
+    this.owner = owner; // public
+    this.#balance = initialBalance; // private
+    this.#transactions = []; // private
   }
 
   // Private method
@@ -149,22 +149,22 @@ class BankAccount {
   }
 
   get balance() {
-    return this.#balance;  // read-only access via getter
+    return this.#balance; // read-only access via getter
   }
 
   getStatement() {
-    return this.#transactions.map(t =>
-      `${t.type}: ${t.amount} LKR (Balance: ${t.balance} LKR)`
-    ).join("\n");
+    return this.#transactions
+      .map((t) => `${t.type}: ${t.amount} LKR (Balance: ${t.balance} LKR)`)
+      .join("\n");
   }
 }
 
 const account = new BankAccount("Ashan", 10000);
 account.deposit(5000).withdraw(2000);
-account.balance;           // 13000
-account.getStatement();    // "deposit: 5000 LKR..."
+account.balance; // 13000
+account.getStatement(); // "deposit: 5000 LKR..."
 
-account.#balance;          // SyntaxError — private, genuinely inaccessible
+account.#balance; // SyntaxError — private, genuinely inaccessible
 account.#recordTransaction; // SyntaxError
 ```
 
@@ -176,7 +176,7 @@ account.#recordTransaction; // SyntaxError
 
 ```javascript
 class Student {
-  static #count = 0;       // private static — tracks how many students created
+  static #count = 0; // private static — tracks how many students created
   static school = "CWWKCC"; // public static
 
   constructor(name, grade) {
@@ -208,9 +208,9 @@ class Student {
 const s1 = new Student("Ashan", 11);
 const s2 = new Student("Dineth", 12);
 
-Student.school;       // "CWWKCC"
-Student.getCount();   // 2
-s1.getCount();        // TypeError — static methods aren't on instances
+Student.school; // "CWWKCC"
+Student.getCount(); // 2
+s1.getCount(); // TypeError — static methods aren't on instances
 
 // Factory methods
 const s3 = Student.fromObject({ name: "Kavya", grade: 11 });
@@ -238,7 +238,7 @@ class Temperature {
 
   // Getter — accessed like a property, no ()
   get fahrenheit() {
-    return (this.#celsius * 9/5) + 32;
+    return (this.#celsius * 9) / 5 + 32;
   }
 
   get kelvin() {
@@ -257,11 +257,11 @@ class Temperature {
 }
 
 const temp = new Temperature(100);
-temp.fahrenheit;    // 212 — computed on the fly
-temp.kelvin;        // 373.15
-temp.celsius = 0;   // triggers setter
-temp.celsius;       // 0
-temp.celsius = -300;  // RangeError!
+temp.fahrenheit; // 212 — computed on the fly
+temp.kelvin; // 373.15
+temp.celsius = 0; // triggers setter
+temp.celsius; // 0
+temp.celsius = -300; // RangeError!
 ```
 
 ```javascript
@@ -275,7 +275,10 @@ class Cart {
   }
 
   get total() {
-    return this.#items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    return this.#items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
   }
 
   get isEmpty() {
@@ -289,9 +292,9 @@ class Cart {
 
 const cart = new Cart();
 cart.addItem({ name: "Book", price: 500, quantity: 2 });
-cart.total;    // 1000
-cart.count;    // 2
-cart.isEmpty;  // false
+cart.total; // 1000
+cart.count; // 2
+cart.isEmpty; // false
 ```
 
 ---
@@ -320,7 +323,7 @@ class Dog extends Animal {
   #breed;
 
   constructor(name, breed) {
-    super(name, "woof");  // call parent constructor — REQUIRED before `this`
+    super(name, "woof"); // call parent constructor — REQUIRED before `this`
     this.#breed = breed;
   }
 
@@ -344,7 +347,7 @@ class GuideDog extends Dog {
   #owner;
 
   constructor(name, breed, owner) {
-    super(name, breed);  // calls Dog constructor
+    super(name, breed); // calls Dog constructor
     this.#owner = owner;
   }
 
@@ -353,19 +356,19 @@ class GuideDog extends Dog {
   }
 }
 
-const rex   = new Dog("Rex", "Labrador");
+const rex = new Dog("Rex", "Labrador");
 const buddy = new GuideDog("Buddy", "Golden Retriever", "Ashan");
 
-rex.speak();          // "Rex barks: woof!"
-rex.describe();       // "Rex says woof — a Labrador"
-buddy.speak();        // "Buddy barks: woof!" (inherited from Dog)
-buddy.guide();        // "Buddy guides Ashan"
+rex.speak(); // "Rex barks: woof!"
+rex.describe(); // "Rex says woof — a Labrador"
+buddy.speak(); // "Buddy barks: woof!" (inherited from Dog)
+buddy.guide(); // "Buddy guides Ashan"
 
 // instanceof checks the prototype chain
-buddy instanceof GuideDog;  // true
-buddy instanceof Dog;       // true
-buddy instanceof Animal;    // true
-buddy instanceof Object;    // always true
+buddy instanceof GuideDog; // true
+buddy instanceof Dog; // true
+buddy instanceof Animal; // true
+buddy instanceof Object; // always true
 ```
 
 ### When `super` is required
@@ -380,8 +383,8 @@ class Base {
 class Child extends Base {
   constructor(value, extra) {
     // Must call super() BEFORE using `this`
-    super(value);         // sets this.value = value via Base constructor
-    this.extra = extra;   // then you can use `this`
+    super(value); // sets this.value = value via Base constructor
+    this.extra = extra; // then you can use `this`
   }
 }
 
@@ -403,37 +406,40 @@ JavaScript classes can only extend one parent. Mixins let you compose behaviour 
 ```javascript
 // Mixins are functions that take a class and return an enhanced class
 
-const Serializable = (Base) => class extends Base {
-  toJSON() {
-    return JSON.stringify(this);
-  }
+const Serializable = (Base) =>
+  class extends Base {
+    toJSON() {
+      return JSON.stringify(this);
+    }
 
-  static fromJSON(json) {
-    return Object.assign(new this(), JSON.parse(json));
-  }
-};
+    static fromJSON(json) {
+      return Object.assign(new this(), JSON.parse(json));
+    }
+  };
 
-const Timestamped = (Base) => class extends Base {
-  constructor(...args) {
-    super(...args);
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
-  }
+const Timestamped = (Base) =>
+  class extends Base {
+    constructor(...args) {
+      super(...args);
+      this.createdAt = new Date();
+      this.updatedAt = new Date();
+    }
 
-  touch() {
-    this.updatedAt = new Date();
-    return this;
-  }
-};
+    touch() {
+      this.updatedAt = new Date();
+      return this;
+    }
+  };
 
-const Validatable = (Base) => class extends Base {
-  validate() {
-    const errors = [];
-    if (!this.name?.trim()) errors.push("Name is required");
-    if (!this.email?.includes("@")) errors.push("Email is invalid");
-    return { valid: errors.length === 0, errors };
-  }
-};
+const Validatable = (Base) =>
+  class extends Base {
+    validate() {
+      const errors = [];
+      if (!this.name?.trim()) errors.push("Name is required");
+      if (!this.email?.includes("@")) errors.push("Email is invalid");
+      return { valid: errors.length === 0, errors };
+    }
+  };
 
 // Compose multiple mixins
 class User extends Serializable(Timestamped(Validatable(class {}))) {
@@ -445,10 +451,10 @@ class User extends Serializable(Timestamped(Validatable(class {}))) {
 }
 
 const user = new User("Ashan", "ashan@cwwkcc.lk");
-user.validate();   // { valid: true, errors: [] }
-user.toJSON();     // JSON string with all properties
-user.createdAt;    // Date when created
-user.touch();      // updates updatedAt
+user.validate(); // { valid: true, errors: [] }
+user.toJSON(); // JSON string with all properties
+user.createdAt; // Date when created
+user.touch(); // updates updatedAt
 ```
 
 ---
@@ -462,25 +468,43 @@ Each class should have one reason to change.
 ```javascript
 // BAD — Student does too many things
 class Student {
-  constructor(name) { this.name = name; }
-  save() { db.save(this); }           // database concern
-  sendEmail() { emailer.send(this); } // email concern
-  formatReport() { /* ... */ }        // reporting concern
+  constructor(name) {
+    this.name = name;
+  }
+  save() {
+    db.save(this);
+  } // database concern
+  sendEmail() {
+    emailer.send(this);
+  } // email concern
+  formatReport() {
+    /* ... */
+  } // reporting concern
 }
 
 // GOOD — separate concerns
 class Student {
-  constructor(name) { this.name = name; }
-  getDisplayName() { return this.name; }
+  constructor(name) {
+    this.name = name;
+  }
+  getDisplayName() {
+    return this.name;
+  }
 }
 
 class StudentRepository {
-  async save(student) { return db.save(student); }
-  async findById(id) { return db.find(id); }
+  async save(student) {
+    return db.save(student);
+  }
+  async findById(id) {
+    return db.find(id);
+  }
 }
 
 class StudentEmailer {
-  async sendWelcome(student) { /* ... */ }
+  async sendWelcome(student) {
+    /* ... */
+  }
 }
 ```
 
