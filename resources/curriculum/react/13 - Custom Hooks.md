@@ -69,7 +69,7 @@ function Component() {
 // ✗ Called conditionally — breaks hook rules
 function Component({ isAdmin }) {
   if (isAdmin) {
-    const { data } = useStudentData(id);  // error
+    const { data } = useStudentData(id); // error
   }
 }
 ```
@@ -92,20 +92,22 @@ function StudentPage({ studentId }) {
     setIsLoading(true);
 
     fetchStudent(studentId)
-      .then(data => {
+      .then((data) => {
         if (!cancelled) {
           setStudent(data);
           setIsLoading(false);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         if (!cancelled) {
           setError(err.message);
           setIsLoading(false);
         }
       });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [studentId]);
 
   if (isLoading) return <Spinner />;
@@ -135,14 +137,22 @@ function useStudentData(studentId) {
     setError(null);
 
     fetchStudent(studentId)
-      .then(data => {
-        if (!cancelled) { setData(data); setIsLoading(false); }
+      .then((data) => {
+        if (!cancelled) {
+          setData(data);
+          setIsLoading(false);
+        }
       })
-      .catch(err => {
-        if (!cancelled) { setError(err.message); setIsLoading(false); }
+      .catch((err) => {
+        if (!cancelled) {
+          setError(err.message);
+          setIsLoading(false);
+        }
       });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [studentId]);
 
   return { data, isLoading, error };
@@ -169,15 +179,15 @@ function useFetch(url) {
     setError(null);
 
     fetch(url, { signal: controller.signal })
-      .then(res => {
+      .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         setData(data);
         setIsLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         if (err.name === "AbortError") return;
         setError(err.message);
         setIsLoading(false);
@@ -214,12 +224,13 @@ function usePaginatedStudents({ grade, query, pageSize = 20 }) {
   useEffect(() => {
     setIsLoading(true);
 
-    fetchStudents({ grade, query, page, limit: pageSize })
-      .then(({ data, total }) => {
+    fetchStudents({ grade, query, page, limit: pageSize }).then(
+      ({ data, total }) => {
         setStudents(data);
         setTotal(total);
         setIsLoading(false);
-      });
+      },
+    );
   }, [grade, query, page, pageSize]);
 
   const totalPages = Math.ceil(total / pageSize);
@@ -235,8 +246,8 @@ function usePaginatedStudents({ grade, query, pageSize = 20 }) {
     hasNext,
     hasPrev,
     goToPage: setPage,
-    nextPage: () => setPage(p => p + 1),
-    prevPage: () => setPage(p => p - 1),
+    nextPage: () => setPage((p) => p + 1),
+    prevPage: () => setPage((p) => p - 1),
   };
 }
 ```
@@ -251,8 +262,8 @@ function usePaginatedStudents({ grade, query, pageSize = 20 }) {
 function useToggle(initial = false) {
   const [value, setValue] = useState(initial);
 
-  const toggle  = useCallback(() => setValue(v => !v), []);
-  const setTrue  = useCallback(() => setValue(true), []);
+  const toggle = useCallback(() => setValue((v) => !v), []);
+  const setTrue = useCallback(() => setValue(true), []);
   const setFalse = useCallback(() => setValue(false), []);
 
   return [value, { toggle, setTrue, setFalse }];
@@ -279,9 +290,9 @@ function useDisclosure(initial = false) {
 
   return {
     isOpen,
-    open:   useCallback(() => setIsOpen(true), []),
-    close:  useCallback(() => setIsOpen(false), []),
-    toggle: useCallback(() => setIsOpen(v => !v), []),
+    open: useCallback(() => setIsOpen(true), []),
+    close: useCallback(() => setIsOpen(false), []),
+    toggle: useCallback(() => setIsOpen((v) => !v), []),
   };
 }
 
@@ -293,8 +304,14 @@ function DropdownMenu({ items }) {
       <button onClick={toggle}>Menu</button>
       {isOpen && (
         <ul>
-          {items.map(item => (
-            <li key={item.id} onClick={() => { item.action(); close(); }}>
+          {items.map((item) => (
+            <li
+              key={item.id}
+              onClick={() => {
+                item.action();
+                close();
+              }}
+            >
               {item.label}
             </li>
           ))}
@@ -312,18 +329,24 @@ function useCounter(initial = 0, { min, max, step = 1 } = {}) {
   const [count, setCount] = useState(initial);
 
   const increment = useCallback(() => {
-    setCount(c => max !== undefined ? Math.min(c + step, max) : c + step);
+    setCount((c) => (max !== undefined ? Math.min(c + step, max) : c + step));
   }, [max, step]);
 
   const decrement = useCallback(() => {
-    setCount(c => min !== undefined ? Math.max(c - step, min) : c - step);
+    setCount((c) => (min !== undefined ? Math.max(c - step, min) : c - step));
   }, [min, step]);
 
   const reset = useCallback(() => setCount(initial), [initial]);
-  const set   = useCallback((val) => {
-    const clamped = Math.min(Math.max(val, min ?? -Infinity), max ?? Infinity);
-    setCount(clamped);
-  }, [min, max]);
+  const set = useCallback(
+    (val) => {
+      const clamped = Math.min(
+        Math.max(val, min ?? -Infinity),
+        max ?? Infinity,
+      );
+      setCount(clamped);
+    },
+    [min, max],
+  );
 
   return { count, increment, decrement, reset, set };
 }
@@ -358,15 +381,19 @@ function useLocalStorage(key, initialValue) {
     }
   });
 
-  const set = useCallback((newValue) => {
-    try {
-      const toStore = newValue instanceof Function ? newValue(value) : newValue;
-      setValue(toStore);
-      localStorage.setItem(key, JSON.stringify(toStore));
-    } catch (err) {
-      console.error("useLocalStorage: failed to save", err);
-    }
-  }, [key, value]);
+  const set = useCallback(
+    (newValue) => {
+      try {
+        const toStore =
+          newValue instanceof Function ? newValue(value) : newValue;
+        setValue(toStore);
+        localStorage.setItem(key, JSON.stringify(toStore));
+      } catch (err) {
+        console.error("useLocalStorage: failed to save", err);
+      }
+    },
+    [key, value],
+  );
 
   const remove = useCallback(() => {
     localStorage.removeItem(key);
@@ -385,7 +412,7 @@ const [theme, setTheme] = useLocalStorage("theme", "dark");
 ```jsx
 function useMediaQuery(query) {
   const [matches, setMatches] = useState(
-    () => window.matchMedia(query).matches
+    () => window.matchMedia(query).matches,
   );
 
   useEffect(() => {
@@ -413,16 +440,19 @@ function useClipboard(timeout = 2000) {
   const [copied, setCopied] = useState(false);
   const timerRef = useRef(null);
 
-  const copy = useCallback(async (text) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => setCopied(false), timeout);
-    } catch (err) {
-      console.error("Copy failed:", err);
-    }
-  }, [timeout]);
+  const copy = useCallback(
+    async (text) => {
+      try {
+        await navigator.clipboard.writeText(text);
+        setCopied(true);
+        clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => setCopied(false), timeout);
+      } catch (err) {
+        console.error("Copy failed:", err);
+      }
+    },
+    [timeout],
+  );
 
   useEffect(() => () => clearTimeout(timerRef.current), []);
 
@@ -447,12 +477,12 @@ function useOnlineStatus() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
-    const on  = () => setIsOnline(true);
+    const on = () => setIsOnline(true);
     const off = () => setIsOnline(false);
-    window.addEventListener("online",  on);
+    window.addEventListener("online", on);
     window.addEventListener("offline", off);
     return () => {
-      window.removeEventListener("online",  on);
+      window.removeEventListener("online", on);
       window.removeEventListener("offline", off);
     };
   }, []);
@@ -473,13 +503,16 @@ function useField(initialValue = "", validate) {
   const [error, setError] = useState("");
   const [touched, setTouched] = useState(false);
 
-  const handleChange = useCallback((e) => {
-    const newValue = e.target.value;
-    setValue(newValue);
-    if (touched && validate) {
-      setError(validate(newValue) ?? "");
-    }
-  }, [touched, validate]);
+  const handleChange = useCallback(
+    (e) => {
+      const newValue = e.target.value;
+      setValue(newValue);
+      if (touched && validate) {
+        setError(validate(newValue) ?? "");
+      }
+    },
+    [touched, validate],
+  );
 
   const handleBlur = useCallback(() => {
     setTouched(true);
@@ -507,13 +540,13 @@ function useField(initialValue = "", validate) {
 
 // Usage
 function LoginForm() {
-  const email = useField("", v => {
+  const email = useField("", (v) => {
     if (!v) return "Email is required";
     if (!v.includes("@")) return "Invalid email";
     return null;
   });
 
-  const password = useField("", v => {
+  const password = useField("", (v) => {
     if (!v) return "Password is required";
     if (v.length < 8) return "At least 8 characters";
     return null;
@@ -529,7 +562,9 @@ function LoginForm() {
       <input {...password.inputProps} type="password" />
       {password.error && <p>{password.error}</p>}
 
-      <button type="submit" disabled={!canSubmit}>Login</button>
+      <button type="submit" disabled={!canSubmit}>
+        Login
+      </button>
     </form>
   );
 }
@@ -544,13 +579,17 @@ function LoginForm() {
 function useStudentSearch() {
   const [query, setQuery] = useState("");
   const [grade, setGrade] = useState(null);
-  const debouncedQuery = useDebounce(query, 300);  // custom hook
-  const isOnline = useOnlineStatus();               // custom hook
+  const debouncedQuery = useDebounce(query, 300); // custom hook
+  const isOnline = useOnlineStatus(); // custom hook
 
-  const { data: students, isLoading, error } = useFetch(
+  const {
+    data: students,
+    isLoading,
+    error,
+  } = useFetch(
     isOnline
       ? `/api/students?query=${debouncedQuery}&grade=${grade ?? ""}`
-      : null  // don't fetch when offline
+      : null, // don't fetch when offline
   );
 
   return {
@@ -579,9 +618,14 @@ function useDebounce(value, delay) {
 // The component is remarkably clean
 function StudentSearchPage() {
   const {
-    query, setQuery,
-    grade, setGrade,
-    students, isLoading, error, isOnline,
+    query,
+    setQuery,
+    grade,
+    setGrade,
+    students,
+    isLoading,
+    error,
+    isOnline,
   } = useStudentSearch();
 
   return (
@@ -609,7 +653,7 @@ return [data, isLoading, error, refetch];
 return { data, isLoading, error, refetch };
 
 // Exception: two-value pairs (like useState) are fine as arrays
-return [value, setValue];  // ✓ mirrors useState convention
+return [value, setValue]; // ✓ mirrors useState convention
 ```
 
 ### Reset and refetch capabilities
@@ -617,7 +661,7 @@ return [value, setValue];  // ✓ mirrors useState convention
 ```jsx
 function useStudentData(id) {
   const [data, setData] = useState(null);
-  const [version, setVersion] = useState(0);  // bump to trigger refetch
+  const [version, setVersion] = useState(0); // bump to trigger refetch
 
   useEffect(() => {
     fetchStudent(id).then(setData);
@@ -625,7 +669,7 @@ function useStudentData(id) {
 
   return {
     data,
-    refetch: () => setVersion(v => v + 1),  // expose refetch
+    refetch: () => setVersion((v) => v + 1), // expose refetch
   };
 }
 ```
@@ -643,7 +687,7 @@ function useData(fetchFn, deps) {
 
   // ...
 
-  return state;  // always expose all three
+  return state; // always expose all three
 }
 ```
 

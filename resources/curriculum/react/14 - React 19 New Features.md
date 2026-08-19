@@ -74,7 +74,7 @@ function SaveButton({ onSave }) {
   function handleClick() {
     startTransition(async () => {
       try {
-        await onSave();  // async function inside startTransition
+        await onSave(); // async function inside startTransition
       } catch (err) {
         setError(err.message);
       }
@@ -116,7 +116,7 @@ function StudentForm({ studentId }) {
         await updateStudentName(studentId, name);
         // State updates here are batched and non-urgent
       } catch (err) {
-        setError(err.message);  // errors inside startTransition are caught
+        setError(err.message); // errors inside startTransition are caught
       }
     });
   }
@@ -125,7 +125,7 @@ function StudentForm({ studentId }) {
     <form onSubmit={handleSubmit}>
       <input
         value={name}
-        onChange={e => setName(e.target.value)}
+        onChange={(e) => setName(e.target.value)}
         disabled={isPending}
       />
       {error && <p className="error">{error}</p>}
@@ -152,8 +152,8 @@ const [state, formAction, isPending] = useActionState(action, initialState);
 ```jsx
 // The action function receives previous state + FormData
 async function submitContactForm(prevState, formData) {
-  const name    = formData.get("name");
-  const email   = formData.get("email");
+  const name = formData.get("name");
+  const email = formData.get("email");
   const message = formData.get("message");
 
   // Validate
@@ -170,10 +170,10 @@ async function submitContactForm(prevState, formData) {
 }
 
 function ContactForm() {
-  const [state, formAction, isPending] = useActionState(
-    submitContactForm,
-    { success: false, error: null }
-  );
+  const [state, formAction, isPending] = useActionState(submitContactForm, {
+    success: false,
+    error: null,
+  });
 
   if (state.success) {
     return <p>Message sent! We'll get back to you shortly.</p>;
@@ -181,8 +181,8 @@ function ContactForm() {
 
   return (
     <form action={formAction}>
-      <input name="name"    placeholder="Your name" required />
-      <input name="email"   type="email" required />
+      <input name="name" placeholder="Your name" required />
+      <input name="email" type="email" required />
       <textarea name="message" required />
 
       {state.error && <p className="error">{state.error}</p>}
@@ -262,8 +262,8 @@ function SubmitButton({ children = "Submit" }) {
 import { useOptimistic } from "react";
 
 const [optimisticValue, addOptimistic] = useOptimistic(
-  currentValue,         // the real value (from state/server)
-  (currentValue, update) => newOptimisticValue  // how to compute optimistic value
+  currentValue, // the real value (from state/server)
+  (currentValue, update) => newOptimisticValue, // how to compute optimistic value
 );
 ```
 
@@ -274,12 +274,12 @@ function LikeButton({ post }) {
 
   const [optimisticLikes, addOptimisticLike] = useOptimistic(
     likes,
-    (currentLikes, newLikes) => newLikes
+    (currentLikes, newLikes) => newLikes,
   );
 
   const [optimisticIsLiked, addOptimisticIsLiked] = useOptimistic(
     isLiked,
-    (_, newState) => newState
+    (_, newState) => newState,
   );
 
   async function handleLike() {
@@ -317,7 +317,7 @@ function MessageThread({ threadId }) {
 
   const [optimisticMessages, addOptimisticMessage] = useOptimistic(
     messages,
-    (currentMessages, newMessage) => [...currentMessages, newMessage]
+    (currentMessages, newMessage) => [...currentMessages, newMessage],
   );
 
   async function sendMessage(text) {
@@ -325,7 +325,7 @@ function MessageThread({ threadId }) {
       id: "temp-" + Date.now(),
       text,
       sender: currentUser,
-      pending: true,   // flag to show "sending..." style
+      pending: true, // flag to show "sending..." style
     };
 
     // Add immediately to UI
@@ -333,7 +333,7 @@ function MessageThread({ threadId }) {
 
     try {
       const confirmedMessage = await sendMessageApi(threadId, text);
-      setMessages(prev => [...prev, confirmedMessage]);
+      setMessages((prev) => [...prev, confirmedMessage]);
     } catch (err) {
       // Optimistic message automatically removed on error
       showToast("Failed to send message", "error");
@@ -342,7 +342,7 @@ function MessageThread({ threadId }) {
 
   return (
     <div>
-      {optimisticMessages.map(msg => (
+      {optimisticMessages.map((msg) => (
         <Message
           key={msg.id}
           message={msg}
@@ -366,14 +366,14 @@ import { use } from "react";
 
 // Reading a Promise — component suspends until resolved
 function StudentProfile({ studentPromise }) {
-  const student = use(studentPromise);  // throws the promise (Suspense catches it)
+  const student = use(studentPromise); // throws the promise (Suspense catches it)
   return <div>{student.name}</div>;
 }
 
 // Must be wrapped in Suspense
 <Suspense fallback={<Spinner />}>
   <StudentProfile studentPromise={fetchStudent(id)} />
-</Suspense>
+</Suspense>;
 ```
 
 ```jsx
@@ -384,14 +384,14 @@ function StudentProfile({ studentPromise }) {
 function AdminPanel({ isAdmin }) {
   if (!isAdmin) return null;
 
-  const user = use(UserContext);  // ✓ called after a conditional
+  const user = use(UserContext); // ✓ called after a conditional
   return <div>Admin: {user.name}</div>;
 }
 
 // useContext would fail here:
 function AdminPanel({ isAdmin }) {
   if (!isAdmin) return null;
-  const user = useContext(UserContext);  // ✗ Hook called after conditional
+  const user = useContext(UserContext); // ✗ Hook called after conditional
 }
 ```
 
@@ -434,10 +434,10 @@ import { useActionState } from "react";
 import { submitAdmissionsForm } from "../actions/admissions";
 
 export default function AdmissionsPage() {
-  const [state, formAction, isPending] = useActionState(
-    submitAdmissionsForm,
-    { success: false, error: null }
-  );
+  const [state, formAction, isPending] = useActionState(submitAdmissionsForm, {
+    success: false,
+    error: null,
+  });
 
   if (state.success) {
     return (
@@ -452,15 +452,20 @@ export default function AdmissionsPage() {
     <form action={formAction} className="space-y-4">
       <input name="studentName" placeholder="Student's full name" required />
       <select name="grade">
-        {[1,2,3,4,5,6,7,8,9,10,11,12,13].map(g => (
-          <option key={g} value={g}>Grade {g}</option>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((g) => (
+          <option key={g} value={g}>
+            Grade {g}
+          </option>
         ))}
       </select>
-      <input name="parentEmail" type="email" placeholder="Parent's email" required />
+      <input
+        name="parentEmail"
+        type="email"
+        placeholder="Parent's email"
+        required
+      />
 
-      {state.error && (
-        <p className="text-red-500">{state.error}</p>
-      )}
+      {state.error && <p className="text-red-500">{state.error}</p>}
 
       <button type="submit" disabled={isPending}>
         {isPending ? "Submitting..." : "Submit Application"}
@@ -489,7 +494,7 @@ function Input({ ref, ...props }) {
 
 // Usage — identical in both cases
 const inputRef = useRef(null);
-<Input ref={inputRef} type="email" />
+<Input ref={inputRef} type="email" />;
 ```
 
 `forwardRef` still works but is now deprecated. Migrate gradually.
@@ -508,7 +513,7 @@ useActionState    Forms with server actions             Manual state: YES for si
                   Form submission with result/error     React Hook Form: YES for complex forms
 
 useFormStatus     Reusable submit buttons               Prop drilling isPending: YES (simpler)
-                  Buttons that don't own the form       
+                  Buttons that don't own the form
 
 useOptimistic     Likes, votes, quick toggles           setState + rollback: YES (less clean)
                   Chat messages, list item actions

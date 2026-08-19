@@ -26,9 +26,9 @@
 ```jsx
 const ref = useRef(0);
 
-ref.current;        // 0 initially
-ref.current = 42;   // mutate freely — no re-render
-ref.current;        // 42
+ref.current; // 0 initially
+ref.current = 42; // mutate freely — no re-render
+ref.current; // 42
 
 // The ref object itself never changes — same reference every render
 // Only ref.current changes
@@ -52,7 +52,7 @@ function SearchInput({ onSearch }) {
   }, []);
 
   function handleClear() {
-    inputRef.current.value = "";   // direct DOM mutation (unusual but valid)
+    inputRef.current.value = ""; // direct DOM mutation (unusual but valid)
     inputRef.current.focus();
   }
 
@@ -74,13 +74,15 @@ function Modal({ isOpen, onClose }) {
 
   useEffect(() => {
     if (isOpen) {
-      closeButtonRef.current?.focus();  // focus close button when modal opens
+      closeButtonRef.current?.focus(); // focus close button when modal opens
     }
   }, [isOpen]);
 
   return isOpen ? (
     <div role="dialog" aria-modal="true">
-      <button ref={closeButtonRef} onClick={onClose}>×</button>
+      <button ref={closeButtonRef} onClick={onClose}>
+        ×
+      </button>
       {/* ... */}
     </div>
   ) : null;
@@ -92,12 +94,14 @@ function ChatMessages({ messages }) {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);  // scroll down when new messages arrive
+  }, [messages]); // scroll down when new messages arrive
 
   return (
     <div className="messages">
-      {messages.map(msg => <Message key={msg.id} message={msg} />)}
-      <div ref={bottomRef} />  {/* invisible sentinel at the bottom */}
+      {messages.map((msg) => (
+        <Message key={msg.id} message={msg} />
+      ))}
+      <div ref={bottomRef} /> {/* invisible sentinel at the bottom */}
     </div>
   );
 }
@@ -138,9 +142,15 @@ function AdaptiveChart() {
 function VideoPlayer({ src }) {
   const videoRef = useRef(null);
 
-  function handlePlay()  { videoRef.current.play();  }
-  function handlePause() { videoRef.current.pause(); }
-  function seek(seconds) { videoRef.current.currentTime = seconds; }
+  function handlePlay() {
+    videoRef.current.play();
+  }
+  function handlePause() {
+    videoRef.current.pause();
+  }
+  function seek(seconds) {
+    videoRef.current.currentTime = seconds;
+  }
 
   return (
     <div>
@@ -177,11 +187,7 @@ function AnimatedCounter({ count }) {
   const prevCount = usePrevious(count);
   const direction = count > prevCount ? "up" : "down";
 
-  return (
-    <span className={`counter animate-${direction}`}>
-      {count}
-    </span>
-  );
+  return <span className={`counter animate-${direction}`}>{count}</span>;
 }
 ```
 
@@ -197,7 +203,7 @@ function Notification({ message, duration = 3000, onDismiss }) {
   }, [duration, onDismiss]);
 
   function handleDismiss() {
-    clearTimeout(timerRef.current);  // cancel auto-dismiss
+    clearTimeout(timerRef.current); // cancel auto-dismiss
     onDismiss();
   }
 
@@ -219,7 +225,9 @@ function useIsMounted() {
 
   useEffect(() => {
     isMounted.current = true;
-    return () => { isMounted.current = false; };
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   return isMounted;
@@ -230,8 +238,9 @@ function DataLoader({ id }) {
   const isMounted = useIsMounted();
 
   useEffect(() => {
-    fetchData(id).then(result => {
-      if (isMounted.current) {  // only update state if still mounted
+    fetchData(id).then((result) => {
+      if (isMounted.current) {
+        // only update state if still mounted
         setData(result);
       }
     });
@@ -253,17 +262,17 @@ function useInterval(callback, delay) {
 
   useEffect(() => {
     const id = setInterval(() => {
-      callbackRef.current();  // always calls the latest version
+      callbackRef.current(); // always calls the latest version
     }, delay);
     return () => clearInterval(id);
-  }, [delay]);  // only restarts if delay changes, not on every callback change
+  }, [delay]); // only restarts if delay changes, not on every callback change
 }
 
 function Timer() {
   const [count, setCount] = useState(0);
 
   useInterval(() => {
-    setCount(c => c + 1);
+    setCount((c) => c + 1);
   }, 1000);
 
   return <p>{count}</p>;
@@ -291,7 +300,7 @@ Read during         Always current           May be stale
 
 // STATE — does the UI need to reflect this value?
 const [count, setCount] = useState(0);
-return <p>Count: {count}</p>;  // yes, UI shows count
+return <p>Count: {count}</p>; // yes, UI shows count
 
 // REF — does this need to persist, but NOT affect UI?
 const timerIdRef = useRef(null);
@@ -309,7 +318,7 @@ Instead of a ref object, you can pass a function to `ref`. React calls it with 
 function MeasuredBox() {
   const [height, setHeight] = useState(0);
 
-  const measuredRef = useCallback(node => {
+  const measuredRef = useCallback((node) => {
     if (node !== null) {
       setHeight(node.getBoundingClientRect().height);
     }
@@ -365,7 +374,7 @@ function LoginForm() {
   return (
     <form>
       <Input
-        ref={emailRef}      // ← this now reaches the <input> inside Input
+        ref={emailRef} // ← this now reaches the <input> inside Input
         label="Email"
         type="email"
       />
@@ -387,19 +396,23 @@ const VideoPlayer = forwardRef(function VideoPlayer({ src }, ref) {
   const videoRef = useRef(null);
 
   // Expose only specific methods to the parent
-  useImperativeHandle(ref, () => ({
-    play() {
-      videoRef.current.play();
-    },
-    pause() {
-      videoRef.current.pause();
-    },
-    seek(time) {
-      videoRef.current.currentTime = time;
-    },
-    // The parent CANNOT access videoRef.current directly
-    // They can only use these three methods
-  }), []);
+  useImperativeHandle(
+    ref,
+    () => ({
+      play() {
+        videoRef.current.play();
+      },
+      pause() {
+        videoRef.current.pause();
+      },
+      seek(time) {
+        videoRef.current.currentTime = time;
+      },
+      // The parent CANNOT access videoRef.current directly
+      // They can only use these three methods
+    }),
+    [],
+  );
 
   return <video ref={videoRef} src={src} />;
 });
@@ -471,10 +484,7 @@ function AnimatedSection({ children }) {
   const [ref, isInView] = useInView({ threshold: 0.1 });
 
   return (
-    <section
-      ref={ref}
-      className={isInView ? "visible animate-in" : "hidden"}
-    >
+    <section ref={ref} className={isInView ? "visible animate-in" : "hidden"}>
       {children}
     </section>
   );
@@ -510,7 +520,7 @@ function NoteEditor({ noteId, initialContent }) {
   return (
     <textarea
       value={content}
-      onChange={e => setContent(e.target.value)}
+      onChange={(e) => setContent(e.target.value)}
       placeholder="Start writing..."
     />
   );

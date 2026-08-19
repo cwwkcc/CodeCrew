@@ -23,13 +23,13 @@ On every render, React re-runs your component function. Every value is recompute
 function StudentList({ students, filters }) {
   // This runs on EVERY render — even if students and filters haven't changed
   const filtered = students
-    .filter(s => s.grade === filters.grade)
+    .filter((s) => s.grade === filters.grade)
     .sort((a, b) => a.name.localeCompare(b.name));
 
   // This function is a NEW function reference on every render
   const handleDelete = (id) => deleteStudent(id);
 
-  return filtered.map(s => (
+  return filtered.map((s) => (
     <StudentCard key={s.id} student={s} onDelete={handleDelete} />
   ));
 }
@@ -59,24 +59,30 @@ function StudentReport({ students, filters }) {
   // Only recomputes when students or filters changes
   const processedStudents = useMemo(() => {
     return students
-      .filter(s => {
+      .filter((s) => {
         if (filters.grade && s.grade !== filters.grade) return false;
-        if (filters.query && !s.name.toLowerCase().includes(filters.query)) return false;
+        if (filters.query && !s.name.toLowerCase().includes(filters.query))
+          return false;
         return true;
       })
       .sort((a, b) => {
-        if (filters.sortBy === "name")  return a.name.localeCompare(b.name);
+        if (filters.sortBy === "name") return a.name.localeCompare(b.name);
         if (filters.sortBy === "score") return b.score - a.score;
         return 0;
       });
   }, [students, filters]);
 
   // Also memoised — only recalculates when processedStudents changes
-  const stats = useMemo(() => ({
-    count: processedStudents.length,
-    average: processedStudents.reduce((sum, s) => sum + s.score, 0) / processedStudents.length,
-    top: processedStudents[0],
-  }), [processedStudents]);
+  const stats = useMemo(
+    () => ({
+      count: processedStudents.length,
+      average:
+        processedStudents.reduce((sum, s) => sum + s.score, 0) /
+        processedStudents.length,
+      top: processedStudents[0],
+    }),
+    [processedStudents],
+  );
 
   return (
     <div>
@@ -107,17 +113,20 @@ function StudentList({ onRefresh }) {
 
   // Without useCallback: new function on every render
   // With useCallback: same reference until id changes
-  const handleDelete = useCallback(async (id) => {
-    await deleteStudent(id);
-    setStudents(prev => prev.filter(s => s.id !== id));
-    onRefresh();
-  }, [onRefresh]);  // stable as long as onRefresh is stable
+  const handleDelete = useCallback(
+    async (id) => {
+      await deleteStudent(id);
+      setStudents((prev) => prev.filter((s) => s.id !== id));
+      onRefresh();
+    },
+    [onRefresh],
+  ); // stable as long as onRefresh is stable
 
-  return students.map(s => (
+  return students.map((s) => (
     <StudentCard
       key={s.id}
       student={s}
-      onDelete={handleDelete}  // same reference = StudentCard can use React.memo
+      onDelete={handleDelete} // same reference = StudentCard can use React.memo
     />
   ));
 }
@@ -178,19 +187,19 @@ function StudentPage({ courseId }) {
 
   // Stable reference — only recreates if setStudents changes (it never does)
   const handleDelete = useCallback((id) => {
-    setStudents(prev => prev.filter(s => s.id !== id));
+    setStudents((prev) => prev.filter((s) => s.id !== id));
   }, []);
 
   const handleEdit = useCallback((student) => {
     openEditModal(student);
   }, []);
 
-  return students.map(s => (
+  return students.map((s) => (
     <StudentCard
       key={s.id}
       student={s}
-      onDelete={handleDelete}   // stable reference
-      onEdit={handleEdit}       // stable reference
+      onDelete={handleDelete} // stable reference
+      onEdit={handleEdit} // stable reference
     />
   ));
 }
@@ -205,30 +214,33 @@ function StudentPage({ courseId }) {
 
 ```jsx
 // ✓ Genuinely expensive computation (> ~1ms, called on every render)
-const sortedData = useMemo(() =>
-  hugeDataset.sort(complexCompareFn),
-  [hugeDataset]
+const sortedData = useMemo(
+  () => hugeDataset.sort(complexCompareFn),
+  [hugeDataset],
 );
 
 // ✓ Stable object reference needed by a memoised child or useEffect
-const queryOptions = useMemo(() => ({
-  page,
-  limit: 20,
-  sortBy,
-  filters,
-}), [page, sortBy, filters]);
+const queryOptions = useMemo(
+  () => ({
+    page,
+    limit: 20,
+    sortBy,
+    filters,
+  }),
+  [page, sortBy, filters],
+);
 
 // ✓ Referential equality for useEffect deps
 useEffect(() => {
   fetchData(queryOptions);
-}, [queryOptions]);  // without memo, new object every render → infinite loop
+}, [queryOptions]); // without memo, new object every render → infinite loop
 ```
 
 ### `useCallback` — use when:
 
 ```jsx
 // ✓ Passed to a component wrapped in React.memo
-<MemoizedChild onAction={useCallback(() => doThing(), [])} />
+<MemoizedChild onAction={useCallback(() => doThing(), [])} />;
 
 // ✓ Listed as a useEffect dependency
 const fetchData = useCallback(() => {
@@ -237,7 +249,7 @@ const fetchData = useCallback(() => {
 
 useEffect(() => {
   fetchData();
-}, [fetchData]);  // stable reference = effect doesn't run on every render
+}, [fetchData]); // stable reference = effect doesn't run on every render
 ```
 
 ---
@@ -252,7 +264,7 @@ const doubled = useMemo(() => count * 2, [count]);
 // Just do: const doubled = count * 2
 
 // ✗ Useless — component isn't wrapped in React.memo
-<RegularChild onClick={useCallback(() => setOpen(true), [])} />
+<RegularChild onClick={useCallback(() => setOpen(true), [])} />;
 // The component re-renders on every parent render anyway
 
 // ✗ Useless — primitive value comparison is already cheap
@@ -295,8 +307,8 @@ Same rules as `useEffect` — all values from component scope that are used in
 ```jsx
 // ✗ Missing dependency — stale computation
 const result = useMemo(() => {
-  return processData(data, config);  // config is used
-}, [data]);  // missing config!
+  return processData(data, config); // config is used
+}, [data]); // missing config!
 
 // ✓ Complete dependencies
 const result = useMemo(() => {
@@ -305,8 +317,8 @@ const result = useMemo(() => {
 
 // ✗ Missing callback dependency
 const handler = useCallback(() => {
-  onComplete(value);  // value and onComplete used
-}, []);  // both missing!
+  onComplete(value); // value and onComplete used
+}, []); // both missing!
 
 // ✓ Complete
 const handler = useCallback(() => {
@@ -318,16 +330,19 @@ const handler = useCallback(() => {
 
 ```jsx
 // ✓ Valid empty array — genuinely no dependencies
-const constants = useMemo(() => ({
-  MAX_ITEMS: 100,
-  API_VERSION: "v2",
-}), []);
+const constants = useMemo(
+  () => ({
+    MAX_ITEMS: 100,
+    API_VERSION: "v2",
+  }),
+  [],
+);
 
 // ✓ Valid empty array — only uses setters (which are stable)
 const handleReset = useCallback(() => {
   setCount(0);
   setName("");
-}, []);  // setCount and setName are stable — don't need to be listed
+}, []); // setCount and setName are stable — don't need to be listed
 // (React guarantees setter functions from useState are stable)
 ```
 
@@ -345,8 +360,9 @@ function StudentSearch({ students }) {
   const results = useMemo(() => {
     // This runs on every render without memo
     // With 5000 students and debounced search, this is measurably slow
-    return students.filter(student => {
-      const matchesQuery = !query ||
+    return students.filter((student) => {
+      const matchesQuery =
+        !query ||
         student.name.toLowerCase().includes(query.toLowerCase()) ||
         student.email.toLowerCase().includes(query.toLowerCase());
 
@@ -377,7 +393,7 @@ function StudentSearch({ students }) {
 function useEventSource(url, onMessage) {
   // If onMessage changed reference on every render, this effect would
   // reconnect to the EventSource on every render — catastrophic
-  const stableOnMessage = useCallback(onMessage, []);  // ← careful: only if onMessage is truly stable
+  const stableOnMessage = useCallback(onMessage, []); // ← careful: only if onMessage is truly stable
 
   useEffect(() => {
     const es = new EventSource(url);
@@ -395,12 +411,19 @@ function AppProvider({ children }) {
   const [settings, setSettings] = useState(defaultSettings);
 
   // Without memo: new object on every render → every context consumer re-renders
-  const value = useMemo(() => ({
-    user,
-    settings,
-    updateSettings: (changes) => setSettings(prev => ({ ...prev, ...changes })),
-    logout: () => { setUser(null); clearToken(); },
-  }), [user, settings]);
+  const value = useMemo(
+    () => ({
+      user,
+      settings,
+      updateSettings: (changes) =>
+        setSettings((prev) => ({ ...prev, ...changes })),
+      logout: () => {
+        setUser(null);
+        clearToken();
+      },
+    }),
+    [user, settings],
+  );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

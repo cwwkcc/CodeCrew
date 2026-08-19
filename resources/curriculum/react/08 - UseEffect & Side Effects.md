@@ -45,10 +45,13 @@ Side effects don't belong in the render phase because React may call your compon
 ```jsx
 import { useEffect } from "react";
 
-useEffect(() => {
-  // Your side effect here
-  // Runs after every render by default
-}, [/* dependency array */]);
+useEffect(
+  () => {
+    // Your side effect here
+    // Runs after every render by default
+  },
+  [/* dependency array */],
+);
 ```
 
 ```jsx
@@ -115,7 +118,7 @@ function Component({ userId }) {
   useEffect(() => {
     fetchUser(userId).then(setData);
     // userId is used but not in deps — if userId changes, effect won't re-run
-  }, []);  // ← missing userId
+  }, []); // ← missing userId
 
   return <div>{data?.name}</div>;
 }
@@ -123,13 +126,13 @@ function Component({ userId }) {
 // ✓ Correct — all used values listed
 useEffect(() => {
   fetchUser(userId).then(setData);
-}, [userId]);  // re-runs when userId changes
+}, [userId]); // re-runs when userId changes
 
 // ✓ If a function is used, it must be in deps (or defined inside the effect)
 function Component({ onDataLoad }) {
   useEffect(() => {
-    fetchData().then(data => onDataLoad(data));
-  }, [onDataLoad]);  // onDataLoad must be in deps
+    fetchData().then((data) => onDataLoad(data));
+  }, [onDataLoad]); // onDataLoad must be in deps
 }
 ```
 
@@ -167,10 +170,10 @@ function Countdown({ from }) {
     if (count <= 0) return;
 
     const timerId = setTimeout(() => {
-      setCount(c => c - 1);
+      setCount((c) => c - 1);
     }, 1000);
 
-    return () => clearTimeout(timerId);  // cancel if count changes or unmounts
+    return () => clearTimeout(timerId); // cancel if count changes or unmounts
   }, [count]);
 
   return <p>{count > 0 ? count : "Done!"}</p>;
@@ -194,7 +197,7 @@ function useWindowSize() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
     // Without cleanup: every render would add another listener — memory leak
-  }, []);  // empty deps — run once, cleanup on unmount
+  }, []); // empty deps — run once, cleanup on unmount
 
   return size;
 }
@@ -216,7 +219,7 @@ function useLiveScore(matchId) {
     ws.onerror = (err) => console.error("WS error:", err);
 
     return () => {
-      ws.close();  // disconnect when matchId changes or component unmounts
+      ws.close(); // disconnect when matchId changes or component unmounts
     };
   }, [matchId]);
 
@@ -242,18 +245,18 @@ function StudentProfile({ studentId }) {
     setStudent(null);
 
     fetchStudent(studentId)
-      .then(data => {
+      .then((data) => {
         setStudent(data);
         setStatus("success");
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         setStatus("error");
       });
   }, [studentId]);
 
   if (status === "loading") return <Spinner />;
-  if (status === "error")   return <ErrorMessage />;
+  if (status === "error") return <ErrorMessage />;
   return <div>{student.name}</div>;
 }
 ```
@@ -272,7 +275,7 @@ useEffect(() => {
 useEffect(() => {
   let cancelled = false;
 
-  fetchStudent(studentId).then(data => {
+  fetchStudent(studentId).then((data) => {
     if (!cancelled) {
       setStudent(data);
     }
@@ -280,7 +283,7 @@ useEffect(() => {
   });
 
   return () => {
-    cancelled = true;  // cleanup: mark this effect's fetch as stale
+    cancelled = true; // cleanup: mark this effect's fetch as stale
   };
 }, [studentId]);
 
@@ -290,12 +293,12 @@ useEffect(() => {
 
   fetchStudent(studentId, { signal: controller.signal })
     .then(setStudent)
-    .catch(err => {
-      if (err.name === "AbortError") return;  // expected — don't set error state
+    .catch((err) => {
+      if (err.name === "AbortError") return; // expected — don't set error state
       setStatus("error");
     });
 
-  return () => controller.abort();  // cancel on cleanup
+  return () => controller.abort(); // cancel on cleanup
 }, [studentId]);
 ```
 
@@ -305,7 +308,11 @@ useEffect(() => {
 
 ```jsx
 // With TanStack Query (File 16) — cleaner and handles all edge cases
-const { data: student, isLoading, isError } = useQuery({
+const {
+  data: student,
+  isLoading,
+  isError,
+} = useQuery({
   queryKey: ["student", studentId],
   queryFn: () => fetchStudent(studentId),
 });
@@ -326,7 +333,7 @@ function useLocalStorage(key, initialValue) {
 
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value));
-  }, [key, value]);  // sync to localStorage whenever value changes
+  }, [key, value]); // sync to localStorage whenever value changes
 
   return [value, setValue];
 }
@@ -344,7 +351,7 @@ function useDocumentTitle(title) {
     document.title = title ? `${title} | ${defaultTitle}` : defaultTitle;
 
     return () => {
-      document.title = defaultTitle;  // restore on unmount
+      document.title = defaultTitle; // restore on unmount
     };
   }, [title]);
 }
@@ -381,12 +388,16 @@ function usePrevious(value) {
     // during the current render
   });
 
-  return ref.current;  // returns previous render's value
+  return ref.current; // returns previous render's value
 }
 
 function Component({ count }) {
   const prevCount = usePrevious(count);
-  return <p>{prevCount} → {count}</p>;
+  return (
+    <p>
+      {prevCount} → {count}
+    </p>
+  );
 }
 ```
 
@@ -397,14 +408,18 @@ function useOnlineStatus() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
-    function handleOnline()  { setIsOnline(true);  }
-    function handleOffline() { setIsOnline(false); }
+    function handleOnline() {
+      setIsOnline(true);
+    }
+    function handleOffline() {
+      setIsOnline(false);
+    }
 
-    window.addEventListener("online",  handleOnline);
+    window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener("online",  handleOnline);
+      window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
   }, []);
@@ -470,9 +485,9 @@ function Tooltip({ targetRef, children }) {
 ```jsx
 // ✗ One effect doing multiple unrelated things
 useEffect(() => {
-  document.title = title;          // thing 1
-  analytics.track("page_view");    // thing 2
-  fetchRelatedContent(postId);     // thing 3
+  document.title = title; // thing 1
+  analytics.track("page_view"); // thing 2
+  fetchRelatedContent(postId); // thing 3
 }, [title, postId]);
 
 // ✓ Separate effects for separate concerns

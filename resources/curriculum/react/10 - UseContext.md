@@ -23,19 +23,19 @@ Prop drilling is passing props through layers of components that don't use them 
 // App needs to pass `user` to UserAvatar, which is 4 levels deep
 function App() {
   const [user, setUser] = useState(currentUser);
-  return <Layout user={user} />;      // Layout doesn't use user
+  return <Layout user={user} />; // Layout doesn't use user
 }
 
 function Layout({ user }) {
-  return <Sidebar user={user} />;     // Sidebar doesn't use user
+  return <Sidebar user={user} />; // Sidebar doesn't use user
 }
 
 function Sidebar({ user }) {
-  return <NavMenu user={user} />;     // NavMenu doesn't use user
+  return <NavMenu user={user} />; // NavMenu doesn't use user
 }
 
 function NavMenu({ user }) {
-  return <UserAvatar user={user} />;  // FINALLY used here
+  return <UserAvatar user={user} />; // FINALLY used here
 }
 ```
 
@@ -49,7 +49,7 @@ Layout, Sidebar, and NavMenu all have to accept and forward `user` just to get
 import { createContext, useContext } from "react";
 
 // 1. Create the context with a default value
-const ThemeContext = createContext("light");  // "light" is the default
+const ThemeContext = createContext("light"); // "light" is the default
 
 // 2. Provide the context value — wrap the part of the tree that needs it
 function App() {
@@ -62,12 +62,8 @@ function App() {
 
 // 3. Consume the context — anywhere inside the Provider
 function Button({ children }) {
-  const theme = useContext(ThemeContext);  // "dark"
-  return (
-    <button className={`btn btn-${theme}`}>
-      {children}
-    </button>
-  );
+  const theme = useContext(ThemeContext); // "dark"
+  return <button className={`btn btn-${theme}`}>{children}</button>;
 }
 
 // No props needed — Button can be anywhere inside the Provider
@@ -106,7 +102,7 @@ export function AuthProvider({ children }) {
     const token = localStorage.getItem("token");
     if (token) {
       verifyToken(token)
-        .then(user => setUser(user))
+        .then((user) => setUser(user))
         .catch(() => localStorage.removeItem("token"))
         .finally(() => setIsLoading(false));
     } else {
@@ -152,7 +148,14 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Router>
     </AuthProvider>
@@ -193,18 +196,24 @@ Use separate contexts for separate concerns. Don't put everything in one giant c
 
 ```jsx
 // Each context has a single, focused responsibility
-<AuthProvider>          {/* user, login, logout */}
-  <ThemeProvider>       {/* theme, toggleTheme */}
-    <ToastProvider>     {/* toasts, showToast, dismissToast */}
+<AuthProvider>
+  {" "}
+  {/* user, login, logout */}
+  <ThemeProvider>
+    {" "}
+    {/* theme, toggleTheme */}
+    <ToastProvider>
+      {" "}
+      {/* toasts, showToast, dismissToast */}
       <App />
     </ToastProvider>
   </ThemeProvider>
-</AuthProvider>
+</AuthProvider>;
 
 // Consumers only subscribe to what they need
 function ProfileButton() {
-  const { user } = useAuth();     // subscribes to auth
-  const { theme } = useTheme();   // subscribes to theme
+  const { user } = useAuth(); // subscribes to auth
+  const { theme } = useTheme(); // subscribes to theme
   // doesn't subscribe to toasts — won't re-render on toast changes
 }
 ```
@@ -227,9 +236,9 @@ function App() {
   return (
     <UserContext.Provider value={{ user, lastActive, setUser }}>
       <div>
-        <UserName />          {/* re-renders when lastActive changes — unnecessary */}
-        <UserRole />          {/* re-renders when lastActive changes — unnecessary */}
-        <ActivityTracker />   {/* actually needs lastActive */}
+        <UserName /> {/* re-renders when lastActive changes — unnecessary */}
+        <UserRole /> {/* re-renders when lastActive changes — unnecessary */}
+        <ActivityTracker /> {/* actually needs lastActive */}
       </div>
     </UserContext.Provider>
   );
@@ -277,20 +286,19 @@ function AuthProvider({ children }) {
 
   // Memoize: only creates a new object when user actually changes
   // Without useMemo: new object on every render → every consumer re-renders
-  const value = useMemo(() => ({
-    user,
-    login: async (credentials) => {
-      const loggedInUser = await loginApi(credentials);
-      setUser(loggedInUser);
-    },
-    logout: () => setUser(null),
-  }), [user]);  // only recalculates when user changes
+  const value = useMemo(
+    () => ({
+      user,
+      login: async (credentials) => {
+        const loggedInUser = await loginApi(credentials);
+        setUser(loggedInUser);
+      },
+      logout: () => setUser(null),
+    }),
+    [user],
+  ); // only recalculates when user changes
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 ```
 
@@ -299,7 +307,7 @@ function AuthProvider({ children }) {
 ```jsx
 // State changes → re-render state consumers
 // Dispatch never changes → dispatch consumers don't re-render on state change
-const StateContext  = createContext(null);
+const StateContext = createContext(null);
 const DispatchContext = createContext(null);
 
 function AppProvider({ children }) {
@@ -338,17 +346,20 @@ export function ToastProvider({ children }) {
 
   const showToast = useCallback((message, type = "info", duration = 4000) => {
     const id = crypto.randomUUID();
-    setToasts(prev => [...prev, { id, message, type }]);
+    setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
+      setToasts((prev) => prev.filter((t) => t.id !== id));
     }, duration);
   }, []);
 
   const dismissToast = useCallback((id) => {
-    setToasts(prev => prev.filter(t => t.id !== id));
+    setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const value = useMemo(() => ({ showToast, dismissToast }), [showToast, dismissToast]);
+  const value = useMemo(
+    () => ({ showToast, dismissToast }),
+    [showToast, dismissToast],
+  );
 
   return (
     <ToastContext.Provider value={value}>
@@ -398,15 +409,13 @@ export function ThemeProvider({ children }) {
   }, [theme]);
 
   const toggleTheme = useCallback(() => {
-    setTheme(t => t === "light" ? "dark" : "light");
+    setTheme((t) => (t === "light" ? "dark" : "light"));
   }, []);
 
   const value = useMemo(() => ({ theme, toggleTheme }), [theme, toggleTheme]);
 
   return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }
 
@@ -443,7 +452,7 @@ Use Zustand when:
 const { theme } = useTheme();
 
 // Zustand: better for notification count (updates constantly, needed everywhere)
-const notifCount = useNotifStore(state => state.unreadCount);
+const notifCount = useNotifStore((state) => state.unreadCount);
 // Only re-renders when unreadCount changes — not when other store state changes
 ```
 

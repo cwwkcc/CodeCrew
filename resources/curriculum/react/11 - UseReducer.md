@@ -27,15 +27,15 @@ function ShoppingCart() {
   const [error, setError] = useState(null);
 
   function addItem(product) {
-    setItems(prev => [...prev, product]);
-    setTotal(prev => prev + product.price);  // must update both in sync
+    setItems((prev) => [...prev, product]);
+    setTotal((prev) => prev + product.price); // must update both in sync
     setError(null);
   }
 
   function applyDiscount(code) {
     if (validCodes.includes(code)) {
       setDiscountCode(code);
-      setTotal(prev => prev * 0.9);  // must also update total
+      setTotal((prev) => prev * 0.9); // must also update total
     } else {
       setError("Invalid discount code");
     }
@@ -101,7 +101,7 @@ function counterReducer(state, action) {
       return { count: action.value };
     default:
       throw new Error(`Unknown action: ${action.type}`);
-      // Throw on unknown actions — surfaces bugs immediately
+    // Throw on unknown actions — surfaces bugs immediately
   }
 }
 
@@ -116,7 +116,9 @@ function Counter() {
       <button onClick={() => dispatch({ type: "INCREMENT" })}>+</button>
       <button onClick={() => dispatch({ type: "DECREMENT" })}>-</button>
       <button onClick={() => dispatch({ type: "RESET" })}>Reset</button>
-      <button onClick={() => dispatch({ type: "SET", value: 10 })}>Set to 10</button>
+      <button onClick={() => dispatch({ type: "SET", value: 10 })}>
+        Set to 10
+      </button>
     </div>
   );
 }
@@ -171,7 +173,7 @@ function formReducer(state, action) {
       return {
         ...state,
         values: { ...state.values, [action.field]: action.value },
-        errors: { ...state.errors, [action.field]: "" },  // clear error on change
+        errors: { ...state.errors, [action.field]: "" }, // clear error on change
       };
 
     case "BLUR":
@@ -180,7 +182,10 @@ function formReducer(state, action) {
         touched: { ...state.touched, [action.field]: true },
         errors: {
           ...state.errors,
-          [action.field]: validateField(action.field, state.values[action.field]),
+          [action.field]: validateField(
+            action.field,
+            state.values[action.field],
+          ),
         },
       };
 
@@ -189,7 +194,10 @@ function formReducer(state, action) {
         ...state,
         isSubmitting: true,
         errors: validateAll(state.values),
-        touched: Object.keys(state.values).reduce((acc, k) => ({ ...acc, [k]: true }), {}),
+        touched: Object.keys(state.values).reduce(
+          (acc, k) => ({ ...acc, [k]: true }),
+          {},
+        ),
       };
 
     case "SUBMIT_SUCCESS":
@@ -227,7 +235,7 @@ function ContactForm() {
 
     dispatch({ type: "SUBMIT_START" });
 
-    if (Object.keys(nextState.errors).length > 0) return;  // has validation errors
+    if (Object.keys(nextState.errors).length > 0) return; // has validation errors
 
     try {
       await submitContact(form.values);
@@ -292,8 +300,8 @@ function useDataFetcher(fetchFn, deps) {
     dispatch({ type: "FETCH_START" });
 
     fetchFn()
-      .then(data => dispatch({ type: "FETCH_SUCCESS", data }))
-      .catch(err => dispatch({ type: "FETCH_ERROR", error: err.message }));
+      .then((data) => dispatch({ type: "FETCH_SUCCESS", data }))
+      .catch((err) => dispatch({ type: "FETCH_ERROR", error: err.message }));
   }, deps);
 
   return state;
@@ -301,16 +309,17 @@ function useDataFetcher(fetchFn, deps) {
 
 // Usage
 function StudentList() {
-  const { status, data: students, error } = useDataFetcher(
-    () => fetchStudents(),
-    []
-  );
+  const {
+    status,
+    data: students,
+    error,
+  } = useDataFetcher(() => fetchStudents(), []);
 
   if (status === "loading") return <Spinner />;
-  if (status === "error")   return <ErrorMessage message={error} />;
-  if (status === "idle")    return null;
+  if (status === "error") return <ErrorMessage message={error} />;
+  if (status === "idle") return null;
 
-  return students.map(s => <StudentCard key={s.id} student={s} />);
+  return students.map((s) => <StudentCard key={s.id} student={s} />);
 }
 ```
 
@@ -360,7 +369,12 @@ function wizardReducer(state, action) {
 function AdmissionsWizard() {
   const [wizard, dispatch] = useReducer(wizardReducer, initialWizardState);
 
-  const StepComponents = [PersonalInfoStep, AcademicDetailsStep, DocumentsStep, ReviewStep];
+  const StepComponents = [
+    PersonalInfoStep,
+    AcademicDetailsStep,
+    DocumentsStep,
+    ReviewStep,
+  ];
   const CurrentStep = StepComponents[wizard.step];
 
   return (
@@ -404,13 +418,16 @@ function appReducer(state, action) {
     case "ADD_NOTIFICATION":
       return {
         ...state,
-        notifications: [...state.notifications, { id: crypto.randomUUID(), ...action.notification }],
+        notifications: [
+          ...state.notifications,
+          { id: crypto.randomUUID(), ...action.notification },
+        ],
       };
 
     case "DISMISS_NOTIFICATION":
       return {
         ...state,
-        notifications: state.notifications.filter(n => n.id !== action.id),
+        notifications: state.notifications.filter((n) => n.id !== action.id),
       };
 
     case "TOGGLE_SIDEBAR":
@@ -425,7 +442,7 @@ function appReducer(state, action) {
 }
 
 // Separate contexts for state and dispatch to prevent unnecessary re-renders
-const StateContext    = createContext(null);
+const StateContext = createContext(null);
 const DispatchContext = createContext(null);
 
 export function AppProvider({ children }) {
@@ -434,20 +451,28 @@ export function AppProvider({ children }) {
   // dispatch is stable — never changes — no memo needed
   return (
     <DispatchContext.Provider value={dispatch}>
-      <StateContext.Provider value={state}>
-        {children}
-      </StateContext.Provider>
+      <StateContext.Provider value={state}>{children}</StateContext.Provider>
     </DispatchContext.Provider>
   );
 }
 
-export function useAppState()    { return useContext(StateContext); }
-export function useAppDispatch() { return useContext(DispatchContext); }
+export function useAppState() {
+  return useContext(StateContext);
+}
+export function useAppDispatch() {
+  return useContext(DispatchContext);
+}
 
 // Convenience hooks for specific slices
-export function useUser()          { return useAppState().user; }
-export function useTheme()         { return useAppState().theme; }
-export function useNotifications() { return useAppState().notifications; }
+export function useUser() {
+  return useAppState().user;
+}
+export function useTheme() {
+  return useAppState().theme;
+}
+export function useNotifications() {
+  return useAppState().notifications;
+}
 
 // Action creator hooks
 export function useThemeActions() {
@@ -461,8 +486,8 @@ export function useThemeActions() {
 ```jsx
 // Usage
 function ThemeToggle() {
-  const { theme } = useAppState();           // subscribes to all state changes
-  const dispatch = useAppDispatch();          // NEVER re-renders (dispatch is stable)
+  const { theme } = useAppState(); // subscribes to all state changes
+  const dispatch = useAppDispatch(); // NEVER re-renders (dispatch is stable)
 
   return (
     <button onClick={() => dispatch({ type: "TOGGLE_THEME" })}>
