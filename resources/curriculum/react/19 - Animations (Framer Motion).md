@@ -28,9 +28,9 @@ Framer Motion is declarative — you describe what a component should look like 
 // Motion says: "I'll figure out how to get there from where it is now"
 
 <motion.div
-  initial={{ opacity: 0, y: 20 }}   // start: invisible, 20px down
-  animate={{ opacity: 1, y: 0 }}    // end: visible, in place
-  exit={{ opacity: 0, y: -20 }}     // leaving: invisible, 20px up
+  initial={{ opacity: 0, y: 20 }} // start: invisible, 20px down
+  animate={{ opacity: 1, y: 0 }} // end: visible, in place
+  exit={{ opacity: 0, y: -20 }} // leaving: invisible, 20px up
 />
 ```
 
@@ -134,8 +134,8 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,  // delay each child by 0.1s
-      delayChildren: 0.2,    // wait 0.2s before starting children
+      staggerChildren: 0.1, // delay each child by 0.1s
+      delayChildren: 0.2, // wait 0.2s before starting children
     },
   },
 };
@@ -151,12 +151,8 @@ const itemVariants = {
 
 function AnimatedList({ items }) {
   return (
-    <motion.ul
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {items.map(item => (
+    <motion.ul variants={containerVariants} initial="hidden" animate="visible">
+      {items.map((item) => (
         <motion.li key={item.id} variants={itemVariants}>
           {/* Children inherit parent's "hidden"/"visible" state automatically */}
           {item.name}
@@ -213,13 +209,13 @@ function NotificationStack({ notifications }) {
   return (
     <div className="fixed top-4 right-4 space-y-2">
       <AnimatePresence>
-        {notifications.map(notif => (
+        {notifications.map((notif) => (
           <motion.div
-            key={notif.id}          // key is essential for AnimatePresence
+            key={notif.id} // key is essential for AnimatePresence
             initial={{ opacity: 0, x: 50, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 50, scale: 0.9 }}
-            layout                  // animate position when others are added/removed
+            layout // animate position when others are added/removed
           >
             <Notification notif={notif} />
           </motion.div>
@@ -325,7 +321,7 @@ function SortableList({ items }) {
   return (
     <ul>
       <AnimatePresence>
-        {items.map(item => (
+        {items.map((item) => (
           <motion.li
             key={item.id}
             layout
@@ -347,7 +343,7 @@ function SortableList({ items }) {
 function TabBar({ tabs, activeTab, onTabChange }) {
   return (
     <div className="tab-bar">
-      {tabs.map(tab => (
+      {tabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
@@ -356,7 +352,7 @@ function TabBar({ tabs, activeTab, onTabChange }) {
           {tab.label}
           {activeTab === tab.id && (
             <motion.div
-              layoutId="tab-indicator"  // same layoutId = shared element transition
+              layoutId="tab-indicator" // same layoutId = shared element transition
               className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
             />
           )}
@@ -395,7 +391,7 @@ async function playSequence() {
   await controls.start({ scale: 1.2, transition: { duration: 0.2 } });
   await controls.start({ scale: 1, transition: { duration: 0.2 } });
   await controls.start({ x: 100, transition: { duration: 0.4 } });
-  controls.start({ opacity: 0 });  // last one without await — fire and forget
+  controls.start({ opacity: 0 }); // last one without await — fire and forget
 }
 ```
 
@@ -409,7 +405,7 @@ For values that animate without triggering React re-renders (pure JS-driven anim
 import { useMotionValue, useTransform, motion } from "framer-motion";
 
 function ParallaxCard() {
-  const x = useMotionValue(0);  // tracks mouse position
+  const x = useMotionValue(0); // tracks mouse position
   const y = useMotionValue(0);
 
   // Transform mouse position → rotation (no re-renders)
@@ -451,13 +447,13 @@ import { useScroll, useTransform, motion } from "framer-motion";
 // Scroll progress of the entire page
 function ParallaxHero() {
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 150]);  // parallax
+  const y = useTransform(scrollY, [0, 500], [0, 150]); // parallax
 
   return (
     <div style={{ overflow: "hidden", height: 500 }}>
       <motion.img
         src="/hero.jpg"
-        style={{ y }}  // moves slower than scroll = parallax
+        style={{ y }} // moves slower than scroll = parallax
       />
     </div>
   );
@@ -489,7 +485,7 @@ function ReadingProgress() {
   return (
     <motion.div
       className="fixed top-0 left-0 right-0 h-1 bg-primary origin-left"
-      style={{ scaleX: scrollYProgress }}  // width = scroll percentage
+      style={{ scaleX: scrollYProgress }} // width = scroll percentage
     />
   );
 }
@@ -506,8 +502,8 @@ import { useLocation, Routes, Route } from "react-router-dom";
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
-  enter:   { opacity: 1, y: 0 },
-  exit:    { opacity: 0, y: -20 },
+  enter: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
 };
 
 function AnimatedRoutes() {
@@ -516,9 +512,30 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/"         element={<PageWrapper><HomePage /></PageWrapper>} />
-        <Route path="/students" element={<PageWrapper><StudentsPage /></PageWrapper>} />
-        <Route path="/about"    element={<PageWrapper><AboutPage /></PageWrapper>} />
+        <Route
+          path="/"
+          element={
+            <PageWrapper>
+              <HomePage />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/students"
+          element={
+            <PageWrapper>
+              <StudentsPage />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <PageWrapper>
+              <AboutPage />
+            </PageWrapper>
+          }
+        />
       </Routes>
     </AnimatePresence>
   );
@@ -575,7 +592,7 @@ function AccessibleMotion({ children, ...props }) {
   const shouldReduceMotion = useReducedMotion();
 
   if (shouldReduceMotion) {
-    return <>{children}</>;  // no animation if user prefers reduced motion
+    return <>{children}</>; // no animation if user prefers reduced motion
   }
 
   return <motion.div {...props}>{children}</motion.div>;

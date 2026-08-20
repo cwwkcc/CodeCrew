@@ -38,7 +38,8 @@ Most React apps are fast enough without explicit optimisation. React's rendering
 ```jsx
 // Add this to your dev entry point to detect unnecessary re-renders
 if (process.env.NODE_ENV === "development") {
-  const { default: whyDidYouRender } = await import("@welldone-software/why-did-you-render");
+  const { default: whyDidYouRender } =
+    await import("@welldone-software/why-did-you-render");
   whyDidYouRender(React, { trackAllPureComponents: true });
 }
 ```
@@ -118,17 +119,19 @@ function Parent() {
 
 ```jsx
 const StudentCard = memo(
-  function StudentCard({ student, onDelete }) { /* ... */ },
+  function StudentCard({ student, onDelete }) {
+    /* ... */
+  },
   (prevProps, nextProps) => {
     // Return true to skip re-render (props are equal)
     // Return false to re-render (props changed)
     return (
-      prevProps.student.id    === nextProps.student.id &&
+      prevProps.student.id === nextProps.student.id &&
       prevProps.student.score === nextProps.student.score &&
-      prevProps.onDelete      === nextProps.onDelete
+      prevProps.onDelete === nextProps.onDelete
     );
     // Only re-render if id, score, or onDelete changed — ignore other student properties
-  }
+  },
 );
 ```
 
@@ -140,17 +143,16 @@ Already covered in depth in File 12. The performance summary:
 
 ```jsx
 // useMemo: cache expensive computed values
-const filteredAndSorted = useMemo(() =>
-  students
-    .filter(s => s.grade === grade)
-    .sort((a, b) => b.score - a.score),
-  [students, grade]
+const filteredAndSorted = useMemo(
+  () =>
+    students.filter((s) => s.grade === grade).sort((a, b) => b.score - a.score),
+  [students, grade],
 );
 
 // useCallback: stable function reference for memoised children
 const handleDelete = useCallback(
-  (id) => setStudents(prev => prev.filter(s => s.id !== id)),
-  []
+  (id) => setStudents((prev) => prev.filter((s) => s.id !== id)),
+  [],
 );
 
 // The rule: only add these when you've MEASURED a problem
@@ -167,19 +169,19 @@ Split your bundle so users only download the code they need.
 import { lazy, Suspense } from "react";
 
 // Lazily import heavy components — downloaded only when needed
-const AdminPanel     = lazy(() => import("./AdminPanel"));
-const ReportViewer   = lazy(() => import("./ReportViewer"));
+const AdminPanel = lazy(() => import("./AdminPanel"));
+const ReportViewer = lazy(() => import("./ReportViewer"));
 const ChartDashboard = lazy(() => import("./ChartDashboard"));
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />  {/* always downloaded */}
+      <Route path="/" element={<HomePage />} /> {/* always downloaded */}
       <Route
         path="/admin"
         element={
           <Suspense fallback={<PageSpinner />}>
-            <AdminPanel />   {/* downloaded only when /admin is visited */}
+            <AdminPanel /> {/* downloaded only when /admin is visited */}
           </Suspense>
         }
       />
@@ -226,7 +228,7 @@ import dynamic from "next/dynamic";
 
 const HeavyChart = dynamic(() => import("./HeavyChart"), {
   loading: () => <Spinner />,
-  ssr: false,  // don't render on server (for browser-only libraries)
+  ssr: false, // don't render on server (for browser-only libraries)
 });
 ```
 
@@ -247,27 +249,24 @@ function VirtualStudentList({ students }) {
   const parentRef = useRef(null);
 
   const virtualizer = useVirtualizer({
-    count:              students.length,
-    getScrollElement:   () => parentRef.current,
-    estimateSize:       () => 80,   // estimated row height in px
-    overscan:           5,          // render 5 extra rows above/below visible area
+    count: students.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 80, // estimated row height in px
+    overscan: 5, // render 5 extra rows above/below visible area
   });
 
   return (
-    <div
-      ref={parentRef}
-      style={{ height: 600, overflow: "auto" }}
-    >
+    <div ref={parentRef} style={{ height: 600, overflow: "auto" }}>
       {/* Total height — keeps scroll bar proportional */}
       <div style={{ height: virtualizer.getTotalSize(), position: "relative" }}>
-        {virtualizer.getVirtualItems().map(virtualRow => (
+        {virtualizer.getVirtualItems().map((virtualRow) => (
           <div
             key={virtualRow.key}
             style={{
               position: "absolute",
-              top:    0,
-              left:   0,
-              width:  "100%",
+              top: 0,
+              left: 0,
+              width: "100%",
               height: `${virtualRow.size}px`,
               transform: `translateY(${virtualRow.start}px)`,
             }}
@@ -304,7 +303,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 export default defineConfig({
   plugins: [
     react(),
-    visualizer({ open: true }),  // opens bundle visualisation in browser
+    visualizer({ open: true }), // opens bundle visualisation in browser
   ],
 });
 ```
@@ -380,13 +379,13 @@ function App() {
   const [query, setQuery] = useState("");
   return (
     <div>
-      <Header />          {/* re-renders on every keystroke — unnecessary */}
-      <Sidebar />         {/* re-renders on every keystroke — unnecessary */}
+      <Header /> {/* re-renders on every keystroke — unnecessary */}
+      <Sidebar /> {/* re-renders on every keystroke — unnecessary */}
       <main>
         <FilterBar query={query} onQueryChange={setQuery} />
         <StudentList query={query} />
       </main>
-      <Footer />          {/* re-renders on every keystroke — unnecessary */}
+      <Footer /> {/* re-renders on every keystroke — unnecessary */}
     </div>
   );
 }
@@ -395,10 +394,10 @@ function App() {
 function App() {
   return (
     <div>
-      <Header />          {/* never re-renders due to filter changes */}
+      <Header /> {/* never re-renders due to filter changes */}
       <Sidebar />
       <main>
-        <StudentSearch />  {/* self-contained — owns its own filter state */}
+        <StudentSearch /> {/* self-contained — owns its own filter state */}
       </main>
       <Footer />
     </div>
@@ -406,7 +405,7 @@ function App() {
 }
 
 function StudentSearch() {
-  const [query, setQuery] = useState("");  // lives here now
+  const [query, setQuery] = useState(""); // lives here now
   return (
     <>
       <FilterBar query={query} onQueryChange={setQuery} />
@@ -441,21 +440,22 @@ function StudentSearch() {
 import { Profiler } from "react";
 
 function onRenderCallback(
-  id,           // component tree identifier
-  phase,        // "mount" or "update"
-  actualDuration,  // time for this render
-  baseDuration,    // estimated time without memoisation
+  id, // component tree identifier
+  phase, // "mount" or "update"
+  actualDuration, // time for this render
+  baseDuration, // estimated time without memoisation
   startTime,
   commitTime,
 ) {
-  if (actualDuration > 16) {  // slower than 60fps threshold
+  if (actualDuration > 16) {
+    // slower than 60fps threshold
     console.warn(`Slow render in ${id}: ${actualDuration}ms`);
   }
 }
 
 <Profiler id="StudentGrid" onRender={onRenderCallback}>
   <StudentGrid students={students} />
-</Profiler>
+</Profiler>;
 ```
 
 ---

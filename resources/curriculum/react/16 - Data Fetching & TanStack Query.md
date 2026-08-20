@@ -33,10 +33,22 @@ useEffect(() => {
   setIsLoading(true);
 
   fetchStudents()
-    .then(data => { if (!cancelled) { setData(data); setIsLoading(false); } })
-    .catch(err  => { if (!cancelled) { setError(err);  setIsLoading(false); } });
+    .then((data) => {
+      if (!cancelled) {
+        setData(data);
+        setIsLoading(false);
+      }
+    })
+    .catch((err) => {
+      if (!cancelled) {
+        setError(err);
+        setIsLoading(false);
+      }
+    });
 
-  return () => { cancelled = true; };
+  return () => {
+    cancelled = true;
+  };
 }, []);
 
 // And then you have no:
@@ -86,9 +98,9 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000,   // data is fresh for 5 minutes
-      retry: 2,                    // retry failed requests twice
-      refetchOnWindowFocus: true,  // refetch when tab regains focus
+      staleTime: 5 * 60 * 1000, // data is fresh for 5 minutes
+      retry: 2, // retry failed requests twice
+      refetchOnWindowFocus: true, // refetch when tab regains focus
     },
   },
 });
@@ -97,7 +109,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <App />
     <ReactQueryDevtools initialIsOpen={false} />
-  </QueryClientProvider>
+  </QueryClientProvider>,
 );
 ```
 
@@ -110,8 +122,8 @@ import { useQuery } from "@tanstack/react-query";
 
 const {
   data,
-  isLoading,       // true only on first load (no cached data)
-  isFetching,      // true whenever a request is in flight (including background)
+  isLoading, // true only on first load (no cached data)
+  isFetching, // true whenever a request is in flight (including background)
   isError,
   error,
   isSuccess,
@@ -125,17 +137,24 @@ const {
 
 ```jsx
 function StudentsPage() {
-  const { data: students, isLoading, isError, error } = useQuery({
+  const {
+    data: students,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["students"],
     queryFn: fetchStudents,
   });
 
   if (isLoading) return <Spinner />;
-  if (isError)   return <ErrorMessage message={error.message} />;
+  if (isError) return <ErrorMessage message={error.message} />;
 
   return (
     <ul>
-      {students.map(s => <StudentCard key={s.id} student={s} />)}
+      {students.map((s) => (
+        <StudentCard key={s.id} student={s} />
+      ))}
     </ul>
   );
 }
@@ -146,9 +165,9 @@ function StudentsPage() {
 ```jsx
 function StudentDetail({ studentId }) {
   const { data: student, isLoading } = useQuery({
-    queryKey: ["student", studentId],   // unique key per student
+    queryKey: ["student", studentId], // unique key per student
     queryFn: () => fetchStudent(studentId),
-    enabled: !!studentId,               // don't fetch if no id
+    enabled: !!studentId, // don't fetch if no id
   });
 
   if (isLoading) return <Spinner />;
@@ -163,18 +182,18 @@ useQuery({
   queryKey: ["students", { grade, query }],
   queryFn: () => fetchStudents({ grade, query }),
 
-  staleTime: 10 * 60 * 1000,  // consider fresh for 10 minutes (default: 0)
-  gcTime:    30 * 60 * 1000,  // keep in cache for 30 minutes even if unused (default: 5 min)
+  staleTime: 10 * 60 * 1000, // consider fresh for 10 minutes (default: 0)
+  gcTime: 30 * 60 * 1000, // keep in cache for 30 minutes even if unused (default: 5 min)
 
-  enabled: isLoggedIn,         // only fetch when condition is true
-  refetchInterval: 30_000,     // poll every 30 seconds (live data)
+  enabled: isLoggedIn, // only fetch when condition is true
+  refetchInterval: 30_000, // poll every 30 seconds (live data)
   refetchOnWindowFocus: false, // don't refetch when tab regains focus
 
-  select: (data) => data.students,  // transform data before returning
+  select: (data) => data.students, // transform data before returning
   // data is now data.students, not the full response
 
-  initialData: [],             // use this while loading (bypasses isLoading = true)
-  placeholderData: keepPreviousData,  // keep previous data while fetching new
+  initialData: [], // use this while loading (bypasses isLoading = true)
+  placeholderData: keepPreviousData, // keep previous data while fetching new
   // ^ great for pagination — no blank flash between pages
 });
 ```
@@ -187,25 +206,27 @@ Query keys are arrays that uniquely identify a piece of data. TanStack Query use
 
 ```jsx
 // Simple key — no parameters
-["students"]
-
-// Parameterised — unique per combination
-["student", studentId]
-["students", { grade: 11 }]
-["students", { grade: 11, page: 2, query: "ashan" }]
-
-// Hierarchical — for invalidating groups
-["students"]               // all students queries
-["students", studentId]    // specific student
-["students", studentId, "results"]  // student's results
-
-// Convention: [entity, id?, scope?]
-["students"]
-["students", "s123"]
-["students", "s123", "scores"]
-["courses"]
-["courses", "c456"]
-["courses", "c456", "students"]
+["students"][
+  // Parameterised — unique per combination
+  ("student", studentId)
+][("students", { grade: 11 })][
+  ("students", { grade: 11, page: 2, query: "ashan" })
+][
+  // Hierarchical — for invalidating groups
+  "students"
+] // all students queries
+[
+  ("students", studentId)
+] // specific student
+[
+  ("students", studentId, "results")
+] // student's results
+[
+  // Convention: [entity, id?, scope?]
+  "students"
+][("students", "s123")][("students", "s123", "scores")]["courses"][
+  ("courses", "c456")
+][("courses", "c456", "students")];
 ```
 
 ```jsx
@@ -244,7 +265,7 @@ function AddStudentForm() {
   });
 
   function handleSubmit(formData) {
-    mutate(formData);  // fire and forget
+    mutate(formData); // fire and forget
     // OR
     // await mutateAsync(formData);  // returns a promise you can await
   }
@@ -264,9 +285,9 @@ function AddStudentForm() {
 ### Multiple mutations
 
 ```jsx
-const updateScore  = useMutation({ mutationFn: updateStudentScore });
+const updateScore = useMutation({ mutationFn: updateStudentScore });
 const deleteStudent = useMutation({ mutationFn: deleteStudentById });
-const promoteGrade  = useMutation({ mutationFn: promoteToNextGrade });
+const promoteGrade = useMutation({ mutationFn: promoteToNextGrade });
 
 // Each has its own isPending, isError, etc.
 ```
@@ -301,7 +322,7 @@ const updateStudent = useMutation({
     await queryClient.cancelQueries({ queryKey: ["student", updatedData.id] });
     const previous = queryClient.getQueryData(["student", updatedData.id]);
     queryClient.setQueryData(["student", updatedData.id], updatedData);
-    return { previous };  // for rollback
+    return { previous }; // for rollback
   },
   onError: (err, variables, context) => {
     queryClient.setQueryData(["student", variables.id], context.previous);
@@ -336,10 +357,10 @@ function LikeButton({ post }) {
       queryClient.setQueryData(["post", post.id], (old) => ({
         ...old,
         isLiked: !old.isLiked,
-        likes:   old.isLiked ? old.likes - 1 : old.likes + 1,
+        likes: old.isLiked ? old.likes - 1 : old.likes + 1,
       }));
 
-      return { previous };  // context for onError
+      return { previous }; // context for onError
     },
 
     onError: (err, variables, context) => {
@@ -353,7 +374,10 @@ function LikeButton({ post }) {
     },
   });
 
-  const post = useQuery({ queryKey: ["post", post.id], queryFn: () => fetchPost(post.id) });
+  const post = useQuery({
+    queryKey: ["post", post.id],
+    queryFn: () => fetchPost(post.id),
+  });
 
   return (
     <button onClick={() => likeMutation.mutate()}>
@@ -376,7 +400,7 @@ function PaginatedStudents({ grade }) {
   const { data, isLoading, isFetching, isPlaceholderData } = useQuery({
     queryKey: ["students", { grade, page }],
     queryFn: () => fetchStudents({ grade, page, limit: 20 }),
-    placeholderData: keepPreviousData,  // show previous page while loading next
+    placeholderData: keepPreviousData, // show previous page while loading next
   });
 
   return (
@@ -390,15 +414,14 @@ function PaginatedStudents({ grade }) {
         />
       )}
       <div className="pagination">
-        <button
-          onClick={() => setPage(p => p - 1)}
-          disabled={page === 1}
-        >
+        <button onClick={() => setPage((p) => p - 1)} disabled={page === 1}>
           ← Previous
         </button>
-        <span>Page {page} of {data?.totalPages}</span>
+        <span>
+          Page {page} of {data?.totalPages}
+        </span>
         <button
-          onClick={() => setPage(p => p + 1)}
+          onClick={() => setPage((p) => p + 1)}
           disabled={isPlaceholderData || page >= (data?.totalPages ?? 1)}
         >
           Next →
@@ -415,24 +438,20 @@ function PaginatedStudents({ grade }) {
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 function InfiniteStudentList({ grade }) {
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-  } = useInfiniteQuery({
-    queryKey: ["students", "infinite", { grade }],
-    queryFn: ({ pageParam = 1 }) => fetchStudents({ grade, page: pageParam, limit: 20 }),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      // Return next page number, or undefined if no more pages
-      return lastPage.hasMore ? allPages.length + 1 : undefined;
-    },
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useInfiniteQuery({
+      queryKey: ["students", "infinite", { grade }],
+      queryFn: ({ pageParam = 1 }) =>
+        fetchStudents({ grade, page: pageParam, limit: 20 }),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, allPages) => {
+        // Return next page number, or undefined if no more pages
+        return lastPage.hasMore ? allPages.length + 1 : undefined;
+      },
+    });
 
   // Flatten pages into single array
-  const students = data?.pages.flatMap(page => page.students) ?? [];
+  const students = data?.pages.flatMap((page) => page.students) ?? [];
 
   // Auto-fetch next page when sentinel is visible
   const sentinelRef = useRef(null);
@@ -516,7 +535,7 @@ const { data: students } = trpc.students.list.useQuery({ grade: 11 });
 // Equivalent to: useMutation({ mutationFn: createStudent })
 const createStudent = trpc.students.create.useMutation({
   onSuccess: () => {
-    utils.students.list.invalidate();  // type-safe invalidation
+    utils.students.list.invalidate(); // type-safe invalidation
   },
 });
 
@@ -530,7 +549,7 @@ const { data, isLoading, isError } = trpc.students.getById.useQuery(
     enabled: !!studentId,
     staleTime: 5 * 60 * 1000,
     placeholderData: keepPreviousData,
-  }
+  },
 );
 ```
 

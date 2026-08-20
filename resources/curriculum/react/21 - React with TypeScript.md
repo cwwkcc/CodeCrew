@@ -23,16 +23,16 @@
 // Interface — preferred for component props (extendable)
 interface StudentCardProps {
   student: {
-    id:       string;
-    name:     string;
-    grade:    number;
-    score:    number;
-    avatarUrl?: string;  // optional
+    id: string;
+    name: string;
+    grade: number;
+    score: number;
+    avatarUrl?: string; // optional
   };
-  onEdit:      (id: string) => void;
-  onDelete:    (id: string) => Promise<void>;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => Promise<void>;
   isSelected?: boolean;
-  className?:  string;
+  className?: string;
 }
 
 function StudentCard({
@@ -53,16 +53,16 @@ function StudentCard({
 
 // Type alias — useful for unions and computed types
 type ButtonVariant = "primary" | "secondary" | "danger" | "ghost";
-type ButtonSize    = "sm" | "md" | "lg";
+type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps {
-  variant?:  ButtonVariant;
-  size?:     ButtonSize;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   disabled?: boolean;
   isLoading?: boolean;
-  onClick?:  () => void;
-  type?:     "button" | "submit" | "reset";
-  children:  React.ReactNode;
+  onClick?: () => void;
+  type?: "button" | "submit" | "reset";
+  children: React.ReactNode;
 }
 ```
 
@@ -71,20 +71,26 @@ interface ButtonProps {
 ```tsx
 // Extend native HTML props so your component accepts all standard attributes
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label:   string;
-  error?:  string;
+  label: string;
+  error?: string;
   helpText?: string;
 }
 
-function Input({ label, error, helpText, className, ...inputProps }: InputProps) {
+function Input({
+  label,
+  error,
+  helpText,
+  className,
+  ...inputProps
+}: InputProps) {
   return (
     <div className="field">
       <label>{label}</label>
       <input
         className={`input ${error ? "input-error" : ""} ${className ?? ""}`}
-        {...inputProps}  // passes type, value, onChange, placeholder, disabled, etc.
+        {...inputProps} // passes type, value, onChange, placeholder, disabled, etc.
       />
-      {error    && <p className="error">{error}</p>}
+      {error && <p className="error">{error}</p>}
       {helpText && <p className="help">{helpText}</p>}
     </div>
   );
@@ -96,10 +102,10 @@ function Input({ label, error, helpText, className, ...inputProps }: InputProps)
   error={errors.email}
   type="email"
   value={email}
-  onChange={e => setEmail(e.target.value)}
+  onChange={(e) => setEmail(e.target.value)}
   autoComplete="email"
   disabled={isSubmitting}
-/>
+/>;
 ```
 
 ---
@@ -109,7 +115,7 @@ function Input({ label, error, helpText, className, ...inputProps }: InputProps)
 ```tsx
 // React.ReactNode — most permissive (JSX, strings, numbers, null, arrays)
 interface PanelProps {
-  children: React.ReactNode;  // use this in most cases
+  children: React.ReactNode; // use this in most cases
 }
 
 // React.ReactElement — specifically a JSX element (not strings/numbers/null)
@@ -117,11 +123,13 @@ interface IconButtonProps {
   icon: React.ReactElement;
   label: string;
 }
-<IconButton icon={<StarIcon />} label="Favorite" />
+<IconButton icon={<StarIcon />} label="Favorite" />;
 
 // React.FC is mostly avoided now — just type the function directly
 // ✗ Avoid:
-const Button: React.FC<ButtonProps> = ({ children }) => <button>{children}</button>;
+const Button: React.FC<ButtonProps> = ({ children }) => (
+  <button>{children}</button>
+);
 
 // ✓ Prefer:
 function Button({ children }: ButtonProps) {
@@ -135,9 +143,9 @@ function Button({ children }: ButtonProps) {
 
 ```tsx
 // TypeScript infers the type from the initial value
-const [count, setCount] = useState(0);          // number
-const [name, setName]   = useState("");         // string
-const [isOpen, setIsOpen] = useState(false);    // boolean
+const [count, setCount] = useState(0); // number
+const [name, setName] = useState(""); // string
+const [isOpen, setIsOpen] = useState(false); // boolean
 
 // When you need to be explicit (initial value is null or ambiguous)
 const [user, setUser] = useState<User | null>(null);
@@ -145,24 +153,26 @@ const [students, setStudents] = useState<Student[]>([]);
 const [selected, setSelected] = useState<string | null>(null);
 
 // Union types — value can only be one of these
-const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
+  "idle",
+);
 
 // Object state
 interface FormState {
-  name:    string;
-  email:   string;
-  grade:   number;
+  name: string;
+  email: string;
+  grade: number;
 }
 
 const [form, setForm] = useState<FormState>({
-  name:  "",
+  name: "",
   email: "",
   grade: 11,
 });
 
 // Functional update — TypeScript infers prev type
-setStudents(prev => [...prev, newStudent]);     // prev: Student[]
-setForm(prev => ({ ...prev, grade: 12 }));     // prev: FormState
+setStudents((prev) => [...prev, newStudent]); // prev: Student[]
+setForm((prev) => ({ ...prev, grade: 12 })); // prev: FormState
 ```
 
 ---
@@ -172,22 +182,22 @@ setForm(prev => ({ ...prev, grade: 12 }));     // prev: FormState
 ```tsx
 // DOM ref — type matches the element type
 const inputRef = useRef<HTMLInputElement>(null);
-const divRef   = useRef<HTMLDivElement>(null);
-const formRef  = useRef<HTMLFormElement>(null);
+const divRef = useRef<HTMLDivElement>(null);
+const formRef = useRef<HTMLFormElement>(null);
 const videoRef = useRef<HTMLVideoElement>(null);
 
 // After mount, inputRef.current is HTMLInputElement (not null)
 // TypeScript doesn't know this — use optional chaining or non-null assertion
-inputRef.current?.focus();       // ✓ optional chaining
-inputRef.current!.focus();       // ✓ non-null assertion (only when you're sure it's mounted)
+inputRef.current?.focus(); // ✓ optional chaining
+inputRef.current!.focus(); // ✓ non-null assertion (only when you're sure it's mounted)
 
 // Mutable ref — for non-DOM values
-const timerRef     = useRef<ReturnType<typeof setTimeout> | null>(null);
+const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 const prevValueRef = useRef<string | undefined>(undefined);
-const countRef     = useRef<number>(0);
+const countRef = useRef<number>(0);
 
 // Non-null ref — when you know it will always be set before use
-const containerRef = useRef<HTMLDivElement>(null!);  // non-null assertion on initial value
+const containerRef = useRef<HTMLDivElement>(null!); // non-null assertion on initial value
 // Only use when you're certain — skips the null check
 ```
 
@@ -198,7 +208,7 @@ const containerRef = useRef<HTMLDivElement>(null!);  // non-null assertion on in
 ```tsx
 // The pattern: React.ChangeEvent<ElementType>
 function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-  const value = e.target.value;  // TypeScript knows this is string
+  const value = e.target.value; // TypeScript knows this is string
 }
 
 function handleSelectChange(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -211,7 +221,7 @@ function handleTextareaChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
 
 // Other event types
 function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
-  e.currentTarget;  // typed as HTMLButtonElement
+  e.currentTarget; // typed as HTMLButtonElement
 }
 
 function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -219,8 +229,8 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 }
 
 function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-  e.key;      // "Enter" | "Escape" | etc.
-  e.ctrlKey;  // boolean
+  e.key; // "Enter" | "Escape" | etc.
+  e.ctrlKey; // boolean
 }
 
 function handleDrop(e: React.DragEvent<HTMLDivElement>) {
@@ -228,7 +238,7 @@ function handleDrop(e: React.DragEvent<HTMLDivElement>) {
 }
 
 // Inline — TypeScript infers the type automatically
-<input onChange={e => setValue(e.target.value)} />
+<input onChange={(e) => setValue(e.target.value)} />;
 // e is inferred as React.ChangeEvent<HTMLInputElement>
 
 // When typing a handler separately, be explicit
@@ -246,8 +256,8 @@ Components that work with different data types while staying fully typed.
 ```tsx
 // Generic list — works with any item type that has an id
 interface ListProps<T extends { id: string }> {
-  items:       T[];
-  renderItem:  (item: T) => React.ReactNode;
+  items: T[];
+  renderItem: (item: T) => React.ReactNode;
   keyExtractor?: (item: T) => string;
   emptyMessage?: string;
 }
@@ -262,10 +272,8 @@ function List<T extends { id: string }>({
 
   return (
     <ul>
-      {items.map(item => (
-        <li key={keyExtractor(item)}>
-          {renderItem(item)}
-        </li>
+      {items.map((item) => (
+        <li key={keyExtractor(item)}>{renderItem(item)}</li>
       ))}
     </ul>
   );
@@ -276,7 +284,7 @@ function List<T extends { id: string }>({
   items={students}
   renderItem={(student) => <StudentCard student={student} />}
   // student is typed as Student automatically
-/>
+/>;
 
 // Generic select/combobox
 interface SelectOption<T> {
@@ -285,21 +293,23 @@ interface SelectOption<T> {
 }
 
 interface SelectProps<T> {
-  options:   SelectOption<T>[];
-  value:     T | null;
-  onChange:  (value: T) => void;
+  options: SelectOption<T>[];
+  value: T | null;
+  onChange: (value: T) => void;
   placeholder?: string;
 }
 
 function Select<T>({ options, value, onChange, placeholder }: SelectProps<T>) {
   return (
     <select
-      value={options.findIndex(o => o.value === value)}
-      onChange={e => onChange(options[Number(e.target.value)].value)}
+      value={options.findIndex((o) => o.value === value)}
+      onChange={(e) => onChange(options[Number(e.target.value)].value)}
     >
       {placeholder && <option value={-1}>{placeholder}</option>}
       {options.map((opt, i) => (
-        <option key={i} value={i}>{opt.label}</option>
+        <option key={i} value={i}>
+          {opt.label}
+        </option>
       ))}
     </select>
   );
@@ -307,10 +317,13 @@ function Select<T>({ options, value, onChange, placeholder }: SelectProps<T>) {
 
 // T is inferred from the options + value type
 <Select<number>
-  options={[{ label: "Grade 11", value: 11 }, { label: "Grade 12", value: 12 }]}
+  options={[
+    { label: "Grade 11", value: 11 },
+    { label: "Grade 12", value: 12 },
+  ]}
   value={selectedGrade}
   onChange={setSelectedGrade}
-/>
+/>;
 ```
 
 ---
@@ -327,7 +340,7 @@ function useStudentData(id: string) {
   useEffect(() => {
     fetchStudent(id)
       .then(setStudent)
-      .catch(err => setError(err.message))
+      .catch((err) => setError(err.message))
       .finally(() => setIsLoading(false));
   }, [id]);
 
@@ -337,13 +350,15 @@ function useStudentData(id: string) {
 
 // Explicit return type (when the inference is complex or you want to document it)
 interface UseStudentDataReturn {
-  student:   Student | null;
+  student: Student | null;
   isLoading: boolean;
-  error:     string | null;
-  refetch:   () => void;
+  error: string | null;
+  refetch: () => void;
 }
 
-function useStudentData(id: string): UseStudentDataReturn { /* ... */ }
+function useStudentData(id: string): UseStudentDataReturn {
+  /* ... */
+}
 
 // Generic hook
 function useLocalStorage<T>(key: string, initial: T): [T, (value: T) => void] {
@@ -361,8 +376,8 @@ function useLocalStorage<T>(key: string, initial: T): [T, (value: T) => void] {
 }
 
 // Usage — T is inferred from initial value
-const [theme, setTheme] = useLocalStorage("theme", "dark");  // T = string
-const [count, setCount] = useLocalStorage("count", 0);       // T = number
+const [theme, setTheme] = useLocalStorage("theme", "dark"); // T = string
+const [count, setCount] = useLocalStorage("count", 0); // T = number
 ```
 
 ---
@@ -373,27 +388,28 @@ const [count, setCount] = useLocalStorage("count", 0);       // T = number
 import { forwardRef } from "react";
 
 // forwardRef<RefType, PropsType>
-const Input = forwardRef<HTMLInputElement, InputProps>(
-  function Input({ label, error, ...inputProps }, ref) {
-    return (
-      <div className="field">
-        <label>{label}</label>
-        <input ref={ref} {...inputProps} />
-        {error && <p className="error">{error}</p>}
-      </div>
-    );
-  }
-);
+const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  { label, error, ...inputProps },
+  ref,
+) {
+  return (
+    <div className="field">
+      <label>{label}</label>
+      <input ref={ref} {...inputProps} />
+      {error && <p className="error">{error}</p>}
+    </div>
+  );
+});
 
 // Usage
 const inputRef = useRef<HTMLInputElement>(null);
-<Input ref={inputRef} label="Email" type="email" />
+<Input ref={inputRef} label="Email" type="email" />;
 
 // Custom imperative handle
 interface VideoPlayerHandle {
-  play:   () => void;
-  pause:  () => void;
-  seek:   (time: number) => void;
+  play: () => void;
+  pause: () => void;
+  seek: (time: number) => void;
 }
 
 interface VideoPlayerProps {
@@ -405,13 +421,15 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useImperativeHandle(ref, () => ({
-      play:  () => videoRef.current?.play(),
+      play: () => videoRef.current?.play(),
       pause: () => videoRef.current?.pause(),
-      seek:  (time) => { if (videoRef.current) videoRef.current.currentTime = time; },
+      seek: (time) => {
+        if (videoRef.current) videoRef.current.currentTime = time;
+      },
     }));
 
     return <video ref={videoRef} src={src} />;
-  }
+  },
 );
 
 const playerRef = useRef<VideoPlayerHandle>(null);
@@ -427,9 +445,9 @@ import { createContext, useContext, useState } from "react";
 
 // Define the context type
 interface AuthContextType {
-  user:    User | null;
-  login:   (credentials: LoginCredentials) => Promise<void>;
-  logout:  () => void;
+  user: User | null;
+  login: (credentials: LoginCredentials) => Promise<void>;
+  logout: () => void;
   isLoading: boolean;
 }
 
@@ -463,7 +481,7 @@ export function useAuth(): AuthContextType {
   if (!context) {
     throw new Error("useAuth must be used inside AuthProvider");
   }
-  return context;  // AuthContextType (not null) — TypeScript knows
+  return context; // AuthContextType (not null) — TypeScript knows
 }
 
 // Usage
@@ -479,8 +497,8 @@ const { user, login, logout } = useAuth();
 // ComponentProps — extract props from a component
 import { ComponentProps } from "react";
 
-type ButtonProps = ComponentProps<"button">;   // all native button props
-type DivProps    = ComponentProps<"div">;
+type ButtonProps = ComponentProps<"button">; // all native button props
+type DivProps = ComponentProps<"div">;
 
 // Extend native props with custom props
 interface CardProps extends ComponentProps<"div"> {
@@ -489,17 +507,17 @@ interface CardProps extends ComponentProps<"div"> {
 }
 
 // ComponentPropsWithoutRef / ComponentPropsWithRef
-type InputPropsWithRef    = ComponentPropsWithRef<"input">;
+type InputPropsWithRef = ComponentPropsWithRef<"input">;
 type InputPropsWithoutRef = ComponentPropsWithoutRef<"input">;
 
 // ElementRef — get the ref type for an element
 import { ElementRef } from "react";
-const ref = useRef<ElementRef<"canvas">>(null);  // HTMLCanvasElement
-const ref2 = useRef<ElementRef<typeof Input>>(null);  // for custom components
+const ref = useRef<ElementRef<"canvas">>(null); // HTMLCanvasElement
+const ref2 = useRef<ElementRef<typeof Input>>(null); // for custom components
 
 // React.HTMLAttributes<T> — standard HTML attributes
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
-  as?: keyof JSX.IntrinsicElements;  // "div" | "section" | "article" | etc.
+  as?: keyof JSX.IntrinsicElements; // "div" | "section" | "article" | etc.
 }
 
 // Discriminated union props — mutually exclusive prop sets

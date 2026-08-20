@@ -45,7 +45,7 @@ import { BrowserRouter } from "react-router-dom";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <App />
-  </BrowserRouter>
+  </BrowserRouter>,
 );
 ```
 
@@ -56,11 +56,11 @@ import { Routes, Route } from "react-router-dom";
 function App() {
   return (
     <Routes>
-      <Route path="/"           element={<HomePage />} />
-      <Route path="/students"   element={<StudentsPage />} />
-      <Route path="/about"      element={<AboutPage />} />
-      <Route path="/contact"    element={<ContactPage />} />
-      <Route path="*"           element={<NotFoundPage />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/students" element={<StudentsPage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
@@ -80,14 +80,14 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "students", element: <StudentsPage /> },
-      { path: "about",    element: <AboutPage /> },
-      { path: "*",        element: <NotFoundPage /> },
+      { path: "about", element: <AboutPage /> },
+      { path: "*", element: <NotFoundPage /> },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <RouterProvider router={router} />,
 );
 ```
 
@@ -101,8 +101,8 @@ Dynamic segments in the path — prefixed with `:`.
 
 ```jsx
 <Routes>
-  <Route path="/students"         element={<StudentsPage />} />
-  <Route path="/students/:id"     element={<StudentDetailPage />} />
+  <Route path="/students" element={<StudentsPage />} />
+  <Route path="/students/:id" element={<StudentDetailPage />} />
   <Route path="/students/:id/edit" element={<StudentEditPage />} />
 </Routes>
 ```
@@ -112,7 +112,7 @@ Dynamic segments in the path — prefixed with `:`.
 import { useParams } from "react-router-dom";
 
 function StudentDetailPage() {
-  const { id } = useParams();  // id matches ":id" in the path
+  const { id } = useParams(); // id matches ":id" in the path
 
   const [student, setStudent] = useState(null);
 
@@ -141,9 +141,9 @@ Nested routes render child routes inside a parent layout. The parent renders an�
 // routes
 <Routes>
   <Route path="/dashboard" element={<DashboardLayout />}>
-    <Route index           element={<DashboardHome />} />
+    <Route index element={<DashboardHome />} />
     <Route path="students" element={<StudentsPage />} />
-    <Route path="results"  element={<ResultsPage />} />
+    <Route path="results" element={<ResultsPage />} />
     <Route path="settings" element={<SettingsPage />} />
   </Route>
 </Routes>
@@ -158,14 +158,16 @@ function DashboardLayout() {
     <div className="dashboard">
       <aside className="sidebar">
         <nav>
-          <NavLink to="/dashboard"          end>Overview</NavLink>
+          <NavLink to="/dashboard" end>
+            Overview
+          </NavLink>
           <NavLink to="/dashboard/students">Students</NavLink>
           <NavLink to="/dashboard/results"> Results</NavLink>
           <NavLink to="/dashboard/settings">Settings</NavLink>
         </nav>
       </aside>
       <main className="content">
-        <Outlet />  {/* child route renders here */}
+        <Outlet /> {/* child route renders here */}
       </main>
     </div>
   );
@@ -222,7 +224,7 @@ function LoginForm() {
     e.preventDefault();
     try {
       await login(credentials);
-      navigate("/dashboard");           // go to dashboard after login
+      navigate("/dashboard"); // go to dashboard after login
     } catch (err) {
       setError(err.message);
     }
@@ -230,12 +232,12 @@ function LoginForm() {
 }
 
 // With options
-navigate("/login");                    // push to history
-navigate(-1);                         // go back (like browser back button)
-navigate(1);                          // go forward
+navigate("/login"); // push to history
+navigate(-1); // go back (like browser back button)
+navigate(1); // go forward
 navigate("/login", { replace: true }); // replace current history entry (no back button)
 navigate("/dashboard", {
-  state: { message: "Welcome back!" } // pass state to the next page
+  state: { message: "Welcome back!" }, // pass state to the next page
 });
 
 // Read state on the destination page
@@ -268,18 +270,18 @@ function StudentsPage() {
 
   const query = searchParams.get("query") ?? "";
   const grade = searchParams.get("grade") ?? "";
-  const page  = Number(searchParams.get("page") ?? "1");
+  const page = Number(searchParams.get("page") ?? "1");
 
   function handleQueryChange(e) {
-    setSearchParams(prev => {
+    setSearchParams((prev) => {
       prev.set("query", e.target.value);
-      prev.set("page", "1");  // reset to page 1 on filter change
+      prev.set("page", "1"); // reset to page 1 on filter change
       return prev;
     });
   }
 
   function handleGradeChange(e) {
-    setSearchParams(prev => {
+    setSearchParams((prev) => {
       if (e.target.value) prev.set("grade", e.target.value);
       else prev.delete("grade");
       prev.set("page", "1");
@@ -288,7 +290,7 @@ function StudentsPage() {
   }
 
   function goToPage(newPage) {
-    setSearchParams(prev => {
+    setSearchParams((prev) => {
       prev.set("page", String(newPage));
       return prev;
     });
@@ -296,11 +298,17 @@ function StudentsPage() {
 
   return (
     <div>
-      <input value={query} onChange={handleQueryChange} placeholder="Search..." />
+      <input
+        value={query}
+        onChange={handleQueryChange}
+        placeholder="Search..."
+      />
       <select value={grade} onChange={handleGradeChange}>
         <option value="">All grades</option>
-        {[6,7,8,9,10,11,12,13].map(g => (
-          <option key={g} value={g}>Grade {g}</option>
+        {[6, 7, 8, 9, 10, 11, 12, 13].map((g) => (
+          <option key={g} value={g}>
+            Grade {g}
+          </option>
         ))}
       </select>
 
@@ -339,12 +347,19 @@ function RequireAuth({ children }) {
 
 // Usage in route config
 <Routes>
-  <Route path="/login"     element={<LoginPage />} />
-  <Route path="/dashboard" element={<RequireAuth><DashboardLayout /></RequireAuth>}>
-    <Route index           element={<DashboardHome />} />
+  <Route path="/login" element={<LoginPage />} />
+  <Route
+    path="/dashboard"
+    element={
+      <RequireAuth>
+        <DashboardLayout />
+      </RequireAuth>
+    }
+  >
+    <Route index element={<DashboardHome />} />
     <Route path="students" element={<StudentsPage />} />
   </Route>
-</Routes>
+</Routes>;
 
 // After login, redirect back to where they were trying to go
 function LoginPage() {
@@ -354,7 +369,7 @@ function LoginPage() {
 
   async function handleLogin(credentials) {
     await login(credentials);
-    navigate(from, { replace: true });  // go to original destination
+    navigate(from, { replace: true }); // go to original destination
   }
 }
 ```
@@ -366,12 +381,20 @@ function RequireRole({ role, children }) {
   const { user } = useAuth();
 
   if (!user) return <Navigate to="/login" replace />;
-  if (!user.roles.includes(role)) return <Navigate to="/unauthorised" replace />;
+  if (!user.roles.includes(role))
+    return <Navigate to="/unauthorised" replace />;
 
   return children;
 }
 
-<Route path="/admin" element={<RequireRole role="admin"><AdminPanel /></RequireRole>} />
+<Route
+  path="/admin"
+  element={
+    <RequireRole role="admin">
+      <AdminPanel />
+    </RequireRole>
+  }
+/>;
 ```
 
 ---
@@ -388,7 +411,7 @@ const router = createBrowserRouter([
     loader: async ({ params }) => {
       const student = await fetchStudent(params.id);
       if (!student) throw new Response("Not Found", { status: 404 });
-      return student;  // returned value available in the component
+      return student; // returned value available in the component
     },
     errorElement: <StudentErrorPage />,
   },
@@ -413,12 +436,12 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
-    errorElement: <RootErrorPage />,  // catches errors from this route + children
+    errorElement: <RootErrorPage />, // catches errors from this route + children
     children: [
       {
         path: "students/:id",
         element: <StudentDetailPage />,
-        errorElement: <StudentErrorPage />,  // more specific error UI
+        errorElement: <StudentErrorPage />, // more specific error UI
         loader: studentLoader,
       },
     ],
@@ -450,7 +473,7 @@ React Router (v6)              Next.js App Router (v14+)
 ────────────────────────────────────────────────────────────
 <Route path="/students">       app/students/page.tsx
   element={<StudentsPage />}
-  
+
 <Route path="/students/:id">   app/students/[id]/page.tsx
   element={<StudentPage />}
 

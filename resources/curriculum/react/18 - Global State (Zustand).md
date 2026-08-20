@@ -38,8 +38,8 @@ Zustand:
 // Even components that only use user.name re-render when theme changes
 
 // Zustand: each component selects exactly what it needs
-const name  = useAppStore(state => state.user.name);   // only re-renders when name changes
-const theme = useAppStore(state => state.theme);        // only re-renders when theme changes
+const name = useAppStore((state) => state.user.name); // only re-renders when name changes
+const theme = useAppStore((state) => state.theme); // only re-renders when theme changes
 // Completely independent — no cross-contamination
 ```
 
@@ -62,27 +62,28 @@ interface UIStore {
   theme: "light" | "dark";
 
   // Actions
-  openSidebar:  () => void;
+  openSidebar: () => void;
   closeSidebar: () => void;
   toggleSidebar: () => void;
-  openModal:  (modalName: string) => void;
+  openModal: (modalName: string) => void;
   closeModal: () => void;
-  setTheme:   (theme: "light" | "dark") => void;
+  setTheme: (theme: "light" | "dark") => void;
 }
 
 export const useUIStore = create<UIStore>((set) => ({
   // Initial state
   isSidebarOpen: true,
-  activeModal:   null,
-  theme:         "light",
+  activeModal: null,
+  theme: "light",
 
   // Actions — call set() to update state
-  openSidebar:   () => set({ isSidebarOpen: true }),
-  closeSidebar:  () => set({ isSidebarOpen: false }),
-  toggleSidebar: () => set(state => ({ isSidebarOpen: !state.isSidebarOpen })),
+  openSidebar: () => set({ isSidebarOpen: true }),
+  closeSidebar: () => set({ isSidebarOpen: false }),
+  toggleSidebar: () =>
+    set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
 
-  openModal:  (modalName) => set({ activeModal: modalName }),
-  closeModal: ()           => set({ activeModal: null }),
+  openModal: (modalName) => set({ activeModal: modalName }),
+  closeModal: () => set({ activeModal: null }),
 
   setTheme: (theme) => set({ theme }),
 }));
@@ -120,34 +121,34 @@ The selector is the function passed to `useUIStore()`. It determines what slice
 
 ```typescript
 // ✓ Select only what you need — re-renders only when that value changes
-const isSidebarOpen = useUIStore(state => state.isSidebarOpen);
-const theme         = useUIStore(state => state.theme);
-const openModal     = useUIStore(state => state.openModal);
+const isSidebarOpen = useUIStore((state) => state.isSidebarOpen);
+const theme = useUIStore((state) => state.theme);
+const openModal = useUIStore((state) => state.openModal);
 
 // ✓ Multiple values — but re-renders when EITHER changes
-const { isSidebarOpen, theme } = useUIStore(state => ({
+const { isSidebarOpen, theme } = useUIStore((state) => ({
   isSidebarOpen: state.isSidebarOpen,
-  theme:         state.theme,
+  theme: state.theme,
 }));
 // Zustand uses shallow equality for object selectors — add shallow if needed
 import { shallow } from "zustand/shallow";
 const { isSidebarOpen, theme } = useUIStore(
-  state => ({ isSidebarOpen: state.isSidebarOpen, theme: state.theme }),
-  shallow
+  (state) => ({ isSidebarOpen: state.isSidebarOpen, theme: state.theme }),
+  shallow,
 );
 
 // ✗ Selecting entire store — re-renders on ANY state change
-const store = useUIStore();  // don't do this unless you genuinely need everything
+const store = useUIStore(); // don't do this unless you genuinely need everything
 ```
 
 ### Computed selectors
 
 ```typescript
 // Derive values from store state directly in the selector
-const hasActiveModal  = useUIStore(state => state.activeModal !== null);
-const isDarkMode      = useUIStore(state => state.theme === "dark");
+const hasActiveModal = useUIStore((state) => state.activeModal !== null);
+const isDarkMode = useUIStore((state) => state.theme === "dark");
 const canDismissModal = useUIStore(
-  state => state.activeModal !== null && !state.isModalPersistent
+  (state) => state.activeModal !== null && !state.isModalPersistent,
 );
 ```
 
@@ -160,37 +161,39 @@ const useCartStore = create<CartStore>((set, get) => ({
   items: [],
   discountCode: null,
 
-  addItem: (product, quantity = 1) => set(state => {
-    const existing = state.items.find(i => i.id === product.id);
+  addItem: (product, quantity = 1) =>
+    set((state) => {
+      const existing = state.items.find((i) => i.id === product.id);
 
-    if (existing) {
-      return {
-        items: state.items.map(i =>
-          i.id === product.id
-            ? { ...i, quantity: i.quantity + quantity }
-            : i
-        ),
-      };
-    }
+      if (existing) {
+        return {
+          items: state.items.map((i) =>
+            i.id === product.id ? { ...i, quantity: i.quantity + quantity } : i,
+          ),
+        };
+      }
 
-    return { items: [...state.items, { ...product, quantity }] };
-  }),
+      return { items: [...state.items, { ...product, quantity }] };
+    }),
 
-  removeItem: (id) => set(state => ({
-    items: state.items.filter(i => i.id !== id),
-  })),
+  removeItem: (id) =>
+    set((state) => ({
+      items: state.items.filter((i) => i.id !== id),
+    })),
 
-  updateQuantity: (id, quantity) => set(state => ({
-    items: quantity <= 0
-      ? state.items.filter(i => i.id !== id)
-      : state.items.map(i => i.id === id ? { ...i, quantity } : i),
-  })),
+  updateQuantity: (id, quantity) =>
+    set((state) => ({
+      items:
+        quantity <= 0
+          ? state.items.filter((i) => i.id !== id)
+          : state.items.map((i) => (i.id === id ? { ...i, quantity } : i)),
+    })),
 
   clearCart: () => set({ items: [], discountCode: null }),
 
   // get() reads current state without subscribing
   applyDiscount: (code) => {
-    const validCodes = { "KITS10": 0.1, "SCHOOL20": 0.2 };
+    const validCodes = { KITS10: 0.1, SCHOOL20: 0.2 };
     const discount = validCodes[code];
 
     if (!discount) {
@@ -204,7 +207,10 @@ const useCartStore = create<CartStore>((set, get) => ({
   // Computed value in the store (alternatively, compute in selector)
   get total() {
     const state = get();
-    const subtotal = state.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const subtotal = state.items.reduce(
+      (sum, i) => sum + i.price * i.quantity,
+      0,
+    );
     const discount = state.discountCode?.discount ?? 0;
     return subtotal * (1 - discount);
   },
@@ -294,10 +300,11 @@ type UISlice = {
 
 const createUISlice = (set: SetState): UISlice => ({
   isSidebarOpen: true,
-  toggleSidebar: () => set(state => ({ isSidebarOpen: !state.isSidebarOpen })),
-  activeModal:   null,
-  openModal:  (name) => set({ activeModal: name }),
-  closeModal: ()     => set({ activeModal: null }),
+  toggleSidebar: () =>
+    set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+  activeModal: null,
+  openModal: (name) => set({ activeModal: name }),
+  closeModal: () => set({ activeModal: null }),
 });
 
 // slices/cart.ts
@@ -310,9 +317,11 @@ type CartSlice = {
 
 const createCartSlice = (set: SetState): CartSlice => ({
   cartItems: [],
-  addToCart:     (item) => set(state => ({ cartItems: [...state.cartItems, item] })),
-  removeFromCart: (id)  => set(state => ({ cartItems: state.cartItems.filter(i => i.id !== id) })),
-  clearCart:            ()  => set({ cartItems: [] }),
+  addToCart: (item) =>
+    set((state) => ({ cartItems: [...state.cartItems, item] })),
+  removeFromCart: (id) =>
+    set((state) => ({ cartItems: state.cartItems.filter((i) => i.id !== id) })),
+  clearCart: () => set({ cartItems: [] }),
 });
 
 // store.ts — combine slices
@@ -324,8 +333,8 @@ export const useAppStore = create<AppStore>()((...args) => ({
 }));
 
 // Each component selects from the combined store
-const isSidebarOpen = useAppStore(state => state.isSidebarOpen);
-const cartItems     = useAppStore(state => state.cartItems);
+const isSidebarOpen = useAppStore((state) => state.isSidebarOpen);
+const cartItems = useAppStore((state) => state.cartItems);
 ```
 
 ---
@@ -339,25 +348,26 @@ import { persist, createJSONStorage } from "zustand/middleware";
 const useSettingsStore = create(
   persist(
     (set) => ({
-      theme:    "dark" as "light" | "dark",
+      theme: "dark" as "light" | "dark",
       language: "en",
       fontSize: 16,
 
-      setTheme:    (theme: "light" | "dark") => set({ theme }),
+      setTheme: (theme: "light" | "dark") => set({ theme }),
       setLanguage: (language: string) => set({ language }),
       setFontSize: (fontSize: number) => set({ fontSize }),
     }),
     {
-      name:    "app-settings",           // localStorage key
+      name: "app-settings", // localStorage key
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({          // only persist these fields
-        theme:    state.theme,
+      partialize: (state) => ({
+        // only persist these fields
+        theme: state.theme,
         language: state.language,
         fontSize: state.fontSize,
         // don't persist actions — they're recreated
       }),
-    }
-  )
+    },
+  ),
 );
 // State automatically saved to localStorage on every change
 // State restored from localStorage on app start
@@ -374,11 +384,12 @@ const useAppStore = create(
   devtools(
     (set) => ({
       count: 0,
-      increment: () => set(state => ({ count: state.count + 1 }), false, "increment"),
+      increment: () =>
+        set((state) => ({ count: state.count + 1 }), false, "increment"),
       //                                                                    ↑ action name in devtools
     }),
-    { name: "AppStore" }  // store name in devtools
-  )
+    { name: "AppStore" }, // store name in devtools
+  ),
 );
 // Open Redux DevTools in browser → see all state changes with action names
 ```
@@ -398,37 +409,41 @@ interface Notification {
 
 const useNotificationStore = create<{
   notifications: Notification[];
-  add:     (notif: Omit<Notification, "id">) => void;
+  add: (notif: Omit<Notification, "id">) => void;
   dismiss: (id: string) => void;
-  clear:   () => void;
+  clear: () => void;
 }>((set) => ({
   notifications: [],
 
   add: (notif) => {
     const id = crypto.randomUUID();
-    set(state => ({
+    set((state) => ({
       notifications: [...state.notifications, { ...notif, id }],
     }));
     // Auto-dismiss after 4 seconds
     setTimeout(() => {
-      set(state => ({
-        notifications: state.notifications.filter(n => n.id !== id),
+      set((state) => ({
+        notifications: state.notifications.filter((n) => n.id !== id),
       }));
     }, 4000);
   },
 
-  dismiss: (id) => set(state => ({
-    notifications: state.notifications.filter(n => n.id !== id),
-  })),
+  dismiss: (id) =>
+    set((state) => ({
+      notifications: state.notifications.filter((n) => n.id !== id),
+    })),
 
   clear: () => set({ notifications: [] }),
 }));
 
 // Utility function — callable outside React
 export const notify = {
-  success: (message: string) => useNotificationStore.getState().add({ type: "success", message }),
-  error:   (message: string) => useNotificationStore.getState().add({ type: "error",   message }),
-  info:    (message: string) => useNotificationStore.getState().add({ type: "info",    message }),
+  success: (message: string) =>
+    useNotificationStore.getState().add({ type: "success", message }),
+  error: (message: string) =>
+    useNotificationStore.getState().add({ type: "error", message }),
+  info: (message: string) =>
+    useNotificationStore.getState().add({ type: "info", message }),
 };
 
 // Usage in non-component code (API layer, etc.)
@@ -446,7 +461,7 @@ try {
 const useAuthStore = create(
   persist(
     (set, get) => ({
-      user:        null as User | null,
+      user: null as User | null,
       accessToken: null as string | null,
 
       setAuth: (user: User, token: string) => set({ user, accessToken: token }),
@@ -462,9 +477,12 @@ const useAuthStore = create(
     }),
     {
       name: "auth",
-      partialize: state => ({ user: state.user, accessToken: state.accessToken }),
-    }
-  )
+      partialize: (state) => ({
+        user: state.user,
+        accessToken: state.accessToken,
+      }),
+    },
+  ),
 );
 ```
 
@@ -546,4 +564,4 @@ Read store outside React:
 
 ---
 
-_Next: [19 — Animations (Framer Motion)](./19%20-%20Animations%20\(Framer%20Motion\).md)_
+_Next: [19 — Animations (Framer Motion)](<./19%20-%20Animations%20(Framer%20Motion).md>)_
