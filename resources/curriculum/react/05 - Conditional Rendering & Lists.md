@@ -33,14 +33,28 @@ React has no template syntax for conditionals — you use JavaScript directly.
 
 ```jsx
 // Render only when true
-{isAdmin && <AdminPanel />}
-{notifications.length > 0 && <NotificationBadge count={notifications.length} />}
+{
+  isAdmin && <AdminPanel />;
+}
+{
+  notifications.length > 0 && (
+    <NotificationBadge count={notifications.length} />
+  );
+}
 
 // ⚠️ The 0 gotcha — numbers are rendered, not skipped
-{count && <Badge />}         // renders "0" when count is 0!
-{count > 0 && <Badge />}     // ✓ — safe
-{!!count && <Badge />}       // ✓ — coerce to boolean
-{count !== 0 && <Badge />}   // ✓ — explicit
+{
+  count && <Badge />;
+} // renders "0" when count is 0!
+{
+  count > 0 && <Badge />;
+} // ✓ — safe
+{
+  !!count && <Badge />;
+} // ✓ — coerce to boolean
+{
+  count !== 0 && <Badge />;
+} // ✓ — explicit
 ```
 
 ### Early returns — for complex conditions
@@ -71,8 +85,8 @@ function UserGreeting({ user }) {
 function StatusBadge({ status, count }) {
   // Compute the rendering data before the return
   const badgeConfig = {
-    active:   { label: "Active",   className: "badge-green" },
-    pending:  { label: "Pending",  className: "badge-yellow" },
+    active: { label: "Active", className: "badge-green" },
+    pending: { label: "Pending", className: "badge-yellow" },
     inactive: { label: "Inactive", className: "badge-grey" },
   }[status] ?? { label: "Unknown", className: "badge-grey" };
 
@@ -92,10 +106,14 @@ function StatusBadge({ status, count }) {
 ```jsx
 function renderPaymentMethod(method) {
   switch (method) {
-    case "card":   return <CardPaymentForm />;
-    case "bank":   return <BankTransferForm />;
-    case "crypto": return <CryptoPaymentForm />;
-    default:       return <p>Select a payment method</p>;
+    case "card":
+      return <CardPaymentForm />;
+    case "bank":
+      return <BankTransferForm />;
+    case "crypto":
+      return <CryptoPaymentForm />;
+    default:
+      return <p>Select a payment method</p>;
   }
 }
 
@@ -148,11 +166,11 @@ function StudentList() {
 
   useEffect(() => {
     fetchStudents()
-      .then(data => {
+      .then((data) => {
         setStudents(data);
         setStatus("success");
       })
-      .catch(err => {
+      .catch((err) => {
         setError(err.message);
         setStatus("error");
       });
@@ -193,7 +211,7 @@ function StudentList() {
   // Success state
   return (
     <ul>
-      {students.map(student => (
+      {students.map((student) => (
         <StudentCard key={student.id} student={student} />
       ))}
     </ul>
@@ -227,7 +245,9 @@ function StudentGrid({ isLoading, students }) {
 
   return (
     <div className="grid">
-      {students.map(s => <StudentCard key={s.id} student={s} />)}
+      {students.map((s) => (
+        <StudentCard key={s.id} student={s} />
+      ))}
     </div>
   );
 }
@@ -243,7 +263,7 @@ function StudentGrid({ isLoading, students }) {
 function CourseList({ courses }) {
   return (
     <div className="course-grid">
-      {courses.map(course => (
+      {courses.map((course) => (
         <CourseCard
           key={course.id}
           title={course.title}
@@ -264,11 +284,10 @@ function ActiveStudentList({ students }) {
   return (
     <ul>
       {students
-        .filter(s => s.isActive)
-        .map(s => (
+        .filter((s) => s.isActive)
+        .map((s) => (
           <li key={s.id}>{s.name}</li>
-        ))
-      }
+        ))}
     </ul>
   );
 }
@@ -300,7 +319,7 @@ function LeaderBoard({ students }) {
 ```jsx
 function StudentsByGrade({ students }) {
   // Group students by grade
-  const byGrade = Object.groupBy(students, s => s.grade);
+  const byGrade = Object.groupBy(students, (s) => s.grade);
   // Or manually:
   // const byGrade = students.reduce((groups, s) => {
   //   (groups[s.grade] ??= []).push(s);
@@ -311,11 +330,11 @@ function StudentsByGrade({ students }) {
 
   return (
     <div>
-      {grades.map(grade => (
+      {grades.map((grade) => (
         <section key={grade}>
           <h2>Grade {grade}</h2>
           <ul>
-            {byGrade[grade].map(student => (
+            {byGrade[grade].map((student) => (
               <li key={student.id}>{student.name}</li>
             ))}
           </ul>
@@ -334,14 +353,22 @@ Keys tell React which item in a list corresponds to which DOM element between re
 
 ```jsx
 // ✓ Best: use stable, unique IDs from your data
-students.map(s => <StudentCard key={s.id} />)
+students.map((s) => <StudentCard key={s.id} />);
 
 // ✓ Acceptable: stable natural unique values
-countries.map(c => <Option key={c.code} value={c.code}>{c.name}</Option>)
-navItems.map(item => <NavLink key={item.path} to={item.path}>{item.label}</NavLink>)
+countries.map((c) => (
+  <Option key={c.code} value={c.code}>
+    {c.name}
+  </Option>
+));
+navItems.map((item) => (
+  <NavLink key={item.path} to={item.path}>
+    {item.label}
+  </NavLink>
+));
 
 // ✗ Never: index when list can change
-students.map((s, i) => <StudentCard key={i} />)
+students.map((s, i) => <StudentCard key={i} />);
 // If you insert at position 0, all keys shift
 // React matches "new key 0" with "old key 0" — wrong student!
 // Component state (like expanded/collapsed) will attach to wrong items
@@ -351,11 +378,11 @@ students.map((s, i) => <StudentCard key={i} />)
 // - Items have no unique identifier
 // - The component has no internal state to preserve
 const staticSteps = ["Select grade", "Enter details", "Review"];
-staticSteps.map((step, i) => <Step key={i} label={step} />)  // fine
+staticSteps.map((step, i) => <Step key={i} label={step} />); // fine
 
 // ✗ Never: random values or timestamps
-students.map(s => <StudentCard key={Math.random()} />)  // new key every render → remount
-students.map(s => <StudentCard key={Date.now()} />)     // same problem
+students.map((s) => <StudentCard key={Math.random()} />); // new key every render → remount
+students.map((s) => <StudentCard key={Date.now()} />); // same problem
 ```
 
 ### What happens with wrong keys
@@ -363,10 +390,14 @@ students.map(s => <StudentCard key={Date.now()} />)     // same problem
 ```jsx
 // State gets attached to the wrong item:
 function TodoItem() {
-  const [isDone, setIsDone] = useState(false);  // internal state
+  const [isDone, setIsDone] = useState(false); // internal state
   return (
     <li>
-      <input type="checkbox" checked={isDone} onChange={() => setIsDone(d => !d)} />
+      <input
+        type="checkbox"
+        checked={isDone}
+        onChange={() => setIsDone((d) => !d)}
+      />
     </li>
   );
 }
@@ -388,11 +419,11 @@ Nested lists need keys at each level.
 function SubjectList({ classes }) {
   return (
     <div>
-      {classes.map(cls => (
+      {classes.map((cls) => (
         <div key={cls.id}>
           <h2>{cls.name}</h2>
           <ul>
-            {cls.subjects.map(subject => (
+            {cls.subjects.map((subject) => (
               // subject.id is unique within the full dataset
               <li key={subject.id}>
                 {subject.name} — {subject.teacher}
@@ -415,10 +446,10 @@ Sometimes you need to choose which component to render based on a value.
 ```jsx
 // Component map — clean and type-safe
 const CARD_COMPONENTS = {
-  student:   StudentCard,
-  teacher:   TeacherCard,
-  admin:     AdminCard,
-  parent:    ParentCard,
+  student: StudentCard,
+  teacher: TeacherCard,
+  admin: AdminCard,
+  parent: ParentCard,
 };
 
 function UserCard({ user }) {
@@ -427,7 +458,7 @@ function UserCard({ user }) {
 }
 
 // Usage
-<UserCard user={{ role: "teacher", name: "Mr. Silva" }} />
+<UserCard user={{ role: "teacher", name: "Mr. Silva" }} />;
 // → renders <TeacherCard user={...} />
 ```
 
@@ -443,7 +474,7 @@ function ReportPage({ showChart }) {
       <ReportTable />
       {showChart && (
         <Suspense fallback={<Spinner />}>
-          <HeavyChart />    {/* loaded only when showChart is true */}
+          <HeavyChart /> {/* loaded only when showChart is true */}
         </Suspense>
       )}
     </div>
@@ -465,10 +496,10 @@ function StudentsPage({ students }) {
 
   // All derived — no extra state needed
   const processed = students
-    .filter(s => gradeFilter === "all" || s.grade === Number(gradeFilter))
-    .filter(s => s.name.toLowerCase().includes(query.toLowerCase()))
+    .filter((s) => gradeFilter === "all" || s.grade === Number(gradeFilter))
+    .filter((s) => s.name.toLowerCase().includes(query.toLowerCase()))
     .sort((a, b) => {
-      if (sortBy === "name")  return a.name.localeCompare(b.name);
+      if (sortBy === "name") return a.name.localeCompare(b.name);
       if (sortBy === "score") return b.score - a.score;
       if (sortBy === "grade") return a.grade - b.grade;
       return 0;
@@ -479,16 +510,21 @@ function StudentsPage({ students }) {
       <div className="controls">
         <input
           value={query}
-          onChange={e => setQuery(e.target.value)}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Search by name..."
         />
-        <select value={gradeFilter} onChange={e => setGradeFilter(e.target.value)}>
+        <select
+          value={gradeFilter}
+          onChange={(e) => setGradeFilter(e.target.value)}
+        >
           <option value="all">All Grades</option>
-          {[6,7,8,9,10,11,12,13].map(g => (
-            <option key={g} value={g}>Grade {g}</option>
+          {[6, 7, 8, 9, 10, 11, 12, 13].map((g) => (
+            <option key={g} value={g}>
+              Grade {g}
+            </option>
           ))}
         </select>
-        <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
           <option value="name">Name</option>
           <option value="score">Score</option>
           <option value="grade">Grade</option>
@@ -499,7 +535,9 @@ function StudentsPage({ students }) {
         <EmptyState message="No students match your filters" />
       ) : (
         <div className="grid">
-          {processed.map(s => <StudentCard key={s.id} student={s} />)}
+          {processed.map((s) => (
+            <StudentCard key={s.id} student={s} />
+          ))}
         </div>
       )}
 
@@ -525,13 +563,17 @@ function VirtualStudentList({ students }) {
   const virtualizer = useVirtualizer({
     count: students.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 64,  // estimated height of each row
+    estimateSize: () => 64, // estimated height of each row
   });
 
   return (
-    <div ref={parentRef} className="list-container" style={{ height: "600px", overflow: "auto" }}>
+    <div
+      ref={parentRef}
+      className="list-container"
+      style={{ height: "600px", overflow: "auto" }}
+    >
       <div style={{ height: virtualizer.getTotalSize() }}>
-        {virtualizer.getVirtualItems().map(virtualItem => (
+        {virtualizer.getVirtualItems().map((virtualItem) => (
           <div
             key={virtualItem.key}
             style={{

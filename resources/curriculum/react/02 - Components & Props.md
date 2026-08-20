@@ -74,7 +74,9 @@ function StudentCard({ student, onEdit }) {
     <div className="card">
       <img src={student.avatarUrl} alt={student.name} />
       <h2>{student.name}</h2>
-      <p>Grade {student.grade} — Score: {student.score}</p>
+      <p>
+        Grade {student.grade} — Score: {student.score}
+      </p>
       <button onClick={() => onEdit(student.id)}>Edit</button>
     </div>
   );
@@ -87,12 +89,12 @@ A component must never modify its own props. Props are immutable from the compon
 
 ```jsx
 function BadComponent({ count }) {
-  count = count + 1;  // ✗ Never mutate props
+  count = count + 1; // ✗ Never mutate props
   return <p>{count}</p>;
 }
 
 function GoodComponent({ count }) {
-  const displayCount = count + 1;  // ✓ Create new value
+  const displayCount = count + 1; // ✓ Create new value
   return <p>{displayCount}</p>;
 }
 ```
@@ -192,13 +194,17 @@ interface StudentCardProps {
     name: string;
     grade: number;
     score: number;
-    avatarUrl?: string;  // optional
+    avatarUrl?: string; // optional
   };
   onEdit: (id: string) => void;
   isHighlighted?: boolean;
 }
 
-function StudentCard({ student, onEdit, isHighlighted = false }: StudentCardProps) {
+function StudentCard({
+  student,
+  onEdit,
+  isHighlighted = false,
+}: StudentCardProps) {
   return (
     <div className={isHighlighted ? "card card-highlighted" : "card"}>
       <h2>{student.name}</h2>
@@ -222,14 +228,8 @@ function Panel({ title, children, footer }) {
       <div className="panel-header">
         <h2>{title}</h2>
       </div>
-      <div className="panel-body">
-        {children}
-      </div>
-      {footer && (
-        <div className="panel-footer">
-          {footer}
-        </div>
-      )}
+      <div className="panel-body">{children}</div>
+      {footer && <div className="panel-footer">{footer}</div>}
     </div>
   );
 }
@@ -241,7 +241,7 @@ function Panel({ title, children, footer }) {
 >
   <ResultsTable students={students} />
   <Pagination page={page} total={total} />
-</Panel>
+</Panel>;
 ```
 
 ### Specialisation — specific version of a general component
@@ -263,8 +263,12 @@ function ConfirmDialog({ message, onConfirm, onCancel }) {
   return (
     <Dialog title="Confirm" onClose={onCancel} variant="warning">
       <p>{message}</p>
-      <Button onClick={onCancel} variant="ghost">Cancel</Button>
-      <Button onClick={onConfirm} variant="danger">Confirm</Button>
+      <Button onClick={onCancel} variant="ghost">
+        Cancel
+      </Button>
+      <Button onClick={onConfirm} variant="danger">
+        Confirm
+      </Button>
     </Dialog>
   );
 }
@@ -301,7 +305,7 @@ function PageLayout({ header, sidebar, main, footer }) {
   sidebar={<FilterPanel filters={filters} onChange={setFilters} />}
   main={<StudentGrid students={students} />}
   footer={<Pagination page={page} total={total} />}
-/>
+/>;
 ```
 
 ---
@@ -388,8 +392,8 @@ function StudentPage({ student }) {
       />
       <div className="stats-grid">
         <StatCard label="Average Score" value={`${student.averageScore}%`} />
-        <StatCard label="Attendance"    value={`${student.attendance}%`} />
-        <StatCard label="Grade"         value={student.grade} />
+        <StatCard label="Attendance" value={`${student.attendance}%`} />
+        <StatCard label="Grade" value={student.grade} />
       </div>
     </div>
   );
@@ -405,8 +409,8 @@ When two components need to share the same state, move the state to their closes
 ```jsx
 // PROBLEM: two sibling components that need shared state
 function FilterBar() {
-  const [query, setQuery] = useState("");  // local state
-  return <input value={query} onChange={e => setQuery(e.target.value)} />;
+  const [query, setQuery] = useState(""); // local state
+  return <input value={query} onChange={(e) => setQuery(e.target.value)} />;
 }
 
 function StudentList() {
@@ -418,17 +422,17 @@ function StudentsPage() {
   return (
     <>
       <FilterBar />
-      <StudentList />   {/* can't filter because it doesn't have query */}
+      <StudentList /> {/* can't filter because it doesn't have query */}
     </>
   );
 }
 
 // SOLUTION: lift state to the common parent
 function StudentsPage() {
-  const [query, setQuery] = useState("");  // state lives here
+  const [query, setQuery] = useState(""); // state lives here
 
-  const filtered = students.filter(s =>
-    s.name.toLowerCase().includes(query.toLowerCase())
+  const filtered = students.filter((s) =>
+    s.name.toLowerCase().includes(query.toLowerCase()),
   );
 
   return (
@@ -444,7 +448,7 @@ function FilterBar({ query, onQueryChange }) {
   return (
     <input
       value={query}
-      onChange={e => onQueryChange(e.target.value)}
+      onChange={(e) => onQueryChange(e.target.value)}
       placeholder="Search students..."
     />
   );
@@ -453,7 +457,9 @@ function FilterBar({ query, onQueryChange }) {
 function StudentList({ students }) {
   return (
     <ul>
-      {students.map(s => <li key={s.id}>{s.name}</li>)}
+      {students.map((s) => (
+        <li key={s.id}>{s.name}</li>
+      ))}
     </ul>
   );
 }
@@ -483,21 +489,21 @@ function PriceDisplay({ amount, currency }) {
 // ✗ Impure — reads external mutable state during render
 let taxRate = 0.08;
 function PriceDisplay({ amount }) {
-  const withTax = amount * (1 + taxRate);  // depends on mutable external var
+  const withTax = amount * (1 + taxRate); // depends on mutable external var
   return <span>{withTax}</span>;
 }
 
 // ✗ Impure — causes side effects during render
 function StudentCard({ student }) {
-  console.log("Rendered:", student.name);  // side effect in render
-  analytics.track("student_viewed", student.id);  // side effect in render
+  console.log("Rendered:", student.name); // side effect in render
+  analytics.track("student_viewed", student.id); // side effect in render
   return <div>{student.name}</div>;
 }
 
 // ✓ Side effects belong in useEffect (covered in File 08)
 function StudentCard({ student }) {
   useEffect(() => {
-    analytics.track("student_viewed", student.id);  // ✓ in effect
+    analytics.track("student_viewed", student.id); // ✓ in effect
   }, [student.id]);
 
   return <div>{student.name}</div>;
@@ -524,18 +530,14 @@ function StudentCard({ student }) {
 // Let callers customise layout without forking the component
 function Card({ children, className, style, ...props }) {
   return (
-    <div
-      className={`card ${className ?? ""}`}
-      style={style}
-      {...props}
-    >
+    <div className={`card ${className ?? ""}`} style={style} {...props}>
       {children}
     </div>
   );
 }
 
 // Callers can add margin, width, etc. without changing Card itself
-<Card className="mt-8 max-w-md">...</Card>
+<Card className="mt-8 max-w-md">...</Card>;
 ```
 
 ### Prefer specific props over passing an entire object
@@ -557,7 +559,7 @@ function Card({ children, className, style, ...props }) {
 
 ```jsx
 // Props: onX (describes the event)
-<SearchBar onSearch={handleSearch} onClear={handleClear} />
+<SearchBar onSearch={handleSearch} onClear={handleClear} />;
 
 // Implementation: handleX (describes the handler)
 function SearchBar({ onSearch, onClear }) {
@@ -565,9 +567,7 @@ function SearchBar({ onSearch, onClear }) {
     onSearch(e.target.value);
   }
 
-  return (
-    <input onChange={handleInputChange} />
-  );
+  return <input onChange={handleInputChange} />;
 }
 ```
 

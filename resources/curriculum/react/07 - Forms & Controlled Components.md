@@ -28,7 +28,7 @@ function UncontrolledInput() {
   const inputRef = useRef(null);
 
   function handleSubmit() {
-    console.log(inputRef.current.value);  // read value on demand
+    console.log(inputRef.current.value); // read value on demand
   }
 
   return (
@@ -46,10 +46,10 @@ function ControlledInput() {
   return (
     <>
       <input
-        value={value}                           // React sets the displayed value
-        onChange={e => setValue(e.target.value)} // React updates state on every keystroke
+        value={value} // React sets the displayed value
+        onChange={(e) => setValue(e.target.value)} // React updates state on every keystroke
       />
-      <p>Current: {value}</p>   // always in sync — no need to read from DOM
+      <p>Current: {value}</p> // always in sync — no need to read from DOM
     </>
   );
 }
@@ -111,20 +111,20 @@ const [email, setEmail] = useState("");
 <input
   type="email"
   value={email}
-  onChange={e => setEmail(e.target.value)}
+  onChange={(e) => setEmail(e.target.value)}
   placeholder="Enter your email"
   autoComplete="email"
-/>
+/>;
 
 // Number input — value is always a string from e.target.value
 const [age, setAge] = useState("");
 <input
   type="number"
   value={age}
-  onChange={e => setAge(e.target.value)}  // "17" as string
+  onChange={(e) => setAge(e.target.value)} // "17" as string
   min={1}
   max={100}
-/>
+/>;
 // Parse when you use it: Number(age) or parseInt(age, 10)
 ```
 
@@ -135,10 +135,10 @@ const [age, setAge] = useState("");
 const [bio, setBio] = useState("");
 <textarea
   value={bio}
-  onChange={e => setBio(e.target.value)}
+  onChange={(e) => setBio(e.target.value)}
   rows={5}
   placeholder="Tell us about yourself..."
-/>
+/>;
 // Note: <textarea>content here</textarea> works in HTML but not in React
 // In React, use value prop
 ```
@@ -146,29 +146,31 @@ const [bio, setBio] = useState("");
 ### Select (dropdown)
 
 ```jsx
-const [grade, setGrade] = useState("");  // or "11" for a default
+const [grade, setGrade] = useState(""); // or "11" for a default
 
-<select value={grade} onChange={e => setGrade(e.target.value)}>
+<select value={grade} onChange={(e) => setGrade(e.target.value)}>
   <option value="">Select a grade</option>
-  {[6, 7, 8, 9, 10, 11, 12, 13].map(g => (
-    <option key={g} value={String(g)}>Grade {g}</option>
+  {[6, 7, 8, 9, 10, 11, 12, 13].map((g) => (
+    <option key={g} value={String(g)}>
+      Grade {g}
+    </option>
   ))}
-</select>
+</select>;
 
 // Multi-select — value is an array
 const [selectedSubjects, setSelectedSubjects] = useState([]);
 <select
   multiple
   value={selectedSubjects}
-  onChange={e => {
-    const selected = Array.from(e.target.selectedOptions, opt => opt.value);
+  onChange={(e) => {
+    const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
     setSelectedSubjects(selected);
   }}
 >
   <option value="math">Mathematics</option>
   <option value="science">Science</option>
   <option value="english">English</option>
-</select>
+</select>;
 ```
 
 ### Checkbox
@@ -213,18 +215,20 @@ function toggleDay(day) {
 ```jsx
 const [role, setRole] = useState("student");
 
-{["student", "teacher", "parent"].map(r => (
-  <label key={r}>
-    <input
-      type="radio"
-      name="role"          // same name groups them
-      value={r}
-      checked={role === r} // controlled: compare to state
-      onChange={e => setRole(e.target.value)}
-    />
-    {r.charAt(0).toUpperCase() + r.slice(1)}
-  </label>
-))}
+{
+  ["student", "teacher", "parent"].map((r) => (
+    <label key={r}>
+      <input
+        type="radio"
+        name="role" // same name groups them
+        value={r}
+        checked={role === r} // controlled: compare to state
+        onChange={(e) => setRole(e.target.value)}
+      />
+      {r.charAt(0).toUpperCase() + r.slice(1)}
+    </label>
+  ));
+}
 ```
 
 ### Range slider
@@ -257,7 +261,7 @@ function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
 
   async function handleSubmit(e) {
-    e.preventDefault();  // ALWAYS — prevents page reload
+    e.preventDefault(); // ALWAYS — prevents page reload
 
     setIsSubmitting(true);
     try {
@@ -279,20 +283,26 @@ function ContactForm() {
       <input
         name="name"
         value={formData.name}
-        onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+        onChange={(e) =>
+          setFormData((prev) => ({ ...prev, name: e.target.value }))
+        }
         required
       />
       <input
         name="email"
         type="email"
         value={formData.email}
-        onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
+        onChange={(e) =>
+          setFormData((prev) => ({ ...prev, email: e.target.value }))
+        }
         required
       />
       <textarea
         name="message"
         value={formData.message}
-        onChange={e => setFormData(prev => ({ ...prev, message: e.target.value }))}
+        onChange={(e) =>
+          setFormData((prev) => ({ ...prev, message: e.target.value }))
+        }
         required
       />
       <button type="submit" disabled={isSubmitting}>
@@ -316,14 +326,16 @@ function RegistrationForm() {
 
   function validate(data) {
     const errs = {};
-    if (!data.name.trim())        errs.name = "Name is required";
-    else if (data.name.length < 2) errs.name = "Name must be at least 2 characters";
+    if (!data.name.trim()) errs.name = "Name is required";
+    else if (data.name.length < 2)
+      errs.name = "Name must be at least 2 characters";
 
-    if (!data.email.trim())              errs.email = "Email is required";
+    if (!data.email.trim()) errs.email = "Email is required";
     else if (!data.email.includes("@")) errs.email = "Email is invalid";
 
-    if (!data.password)              errs.password = "Password is required";
-    else if (data.password.length < 8) errs.password = "Password must be at least 8 characters";
+    if (!data.password) errs.password = "Password is required";
+    else if (data.password.length < 8)
+      errs.password = "Password must be at least 8 characters";
 
     return errs;
   }
@@ -332,7 +344,7 @@ function RegistrationForm() {
     e.preventDefault();
     const errs = validate(form);
     setErrors(errs);
-    if (Object.keys(errs).length > 0) return;  // stop if errors
+    if (Object.keys(errs).length > 0) return; // stop if errors
     submitForm(form);
   }
 
@@ -341,12 +353,14 @@ function RegistrationForm() {
       <div className="field">
         <input
           value={form.name}
-          onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
+          onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
           aria-invalid={!!errors.name}
           aria-describedby={errors.name ? "name-error" : undefined}
         />
         {errors.name && (
-          <p id="name-error" className="error" role="alert">{errors.name}</p>
+          <p id="name-error" className="error" role="alert">
+            {errors.name}
+          </p>
         )}
       </div>
       {/* ... other fields */}
@@ -415,7 +429,7 @@ function StudentForm() {
   // One handler for all text fields — uses input's name attribute
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -424,12 +438,24 @@ function StudentForm() {
   return (
     <form>
       <input name="firstName" value={form.firstName} onChange={handleChange} />
-      <input name="lastName"  value={form.lastName}  onChange={handleChange} />
-      <input name="email"     value={form.email}     onChange={handleChange} type="email" />
-      <input name="phone"     value={form.phone}     onChange={handleChange} type="tel" />
-      <select name="grade"    value={form.grade}     onChange={handleChange}>
-        {[6,7,8,9,10,11,12,13].map(g => (
-          <option key={g} value={g}>Grade {g}</option>
+      <input name="lastName" value={form.lastName} onChange={handleChange} />
+      <input
+        name="email"
+        value={form.email}
+        onChange={handleChange}
+        type="email"
+      />
+      <input
+        name="phone"
+        value={form.phone}
+        onChange={handleChange}
+        type="tel"
+      />
+      <select name="grade" value={form.grade} onChange={handleChange}>
+        {[6, 7, 8, 9, 10, 11, 12, 13].map((g) => (
+          <option key={g} value={g}>
+            Grade {g}
+          </option>
         ))}
       </select>
     </form>
@@ -450,38 +476,44 @@ function QualificationsForm() {
   ]);
 
   function addQualification() {
-    setQualifications(prev => [
+    setQualifications((prev) => [
       ...prev,
       { id: crypto.randomUUID(), subject: "", grade: "" },
     ]);
   }
 
   function removeQualification(id) {
-    setQualifications(prev => prev.filter(q => q.id !== id));
+    setQualifications((prev) => prev.filter((q) => q.id !== id));
   }
 
   function updateQualification(id, field, value) {
-    setQualifications(prev =>
-      prev.map(q => q.id === id ? { ...q, [field]: value } : q)
+    setQualifications((prev) =>
+      prev.map((q) => (q.id === id ? { ...q, [field]: value } : q)),
     );
   }
 
   return (
     <div>
-      {qualifications.map(qual => (
+      {qualifications.map((qual) => (
         <div key={qual.id} className="qualification-row">
           <input
             placeholder="Subject"
             value={qual.subject}
-            onChange={e => updateQualification(qual.id, "subject", e.target.value)}
+            onChange={(e) =>
+              updateQualification(qual.id, "subject", e.target.value)
+            }
           />
           <select
             value={qual.grade}
-            onChange={e => updateQualification(qual.id, "grade", e.target.value)}
+            onChange={(e) =>
+              updateQualification(qual.id, "grade", e.target.value)
+            }
           >
             <option value="">Grade</option>
-            {["A", "B", "C", "S", "F"].map(g => (
-              <option key={g} value={g}>{g}</option>
+            {["A", "B", "C", "S", "F"].map((g) => (
+              <option key={g} value={g}>
+                {g}
+              </option>
             ))}
           </select>
           <button
@@ -536,7 +568,10 @@ function FileUpload({ onUpload }) {
   return (
     <div
       className={`upload-zone ${isDragging ? "dragging" : ""}`}
-      onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragging(true);
+      }}
       onDragLeave={() => setIsDragging(false)}
       onDrop={handleDrop}
     >
@@ -580,12 +615,16 @@ const schema = z.object({
 });
 
 function Form() {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(schema),
   });
 
   return (
-    <form onSubmit={handleSubmit(data => console.log(data))}>
+    <form onSubmit={handleSubmit((data) => console.log(data))}>
       <input {...register("name")} />
       {errors.name && <p>{errors.name.message}</p>}
 

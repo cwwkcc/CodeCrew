@@ -26,7 +26,12 @@ JSX is **not** HTML. It's a syntax extension for JavaScript that looks like HT
 const element = <h1 className="title">Hello, {name}</h1>;
 
 // What the compiler produces (plain JS):
-const element = React.createElement("h1", { className: "title" }, "Hello, ", name);
+const element = React.createElement(
+  "h1",
+  { className: "title" },
+  "Hello, ",
+  name,
+);
 ```
 
 JSX is JavaScript. It follows JavaScript rules, not HTML rules. It can appear anywhere a JavaScript expression can appear — inside variables, function returns, ternaries, arrays.
@@ -108,17 +113,37 @@ const student = { name: "Dineth", grade: 11 };
 
 ```jsx
 // ✓ Valid — these render
-{42}           // number → "42"
-{"hello"}      // string → "hello"
-{true}         // boolean → nothing (booleans are not rendered)
-{null}         // null → nothing
-{undefined}    // undefined → nothing
-{<span />}     // JSX → rendered
-{[1, 2, 3]}    // array → each item rendered
+{
+  42;
+} // number → "42"
+{
+  ("hello");
+} // string → "hello"
+{
+  true;
+} // boolean → nothing (booleans are not rendered)
+{
+  null;
+} // null → nothing
+{
+  undefined;
+} // undefined → nothing
+{
+  <span />;
+} // JSX → rendered
+{
+  [1, 2, 3];
+} // array → each item rendered
 
 // ✗ Invalid — these cause errors or unexpected output
-{objects}      // Error: Objects are not valid as a React child
-{{key: "val"}} // Error: same reason
+{
+  objects;
+} // Error: Objects are not valid as a React child
+{
+  {
+    key: "val";
+  }
+} // Error: same reason
 ```
 
 ---
@@ -335,7 +360,7 @@ Use `.map()` to transform an array of data into an array of JSX elements.
 function StudentList({ students }) {
   return (
     <ul>
-      {students.map(student => (
+      {students.map((student) => (
         <li key={student.id}>
           {student.name} — Grade {student.grade}
         </li>
@@ -351,24 +376,24 @@ Every element in a mapped list needs a **unique, stable `key` prop**. React u
 
 ```jsx
 // ✓ Use a unique, stable identifier (database ID is perfect)
-students.map(s => <StudentCard key={s.id} student={s} />)
+students.map((s) => <StudentCard key={s.id} student={s} />);
 
 // ✓ If no ID, use a naturally unique value
-categories.map(c => <CategoryTab key={c.slug} category={c} />)
+categories.map((c) => <CategoryTab key={c.slug} category={c} />);
 
 // ✗ Never use array index as key (when list can reorder or change)
-students.map((s, index) => <StudentCard key={index} student={s} />)
+students.map((s, index) => <StudentCard key={index} student={s} />);
 // Why: if you insert at the start, all keys shift → React remounts everything
 
 // ✗ Never use random values
-students.map(s => <StudentCard key={Math.random()} student={s} />)
+students.map((s) => <StudentCard key={Math.random()} student={s} />);
 // Why: new key on every render → remount on every render → kills performance
 
 // Index is acceptable ONLY when:
 // - The list is static (never reordered, never items inserted/removed)
 // - Items have no stable ID
 const staticLinks = ["Home", "About", "Contact"];
-staticLinks.map((link, i) => <NavLink key={i}>{link}</NavLink>)
+staticLinks.map((link, i) => <NavLink key={i}>{link}</NavLink>);
 ```
 
 ### Keys must be unique among siblings, not globally
@@ -416,12 +441,14 @@ function StudentRow({ student }) {
 }
 
 // Keyed fragments — when rendering a list of fragments
-{students.map(student => (
-  <Fragment key={student.id}>
-    <dt>{student.name}</dt>
-    <dd>{student.score}</dd>
-  </Fragment>
-))}
+{
+  students.map((student) => (
+    <Fragment key={student.id}>
+      <dt>{student.name}</dt>
+      <dd>{student.score}</dd>
+    </Fragment>
+  ));
+}
 ```
 
 ---
@@ -545,14 +572,26 @@ function List({ children }) {
 
 ```jsx
 // These render nothing — useful for conditional rendering
-{null}
-{undefined}
-{false}
-{true}
+{
+  null;
+}
+{
+  undefined;
+}
+{
+  false;
+}
+{
+  true;
+}
 
 // But 0 renders as "0" — this is the common bug
-{0}       // renders "0" in the DOM
-{0 && <Component />}  // renders "0" not nothing!
+{
+  0;
+} // renders "0" in the DOM
+{
+  0 && <Component />;
+} // renders "0" not nothing!
 ```
 
 ### Objects cannot be rendered directly
@@ -573,7 +612,7 @@ const user = { name: "Ashan", grade: 11 };
 ```jsx
 // JSX can be stored, passed, returned — it's just a value
 const heading = <h1>Title</h1>;
-const items = students.map(s => <li key={s.id}>{s.name}</li>);
+const items = students.map((s) => <li key={s.id}>{s.name}</li>);
 
 function renderStatus(status) {
   if (status === "loading") return <Spinner />;

@@ -32,8 +32,8 @@ function Counter() {
   let count = 0;
 
   function handleClick() {
-    count++;  // changes the variable but React doesn't know
-    console.log(count);  // increments, but UI never updates
+    count++; // changes the variable but React doesn't know
+    console.log(count); // increments, but UI never updates
   }
 
   return (
@@ -57,10 +57,10 @@ import { useState } from "react";
 function Counter() {
   // Declare a state variable
   // useState returns [currentValue, setterFunction]
-  const [count, setCount] = useState(0);  // 0 is the initial value
+  const [count, setCount] = useState(0); // 0 is the initial value
 
   function handleIncrement() {
-    setCount(count + 1);  // schedule a state update → triggers re-render
+    setCount(count + 1); // schedule a state update → triggers re-render
   }
 
   return (
@@ -99,14 +99,14 @@ function Component() {
 // ✗ Never call hooks inside conditions
 function BadComponent({ showExtra }) {
   if (showExtra) {
-    const [x, setX] = useState(0);  // Error: conditional hook
+    const [x, setX] = useState(0); // Error: conditional hook
   }
 }
 
 // ✗ Never call hooks inside loops
 function BadComponent({ items }) {
-  return items.map(item => {
-    const [selected, setSelected] = useState(false);  // Error: hook in loop
+  return items.map((item) => {
+    const [selected, setSelected] = useState(false); // Error: hook in loop
     return <div onClick={() => setSelected(true)}>{item.name}</div>;
   });
 }
@@ -114,7 +114,7 @@ function BadComponent({ items }) {
 // ✗ Never call hooks inside nested functions
 function BadComponent() {
   function innerFunction() {
-    const [x, setX] = useState(0);  // Error: hook in nested function
+    const [x, setX] = useState(0); // Error: hook in nested function
   }
 }
 ```
@@ -143,7 +143,7 @@ function Counter() {
 
   function handleClickWrong() {
     setCount(count + 1);
-    console.log(count);  // still the OLD count — update hasn't happened yet
+    console.log(count); // still the OLD count — update hasn't happened yet
   }
 
   return <button onClick={handleClick}>+</button>;
@@ -162,15 +162,15 @@ function Counter() {
 
   function handleTripleIncrement() {
     // ✗ Wrong — all read the same stale `count`
-    setCount(count + 1);  // uses count = 0 → sets to 1
-    setCount(count + 1);  // uses count = 0 → sets to 1
-    setCount(count + 1);  // uses count = 0 → sets to 1
+    setCount(count + 1); // uses count = 0 → sets to 1
+    setCount(count + 1); // uses count = 0 → sets to 1
+    setCount(count + 1); // uses count = 0 → sets to 1
     // Result: 1
 
     // ✓ Correct — each callback receives the latest queued value
-    setCount(prev => prev + 1);  // prev = 0 → sets to 1
-    setCount(prev => prev + 1);  // prev = 1 → sets to 2
-    setCount(prev => prev + 1);  // prev = 2 → sets to 3
+    setCount((prev) => prev + 1); // prev = 0 → sets to 1
+    setCount((prev) => prev + 1); // prev = 1 → sets to 2
+    setCount((prev) => prev + 1); // prev = 2 → sets to 3
     // Result: 3
   }
 }
@@ -184,13 +184,13 @@ function Counter() {
 
 ```jsx
 // Toggle — always use functional form
-setIsOpen(prev => !prev);  // ✓ safe
-setIsOpen(!isOpen);         // ✗ may be stale in async contexts
+setIsOpen((prev) => !prev); // ✓ safe
+setIsOpen(!isOpen); // ✗ may be stale in async contexts
 
 // Counter in a timer — functional form is essential
 useEffect(() => {
   const id = setInterval(() => {
-    setCount(prev => prev + 1);  // ✓ always uses current value
+    setCount((prev) => prev + 1); // ✓ always uses current value
     // setCount(count + 1);      // ✗ stale closure — count is always 0
   }, 1000);
   return () => clearInterval(id);
@@ -212,10 +212,10 @@ const [user, setUser] = useState({ name: "Ashan", grade: 11, score: 82 });
 
 // ✗ Mutating state — React won't re-render
 user.score = 91;
-setUser(user);  // same reference → no re-render
+setUser(user); // same reference → no re-render
 
 // ✓ Create new object with spread
-setUser({ ...user, score: 91 });  // new reference → re-render
+setUser({ ...user, score: 91 }); // new reference → re-render
 
 // ✓ Nested objects — spread at every level
 const [profile, setProfile] = useState({
@@ -236,7 +236,7 @@ setProfile({
 
 ```jsx
 const [students, setStudents] = useState([
-  { id: 1, name: "Ashan",  score: 82 },
+  { id: 1, name: "Ashan", score: 82 },
   { id: 2, name: "Dineth", score: 91 },
 ]);
 
@@ -244,19 +244,17 @@ const [students, setStudents] = useState([
 setStudents([...students, { id: 3, name: "Kavya", score: 78 }]);
 
 // REMOVE — filter out the item
-setStudents(students.filter(s => s.id !== 2));
+setStudents(students.filter((s) => s.id !== 2));
 
 // UPDATE — map and replace the matching item
-setStudents(students.map(s =>
-  s.id === 1 ? { ...s, score: 88 } : s
-));
+setStudents(students.map((s) => (s.id === 1 ? { ...s, score: 88 } : s)));
 
 // SORT — sort returns a new array only if you spread first
 setStudents([...students].sort((a, b) => b.score - a.score));
 
 // ✗ NEVER mutate array state methods
-students.push({ id: 3, name: "Kavya" });  // mutates — won't re-render
-students.sort((a, b) => a.score - b.score);  // mutates — won't re-render
+students.push({ id: 3, name: "Kavya" }); // mutates — won't re-render
+students.sort((a, b) => a.score - b.score); // mutates — won't re-render
 
 // Reference: what to use instead
 // Instead of push   → [...arr, newItem]
@@ -295,7 +293,7 @@ function Form() {
 
   // Update one field at a time
   function handleChange(e) {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
@@ -319,11 +317,11 @@ If a value can be computed from existing state or props, don't store it in state
 function UserForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [fullName, setFullName] = useState("");  // unnecessary!
+  const [fullName, setFullName] = useState(""); // unnecessary!
 
   function handleFirstNameChange(e) {
     setFirstName(e.target.value);
-    setFullName(e.target.value + " " + lastName);  // tedious to keep in sync
+    setFullName(e.target.value + " " + lastName); // tedious to keep in sync
   }
 }
 
@@ -332,7 +330,7 @@ function UserForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
-  const fullName = firstName + " " + lastName;  // computed, not stored
+  const fullName = firstName + " " + lastName; // computed, not stored
   // fullName is always in sync — impossible for it not to be
 }
 
@@ -344,11 +342,13 @@ function StudentList({ students }) {
   // ✗ Don't store filteredStudents in state
   // ✓ Compute it
   const filteredStudents = students
-    .filter(s => s.name.toLowerCase().includes(query.toLowerCase()))
-    .sort((a, b) => a[sortBy] > b[sortBy] ? 1 : -1);
+    .filter((s) => s.name.toLowerCase().includes(query.toLowerCase()))
+    .sort((a, b) => (a[sortBy] > b[sortBy] ? 1 : -1));
 
   // selectedCount, averageScore, topStudent — all derived, not stored
-  const averageScore = filteredStudents.reduce((sum, s) => sum + s.score, 0) / filteredStudents.length;
+  const averageScore =
+    filteredStudents.reduce((sum, s) => sum + s.score, 0) /
+    filteredStudents.length;
 }
 ```
 
@@ -382,7 +382,7 @@ function Settings() {
 // Common use: expensive initial calculation
 function DataGrid({ rawData }) {
   const [processedData, setProcessedData] = useState(() =>
-    rawData.map(processExpensively)
+    rawData.map(processExpensively),
   );
 }
 ```
@@ -422,26 +422,26 @@ const [version, setVersion] = useState(0);
 
 ```jsx
 function StudentProfile({ id }) {
-  const [status, setStatus] = useState("idle");  // idle | loading | success | error
+  const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [student, setStudent] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     setStatus("loading");
     fetchStudent(id)
-      .then(data => {
+      .then((data) => {
         setStudent(data);
         setStatus("success");
       })
-      .catch(err => {
+      .catch((err) => {
         setError(err.message);
         setStatus("error");
       });
   }, [id]);
 
   if (status === "loading") return <Spinner />;
-  if (status === "error")   return <ErrorMessage message={error} />;
-  if (status === "idle")    return null;
+  if (status === "error") return <ErrorMessage message={error} />;
+  if (status === "idle") return null;
 
   return <div>{student.name}</div>;
 }
@@ -457,7 +457,9 @@ function FAQ({ items }) {
     <div>
       {items.map((item, index) => (
         <div key={item.id}>
-          <button onClick={() => setOpenIndex(index === openIndex ? null : index)}>
+          <button
+            onClick={() => setOpenIndex(index === openIndex ? null : index)}
+          >
             {item.question}
           </button>
           {openIndex === index && <p>{item.answer}</p>}
@@ -472,7 +474,7 @@ function TagPicker({ tags }) {
   const [selected, setSelected] = useState(new Set());
 
   function toggle(tag) {
-    setSelected(prev => {
+    setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(tag)) next.delete(tag);
       else next.add(tag);
@@ -480,7 +482,7 @@ function TagPicker({ tags }) {
     });
   }
 
-  return tags.map(tag => (
+  return tags.map((tag) => (
     <button
       key={tag}
       onClick={() => toggle(tag)}

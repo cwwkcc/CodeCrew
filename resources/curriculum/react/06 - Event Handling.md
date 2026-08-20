@@ -64,17 +64,17 @@ React passes a SyntheticEvent object to every handler. It has the same propertie
 ```jsx
 function InputField() {
   function handleChange(e) {
-    e.type;           // "change"
-    e.target;         // the DOM element that triggered the event
-    e.target.value;   // current input value
-    e.target.name;    // input name attribute
+    e.type; // "change"
+    e.target; // the DOM element that triggered the event
+    e.target.value; // current input value
+    e.target.name; // input name attribute
     e.target.checked; // for checkboxes
-    e.currentTarget;  // element the handler is attached to
+    e.currentTarget; // element the handler is attached to
 
-    e.preventDefault();      // stop default browser behaviour
-    e.stopPropagation();     // stop bubbling to parent elements
+    e.preventDefault(); // stop default browser behaviour
+    e.stopPropagation(); // stop bubbling to parent elements
 
-    e.nativeEvent;    // access the original native browser event
+    e.nativeEvent; // access the original native browser event
   }
 
   return <input onChange={handleChange} />;
@@ -83,13 +83,15 @@ function InputField() {
 // Mouse events
 function ClickTarget() {
   function handleClick(e) {
-    e.clientX; e.clientY;   // position relative to viewport
-    e.pageX;   e.pageY;     // position relative to full document
-    e.button;               // 0=left, 1=middle, 2=right
-    e.ctrlKey;              // was Ctrl held?
-    e.shiftKey;             // was Shift held?
-    e.altKey;               // was Alt held?
-    e.metaKey;              // was Cmd/Win held?
+    e.clientX;
+    e.clientY; // position relative to viewport
+    e.pageX;
+    e.pageY; // position relative to full document
+    e.button; // 0=left, 1=middle, 2=right
+    e.ctrlKey; // was Ctrl held?
+    e.shiftKey; // was Shift held?
+    e.altKey; // was Alt held?
+    e.metaKey; // was Cmd/Win held?
   }
 
   return <div onClick={handleClick} />;
@@ -102,70 +104,70 @@ function ClickTarget() {
 
 ```jsx
 // Mouse
-onClick          // click (primary button)
-onDoubleClick    // double click
-onMouseDown      // mouse button pressed
-onMouseUp        // mouse button released
-onMouseMove      // mouse moved over element
-onMouseEnter     // mouse entered (no bubbling)
-onMouseLeave     // mouse left (no bubbling)
-onMouseOver      // mouse over element or descendant (bubbles)
-onMouseOut       // mouse out of element or descendant (bubbles)
-onContextMenu    // right click
+onClick; // click (primary button)
+onDoubleClick; // double click
+onMouseDown; // mouse button pressed
+onMouseUp; // mouse button released
+onMouseMove; // mouse moved over element
+onMouseEnter; // mouse entered (no bubbling)
+onMouseLeave; // mouse left (no bubbling)
+onMouseOver; // mouse over element or descendant (bubbles)
+onMouseOut; // mouse out of element or descendant (bubbles)
+onContextMenu; // right click
 
 // Keyboard
-onKeyDown        // key pressed (fires repeatedly when held)
-onKeyUp          // key released
+onKeyDown; // key pressed (fires repeatedly when held)
+onKeyUp; // key released
 // (onKeyPress is deprecated)
 
 // Form
-onChange         // input value changed
-onInput          // synonym in React (use onChange)
-onSubmit         // form submitted
-onReset          // form reset
-onFocus          // element received focus
-onBlur           // element lost focus
-onFocusIn        // focus (bubbles) — use onFocus in React (it bubbles)
-onFocusOut       // blur (bubbles) — use onBlur in React (it bubbles)
-onSelect         // text selected in input/textarea
+onChange; // input value changed
+onInput; // synonym in React (use onChange)
+onSubmit; // form submitted
+onReset; // form reset
+onFocus; // element received focus
+onBlur; // element lost focus
+onFocusIn; // focus (bubbles) — use onFocus in React (it bubbles)
+onFocusOut; // blur (bubbles) — use onBlur in React (it bubbles)
+onSelect; // text selected in input/textarea
 
 // Clipboard
-onCopy
-onCut
-onPaste
+onCopy;
+onCut;
+onPaste;
 
 // Drag
-onDragStart
-onDrag
-onDragEnd
-onDragEnter
-onDragOver
-onDragLeave
-onDrop
+onDragStart;
+onDrag;
+onDragEnd;
+onDragEnter;
+onDragOver;
+onDragLeave;
+onDrop;
 
 // Touch
-onTouchStart
-onTouchMove
-onTouchEnd
-onTouchCancel
+onTouchStart;
+onTouchMove;
+onTouchEnd;
+onTouchCancel;
 
 // Wheel
-onWheel
+onWheel;
 
 // Media
-onPlay
-onPause
-onEnded
-onVolumeChange
-onTimeUpdate
+onPlay;
+onPause;
+onEnded;
+onVolumeChange;
+onTimeUpdate;
 
 // Other
-onScroll
-onResize         // not on elements, use ResizeObserver instead
-onLoad
-onError
-onAnimationEnd
-onTransitionEnd
+onScroll;
+onResize; // not on elements, use ResizeObserver instead
+onLoad;
+onError;
+onAnimationEnd;
+onTransitionEnd;
 ```
 
 ---
@@ -179,12 +181,10 @@ You often need to pass data to a handler — like which item was clicked.
 function StudentList({ students, onDelete }) {
   return (
     <ul>
-      {students.map(student => (
+      {students.map((student) => (
         <li key={student.id}>
           {student.name}
-          <button onClick={() => onDelete(student.id)}>
-            Delete
-          </button>
+          <button onClick={() => onDelete(student.id)}>Delete</button>
         </li>
       ))}
     </ul>
@@ -200,13 +200,10 @@ function StudentList({ students, onDelete }) {
 
   return (
     <ul>
-      {students.map(student => (
+      {students.map((student) => (
         <li key={student.id}>
           {student.name}
-          <button
-            data-student-id={student.id}
-            onClick={handleDelete}
-          >
+          <button data-student-id={student.id} onClick={handleDelete}>
             Delete
           </button>
         </li>
@@ -218,9 +215,11 @@ function StudentList({ students, onDelete }) {
 // ✓ Curried handler factory
 const makeDeleteHandler = (id) => () => onDelete(id);
 
-students.map(s => (
-  <button key={s.id} onClick={makeDeleteHandler(s.id)}>Delete</button>
-))
+students.map((s) => (
+  <button key={s.id} onClick={makeDeleteHandler(s.id)}>
+    Delete
+  </button>
+));
 ```
 
 ---
@@ -245,7 +244,7 @@ function Parent() {
 function Child() {
   function handleChildClick(e) {
     console.log("child clicked");
-    e.stopPropagation();  // prevents "parent clicked" from logging
+    e.stopPropagation(); // prevents "parent clicked" from logging
   }
 
   return (
@@ -304,7 +303,7 @@ function SearchInput({ onSearch }) {
   return (
     <input
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={(e) => setValue(e.target.value)}
       onKeyDown={handleKeyDown}
       placeholder="Search... (Enter to search, Esc to clear)"
     />
@@ -321,7 +320,7 @@ function SearchInput({ onSearch }) {
 // Modifier key combinations
 function handleKeyDown(e) {
   if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
-    e.preventDefault();  // prevent browser's "save page" dialog
+    e.preventDefault(); // prevent browser's "save page" dialog
     handleSave();
   }
 
@@ -338,11 +337,11 @@ function Dropdown({ items, onSelect }) {
   function handleKeyDown(e) {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setFocusIndex(i => Math.min(i + 1, items.length - 1));
+      setFocusIndex((i) => Math.min(i + 1, items.length - 1));
     }
     if (e.key === "ArrowUp") {
       e.preventDefault();
-      setFocusIndex(i => Math.max(i - 1, 0));
+      setFocusIndex((i) => Math.max(i - 1, 0));
     }
     if (e.key === "Enter" && focusIndex >= 0) {
       onSelect(items[focusIndex]);
@@ -382,13 +381,13 @@ function DrawingCanvas() {
 
   function handlePointerDown(e) {
     setIsDrawing(true);
-    e.currentTarget.setPointerCapture(e.pointerId);  // keep tracking even outside element
+    e.currentTarget.setPointerCapture(e.pointerId); // keep tracking even outside element
     setPath([{ x: e.clientX, y: e.clientY }]);
   }
 
   function handlePointerMove(e) {
     if (!isDrawing) return;
-    setPath(prev => [...prev, { x: e.clientX, y: e.clientY }]);
+    setPath((prev) => [...prev, { x: e.clientX, y: e.clientY }]);
   }
 
   function handlePointerUp() {
@@ -414,7 +413,7 @@ function SwipeableCard({ onSwipeLeft, onSwipeRight }) {
 
   function handleTouchEnd(e) {
     const diff = e.changedTouches[0].clientX - startX.current;
-    if (diff > 50)  onSwipeRight();
+    if (diff > 50) onSwipeRight();
     if (diff < -50) onSwipeLeft();
   }
 
@@ -454,9 +453,9 @@ function KeyboardShortcuts({ onSave, onUndo }) {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [onSave, onUndo]);  // re-attach if handlers change
+  }, [onSave, onUndo]); // re-attach if handlers change
 
-  return null;  // this component renders nothing — just registers shortcuts
+  return null; // this component renders nothing — just registers shortcuts
 }
 
 // Scroll position

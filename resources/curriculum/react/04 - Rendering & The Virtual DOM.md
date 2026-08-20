@@ -46,13 +46,14 @@ function Counter() {
 
   // React calls this function on every render
   // During render, this code runs top to bottom
-  const doubled = count * 2;  // computed during render
+  const doubled = count * 2; // computed during render
 
-  return (  // return value is the "render output"
+  return (
+    // return value is the "render output"
     <div>
       <p>Count: {count}</p>
       <p>Doubled: {doubled}</p>
-      <button onClick={() => setCount(c => c + 1)}>+</button>
+      <button onClick={() => setCount((c) => c + 1)}>+</button>
     </div>
   );
 }
@@ -125,9 +126,12 @@ If the element type changes, React destroys the old subtree and builds a new one
 
 ```jsx
 // If condition switches from true to false:
-{isAdmin
-  ? <AdminDashboard />   // type: AdminDashboard
-  : <UserDashboard />    // type: UserDashboard
+{
+  isAdmin ? (
+    <AdminDashboard /> // type: AdminDashboard
+  ) : (
+    <UserDashboard />
+  ); // type: UserDashboard
 }
 
 // React sees different types → destroys AdminDashboard (all its state lost)
@@ -178,15 +182,15 @@ function Parent() {
 
   return (
     <div>
-      <button onClick={() => setCount(c => c + 1)}>+</button>
-      <Child />        {/* re-renders every time Parent re-renders */}
+      <button onClick={() => setCount((c) => c + 1)}>+</button>
+      <Child /> {/* re-renders every time Parent re-renders */}
       <ExpensiveList /> {/* also re-renders — even though no props passed! */}
     </div>
   );
 }
 
 function Child() {
-  console.log("Child rendered");  // logs on every Parent re-render
+  console.log("Child rendered"); // logs on every Parent re-render
   return <p>I am a child</p>;
 }
 ```
@@ -201,15 +205,15 @@ function Component() {
 
   // Calling setCount with the SAME value → no re-render
   // React compares with Object.is() — if same, skips the re-render
-  setCount(0);  // count is already 0 → React skips
+  setCount(0); // count is already 0 → React skips
 
   // Regular variables changing → no re-render
   let localVar = 0;
-  localVar = 5;  // React doesn't watch this
+  localVar = 5; // React doesn't watch this
 
   // Refs changing → no re-render (File 09)
   const ref = useRef(0);
-  ref.current = 5;  // silently updates, no re-render
+  ref.current = 5; // silently updates, no re-render
 }
 ```
 
@@ -222,7 +226,7 @@ The `key` prop has two uses — both are about controlling reconciliation.
 ### Use 1: Lists (already covered in File 01)
 
 ```jsx
-students.map(s => <StudentCard key={s.id} student={s} />)
+students.map((s) => <StudentCard key={s.id} student={s} />);
 ```
 
 ### Use 2: Force reset — tell React an element is "different"
@@ -251,9 +255,9 @@ function Component() {
   const [role, setRole] = useState("");
 
   function handleReset() {
-    setName("");    // } React batches these
-    setEmail("");   // } three updates
-    setRole("");    // } into ONE re-render
+    setName(""); // } React batches these
+    setEmail(""); // } three updates
+    setRole(""); // } into ONE re-render
   }
 
   // Only ONE re-render, not three
@@ -265,14 +269,14 @@ function Component() {
 ```jsx
 // Before React 18 — each caused a separate re-render
 setTimeout(() => {
-  setCount(c => c + 1);  // re-render 1
-  setFlag(f => !f);       // re-render 2
+  setCount((c) => c + 1); // re-render 1
+  setFlag((f) => !f); // re-render 2
 }, 1000);
 
 // React 18+ — batched even in setTimeout, fetch, promises
 setTimeout(() => {
-  setCount(c => c + 1);  // }
-  setFlag(f => !f);       // } ONE re-render
+  setCount((c) => c + 1); // }
+  setFlag((f) => !f); // } ONE re-render
 }, 1000);
 ```
 
@@ -282,7 +286,7 @@ If you ever need to force synchronous state application (rare), use `flushSync`
 import { flushSync } from "react-dom";
 
 flushSync(() => {
-  setCount(c => c + 1);
+  setCount((c) => c + 1);
 });
 // DOM is updated synchronously here
 // Only use when you need to read updated DOM layout immediately
@@ -296,7 +300,7 @@ In development, `React.StrictMode` calls component functions **twice** on ev
 
 ```jsx
 function Component() {
-  console.log("rendering");  // logs TWICE in development with StrictMode
+  console.log("rendering"); // logs TWICE in development with StrictMode
 
   return <div />;
 }
@@ -308,7 +312,7 @@ function Component() {
 // StrictMode will catch this impurity:
 let rendered = 0;
 function ImpureComponent() {
-  rendered++;  // side effect during render
+  rendered++; // side effect during render
   return <p>Rendered {rendered} times</p>;
 
   // Without StrictMode: renders "Rendered 1 times", "Rendered 2 times"...

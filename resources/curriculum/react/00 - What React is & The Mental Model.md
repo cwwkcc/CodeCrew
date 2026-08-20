@@ -33,7 +33,8 @@ function updateUserProfile(user) {
   }
 
   if (user.notifications.length > 0) {
-    document.getElementById("notification-count").textContent = user.notifications.length;
+    document.getElementById("notification-count").textContent =
+      user.notifications.length;
     document.getElementById("notification-bell").classList.add("active");
   } else {
     document.getElementById("notification-bell").classList.remove("active");
@@ -96,9 +97,9 @@ This is the shift. Everything else in React flows from this idea.
 ```javascript
 // Imperative — you tell the DOM what to do
 const list = document.getElementById("student-list");
-list.innerHTML = "";  // clear it
+list.innerHTML = ""; // clear it
 
-students.forEach(student => {
+students.forEach((student) => {
   const li = document.createElement("li");
   li.className = "student-item";
   li.textContent = student.name;
@@ -114,10 +115,12 @@ students.forEach(student => {
 function StudentList({ students }) {
   return (
     <ul>
-      {students.map(student => (
+      {students.map((student) => (
         <li
           key={student.id}
-          className={student.score > 90 ? "student-item top-student" : "student-item"}
+          className={
+            student.score > 90 ? "student-item top-student" : "student-item"
+          }
         >
           {student.name}
         </li>
@@ -240,7 +243,7 @@ Your Components (JSX)
 3. Calculates the minimal set of real DOM changes needed
 4. Applies only those changes
 
-This is called **reconciliation**. It's what makes React fast — instead of rebuilding the entire DOM, it makes surgical updates. Full detail in File 04.
+This is called **reconciliation**. It's what makes React fast — instead of rebuilding the entire DOM, it makes surgical updates. Full detail in [[04 - Rendering & The Virtual DOM]].
 
 ---
 
@@ -257,15 +260,9 @@ Zustand               — global client state
 React Hook Form       — form state and validation
 Framer Motion         — animations
 shadcn/ui + Radix     — accessible component primitives
-
-In the Project Nexus stack specifically:
-Next.js               — React framework (routing, SSR, API routes)
-TypeScript            — type safety on top of React
-Tailwind CSS          — styling
-tRPC                  — type-safe API calls
 ```
 
-React doesn't prescribe how you do routing, state management, or data fetching. That's both its strength (flexibility) and its challenge (you have to choose). This curriculum covers the choices made for Project Nexus.
+React doesn't prescribe how you do routing, state management, or data fetching. That's both its strength (flexibility) and its challenge (you have to choose).
 
 ---
 
@@ -278,7 +275,7 @@ cd my-app
 npm install
 npm run dev
 
-# For Next.js (what Project Nexus uses)
+# For Next.js
 npx create-next-app@latest my-app
 ```
 
@@ -294,7 +291,7 @@ import App from "./App";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 ```
 
@@ -357,4 +354,4 @@ The ecosystem:
 
 ---
 
-_Next: [01 — JSX In Depth](01%20-%20JSX%20in%20Depth.md)_
+_Next: [[01 - JSX in Depth]]_
