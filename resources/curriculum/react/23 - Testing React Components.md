@@ -57,8 +57,8 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: "jsdom",
-    globals:     true,
-    setupFiles:  ["./src/test/setup.ts"],
+    globals: true,
+    setupFiles: ["./src/test/setup.ts"],
   },
 });
 ```
@@ -80,13 +80,13 @@ import { render, screen } from "@testing-library/react";
 render(<StudentCard student={mockStudent} onDelete={vi.fn()} />);
 
 // screen.getBy* — throws if not found (good for elements that should always be there)
-screen.getByText("Ashan Perera");                        // exact text match
-screen.getByText(/ashan/i);                              // regex, case-insensitive
-screen.getByRole("button", { name: "Delete" });          // by ARIA role + accessible name
-screen.getByRole("heading", { level: 2 });               // h2 element
-screen.getByLabelText("Email");                          // input associated with label
+screen.getByText("Ashan Perera"); // exact text match
+screen.getByText(/ashan/i); // regex, case-insensitive
+screen.getByRole("button", { name: "Delete" }); // by ARIA role + accessible name
+screen.getByRole("heading", { level: 2 }); // h2 element
+screen.getByLabelText("Email"); // input associated with label
 screen.getByPlaceholderText("Search students...");
-screen.getByTestId("score-display");                     // data-testid attribute (last resort)
+screen.getByTestId("score-display"); // data-testid attribute (last resort)
 
 // screen.queryBy* — returns null if not found (for asserting absence)
 expect(screen.queryByText("Error")).toBeNull();
@@ -133,17 +133,14 @@ await user.click(screen.getByRole("button", { name: "Submit" }));
 await user.dblClick(screen.getByText("Double click me"));
 
 // Selecting from a dropdown
-await user.selectOptions(
-  screen.getByRole("combobox", { name: "Grade" }),
-  "11"
-);
+await user.selectOptions(screen.getByRole("combobox", { name: "Grade" }), "11");
 
 // Keyboard
 await user.keyboard("{Enter}");
 await user.keyboard("{Escape}");
 await user.keyboard("{Tab}");
-await user.keyboard("Hello World");    // type text
-await user.keyboard("{Control>}a{/Control}");  // Ctrl+A (select all)
+await user.keyboard("Hello World"); // type text
+await user.keyboard("{Control>}a{/Control}"); // Ctrl+A (select all)
 
 // Hover
 await user.hover(screen.getByRole("button", { name: "Info" }));
@@ -204,10 +201,13 @@ expect(mockOnDelete).toHaveBeenCalledWith("s123");
 expect(mockOnDelete).toHaveBeenCalledTimes(1);
 
 // Mocking fetch
-vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-  ok:   true,
-  json: () => Promise.resolve({ students: [mockStudent] }),
-}));
+vi.stubGlobal(
+  "fetch",
+  vi.fn().mockResolvedValue({
+    ok: true,
+    json: () => Promise.resolve({ students: [mockStudent] }),
+  }),
+);
 
 // Mocking modules
 vi.mock("./api/students", () => ({
@@ -219,8 +219,8 @@ vi.mock("./api/students", () => ({
 import { fetchStudents } from "./api/students";
 
 vi.mocked(fetchStudents)
-  .mockResolvedValueOnce([])                  // first call returns empty
-  .mockResolvedValueOnce([mockStudent1]);      // second call returns one student
+  .mockResolvedValueOnce([]) // first call returns empty
+  .mockResolvedValueOnce([mockStudent1]); // second call returns one student
 ```
 
 ### Wrapping with providers
@@ -237,8 +237,8 @@ function createTestQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        retry: false,  // don't retry in tests — fail fast
-        gcTime: 0,     // don't cache between tests
+        retry: false, // don't retry in tests — fail fast
+        gcTime: 0, // don't cache between tests
       },
     },
   });
@@ -253,9 +253,7 @@ function AllProviders({ children }: WrapperProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter>
-        {children}
-      </MemoryRouter>
+      <MemoryRouter>{children}</MemoryRouter>
     </QueryClientProvider>
   );
 }
@@ -301,12 +299,12 @@ test("useCounter respects min and max", () => {
   const { result } = renderHook(() => useCounter(0, { min: 0, max: 5 }));
 
   act(() => result.current.decrement());
-  expect(result.current.count).toBe(0);  // can't go below min
+  expect(result.current.count).toBe(0); // can't go below min
 
   for (let i = 0; i < 10; i++) {
     act(() => result.current.increment());
   }
-  expect(result.current.count).toBe(5);  // can't exceed max
+  expect(result.current.count).toBe(5); // can't exceed max
 });
 ```
 
@@ -330,8 +328,8 @@ test("submits form with valid data", async () => {
 
   await waitFor(() => {
     expect(mockSubmit).toHaveBeenCalledWith({
-      name:    "Ashan Perera",
-      email:   "ashan@school.lk",
+      name: "Ashan Perera",
+      email: "ashan@school.lk",
       message: "Hello from CWWKCC",
     });
   });
@@ -378,7 +376,9 @@ test("modal is accessible", async () => {
 
 ```tsx
 test("StudentCard renders correctly", () => {
-  const { container } = render(<StudentCard student={mockStudent} onDelete={vi.fn()} />);
+  const { container } = render(
+    <StudentCard student={mockStudent} onDelete={vi.fn()} />,
+  );
   expect(container.firstChild).toMatchSnapshot();
 });
 // Snapshot tests catch unexpected UI changes
@@ -392,11 +392,11 @@ test("StudentCard renders correctly", () => {
 
 ```tsx
 // ✗ Don't test implementation details
-expect(component.state("isOpen")).toBe(true);     // internal state
+expect(component.state("isOpen")).toBe(true); // internal state
 expect(component.find("div.container")).toExist(); // CSS class names
 
 // ✗ Don't test library behaviour
-expect(screen.getByRole("button")).toBeEnabled();  // fine, but...
+expect(screen.getByRole("button")).toBeEnabled(); // fine, but...
 // Don't test that clicking a disabled button doesn't fire — the browser handles that
 
 // ✗ Don't test third-party libraries
@@ -471,4 +471,4 @@ What NOT to test:
 
 ---
 
-_Next: [24 — Component Library (shadcn & Radix)](./24%20-%20Component%20Library%20\(shadcn%20%26%20Radix\).md)_
+_Next: [24 — Component Library (shadcn & Radix)](<./24%20-%20Component%20Library%20(shadcn%20%26%20Radix).md>)_

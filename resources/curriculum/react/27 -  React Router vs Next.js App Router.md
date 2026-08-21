@@ -50,11 +50,11 @@ In React Router you declare routes explicitly:
 ```jsx
 // React Router
 <Routes>
-  <Route path="/"              element={<HomePage />} />
-  <Route path="/students"      element={<StudentsPage />} />
-  <Route path="/students/:id"  element={<StudentDetailPage />} />
-  <Route path="/about"         element={<AboutPage />} />
-  <Route path="*"              element={<NotFoundPage />} />
+  <Route path="/" element={<HomePage />} />
+  <Route path="/students" element={<StudentsPage />} />
+  <Route path="/students/:id" element={<StudentDetailPage />} />
+  <Route path="/about" element={<AboutPage />} />
+  <Route path="*" element={<NotFoundPage />} />
 </Routes>
 ```
 
@@ -95,18 +95,20 @@ In React Router, a shared layout is a parent route that renders `<Outlet />`:
 ```jsx
 // React Router
 <Routes>
-  <Route path="/" element={<RootLayout />}>        {/* shared layout */}
-    <Route index      element={<HomePage />} />
+  <Route path="/" element={<RootLayout />}>
+    {" "}
+    {/* shared layout */}
+    <Route index element={<HomePage />} />
     <Route path="students" element={<StudentsPage />} />
-    <Route path="about"    element={<AboutPage />} />
+    <Route path="about" element={<AboutPage />} />
   </Route>
-</Routes>
+</Routes>;
 
 function RootLayout() {
   return (
     <div>
       <Header />
-      <Outlet />     {/* child page renders here */}
+      <Outlet /> {/* child page renders here */}
       <Footer />
     </div>
   );
@@ -117,12 +119,16 @@ In Next.js, `layout.tsx` wraps all routes in the same folder:
 
 ```tsx
 // app/layout.tsx — wraps every page in the app
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>
         <Header />
-        {children}     {/* child page renders here — equivalent to <Outlet /> */}
+        {children} {/* child page renders here — equivalent to <Outlet /> */}
         <Footer />
       </body>
     </html>
@@ -130,7 +136,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 
 // app/students/layout.tsx — wraps only /students/* routes
-export default function StudentsLayout({ children }: { children: React.ReactNode }) {
+export default function StudentsLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="students-section">
       <StudentsNav />
@@ -196,12 +206,18 @@ import { Link, NavLink } from "react-router-dom";
 // Next.js
 import Link from "next/link";
 
-<Link href="/students">Students</Link>
+<Link href="/students">Students</Link>;
 
 // Active styling — no built-in isActive; use usePathname()
 import { usePathname } from "next/navigation";
 
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+function NavLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const isActive = pathname === href || pathname.startsWith(href + "/");
 
@@ -228,7 +244,7 @@ function LoginForm() {
   async function handleLogin() {
     await login(credentials);
     navigate("/dashboard");
-    navigate(-1);                          // go back
+    navigate(-1); // go back
     navigate("/login", { replace: true }); // replace history entry
   }
 }
@@ -245,9 +261,9 @@ function LoginForm() {
   async function handleLogin() {
     await login(credentials);
     router.push("/dashboard");
-    router.back();                  // go back
-    router.replace("/dashboard");   // replace history entry
-    router.refresh();               // re-fetch server component data
+    router.back(); // go back
+    router.replace("/dashboard"); // replace history entry
+    router.refresh(); // re-fetch server component data
   }
 }
 
@@ -257,7 +273,7 @@ import { redirect } from "next/navigation";
 async function LoginAction(formData: FormData) {
   "use server";
   await login(formData);
-  redirect("/dashboard");    // redirect after server action
+  redirect("/dashboard"); // redirect after server action
 }
 ```
 
@@ -267,7 +283,7 @@ async function LoginAction(formData: FormData) {
 
 ```jsx
 // React Router — :id in path string
-<Route path="/students/:id" element={<StudentPage />} />
+<Route path="/students/:id" element={<StudentPage />} />;
 
 function StudentPage() {
   const { id } = useParams();
@@ -290,7 +306,7 @@ export default async function StudentPage({
 }
 
 // Client Component — use useParams() hook
-"use client";
+("use client");
 import { useParams } from "next/navigation";
 
 export default function StudentPage() {
@@ -340,18 +356,18 @@ export default function StudentsPage({
   searchParams: { grade?: string; page?: string };
 }) {
   const grade = searchParams.grade ?? "";
-  const page  = Number(searchParams.page ?? "1");
+  const page = Number(searchParams.page ?? "1");
   // searchParams are read-only in server components — no setter
 }
 
 // Next.js — client component
-"use client";
+("use client");
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 function StudentsFilter() {
   const searchParams = useSearchParams();
-  const router       = useRouter();
-  const pathname     = usePathname();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const grade = searchParams.get("grade") ?? "";
 
@@ -464,7 +480,7 @@ export default function StudentsLoading() {
 // app/students/error.tsx — shown when page.tsx throws
 // (automatically wraps in <ErrorBoundary>)
 // Must be a Client Component
-"use client";
+("use client");
 
 export default function StudentsError({
   error,
@@ -509,7 +525,14 @@ function RequireAuth({ children }) {
   return children;
 }
 
-<Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+<Route
+  path="/dashboard"
+  element={
+    <RequireAuth>
+      <Dashboard />
+    </RequireAuth>
+  }
+/>;
 ```
 
 ```tsx
@@ -542,7 +565,7 @@ export default async function DashboardPage() {
   const session = await getSession();
 
   if (!session) {
-    redirect("/login");   // server-side redirect — no flash
+    redirect("/login"); // server-side redirect — no flash
   }
 
   return <Dashboard user={session.user} />;

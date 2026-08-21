@@ -25,11 +25,11 @@
 import { createContext, useContext, useState } from "react";
 
 interface SelectContextType {
-  value:    string | null;
+  value: string | null;
   onChange: (value: string) => void;
-  isOpen:   boolean;
-  toggle:   () => void;
-  close:    () => void;
+  isOpen: boolean;
+  toggle: () => void;
+  close: () => void;
 }
 
 const SelectContext = createContext<SelectContextType | null>(null);
@@ -56,10 +56,13 @@ function Select({
     <SelectContext.Provider
       value={{
         value,
-        onChange: (v) => { onChange(v); setIsOpen(false); },
+        onChange: (v) => {
+          onChange(v);
+          setIsOpen(false);
+        },
         isOpen,
-        toggle: () => setIsOpen(o => !o),
-        close:  () => setIsOpen(false),
+        toggle: () => setIsOpen((o) => !o),
+        close: () => setIsOpen(false),
       }}
     >
       <div className="select-root">{children}</div>
@@ -68,7 +71,11 @@ function Select({
 }
 
 // Sub-components — consume context
-Select.Trigger = function SelectTrigger({ children }: { children: React.ReactNode }) {
+Select.Trigger = function SelectTrigger({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { toggle, isOpen } = useSelectContext();
   return (
     <button onClick={toggle} aria-expanded={isOpen}>
@@ -78,7 +85,11 @@ Select.Trigger = function SelectTrigger({ children }: { children: React.ReactNod
   );
 };
 
-Select.Content = function SelectContent({ children }: { children: React.ReactNode }) {
+Select.Content = function SelectContent({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { isOpen } = useSelectContext();
   if (!isOpen) return null;
   return <div className="select-content">{children}</div>;
@@ -108,10 +119,14 @@ function GradeSelector() {
 
   return (
     <Select value={grade} onChange={setGrade}>
-      <Select.Trigger>{grade ? `Grade ${grade}` : "Select grade"}</Select.Trigger>
+      <Select.Trigger>
+        {grade ? `Grade ${grade}` : "Select grade"}
+      </Select.Trigger>
       <Select.Content>
-        {[6,7,8,9,10,11,12,13].map(g => (
-          <Select.Item key={g} value={String(g)}>Grade {g}</Select.Item>
+        {[6, 7, 8, 9, 10, 11, 12, 13].map((g) => (
+          <Select.Item key={g} value={String(g)}>
+            Grade {g}
+          </Select.Item>
         ))}
       </Select.Content>
     </Select>
@@ -132,18 +147,23 @@ This pattern is used by: Radix UI, shadcn/ui, Headless UI, Reach UI. When you us
 ```tsx
 // DataFetcher — logic reuse with render props
 interface DataFetcherProps<T> {
-  url:          string;
+  url: string;
   renderLoading: () => React.ReactNode;
-  renderError:   (error: string) => React.ReactNode;
-  renderData:    (data: T) => React.ReactNode;
+  renderError: (error: string) => React.ReactNode;
+  renderData: (data: T) => React.ReactNode;
 }
 
-function DataFetcher<T>({ url, renderLoading, renderError, renderData }: DataFetcherProps<T>) {
+function DataFetcher<T>({
+  url,
+  renderLoading,
+  renderError,
+  renderData,
+}: DataFetcherProps<T>) {
   const { data, isLoading, error } = useFetch<T>(url);
 
   if (isLoading) return <>{renderLoading()}</>;
-  if (error)     return <>{renderError(error)}</>;
-  if (!data)     return null;
+  if (error) return <>{renderError(error)}</>;
+  if (!data) return null;
   return <>{renderData(data)}</>;
 }
 
@@ -153,12 +173,16 @@ function DataFetcher<T>({ url, renderLoading, renderError, renderData }: DataFet
   renderLoading={() => <StudentListSkeleton />}
   renderError={(err) => <RetryableError message={err} onRetry={refetch} />}
   renderData={(students) => <StudentGrid students={students} />}
-/>
+/>;
 
 // Children as render prop — common alternative
 interface TooltipProps {
   content: string;
-  children: (props: { ref: React.Ref<any>; onMouseEnter: () => void; onMouseLeave: () => void }) => React.ReactNode;
+  children: (props: {
+    ref: React.Ref<any>;
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
+  }) => React.ReactNode;
 }
 
 function Tooltip({ content, children }: TooltipProps) {
@@ -185,7 +209,7 @@ function Tooltip({ content, children }: TooltipProps) {
       Delete
     </button>
   )}
-</Tooltip>
+</Tooltip>;
 ```
 
 **Note:** Custom hooks have largely replaced render props for logic reuse. Render props are still useful when the consumer needs full control over the rendered output for a specific part of the UI.
@@ -200,14 +224,12 @@ function Tooltip({ content, children }: TooltipProps) {
 
 ```tsx
 // withAuth — add authentication check to any component
-function withAuth<P extends object>(
-  WrappedComponent: React.ComponentType<P>
-) {
+function withAuth<P extends object>(WrappedComponent: React.ComponentType<P>) {
   return function AuthenticatedComponent(props: P) {
     const { user, isLoading } = useAuth();
 
     if (isLoading) return <FullPageSpinner />;
-    if (!user)     return <Navigate to="/login" />;
+    if (!user) return <Navigate to="/login" />;
 
     return <WrappedComponent {...props} />;
   };
@@ -216,7 +238,7 @@ function withAuth<P extends object>(
 // withErrorBoundary — wrap any component in an error boundary
 function withErrorBoundary<P extends object>(
   WrappedComponent: React.ComponentType<P>,
-  fallback: React.ReactNode = <GenericErrorMessage />
+  fallback: React.ReactNode = <GenericErrorMessage />,
 ) {
   return class extends React.Component<P, { hasError: boolean }> {
     state = { hasError: false };
@@ -253,7 +275,7 @@ const SafeChart = withErrorBoundary(Chart, <ChartErrorFallback />);
 
 // feature/auth/index.ts — clean exports
 export { AuthProvider } from "./AuthProvider";
-export { useAuth }      from "./useAuth";
+export { useAuth } from "./useAuth";
 export type { User, LoginCredentials } from "./types";
 
 // AuthProvider.tsx
@@ -261,11 +283,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // All auth state and logic lives here
   const [user, setUser] = useState<User | null>(null);
 
-  const value = useMemo(() => ({
-    user,
-    login:  async (creds: LoginCredentials) => { /* ... */ },
-    logout: () => { /* ... */ },
-  }), [user]);
+  const value = useMemo(
+    () => ({
+      user,
+      login: async (creds: LoginCredentials) => {
+        /* ... */
+      },
+      logout: () => {
+        /* ... */
+      },
+    }),
+    [user],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
@@ -302,11 +331,11 @@ function App() {
 ```tsx
 // Presentational — pure, testable, reusable
 interface StudentGridProps {
-  students:    Student[];
-  isLoading:   boolean;
-  error:       string | null;
-  onDelete:    (id: string) => void;
-  onEdit:      (student: Student) => void;
+  students: Student[];
+  isLoading: boolean;
+  error: string | null;
+  onDelete: (id: string) => void;
+  onEdit: (student: Student) => void;
   emptyMessage?: string;
 }
 
@@ -319,12 +348,12 @@ function StudentGrid({
   emptyMessage = "No students found",
 }: StudentGridProps) {
   if (isLoading) return <GridSkeleton />;
-  if (error)     return <ErrorMessage message={error} />;
+  if (error) return <ErrorMessage message={error} />;
   if (students.length === 0) return <EmptyState message={emptyMessage} />;
 
   return (
     <div className="grid">
-      {students.map(student => (
+      {students.map((student) => (
         <StudentCard
           key={student.id}
           student={student}
@@ -339,9 +368,13 @@ function StudentGrid({
 
 // Container — knows about data, business logic, navigation
 function StudentsPageContainer() {
-  const { data: students, isLoading, error } = useQuery({
+  const {
+    data: students,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["students"],
-    queryFn:  fetchStudents,
+    queryFn: fetchStudents,
   });
 
   const deleteMutation = useMutation({
@@ -448,21 +481,21 @@ function SmartAccordion({
 ```tsx
 // Configuration approach — prop explosion
 interface CardProps {
-  title:           string;
-  subtitle?:       string;
-  showAvatar?:     boolean;
-  avatarSrc?:      string;
-  footerText?:     string;
+  title: string;
+  subtitle?: string;
+  showAvatar?: boolean;
+  avatarSrc?: string;
+  footerText?: string;
   showFooterBorder?: boolean;
-  actions?:        Array<{ label: string; onClick: () => void }>;
-  variant?:        "default" | "compact" | "featured";
+  actions?: Array<{ label: string; onClick: () => void }>;
+  variant?: "default" | "compact" | "featured";
   // ... 10 more props
 }
 
 // Composition approach — flexible and extensible
 interface CardProps {
-  header?:  React.ReactNode;  // caller composes the header
-  footer?:  React.ReactNode;  // caller composes the footer
+  header?: React.ReactNode; // caller composes the header
+  footer?: React.ReactNode; // caller composes the footer
   children: React.ReactNode;
   className?: string;
 }
@@ -490,13 +523,17 @@ function Card({ header, footer, children, className }: CardProps) {
   }
   footer={
     <div className="flex gap-2">
-      <Button variant="ghost" onClick={onEdit}>Edit</Button>
-      <Button variant="danger" onClick={onDelete}>Delete</Button>
+      <Button variant="ghost" onClick={onEdit}>
+        Edit
+      </Button>
+      <Button variant="danger" onClick={onDelete}>
+        Delete
+      </Button>
     </div>
   }
 >
   <ScoreChart scores={student.scores} />
-</Card>
+</Card>;
 ```
 
 ---

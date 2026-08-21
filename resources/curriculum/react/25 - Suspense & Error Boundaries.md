@@ -35,7 +35,7 @@ function StudentPage({ id }) {
   }, [id]);
 
   if (isLoading) return <Spinner />;
-  if (error)     return <ErrorMessage error={error} />;
+  if (error) return <ErrorMessage error={error} />;
   return <StudentProfile student={student} />;
 }
 ```
@@ -98,8 +98,8 @@ The most common use of Suspense today: splitting your bundle and loading heavy c
 import { lazy, Suspense } from "react";
 
 // Instead of: import AdminPanel from "./AdminPanel"
-const AdminPanel    = lazy(() => import("./AdminPanel"));
-const ResultsChart  = lazy(() => import("./ResultsChart"));
+const AdminPanel = lazy(() => import("./AdminPanel"));
+const ResultsChart = lazy(() => import("./ResultsChart"));
 const PanoramicView = lazy(() => import("./PanoramicView"));
 ```
 
@@ -147,7 +147,7 @@ import dynamic from "next/dynamic";
 
 const PanoramicViewer = dynamic(() => import("@/components/PanoramicViewer"), {
   loading: () => <PanoramicSkeleton />,
-  ssr: false,           // don't render on server (uses browser APIs)
+  ssr: false, // don't render on server (uses browser APIs)
 });
 
 const AudioPlayer = dynamic(() => import("@/components/AudioPlayer"), {
@@ -182,7 +182,7 @@ function StudentList() {
   });
 
   if (isLoading) return <Spinner />;
-  if (error)     return <ErrorMessage />;
+  if (error) return <ErrorMessage />;
   return <StudentGrid students={data} />;
 }
 
@@ -224,7 +224,6 @@ Multiple Suspense boundaries let different parts of the page load independently.
 function DashboardPage() {
   return (
     <div className="dashboard-grid">
-
       {/* Header loads fast — own boundary so it doesn't block */}
       <Suspense fallback={<HeaderSkeleton />}>
         <DashboardHeader />
@@ -245,7 +244,6 @@ function DashboardPage() {
       <Suspense fallback={<SidebarSkeleton />}>
         <Sidebar />
       </Suspense>
-
     </div>
   );
 }
@@ -416,9 +414,7 @@ function StudentDetail({ id }: { id: string }) {
   const [student, setStudent] = useState<Student | null>(null);
 
   useEffect(() => {
-    fetchStudent(id)
-      .then(setStudent)
-      .catch(showBoundary);  // async error → nearest ErrorBoundary
+    fetchStudent(id).then(setStudent).catch(showBoundary); // async error → nearest ErrorBoundary
   }, [id, showBoundary]);
 
   if (!student) return <Spinner />;
@@ -489,7 +485,6 @@ export default function StudentsPage() {
       >
         <StudentGrid />
       </AsyncBoundary>
-
     </main>
   );
 }

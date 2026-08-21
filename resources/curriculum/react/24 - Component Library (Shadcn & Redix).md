@@ -4,15 +4,15 @@
 
 ## Table of Contents
 
-1. [What shadcn/ui Actually Is](#1-what-shadcnui-actually-is)
-2. [Setup](#2-setup)
-3. [Core Components Reference](#3-core-components-reference)
-4. [Customising Components](#4-customising-components)
-5. [Building with Radix Primitives Directly](#5-building-with-radix-primitives-directly)
-6. [The cn() Utility](#6-the-cn-utility)
-7. [Form Integration (shadcn + RHF + Zod)](#7-form-integration-shadcn--rhf--zod)
-8. [Theming and CSS Variables](#8-theming-and-css-variables)
-9. [Creating Custom Components in the shadcn Style](#9-creating-custom-components-in-the-shadcn-style)
+1. [What shadcn/ui Actually Is](https://claude.ai/chat/5ef97483-862b-4ab3-af0d-39a5aafd519d#1-what-shadcnui-actually-is)
+2. [Setup](https://claude.ai/chat/5ef97483-862b-4ab3-af0d-39a5aafd519d#2-setup)
+3. [Core Components Reference](https://claude.ai/chat/5ef97483-862b-4ab3-af0d-39a5aafd519d#3-core-components-reference)
+4. [Customising Components](https://claude.ai/chat/5ef97483-862b-4ab3-af0d-39a5aafd519d#4-customising-components)
+5. [Building with Radix Primitives Directly](https://claude.ai/chat/5ef97483-862b-4ab3-af0d-39a5aafd519d#5-building-with-radix-primitives-directly)
+6. [The cn() Utility](https://claude.ai/chat/5ef97483-862b-4ab3-af0d-39a5aafd519d#6-the-cn-utility)
+7. [Form Integration (shadcn + RHF + Zod)](https://claude.ai/chat/5ef97483-862b-4ab3-af0d-39a5aafd519d#7-form-integration-shadcn--rhf--zod)
+8. [Theming and CSS Variables](https://claude.ai/chat/5ef97483-862b-4ab3-af0d-39a5aafd519d#8-theming-and-css-variables)
+9. [Creating Custom Components in the shadcn Style](https://claude.ai/chat/5ef97483-862b-4ab3-af0d-39a5aafd519d#9-creating-custom-components-in-the-shadcn-style)
 
 ---
 
@@ -102,32 +102,51 @@ import { Input } from "@/components/ui/input";
 
 ```tsx
 import {
-  Dialog, DialogContent, DialogDescription,
-  DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 
-function DeleteStudentDialog({ student, onConfirm }: { student: Student; onConfirm: () => void }) {
+function DeleteStudentDialog({
+  student,
+  onConfirm,
+}: {
+  student: Student;
+  onConfirm: () => void;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive" size="sm">Delete</Button>
+        <Button variant="destructive" size="sm">
+          Delete
+        </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete Student</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete {student.name}? This cannot be undone.
+            Are you sure you want to delete {student.name}? This cannot be
+            undone.
           </DialogDescription>
         </DialogHeader>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
           <Button
             variant="destructive"
-            onClick={() => { onConfirm(); setOpen(false); }}
+            onClick={() => {
+              onConfirm();
+              setOpen(false);
+            }}
           >
             Delete
           </Button>
@@ -142,8 +161,11 @@ function DeleteStudentDialog({ student, onConfirm }: { student: Student; onConfi
 
 ```tsx
 import {
-  Select, SelectContent, SelectItem,
-  SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 
 <Select value={grade} onValueChange={setGrade}>
@@ -151,19 +173,25 @@ import {
     <SelectValue placeholder="Select grade" />
   </SelectTrigger>
   <SelectContent>
-    {[6,7,8,9,10,11,12,13].map(g => (
-      <SelectItem key={g} value={String(g)}>Grade {g}</SelectItem>
+    {[6, 7, 8, 9, 10, 11, 12, 13].map((g) => (
+      <SelectItem key={g} value={String(g)}>
+        Grade {g}
+      </SelectItem>
     ))}
   </SelectContent>
-</Select>
+</Select>;
 ```
 
 ### Dropdown Menu
 
 ```tsx
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 <DropdownMenu>
@@ -181,15 +209,20 @@ import {
       Delete
     </DropdownMenuItem>
   </DropdownMenuContent>
-</DropdownMenu>
+</DropdownMenu>;
 ```
 
 ### Table
 
 ```tsx
 import {
-  Table, TableBody, TableCaption, TableCell,
-  TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 
 <Table>
@@ -202,7 +235,7 @@ import {
     </TableRow>
   </TableHeader>
   <TableBody>
-    {students.map(student => (
+    {students.map((student) => (
       <TableRow key={student.id}>
         <TableCell className="font-medium">{student.name}</TableCell>
         <TableCell>{student.stream}</TableCell>
@@ -210,7 +243,7 @@ import {
       </TableRow>
     ))}
   </TableBody>
-</Table>
+</Table>;
 ```
 
 ### Toast (Sonner)
@@ -221,7 +254,7 @@ import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 
 // In your layout
-<Toaster position="top-right" richColors />
+<Toaster position="top-right" richColors />;
 
 // In any component
 toast.success("Student saved successfully");
@@ -302,9 +335,7 @@ function FAQ({ items }: { items: { question: string; answer: string }[] }) {
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-            <div className="p-4 pt-0 text-muted-foreground">
-              {item.answer}
-            </div>
+            <div className="p-4 pt-0 text-muted-foreground">{item.answer}</div>
           </Accordion.Content>
         </Accordion.Item>
       ))}
@@ -326,32 +357,28 @@ import { cn } from "@/lib/utils";
 // cn = clsx + tailwind-merge
 
 // Basic merging
-cn("px-4 py-2", "px-6")        // "py-2 px-6"  — px-6 overrides px-4
-cn("text-sm", "text-lg")       // "text-lg"    — text-lg overrides text-sm
-cn("bg-red-500", "bg-blue-500") // "bg-blue-500" — later wins
+cn("px-4 py-2", "px-6"); // "py-2 px-6"  — px-6 overrides px-4
+cn("text-sm", "text-lg"); // "text-lg"    — text-lg overrides text-sm
+cn("bg-red-500", "bg-blue-500"); // "bg-blue-500" — later wins
 
 // Conditional classes
 cn(
   "base-classes",
-  isActive && "active-classes",      // adds if truthy
-  hasError ? "error" : "no-error",   // ternary
-  { "hidden": !isVisible },          // object syntax
-)
+  isActive && "active-classes", // adds if truthy
+  hasError ? "error" : "no-error", // ternary
+  { hidden: !isVisible }, // object syntax
+);
 
 // In components — the standard pattern
-function Badge({
-  className,
-  variant = "default",
-  children,
-}: BadgeProps) {
+function Badge({ className, variant = "default", children }: BadgeProps) {
   return (
     <div
       className={cn(
         "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
         variant === "success" && "bg-green-100 text-green-800",
-        variant === "error"   && "bg-red-100 text-red-800",
+        variant === "error" && "bg-red-100 text-red-800",
         variant === "default" && "bg-primary/10 text-primary",
-        className  // allows caller to override/extend
+        className, // allows caller to override/extend
       )}
     >
       {children}
@@ -371,16 +398,27 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
-  Form, FormControl, FormDescription,
-  FormField, FormItem, FormLabel, FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
-import { Input }  from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
 const schema = z.object({
   studentName: z.string().min(2, "Name must be at least 2 characters"),
-  grade:       z.string({ required_error: "Please select a grade" }),
+  grade: z.string({ required_error: "Please select a grade" }),
   parentEmail: z.string().email("Invalid email address"),
 });
 
@@ -399,7 +437,6 @@ function AdmissionsForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-
         <FormField
           control={form.control}
           name="studentName"
@@ -409,8 +446,10 @@ function AdmissionsForm() {
               <FormControl>
                 <Input placeholder="Full name" {...field} />
               </FormControl>
-              <FormDescription>As it appears on the birth certificate</FormDescription>
-              <FormMessage />  {/* shows error.message automatically */}
+              <FormDescription>
+                As it appears on the birth certificate
+              </FormDescription>
+              <FormMessage /> {/* shows error.message automatically */}
             </FormItem>
           )}
         />
@@ -428,8 +467,10 @@ function AdmissionsForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {[1,2,3,4,5,6,7,8,9,10,11,12,13].map(g => (
-                    <SelectItem key={g} value={String(g)}>Grade {g}</SelectItem>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((g) => (
+                    <SelectItem key={g} value={String(g)}>
+                      Grade {g}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -455,7 +496,6 @@ function AdmissionsForm() {
         <Button type="submit" disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? "Submitting..." : "Submit Application"}
         </Button>
-
       </form>
     </Form>
   );
@@ -496,8 +536,8 @@ Customise by changing these values. The CWWKCC palette would replace `--primary
 
 ```css
 :root {
-  --primary: 43 60% 55%;            /* #c9a84c in HSL */
-  --primary-foreground: 0 0% 100%;  /* white text on primary */
+  --primary: 43 60% 55%; /* #c9a84c in HSL */
+  --primary-foreground: 0 0% 100%; /* white text on primary */
 }
 ```
 

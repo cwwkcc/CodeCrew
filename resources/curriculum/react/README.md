@@ -1,75 +1,86 @@
-# React Curriculum
+---
+tags: [MOC, react, curriculum]
+---
 
-React is a JavaScript library for building user interfaces. It's the foundation of the Project Nexus stack — every page, every component, every interactive element you build uses React. This curriculum takes you from zero to production-ready, covering the core library, the hooks system, React 19, and the ecosystem libraries that complete a real application.
+# ⚛️ React Curriculum
+
+Complete React 19 curriculum — 28 modules covering hooks, patterns, performance, and ecosystem.
+
+> **Location:** `resources/curriculum/react/`
 
 ---
 
-## Prerequisites
+## Module Index
 
-Complete the JavaScript curriculum (`00–08` minimum) before starting here. React is built entirely on JavaScript closures, the event model, the module system, and asynchronous patterns. If those aren't solid, React's behaviour will feel like magic — and not the good kind.
+### Part 1 — Foundations
 
-TypeScript basics (`00–02` in the TS curriculum) are helpful but not required for the early files. File `21` covers React + TypeScript together.
+| #   | Topic                            | File                                       |
+| --- | -------------------------------- | ------------------------------------------ |
+| 00  | What React is & The Mental Model | `00 - What React is & The Mental Model.md` |
+| 01  | JSX in Depth                     | `01 - JSX in Depth.md`                     |
+| 02  | Components & Props               | `02 - Components & Props.md`               |
+| 03  | State & UseState                 | `03 - State & UseState.md`                 |
+| 04  | Rendering & The Virtual DOM      | `04 - Rendering & The Virtual DOM.md`      |
+| 05  | Conditional Rendering & Lists    | `05 - Conditional Rendering & Lists.md`    |
+| 06  | Event Handling                   | `06 - Event Handling.md`                   |
 
----
+### Part 2 — Hooks
 
-## Structure
+| #   | Topic                         | File                                    |
+| --- | ----------------------------- | --------------------------------------- |
+| 07  | Forms & Controlled Components | `07 - Forms & Controlled Components.md` |
+| 08  | UseEffect & Side Effects      | `08 - UseEffect & Side Effects.md`      |
+| 09  | UseRef                        | `09 - UseRef.md`                        |
+| 10  | UseContext                    | `10 - UseContext.md`                    |
+| 11  | UseReducer                    | `11 - UseReducer.md`                    |
+| 12  | UseMemo & UseCallback         | `12 - UseMemo & UseCallBack.md`         |
+| 13  | Custom Hooks                  | `13 - Custom Hooks.md`                  |
 
-```
-CORE (00–07)
-  The fundamental building blocks. Components, props, state, rendering.
-  Work through these in order — each file assumes the previous.
+### Part 3 — Advanced
 
-HOOKS (08–13)
-  React's system for adding behaviour to components.
-  useEffect, useRef, useContext, useReducer, useMemo, useCallback, custom hooks.
+| #   | Topic                                      | File                                                 |
+| --- | ------------------------------------------ | ---------------------------------------------------- |
+| 14  | React 19 New Features                      | `14 - React 19 New Features.md`                      |
+| 15  | React Router                               | `15 - React Router.md`                               |
+| 16  | Data Fetching & TanStack Query             | `16 - Data Fetching & TanStack Query.md`             |
+| 17  | Forms & Validation (React Hook Form + Zod) | `17 - Forms & Validation (React Hook form + Zod).md` |
+| 18  | Global State (Zustand)                     | `18 - Global State (Zustand).md`                     |
+| 19  | Animations (Framer Motion)                 | `19 - Animations (Framer Motion).md`                 |
+| 20  | Performance Optimization                   | `20 - Performance Optimization.md`                   |
 
-REACT 19 (14)
-  New primitives: use(), Actions, useFormStatus, useOptimistic.
-  Only makes sense after the full hooks system is understood.
+### Part 4 — TypeScript & Testing
 
-ECOSYSTEM (15–19)
-  The libraries that complete a real application.
-  Router, TanStack Query, React Hook Form + Zod, Zustand, Framer Motion.
+| #   | Topic                    | File                               |
+| --- | ------------------------ | ---------------------------------- |
+| 21  | React with TypeScript    | `21 - React with TypeScript.md`    |
+| 22  | Design Patterns in React | `22 - Design Patterns in React.md` |
+| 23  | Testing React Components | `23 - Testing React Components.md` |
 
-ADVANCED (20–27)
-  Performance, TypeScript integration, patterns, testing, shadcn/ui.
-  These files assume you've built something with React already.
-```
+### Part 5 — Ecosystem
 
----
-
-## File Map
-
-```
-00 - What React Is & The Mental Model
-01 - JSX In Depth
-02 - Components & Props
-03 - State & useState
-04 - Rendering & the Virtual DOM
-05 - Conditional Rendering & Lists
-06 - Event Handling
-07 - Forms & Controlled Components
-08 - useEffect & Side Effects
-09 - useRef
-10 - useContext
-11 - useReducer
-12 - useMemo & useCallback
-13 - Custom Hooks
-14 - React 19 New Features
-15 - React Router
-16 - Data Fetching & TanStack Query
-17 - Forms & Validation (React Hook Form + Zod)
-18 - Global State (Zustand)
-19 - Animations (Framer Motion)
-20 - Performance Optimization
-21 - React with TypeScript
-22 - Design Patterns in React
-23 - Testing React Components
-24 - Component Library (shadcn & Radix)
-25 - Suspense & Error Boundaries
-26 - Useimperativehandle & Forwardref
-27 - React Router vs Next.js App Router
-```
+| #   | Topic                                | File                                         |
+| --- | ------------------------------------ | -------------------------------------------- |
+| 24  | Component Libraries (Shadcn & Radix) | `24 - Component Library (Shadcn & Redix).md` |
+| 25  | Suspense & Error Boundaries          | `25 - Suspense & Error Boundaries.md`        |
+| 26  | UseImperativeHandle & ForwardRef     | `26 - Useimperativehandle & Forwardref.md`   |
+| 27  | React Router vs Next.js App Router   | `27 - React Router vs Next.js App Router.md` |
 
 ---
 
+## 🔗 Cross‑Curriculum Links
+
+| Module                | Related Topics                                                             |
+| --------------------- | -------------------------------------------------------------------------- |
+| `03 - State`          | → [[../javascript/02 - Functions, Scope, JSON, Dates & Timers]] (closures) |
+| `08 - Effect`         | → [[../nodejs/02 - The Event Loop in Depth]] (async model)                 |
+| `16 - TanStack Query` | → [[../web-fundamental/04 - REST & API Design]]                            |
+| `21 - React + TS`     | → [[../typescript/09 - TypeScript with React]]                             |
+
+## 📝 Assignments
+
+- [[../../assignments/react/student-card-list/Assignment|student-card-list]] – mental model, JSX, components/props, state
+- [[../../assignments/react/interactive-attendance-tracker/Assignment|interactive-attendance-tracker]] – conditional rendering, lists, events, controlled forms
+- [[../../assignments/react/theme-and-timer-dashboard/Assignment|theme-and-timer-dashboard]] – useEffect, useRef, useContext, useReducer
+- [[../../assignments/react/custom-hook-library/Assignment|custom-hook-library]] – useMemo/useCallback, custom hooks
+- [[../../assignments/react/mini-blog-with-routing/Assignment|mini-blog-with-routing]] – React Router, TanStack Query, React Hook Form + Zod
+- [[../../assignments/react/global-state-and-motion/Assignment|global-state-and-motion]] – Zustand, Framer Motion, performance optimization, Suspense & Error Boundaries

@@ -26,7 +26,7 @@ function SearchPage() {
   return (
     <div>
       <button onClick={handleSearchClick}>Search</button>
-      <SearchInput />   {/* <input> is buried inside this component */}
+      <SearchInput /> {/* <input> is buried inside this component */}
     </div>
   );
 }
@@ -68,7 +68,7 @@ const SearchInput = forwardRef(function SearchInput({ placeholder }, ref) {
   return (
     <div className="search-wrapper">
       <input
-        ref={ref}            // attach the forwarded ref to the actual input
+        ref={ref} // attach the forwarded ref to the actual input
         type="search"
         placeholder={placeholder}
       />
@@ -86,7 +86,7 @@ function SearchPage() {
   const searchRef = useRef(null);
 
   function handleSearchClick() {
-    searchRef.current?.focus();   // directly focuses the <input>
+    searchRef.current?.focus(); // directly focuses the <input>
   }
 
   return (
@@ -126,7 +126,10 @@ import { forwardRef, useImperativeHandle, useRef } from "react";
 
 // Instead of exposing the raw <input> DOM node...
 // Expose only what parents should be allowed to do
-const SearchInput = forwardRef(function SearchInput({ placeholder, onSearch }, ref) {
+const SearchInput = forwardRef(function SearchInput(
+  { placeholder, onSearch },
+  ref,
+) {
   const inputRef = useRef(null);
 
   useImperativeHandle(ref, () => ({
@@ -144,10 +147,12 @@ const SearchInput = forwardRef(function SearchInput({ placeholder, onSearch }, r
   return (
     <div className="search-wrapper">
       <input
-        ref={inputRef}     // internal ref — not exposed
+        ref={inputRef} // internal ref — not exposed
         type="search"
         placeholder={placeholder}
-        onKeyDown={(e) => e.key === "Enter" && onSearch?.(e.currentTarget.value)}
+        onKeyDown={(e) =>
+          e.key === "Enter" && onSearch?.(e.currentTarget.value)
+        }
       />
     </div>
   );
@@ -160,12 +165,12 @@ function SearchPage() {
 
   function handleKeyShortcut(e) {
     if (e.key === "/" && e.metaKey) {
-      searchRef.current?.focus();        // ✅ allowed
+      searchRef.current?.focus(); // ✅ allowed
     }
   }
 
   function handleSubmit() {
-    const query = searchRef.current?.getValue();  // ✅ allowed
+    const query = searchRef.current?.getValue(); // ✅ allowed
     performSearch(query);
   }
 
@@ -181,13 +186,14 @@ function SearchPage() {
 
 ```jsx
 useImperativeHandle(
-  ref,                    // the ref from forwardRef's second parameter
-  () => ({               // factory that returns the exposed object
+  ref, // the ref from forwardRef's second parameter
+  () => ({
+    // factory that returns the exposed object
     method() {},
     anotherMethod() {},
   }),
-  [dependencies]          // optional — re-run factory when these change
-                          // like useEffect deps — usually [] or stable values
+  [dependencies], // optional — re-run factory when these change
+  // like useEffect deps — usually [] or stable values
 );
 ```
 
@@ -202,16 +208,16 @@ import { forwardRef, useImperativeHandle, useRef } from "react";
 
 // 1. Define the handle type (what the parent gets)
 interface SearchInputHandle {
-  focus:    () => void;
-  clear:    () => void;
+  focus: () => void;
+  clear: () => void;
   getValue: () => string;
 }
 
 // 2. Define the props type
 interface SearchInputProps {
   placeholder?: string;
-  onSearch?:    (query: string) => void;
-  className?:   string;
+  onSearch?: (query: string) => void;
+  className?: string;
 }
 
 // 3. forwardRef<HandleType, PropsType>
@@ -243,7 +249,7 @@ const SearchInput = forwardRef<SearchInputHandle, SearchInputProps>(
         />
       </div>
     );
-  }
+  },
 );
 
 // In the parent — fully typed
@@ -252,8 +258,8 @@ function SearchPage() {
   //                       ↑ type the ref with the handle type
 
   function handleShortcut() {
-    searchRef.current?.focus();        // ✅ TypeScript knows this exists
-    searchRef.current?.getValue();     // ✅
+    searchRef.current?.focus(); // ✅ TypeScript knows this exists
+    searchRef.current?.getValue(); // ✅
     // searchRef.current?.select()     ← TypeScript error — not in handle type
   }
 
@@ -265,19 +271,20 @@ function SearchPage() {
 
 ```tsx
 // When you just want to forward to a DOM element
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  function Button({ children, ...props }, ref) {
-    return (
-      <button ref={ref} {...props}>
-        {children}
-      </button>
-    );
-  }
-);
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  { children, ...props },
+  ref,
+) {
+  return (
+    <button ref={ref} {...props}>
+      {children}
+    </button>
+  );
+});
 
 // Parent gets a proper HTMLButtonElement ref
 const btnRef = useRef<HTMLButtonElement>(null);
-btnRef.current?.getBoundingClientRect();  // all native DOM methods available
+btnRef.current?.getBoundingClientRect(); // all native DOM methods available
 ```
 
 ---
@@ -288,41 +295,42 @@ btnRef.current?.getBoundingClientRect();  // all native DOM methods available
 
 ```tsx
 interface DialogHandle {
-  open:  () => void;
+  open: () => void;
   close: () => void;
 }
 
-const Dialog = forwardRef<DialogHandle, DialogProps>(
-  function Dialog({ title, children }, ref) {
-    const [isOpen, setIsOpen] = useState(false);
-    const firstFocusableRef = useRef<HTMLButtonElement>(null);
+const Dialog = forwardRef<DialogHandle, DialogProps>(function Dialog(
+  { title, children },
+  ref,
+) {
+  const [isOpen, setIsOpen] = useState(false);
+  const firstFocusableRef = useRef<HTMLButtonElement>(null);
 
-    useImperativeHandle(ref, () => ({
-      open() {
-        setIsOpen(true);
-        // Focus the first interactive element after open
-        setTimeout(() => firstFocusableRef.current?.focus(), 0);
-      },
-      close() {
-        setIsOpen(false);
-      },
-    }));
+  useImperativeHandle(ref, () => ({
+    open() {
+      setIsOpen(true);
+      // Focus the first interactive element after open
+      setTimeout(() => firstFocusableRef.current?.focus(), 0);
+    },
+    close() {
+      setIsOpen(false);
+    },
+  }));
 
-    if (!isOpen) return null;
+  if (!isOpen) return null;
 
-    return (
-      <div className="dialog-overlay" role="dialog" aria-modal>
-        <div className="dialog-content">
-          <h2>{title}</h2>
-          {children}
-          <button ref={firstFocusableRef} onClick={() => setIsOpen(false)}>
-            Close
-          </button>
-        </div>
+  return (
+    <div className="dialog-overlay" role="dialog" aria-modal>
+      <div className="dialog-content">
+        <h2>{title}</h2>
+        {children}
+        <button ref={firstFocusableRef} onClick={() => setIsOpen(false)}>
+          Close
+        </button>
       </div>
-    );
-  }
-);
+    </div>
+  );
+});
 
 function ParentPage() {
   const dialogRef = useRef<DialogHandle>(null);
@@ -342,7 +350,7 @@ function ParentPage() {
 
 ```tsx
 interface AnimatedBannerHandle {
-  show:    () => void;
+  show: () => void;
   dismiss: () => void;
 }
 
@@ -353,16 +361,18 @@ const AnimatedBanner = forwardRef<AnimatedBannerHandle, BannerProps>(
     useImperativeHandle(ref, () => ({
       show() {
         bannerRef.current?.animate(
-          [{ opacity: 0, transform: "translateY(-10px)" },
-           { opacity: 1, transform: "translateY(0)" }],
-          { duration: 200, fill: "forwards" }
+          [
+            { opacity: 0, transform: "translateY(-10px)" },
+            { opacity: 1, transform: "translateY(0)" },
+          ],
+          { duration: 200, fill: "forwards" },
         );
       },
       dismiss() {
-        bannerRef.current?.animate(
-          [{ opacity: 1 }, { opacity: 0 }],
-          { duration: 150, fill: "forwards" }
-        ).onfinish = () => {
+        bannerRef.current?.animate([{ opacity: 1 }, { opacity: 0 }], {
+          duration: 150,
+          fill: "forwards",
+        }).onfinish = () => {
           bannerRef.current?.remove();
         };
       },
@@ -373,7 +383,7 @@ const AnimatedBanner = forwardRef<AnimatedBannerHandle, BannerProps>(
         {message}
       </div>
     );
-  }
+  },
 );
 ```
 
@@ -393,7 +403,7 @@ const DialogContent = forwardRef<
     <RadixDialog.Portal>
       <RadixDialog.Overlay className="dialog-overlay" />
       <RadixDialog.Content
-        ref={ref}           // forward ref to the Radix Content element
+        ref={ref} // forward ref to the Radix Content element
         className={cn("dialog-content", className)}
         {...props}
       >
@@ -424,7 +434,7 @@ function SearchInput({ placeholder, ref }) {
 }
 
 // Usage is identical in both versions
-<SearchInput ref={searchRef} placeholder="Search..." />
+<SearchInput ref={searchRef} placeholder="Search..." />;
 ```
 
 `useImperativeHandle` still works the same way in React 19 — you just don't need `forwardRef` wrapping it:
@@ -436,7 +446,9 @@ function SearchInput({ placeholder, ref }) {
 
   useImperativeHandle(ref, () => ({
     focus: () => inputRef.current?.focus(),
-    clear: () => { if (inputRef.current) inputRef.current.value = ""; },
+    clear: () => {
+      if (inputRef.current) inputRef.current.value = "";
+    },
   }));
 
   return <input ref={inputRef} placeholder={placeholder} />;
@@ -470,7 +482,7 @@ function Parent() {
   const childRef = useRef();
 
   function handleClick() {
-    const value = childRef.current.getValue();  // reads child state via ref
+    const value = childRef.current.getValue(); // reads child state via ref
     doSomething(value);
   }
 }
@@ -480,7 +492,7 @@ function Parent() {
   const [value, setValue] = useState("");
 
   function handleClick() {
-    doSomething(value);  // parent owns the state
+    doSomething(value); // parent owns the state
   }
 
   return <Input value={value} onChange={setValue} />;
