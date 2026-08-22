@@ -16,6 +16,7 @@
 10. [Operational vs Programmer Errors]
 11. [Error Handling in HTTP Servers]
 12. [The Error Propagation Contract]
+
 ---
 
 ## 1. The Error Object
@@ -23,11 +24,11 @@
 Every error in Node.js is an instance of `Error` (or a subclass of it).
 
 ```javascript
-const err = new Error('Something went wrong');
+const err = new Error("Something went wrong");
 
-err.message;  // 'Something went wrong'
-err.name;     // 'Error' (or subclass name)
-err.stack;    // Multiline string: error message + call stack
+err.message; // 'Something went wrong'
+err.name; // 'Error' (or subclass name)
+err.stack; // Multiline string: error message + call stack
 
 console.log(err.stack);
 // Error: Something went wrong
@@ -43,7 +44,7 @@ The stack trace shows you exactly where in the code the error was created. `err.
 The `Error` object is just an object — you can add any properties:
 
 ```javascript
-const err = new Error('User not found');
+const err = new Error("User not found");
 err.statusCode = 404;
 err.userId = 42;
 
@@ -60,12 +61,12 @@ if (err.statusCode === 404) {
 ### Built-in JavaScript Error Types
 
 ```javascript
-new Error('generic')            // base type
-new TypeError('wrong type')     // wrong type passed to operation
-new RangeError('out of range')  // value outside valid range
-new ReferenceError('not defined') // accessing undefined variable
-new SyntaxError('invalid code') // usually from eval() or JSON.parse()
-new URIError('bad URI')
+new Error("generic"); // base type
+new TypeError("wrong type"); // wrong type passed to operation
+new RangeError("out of range"); // value outside valid range
+new ReferenceError("not defined"); // accessing undefined variable
+new SyntaxError("invalid code"); // usually from eval() or JSON.parse()
+new URIError("bad URI");
 ```
 
 ### Node.js System Errors
@@ -74,12 +75,12 @@ When a system call fails (file not found, connection refused, permission denied)
 
 ```javascript
 try {
-  await fs.readFile('missing.txt');
+  await fs.readFile("missing.txt");
 } catch (err) {
-  err.code;     // 'ENOENT' — no such file or directory
-  err.message;  // "ENOENT: no such file or directory, open 'missing.txt'"
-  err.path;     // 'missing.txt'
-  err.syscall;  // 'open'
+  err.code; // 'ENOENT' — no such file or directory
+  err.message; // "ENOENT: no such file or directory, open 'missing.txt'"
+  err.path; // 'missing.txt'
+  err.syscall; // 'open'
 }
 ```
 
@@ -109,18 +110,18 @@ Synchronous errors propagate up the call stack. `try/catch` intercepts them.
 
 ```javascript
 function parseJSON(str) {
-  return JSON.parse(str);   // throws SyntaxError if invalid
+  return JSON.parse(str); // throws SyntaxError if invalid
 }
 
 try {
-  const data = parseJSON('not valid json');
+  const data = parseJSON("not valid json");
   console.log(data);
 } catch (err) {
-  console.error('Parse failed:', err.message);
+  console.error("Parse failed:", err.message);
   // 'Parse failed: Unexpected token o in JSON at position 0'
 }
 
-console.log('Execution continues here');
+console.log("Execution continues here");
 ```
 
 ### Re-throwing
@@ -146,12 +147,12 @@ try {
 async function withConnection() {
   const conn = await db.connect();
   try {
-    return await conn.query('SELECT * FROM users');
+    return await conn.query("SELECT * FROM users");
   } catch (err) {
-    console.error('Query failed:', err);
+    console.error("Query failed:", err);
     throw err;
   } finally {
-    await conn.close();  // always runs, even if we threw
+    await conn.close(); // always runs, even if we threw
   }
 }
 ```
@@ -163,10 +164,10 @@ async function withConnection() {
 In the callback pattern, errors are passed as the first argument. This is the **error-first callback** (or Node callback) convention.
 
 ```javascript
-fs.readFile('file.txt', (err, data) => {
+fs.readFile("file.txt", (err, data) => {
   if (err) {
     // handle the error — do NOT throw inside callbacks
-    console.error('Read failed:', err.message);
+    console.error("Read failed:", err.message);
     return;
   }
   // data is only valid if err is null
@@ -185,13 +186,13 @@ fs.readFile('file.txt', (err, data) => {
 
 ```javascript
 // WRONG — throws inside callback
-fs.readFile('file.txt', (err, data) => {
-  if (err) throw err;   // unhandled, crashes the process
+fs.readFile("file.txt", (err, data) => {
+  if (err) throw err; // unhandled, crashes the process
   process(data);
 });
 
 // CORRECT
-fs.readFile('file.txt', (err, data) => {
+fs.readFile("file.txt", (err, data) => {
   if (err) {
     handleError(err);
     return;
@@ -207,19 +208,20 @@ fs.readFile('file.txt', (err, data) => {
 A rejected promise carries the error. Handle it with `.catch()` or in a `try/catch` with `await`.
 
 ```javascript
-fs.promises.readFile('file.txt', 'utf8')
-  .then(data => process(data))
-  .catch(err => console.error('Read failed:', err.message));
+fs.promises
+  .readFile("file.txt", "utf8")
+  .then((data) => process(data))
+  .catch((err) => console.error("Read failed:", err.message));
 ```
 
 ### Chained Promises
 
 ```javascript
 fetchUser(id)
-  .then(user => fetchPosts(user.id))
-  .then(posts => formatPosts(posts))
-  .then(result => res.json(result))
-  .catch(err => {
+  .then((user) => fetchPosts(user.id))
+  .then((posts) => formatPosts(posts))
+  .then((result) => res.json(result))
+  .catch((err) => {
     // catches errors from any step in the chain
     res.status(500).json({ error: err.message });
   });
@@ -231,10 +233,10 @@ A promise that rejects without a `.catch()` is an **unhandled rejection**. In No
 
 ```javascript
 // This will crash in Node 15+
-Promise.reject(new Error('Oops'));  // no .catch()
+Promise.reject(new Error("Oops")); // no .catch()
 
 // Always handle rejections
-Promise.reject(new Error('Oops')).catch(err => {
+Promise.reject(new Error("Oops")).catch((err) => {
   console.error(err);
 });
 ```
@@ -248,19 +250,19 @@ Promise.reject(new Error('Oops')).catch(err => {
 ```javascript
 async function processFile(path) {
   try {
-    const data = await fs.promises.readFile(path, 'utf8');
+    const data = await fs.promises.readFile(path, "utf8");
     const parsed = JSON.parse(data);
     return parsed;
   } catch (err) {
-    if (err.code === 'ENOENT') {
-      console.log('File not found, using defaults');
+    if (err.code === "ENOENT") {
+      console.log("File not found, using defaults");
       return {};
     }
     if (err instanceof SyntaxError) {
-      console.error('Invalid JSON in file');
+      console.error("Invalid JSON in file");
       return {};
     }
-    throw err;  // unexpected error — re-throw
+    throw err; // unexpected error — re-throw
   }
 }
 ```
@@ -271,8 +273,8 @@ async function processFile(path) {
 async function main() {
   // Option 1 — one try/catch wraps everything
   try {
-    const user   = await fetchUser(id);
-    const posts  = await fetchPosts(user.id);
+    const user = await fetchUser(id);
+    const posts = await fetchPosts(user.id);
     const result = await formatPosts(posts);
     return result;
   } catch (err) {
@@ -297,16 +299,16 @@ async function main() {
 ```javascript
 // WRONG — errors in the async callback are swallowed
 items.forEach(async (item) => {
-  await processItem(item);  // if this throws, nobody catches it
+  await processItem(item); // if this throws, nobody catches it
 });
 
 // CORRECT — use for...of
 for (const item of items) {
-  await processItem(item);  // errors propagate up to the outer try/catch
+  await processItem(item); // errors propagate up to the outer try/catch
 }
 
 // Or Promise.all for parallel execution
-await Promise.all(items.map(item => processItem(item)));
+await Promise.all(items.map((item) => processItem(item)));
 ```
 
 ---
@@ -316,41 +318,41 @@ await Promise.all(items.map(item => processItem(item)));
 Classes that extend `EventEmitter` (including streams and the HTTP server) emit `'error'` events when something goes wrong.
 
 ```javascript
-const { EventEmitter } = require('node:events');
+const { EventEmitter } = require("node:events");
 
 const emitter = new EventEmitter();
 
 // If 'error' is emitted with no listener, Node throws it — crashing the process
 // ALWAYS add an error listener to EventEmitters
 
-emitter.on('error', (err) => {
-  console.error('Emitter error:', err.message);
+emitter.on("error", (err) => {
+  console.error("Emitter error:", err.message);
 });
 
-emitter.emit('error', new Error('Something broke'));
+emitter.emit("error", new Error("Something broke"));
 ```
 
 ### Streams
 
 ```javascript
-const readable = fs.createReadStream('missing-file.txt');
+const readable = fs.createReadStream("missing-file.txt");
 
 // Without an error listener — crash
 // With an error listener — handled
-readable.on('error', (err) => {
-  console.error('Stream error:', err.code);
+readable.on("error", (err) => {
+  console.error("Stream error:", err.code);
 });
 
 // pipeline handles errors properly — always prefer it
-const { pipeline } = require('node:stream/promises');
+const { pipeline } = require("node:stream/promises");
 
 try {
   await pipeline(
-    fs.createReadStream('input.txt'),
-    fs.createWriteStream('output.txt'),
+    fs.createReadStream("input.txt"),
+    fs.createWriteStream("output.txt"),
   );
 } catch (err) {
-  console.error('Pipeline failed:', err.message);
+  console.error("Pipeline failed:", err.message);
 }
 ```
 
@@ -362,16 +364,16 @@ Node.js emits process-level events when errors go unhandled.
 
 ```javascript
 // Unhandled promise rejection
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at:", promise, "reason:", reason);
   // In production: log to error tracking service, then exit
   process.exit(1);
 });
 
 // Uncaught synchronous exception
-process.on('uncaughtException', (err, origin) => {
-  console.error('Uncaught Exception:', err);
-  console.error('Origin:', origin);
+process.on("uncaughtException", (err, origin) => {
+  console.error("Uncaught Exception:", err);
+  console.error("Origin:", origin);
   // The process is in an undefined state — do minimal cleanup and exit
   process.exit(1);
 });
@@ -404,8 +406,8 @@ Custom error classes let you distinguish error types programmatically and attach
 class AppError extends Error {
   constructor(message, options = {}) {
     super(message);
-    this.name        = this.constructor.name;
-    this.statusCode  = options.statusCode  ?? 500;
+    this.name = this.constructor.name;
+    this.statusCode = options.statusCode ?? 500;
     this.isOperational = options.isOperational ?? true;
     Error.captureStackTrace(this, this.constructor);
   }
@@ -416,8 +418,8 @@ class NotFoundError extends AppError {
   constructor(resource, id) {
     super(`${resource} with id ${id} not found`);
     this.statusCode = 404;
-    this.resource   = resource;
-    this.id         = id;
+    this.resource = resource;
+    this.id = id;
   }
 }
 
@@ -425,19 +427,19 @@ class ValidationError extends AppError {
   constructor(field, message) {
     super(`Validation failed: ${message}`);
     this.statusCode = 400;
-    this.field      = field;
+    this.field = field;
   }
 }
 
 class AuthError extends AppError {
-  constructor(message = 'Unauthorised') {
+  constructor(message = "Unauthorised") {
     super(message);
     this.statusCode = 401;
   }
 }
 
 class ForbiddenError extends AppError {
-  constructor(message = 'Forbidden') {
+  constructor(message = "Forbidden") {
     super(message);
     this.statusCode = 403;
   }
@@ -450,7 +452,7 @@ class ForbiddenError extends AppError {
 async function getUser(id) {
   const user = await db.findUser(id);
   if (!user) {
-    throw new NotFoundError('User', id);
+    throw new NotFoundError("User", id);
   }
   return user;
 }
@@ -517,13 +519,13 @@ class AppError extends Error {
   }
 }
 
-process.on('uncaughtException', (err) => {
+process.on("uncaughtException", (err) => {
   if (err.isOperational) {
     // Somehow reached top level despite being operational — log and continue
-    console.error('Operational error at top level:', err);
+    console.error("Operational error at top level:", err);
   } else {
     // Programmer error — unknown state, must exit
-    console.error('FATAL programmer error:', err);
+    console.error("FATAL programmer error:", err);
     process.exit(1);
   }
 });
@@ -536,7 +538,7 @@ process.on('uncaughtException', (err) => {
 The standard pattern for Express-style error handling:
 
 ```javascript
-const http = require('node:http');
+const http = require("node:http");
 
 // Centralised error handler
 function handleError(err, res) {
@@ -544,18 +546,16 @@ function handleError(err, res) {
   const isOperational = err.isOperational ?? false;
 
   // Don't leak internal error details to clients in production
-  const message = isOperational
-    ? err.message
-    : 'An unexpected error occurred';
+  const message = isOperational ? err.message : "An unexpected error occurred";
 
-  res.writeHead(statusCode, { 'Content-Type': 'application/json' });
+  res.writeHead(statusCode, { "Content-Type": "application/json" });
   res.end(JSON.stringify({ error: message }));
 
   // Log everything regardless
   console.error({
     statusCode,
-    message:    err.message,
-    stack:      err.stack,
+    message: err.message,
+    stack: err.stack,
     isOperational,
   });
 }
@@ -580,10 +580,13 @@ const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 
-app.get('/users/:id', asyncHandler(async (req, res) => {
-  const user = await getUser(req.params.id);  // throws NotFoundError if not found
-  res.json(user);
-}));
+app.get(
+  "/users/:id",
+  asyncHandler(async (req, res) => {
+    const user = await getUser(req.params.id); // throws NotFoundError if not found
+    res.json(user);
+  }),
+);
 
 // Express error handling middleware — must have 4 parameters
 app.use((err, req, res, next) => {
@@ -619,19 +622,19 @@ For async functions:
 // WRONG — null to signal failure
 async function findUser(id) {
   const user = await db.query(id);
-  return user ?? null;  // caller must check for null
+  return user ?? null; // caller must check for null
 }
 
 // WRONG — throw a string
-throw 'User not found';  // no stack trace, no .message
+throw "User not found"; // no stack trace, no .message
 
 // CORRECT — throw an Error
-throw new NotFoundError('User', id);
+throw new NotFoundError("User", id);
 
 // CORRECT — return value (caller never needs to handle failure path)
 // only if the absence of a value is a valid, expected state:
 async function findOptionalUser(id) {
-  return await db.query(id) ?? null;
+  return (await db.query(id)) ?? null;
   // document clearly that null is a valid return, not an error
 }
 ```

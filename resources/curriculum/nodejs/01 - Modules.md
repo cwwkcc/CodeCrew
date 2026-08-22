@@ -27,26 +27,26 @@ Before modules, all JavaScript in a browser shared one global scope. Every varia
 
 ```javascript
 // script1.js
-var user = { name: 'Alice' };
+var user = { name: "Alice" };
 
 // script2.js
-var user = { name: 'Bob' };  // silently overwrites script1's user
+var user = { name: "Bob" }; // silently overwrites script1's user
 
 // script3.js
-console.log(user.name);  // "Bob" — which one did you expect?
+console.log(user.name); // "Bob" — which one did you expect?
 ```
 
 Node.js was designed from the start with a module system. Each file is its own scope. Nothing leaks unless explicitly exported.
 
 ```javascript
 // user.js
-const name = 'Alice';          // private to this file
-module.exports = { name };     // explicitly exported
+const name = "Alice"; // private to this file
+module.exports = { name }; // explicitly exported
 
 // main.js
-const user = require('./user');
-console.log(user.name);        // "Alice"
-console.log(name);             // ReferenceError — not in scope
+const user = require("./user");
+console.log(user.name); // "Alice"
+console.log(name); // ReferenceError — not in scope
 ```
 
 ---
@@ -59,7 +59,9 @@ CommonJS (CJS) is the module system Node.js shipped with. Every `.js` file in 
 
 ```javascript
 // Single export
-module.exports = function add(a, b) { return a + b; };
+module.exports = function add(a, b) {
+  return a + b;
+};
 
 // Object of exports
 module.exports = {
@@ -74,37 +76,37 @@ exports.subtract = (a, b) => a - b;
 // ONLY works if you never reassign module.exports
 
 // The trap:
-exports = { add: (a, b) => a + b };  // WRONG — reassigns local variable
-                                      // module.exports is now still {}
-                                      // exports no longer points to module.exports
+exports = { add: (a, b) => a + b }; // WRONG — reassigns local variable
+// module.exports is now still {}
+// exports no longer points to module.exports
 ```
 
 ### Importing
 
 ```javascript
 // Import the whole export
-const math = require('./math');
+const math = require("./math");
 math.add(1, 2);
 
 // Destructure on import
-const { add, subtract } = require('./math');
+const { add, subtract } = require("./math");
 add(1, 2);
 
 // Import a default export
-const add = require('./add');  // when module.exports = function...
+const add = require("./add"); // when module.exports = function...
 add(1, 2);
 
 // Import built-in module
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // Import npm package
-const express = require('express');
+const express = require("express");
 
 // Import with path resolution
-const config = require('./config');          // ./config.js or ./config/index.js
-const utils = require('../shared/utils');    // relative path
-const lodash = require('lodash');            // node_modules
+const config = require("./config"); // ./config.js or ./config/index.js
+const utils = require("../shared/utils"); // relative path
+const lodash = require("lodash"); // node_modules
 ```
 
 ---
@@ -213,7 +215,7 @@ const PI = 3.14159;
 exports.area = (r) => PI * r * r;
 
 // What Node.js actually executes:
-(function(exports, require, module, __filename, __dirname) {
+(function (exports, require, module, __filename, __dirname) {
   const PI = 3.14159;
   exports.area = (r) => PI * r * r;
 });
@@ -239,7 +241,7 @@ const x = 5;  → scoped to the wrapper function → private to this file
 You can see the actual wrapper:
 
 ```javascript
-const Module = require('module');
+const Module = require("module");
 console.log(Module.wrapper);
 // [
 //   '(function(exports, require, module, __filename, __dirname) { ',
@@ -262,18 +264,18 @@ module.exports = {
 };
 
 // a.js
-const counter = require('./counter');
+const counter = require("./counter");
 counter.increment();
 counter.increment();
-console.log(counter.get());  // 2
+console.log(counter.get()); // 2
 
 // b.js
-const counter = require('./counter');  // same cached instance
-console.log(counter.get());  // also 2 — same object as a.js got
+const counter = require("./counter"); // same cached instance
+console.log(counter.get()); // also 2 — same object as a.js got
 
 // main.js
-require('./a');
-require('./b');
+require("./a");
+require("./b");
 // counter.js is only executed ONCE
 // both a.js and b.js share the same counter object
 ```
@@ -294,8 +296,8 @@ console.log(require.cache);
 // both resolve to the same absolute path → same cache entry.
 
 // Clearing the cache (for testing or hot reload):
-delete require.cache[require.resolve('./counter')];
-const freshCounter = require('./counter');  // re-executes the file
+delete require.cache[require.resolve("./counter")];
+const freshCounter = require("./counter"); // re-executes the file
 ```
 
 ### Caching Implications
@@ -317,10 +319,10 @@ module.exports = {
 };
 
 // main.js
-require('./config').init({ db: 'postgres://...' });
+require("./config").init({ db: "postgres://..." });
 
 // anywhere else in the app:
-const cfg = require('./config').get();
+const cfg = require("./config").get();
 // Returns the same config object set in main.js.
 // This is the "module singleton" pattern.
 ```
@@ -333,21 +335,21 @@ Circular dependencies happen when A requires B, and B requires A. Node.js handle
 
 ```javascript
 // a.js
-console.log('a: start');
-const b = require('./b');
-console.log('a: b.done =', b.done);
+console.log("a: start");
+const b = require("./b");
+console.log("a: b.done =", b.done);
 module.exports = { done: true };
-console.log('a: end');
+console.log("a: end");
 
 // b.js
-console.log('b: start');
-const a = require('./a');
-console.log('b: a.done =', a.done);
+console.log("b: start");
+const a = require("./a");
+console.log("b: a.done =", a.done);
 module.exports = { done: true };
-console.log('b: end');
+console.log("b: end");
 
 // main.js
-require('./a');
+require("./a");
 ```
 
 ```
@@ -380,9 +382,9 @@ Why:
 // a.js
 module.exports = {
   getB() {
-    const b = require('./b');  // required lazily, inside function
+    const b = require("./b"); // required lazily, inside function
     return b;
-  }
+  },
 };
 
 // Option 2: Restructure to extract shared code to a third module
@@ -426,31 +428,31 @@ export { default as helper } from './helper.js';
 
 ```javascript
 // Named imports
-import { add, PI } from './math.js';
+import { add, PI } from "./math.js";
 
 // Default import
-import multiply from './multiply.js';
+import multiply from "./multiply.js";
 
 // Named + default
-import multiply, { add, PI } from './math.js';
+import multiply, { add, PI } from "./math.js";
 
 // Rename on import
-import { add as sum } from './math.js';
+import { add as sum } from "./math.js";
 
 // Import everything as namespace
-import * as math from './math.js';
+import * as math from "./math.js";
 math.add(1, 2);
 math.PI;
 
 // Side-effect only import (runs the module, imports nothing)
-import './setup.js';
+import "./setup.js";
 
 // Built-in modules — use 'node:' prefix (recommended)
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 // npm packages
-import express from 'express';
+import express from "express";
 ```
 
 ### Enabling ESM in Node.js
@@ -481,20 +483,20 @@ ESM loading is fundamentally different from CommonJS. This is the most important
 
 ```javascript
 // require() is a function call — happens at runtime
-const lib = require('./lib');  // executes lib.js right now, synchronously
+const lib = require("./lib"); // executes lib.js right now, synchronously
 
 // You CAN require() conditionally:
-if (process.env.NODE_ENV === 'test') {
-  const mock = require('./mock-db');
+if (process.env.NODE_ENV === "test") {
+  const mock = require("./mock-db");
 }
 
 // You CAN require() dynamically:
-const name = 'lodash';
-const _ = require(name);  // works
+const name = "lodash";
+const _ = require(name); // works
 
 // You CAN require() inside functions:
 function getDb() {
-  return require('./db');  // lazy load
+  return require("./db"); // lazy load
 }
 ```
 
@@ -526,11 +528,11 @@ Tree shaking:
   Bundlers (Webpack, Rollup, esbuild) read your imports statically.
   They know exactly which exports are used.
   Unused exports are eliminated from the final bundle.
-  
+
   import { debounce } from 'lodash-es';
   // Bundler: only debounce is imported → only include debounce in bundle
   // Result: ~1KB instead of ~70KB for all of lodash
-  
+
   With CommonJS require():
   const _ = require('lodash');
   // Bundler can't know at parse time which methods will be used
@@ -540,7 +542,7 @@ Circular dependency handling:
   ESM: links are resolved before execution.
        Both files can reference each other's exports.
        The value is a LIVE BINDING — always reflects current value.
-  
+
   CJS: require() executes the file at call time.
        Gets whatever was exported at that moment (snapshot).
 ```
@@ -576,14 +578,16 @@ This is why ESM can handle circular dependencies better:
 ```javascript
 // counter.mjs
 export let count = 0;
-export function increment() { count++; }
+export function increment() {
+  count++;
+}
 
 // main.mjs
-import { count, increment } from './counter.mjs';
+import { count, increment } from "./counter.mjs";
 
-console.log(count);  // 0
+console.log(count); // 0
 increment();
-console.log(count);  // 1  ← the import is a LIVE BINDING
+console.log(count); // 1  ← the import is a LIVE BINDING
 
 // In CommonJS, this would NOT work:
 // const { count, increment } = require('./counter');
@@ -620,7 +624,7 @@ Conditional import  Yes (if/require)             Only with dynamic import()
 // Only available in ES Modules
 // main.mjs
 
-const config = await fetchConfig();  // at the top level of the file
+const config = await fetchConfig(); // at the top level of the file
 // This works in ESM.
 // The module waits for the promise before its exports are available.
 
@@ -642,15 +646,20 @@ In a real codebase you will encounter both. The rules for interop are specific.
 
 ```javascript
 // lib.cjs (CommonJS)
-module.exports = { name: 'Alice', greet() { return 'hello'; } };
+module.exports = {
+  name: "Alice",
+  greet() {
+    return "hello";
+  },
+};
 
 // main.mjs (ESM importing CJS)
-import lib from './lib.cjs';          // ✓ default import gets module.exports
-console.log(lib.name);                // 'Alice'
-console.log(lib.greet());             // 'hello'
+import lib from "./lib.cjs"; // ✓ default import gets module.exports
+console.log(lib.name); // 'Alice'
+console.log(lib.greet()); // 'hello'
 
 // Named imports from CJS: NOT statically analysable
-import { name } from './lib.cjs';     // may work, may not
+import { name } from "./lib.cjs"; // may work, may not
 // Node.js attempts to detect named exports from CJS via static analysis.
 // Not reliable. Always use default import for CJS modules.
 ```
@@ -660,19 +669,21 @@ import { name } from './lib.cjs';     // may work, may not
 ```javascript
 // utils.mjs (ESM)
 export const PI = 3.14;
-export default function add(a, b) { return a + b; }
+export default function add(a, b) {
+  return a + b;
+}
 
 // main.cjs (CJS trying to import ESM)
-const utils = require('./utils.mjs');  // ✗ ERR_REQUIRE_ESM
+const utils = require("./utils.mjs"); // ✗ ERR_REQUIRE_ESM
 
 // CJS cannot synchronously require() an ESM module.
 // ESM loading is async. require() is sync. Incompatible.
 
 // Solution: use dynamic import() (which IS async)
 async function loadUtils() {
-  const utils = await import('./utils.mjs');
-  console.log(utils.PI);       // 3.14
-  console.log(utils.default);  // the add function
+  const utils = await import("./utils.mjs");
+  console.log(utils.PI); // 3.14
+  console.log(utils.default); // the add function
 }
 loadUtils();
 ```
@@ -683,12 +694,12 @@ loadUtils();
 // package.json of a dual-mode package
 {
   "name": "my-lib",
-  "main": "./dist/cjs/index.js",      // for require()
-  "module": "./dist/esm/index.js",    // for bundlers (not Node.js)
+  "main": "./dist/cjs/index.js", // for require()
+  "module": "./dist/esm/index.js", // for bundlers (not Node.js)
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",   // for import
-      "require": "./dist/cjs/index.js"   // for require()
+      "import": "./dist/esm/index.js", // for import
+      "require": "./dist/cjs/index.js" // for require()
     }
   }
 }
@@ -753,38 +764,35 @@ CommonJS provides `__dirname` and `__filename` as part of the module wrapper
 
 ```javascript
 // CommonJS
-console.log(__filename);  // '/projects/app/src/server.js'
-console.log(__dirname);   // '/projects/app/src'
+console.log(__filename); // '/projects/app/src/server.js'
+console.log(__dirname); // '/projects/app/src'
 
 // ES Modules — they don't exist
-console.log(__dirname);   // ReferenceError: __dirname is not defined
+console.log(__dirname); // ReferenceError: __dirname is not defined
 
 // ESM equivalent using import.meta.url
-import { fileURLToPath } from 'node:url';
-import { dirname } from 'node:path';
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-console.log(__filename);  // '/projects/app/src/server.js'
-console.log(__dirname);   // '/projects/app/src'
+console.log(__filename); // '/projects/app/src/server.js'
+console.log(__dirname); // '/projects/app/src'
 
 // Or use import.meta directly
-console.log(import.meta.url);  // 'file:///projects/app/src/server.js'
+console.log(import.meta.url); // 'file:///projects/app/src/server.js'
 // import.meta.url is always a file:// URL, not a path.
 // fileURLToPath converts it to a regular path string.
 
 // Reading a file relative to the current module (common pattern):
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
-const data = await readFile(join(__dirname, 'data.json'), 'utf8');
+const data = await readFile(join(__dirname, "data.json"), "utf8");
 
 // In Node.js 21+, there's a shorter way:
-const data = await readFile(
-  new URL('./data.json', import.meta.url),
-  'utf8'
-);
+const data = await readFile(new URL("./data.json", import.meta.url), "utf8");
 // URL constructor with a base URL resolves relative paths.
 // Avoids needing __dirname entirely.
 ```
@@ -806,24 +814,30 @@ src/
 
 ```javascript
 // math/add.js
-export function add(a, b) { return a + b; }
+export function add(a, b) {
+  return a + b;
+}
 
 // math/subtract.js
-export function subtract(a, b) { return a - b; }
+export function subtract(a, b) {
+  return a - b;
+}
 
 // math/multiply.js
-export function multiply(a, b) { return a * b; }
+export function multiply(a, b) {
+  return a * b;
+}
 
 // math/index.js  (barrel)
-export { add } from './add.js';
-export { subtract } from './subtract.js';
-export { multiply } from './multiply.js';
+export { add } from "./add.js";
+export { subtract } from "./subtract.js";
+export { multiply } from "./multiply.js";
 
 // Consumer:
-import { add, subtract } from './math';
+import { add, subtract } from "./math";
 // Instead of:
-import { add } from './math/add.js';
-import { subtract } from './math/subtract.js';
+import { add } from "./math/add.js";
+import { subtract } from "./math/subtract.js";
 ```
 
 ### The Barrel File Performance Problem
@@ -836,7 +850,7 @@ Barrels are convenient but hurt performance in two ways:
    → Node resolves ./math → ./math/index.js
    → index.js imports add.js, subtract.js, multiply.js
    → All three files loaded, even if you only use 'add'
-   
+
    Thousands of files × barrel imports = slow startup times.
    Common cause of slow Jest test runs and slow ts-node startup.
 
@@ -858,10 +872,10 @@ Best practices:
 
 ```javascript
 // Static import: resolved at parse time
-import { add } from './math.js';
+import { add } from "./math.js";
 
 // Dynamic import: resolved at runtime, returns a Promise
-const math = await import('./math.js');
+const math = await import("./math.js");
 math.add(1, 2);
 
 // Conditional loading
@@ -873,19 +887,19 @@ async function loadFeature(name) {
 // Lazy loading heavy dependencies
 async function processImage(buffer) {
   // Only load sharp when actually needed
-  const { default: sharp } = await import('sharp');
+  const { default: sharp } = await import("sharp");
   return sharp(buffer).resize(800).toBuffer();
 }
 
 // In a CJS file — the ONLY way to load ESM
 // (require() cannot load ESM)
 async function loadEsmLib() {
-  const { greet } = await import('./esm-only-lib.mjs');
-  return greet('world');
+  const { greet } = await import("./esm-only-lib.mjs");
+  return greet("world");
 }
 
 // import() always returns a Module namespace object
-const mod = await import('./math.js');
+const mod = await import("./math.js");
 // {
 //   add: [Function: add],
 //   subtract: [Function: subtract],
@@ -894,7 +908,7 @@ const mod = await import('./math.js');
 // }
 
 // Destructure directly:
-const { add, default: multiply } = await import('./math.js');
+const { add, default: multiply } = await import("./math.js");
 ```
 
 ### Dynamic import vs require()

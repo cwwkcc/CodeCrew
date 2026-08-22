@@ -76,14 +76,14 @@ const buf2 = Buffer.allocUnsafe(10);
 ### From a String
 
 ```javascript
-const buf = Buffer.from('Hello');
-console.log(buf);          // <Buffer 48 65 6c 6c 6f>
-console.log(buf.length);   // 5
+const buf = Buffer.from("Hello");
+console.log(buf); // <Buffer 48 65 6c 6c 6f>
+console.log(buf.length); // 5
 
 // With explicit encoding
-const buf2 = Buffer.from('Hello', 'utf8');   // default
-const buf3 = Buffer.from('48656c6c6f', 'hex');
-const buf4 = Buffer.from('SGVsbG8=', 'base64');
+const buf2 = Buffer.from("Hello", "utf8"); // default
+const buf3 = Buffer.from("48656c6c6f", "hex");
+const buf4 = Buffer.from("SGVsbG8=", "base64");
 ```
 
 ### From an Array of Bytes
@@ -98,24 +98,24 @@ console.log(buf.toString()); // 'Hello'
 ```javascript
 const buf = Buffer.alloc(4);
 
-buf.writeUInt8(255, 0);         // write 255 at offset 0
-buf.writeUInt16LE(1000, 1);     // write 1000 as 16-bit little-endian at offset 1
-buf.writeUInt8(42, 3);          // write 42 at offset 3
+buf.writeUInt8(255, 0); // write 255 at offset 0
+buf.writeUInt16LE(1000, 1); // write 1000 as 16-bit little-endian at offset 1
+buf.writeUInt8(42, 3); // write 42 at offset 3
 
-console.log(buf.readUInt8(0));       // 255
-console.log(buf.readUInt16LE(1));    // 1000
+console.log(buf.readUInt8(0)); // 255
+console.log(buf.readUInt16LE(1)); // 1000
 
 // Direct index access
-const buf2 = Buffer.from('ABC');
-console.log(buf2[0]);   // 65 (ASCII code for 'A')
-buf2[0] = 90;           // modify in place
+const buf2 = Buffer.from("ABC");
+console.log(buf2[0]); // 65 (ASCII code for 'A')
+buf2[0] = 90; // modify in place
 console.log(buf2.toString()); // 'ZBC'
 ```
 
 ### Slicing
 
 ```javascript
-const buf = Buffer.from('Hello World');
+const buf = Buffer.from("Hello World");
 
 // slice shares memory with the original — NOT a copy
 const slice = buf.slice(0, 5);
@@ -135,8 +135,8 @@ const copy = Buffer.from(buf.slice(0, 5));
 ### Concatenating
 
 ```javascript
-const a = Buffer.from('Hello ');
-const b = Buffer.from('World');
+const a = Buffer.from("Hello ");
+const b = Buffer.from("World");
 
 // Buffers are fixed-size — you can't push to them
 // Use Buffer.concat to create a new combined Buffer
@@ -154,12 +154,12 @@ const combined2 = Buffer.concat([a, b], a.length + b.length);
 When you call `buf.toString()` or `Buffer.from(string)`, an encoding converts between bytes and text. The encoding matters because different encodings map the same bytes to different characters.
 
 ```javascript
-const buf = Buffer.from('Hello');
+const buf = Buffer.from("Hello");
 
-console.log(buf.toString('utf8'));    // 'Hello'     (default)
-console.log(buf.toString('ascii'));   // 'Hello'
-console.log(buf.toString('hex'));     // '48656c6c6f'
-console.log(buf.toString('base64')); // 'SGVsbG8='
+console.log(buf.toString("utf8")); // 'Hello'     (default)
+console.log(buf.toString("ascii")); // 'Hello'
+console.log(buf.toString("hex")); // '48656c6c6f'
+console.log(buf.toString("base64")); // 'SGVsbG8='
 ```
 
 ### Common Encodings in Node.js
@@ -178,13 +178,13 @@ console.log(buf.toString('base64')); // 'SGVsbG8='
 
 ```javascript
 // A multi-byte UTF-8 character
-const buf = Buffer.from('é');       // 'é' is 2 bytes in UTF-8: 0xC3 0xA9
-console.log(buf.length);            // 2
-console.log('é'.length);           // 1 — JS string length counts code units, not bytes
+const buf = Buffer.from("é"); // 'é' is 2 bytes in UTF-8: 0xC3 0xA9
+console.log(buf.length); // 2
+console.log("é".length); // 1 — JS string length counts code units, not bytes
 
 // Buffer.byteLength gives the byte count, not character count
-console.log(Buffer.byteLength('é', 'utf8'));   // 2
-console.log(Buffer.byteLength('Hello', 'utf8')); // 5
+console.log(Buffer.byteLength("é", "utf8")); // 2
+console.log(Buffer.byteLength("Hello", "utf8")); // 5
 ```
 
 This distinction matters when you're building HTTP headers (Content-Length must be byte count, not character count) or implementing network protocols.
@@ -255,21 +255,21 @@ A Readable stream emits data events as chunks become available.
 ### Consuming with 'data' events
 
 ```javascript
-const fs = require('fs');
+const fs = require("fs");
 
-const readable = fs.createReadStream('file.txt', { encoding: 'utf8' });
+const readable = fs.createReadStream("file.txt", { encoding: "utf8" });
 
-readable.on('data', (chunk) => {
+readable.on("data", (chunk) => {
   // chunk is a string (because encoding was set) or Buffer
-  console.log('Received chunk:', chunk.length, 'bytes');
+  console.log("Received chunk:", chunk.length, "bytes");
 });
 
-readable.on('end', () => {
-  console.log('No more data.');
+readable.on("end", () => {
+  console.log("No more data.");
 });
 
-readable.on('error', (err) => {
-  console.error('Stream error:', err);
+readable.on("error", (err) => {
+  console.error("Stream error:", err);
 });
 ```
 
@@ -277,8 +277,8 @@ readable.on('error', (err) => {
 
 ```javascript
 // Default highWaterMark is 64KB (65536 bytes)
-const readable = fs.createReadStream('file.txt', {
-  highWaterMark: 1024 * 16,  // 16KB chunks
+const readable = fs.createReadStream("file.txt", {
+  highWaterMark: 1024 * 16, // 16KB chunks
 });
 
 // For object streams (non-binary), default highWaterMark is 16 objects
@@ -287,27 +287,31 @@ const readable = fs.createReadStream('file.txt', {
 ### Common Readable Sources
 
 ```javascript
-const fs   = require('fs');
-const http = require('http');
-const { Readable } = require('stream');
+const fs = require("fs");
+const http = require("http");
+const { Readable } = require("stream");
 
 // File
-const fileStream = fs.createReadStream('data.csv');
+const fileStream = fs.createReadStream("data.csv");
 
 // HTTP request body
 http.createServer((req, res) => {
   // req is a Readable stream
-  req.on('data', chunk => { /* ... */ });
-  req.on('end', () => { /* ... */ });
+  req.on("data", (chunk) => {
+    /* ... */
+  });
+  req.on("end", () => {
+    /* ... */
+  });
 });
 
 // Creating a Readable from scratch
 const readable = new Readable({
   read() {
-    this.push('Hello ');
-    this.push('World');
-    this.push(null);  // null signals end of stream
-  }
+    this.push("Hello ");
+    this.push("World");
+    this.push(null); // null signals end of stream
+  },
 });
 ```
 
@@ -318,20 +322,20 @@ const readable = new Readable({
 A Writable stream accepts data written to it and does something with it — writes to a file, sends over a network, etc.
 
 ```javascript
-const fs = require('fs');
+const fs = require("fs");
 
-const writable = fs.createWriteStream('output.txt');
+const writable = fs.createWriteStream("output.txt");
 
-writable.write('First line\n');
-writable.write('Second line\n');
-writable.end('Final line\n');  // end() writes last chunk and signals done
+writable.write("First line\n");
+writable.write("Second line\n");
+writable.end("Final line\n"); // end() writes last chunk and signals done
 
-writable.on('finish', () => {
-  console.log('All data flushed to disk.');
+writable.on("finish", () => {
+  console.log("All data flushed to disk.");
 });
 
-writable.on('error', (err) => {
-  console.error('Write error:', err);
+writable.on("error", (err) => {
+  console.error("Write error:", err);
 });
 ```
 
@@ -344,7 +348,7 @@ const canWriteMore = writable.write(chunk);
 if (!canWriteMore) {
   // Stop writing until 'drain' event fires
   readable.pause();
-  writable.once('drain', () => readable.resume());
+  writable.once("drain", () => readable.resume());
 }
 ```
 
@@ -352,17 +356,17 @@ if (!canWriteMore) {
 
 ```javascript
 // File
-const file = fs.createWriteStream('log.txt');
+const file = fs.createWriteStream("log.txt");
 
 // HTTP response
 http.createServer((req, res) => {
   // res is a Writable stream
-  res.write('Hello ');
-  res.end('World');
+  res.write("Hello ");
+  res.end("World");
 });
 
 // process.stdout / process.stderr
-process.stdout.write('Hello\n');
+process.stdout.write("Hello\n");
 ```
 
 ---
@@ -372,15 +376,15 @@ process.stdout.write('Hello\n');
 `pipe()` connects a Readable to a Writable, automatically handling data flow and backpressure.
 
 ```javascript
-const fs = require('fs');
+const fs = require("fs");
 
 // Copy a file
-const source = fs.createReadStream('input.txt');
-const dest   = fs.createWriteStream('output.txt');
+const source = fs.createReadStream("input.txt");
+const dest = fs.createWriteStream("output.txt");
 
 source.pipe(dest);
 
-dest.on('finish', () => console.log('Copy complete.'));
+dest.on("finish", () => console.log("Copy complete."));
 ```
 
 ### Chaining pipe
@@ -388,13 +392,13 @@ dest.on('finish', () => console.log('Copy complete.'));
 `pipe()` returns the destination stream, so you can chain multiple transforms:
 
 ```javascript
-const fs   = require('fs');
-const zlib = require('zlib');
+const fs = require("fs");
+const zlib = require("zlib");
 
 // Read file → compress with gzip → write compressed file
-fs.createReadStream('file.txt')
+fs.createReadStream("file.txt")
   .pipe(zlib.createGzip())
-  .pipe(fs.createWriteStream('file.txt.gz'));
+  .pipe(fs.createWriteStream("file.txt.gz"));
 ```
 
 ### stream.pipeline — The Better Way
@@ -402,27 +406,27 @@ fs.createReadStream('file.txt')
 `pipe()` has a known issue: errors in intermediate streams don't propagate properly, leaving streams unclosed. `stream.pipeline()` fixes this.
 
 ```javascript
-const { pipeline } = require('stream');
-const fs   = require('fs');
-const zlib = require('zlib');
+const { pipeline } = require("stream");
+const fs = require("fs");
+const zlib = require("zlib");
 
 pipeline(
-  fs.createReadStream('file.txt'),
+  fs.createReadStream("file.txt"),
   zlib.createGzip(),
-  fs.createWriteStream('file.txt.gz'),
+  fs.createWriteStream("file.txt.gz"),
   (err) => {
-    if (err) console.error('Pipeline failed:', err);
-    else     console.log('Pipeline complete.');
-  }
+    if (err) console.error("Pipeline failed:", err);
+    else console.log("Pipeline complete.");
+  },
 );
 
 // With promises (Node 15+)
-const { pipeline } = require('stream/promises');
+const { pipeline } = require("stream/promises");
 
 await pipeline(
-  fs.createReadStream('file.txt'),
+  fs.createReadStream("file.txt"),
   zlib.createGzip(),
-  fs.createWriteStream('file.txt.gz'),
+  fs.createWriteStream("file.txt.gz"),
 );
 ```
 
@@ -435,7 +439,7 @@ Always use `pipeline()` instead of `pipe()` in production code.
 A Transform stream sits in the middle of a pipeline — it reads input, transforms it, and outputs the result. It is both readable and writable.
 
 ```javascript
-const { Transform } = require('stream');
+const { Transform } = require("stream");
 
 // Transform that uppercases all text
 const uppercase = new Transform({
@@ -445,7 +449,7 @@ const uppercase = new Transform({
     this.push(chunk.toString().toUpperCase());
     // Call callback when done with this chunk
     callback();
-  }
+  },
 });
 
 process.stdin.pipe(uppercase).pipe(process.stdout);
@@ -454,35 +458,35 @@ process.stdin.pipe(uppercase).pipe(process.stdout);
 ### Transform with Error
 
 ```javascript
-const { Transform } = require('stream');
+const { Transform } = require("stream");
 
 const jsonParser = new Transform({
-  objectMode: true,       // output objects, not Buffers
+  objectMode: true, // output objects, not Buffers
   transform(chunk, encoding, callback) {
     try {
       const parsed = JSON.parse(chunk.toString());
       this.push(parsed);
       callback();
     } catch (err) {
-      callback(err);  // pass error to pipeline
+      callback(err); // pass error to pipeline
     }
-  }
+  },
 });
 ```
 
 ### Built-in Transform Streams
 
 ```javascript
-const zlib   = require('zlib');
-const crypto = require('crypto');
+const zlib = require("zlib");
+const crypto = require("crypto");
 
 // Compression
-zlib.createGzip()    // compress
-zlib.createGunzip()  // decompress
+zlib.createGzip(); // compress
+zlib.createGunzip(); // decompress
 
 // Encryption
-crypto.createCipheriv(algorithm, key, iv)
-crypto.createDecipheriv(algorithm, key, iv)
+crypto.createCipheriv(algorithm, key, iv);
+crypto.createDecipheriv(algorithm, key, iv);
 ```
 
 ---
@@ -492,29 +496,29 @@ crypto.createDecipheriv(algorithm, key, iv)
 A Duplex stream is readable and writable, but the read and write sides are independent — unlike Transform where output derives from input.
 
 ```javascript
-const { Duplex } = require('stream');
+const { Duplex } = require("stream");
 
 const duplex = new Duplex({
   read(size) {
-    this.push('data from readable side');
+    this.push("data from readable side");
     this.push(null);
   },
   write(chunk, encoding, callback) {
-    console.log('Received on writable side:', chunk.toString());
+    console.log("Received on writable side:", chunk.toString());
     callback();
-  }
+  },
 });
 ```
 
 The most common Duplex stream you'll work with is a TCP socket:
 
 ```javascript
-const net = require('net');
+const net = require("net");
 
 const server = net.createServer((socket) => {
   // socket is a Duplex stream
-  socket.on('data', (data) => {
-    socket.write('Echo: ' + data);  // write back what was received
+  socket.on("data", (data) => {
+    socket.write("Echo: " + data); // write back what was received
   });
 });
 ```
@@ -541,12 +545,12 @@ Without backpressure handling:
 `pipe()` and `pipeline()` handle backpressure automatically. If you're manually consuming a stream, you must handle it yourself:
 
 ```javascript
-const fs = require('fs');
+const fs = require("fs");
 
-const readable = fs.createReadStream('large-file.bin');
-const writable = fs.createWriteStream('output.bin');
+const readable = fs.createReadStream("large-file.bin");
+const writable = fs.createWriteStream("output.bin");
 
-readable.on('data', (chunk) => {
+readable.on("data", (chunk) => {
   const canContinue = writable.write(chunk);
 
   if (!canContinue) {
@@ -554,13 +558,13 @@ readable.on('data', (chunk) => {
     readable.pause();
 
     // Resume when the writable has drained
-    writable.once('drain', () => {
+    writable.once("drain", () => {
       readable.resume();
     });
   }
 });
 
-readable.on('end', () => writable.end());
+readable.on("end", () => writable.end());
 ```
 
 `pipe()` does exactly this internally. Use it and you get backpressure for free.
@@ -586,10 +590,10 @@ Switching modes:
 ```
 
 ```javascript
-const readable = fs.createReadStream('file.txt');
+const readable = fs.createReadStream("file.txt");
 
 // Paused mode — pull data manually
-readable.on('readable', () => {
+readable.on("readable", () => {
   let chunk;
   while ((chunk = readable.read(64)) !== null) {
     // read up to 64 bytes at a time
@@ -598,7 +602,7 @@ readable.on('readable', () => {
 });
 
 // Flowing mode — data pushed to you
-readable.on('data', (chunk) => {
+readable.on("data", (chunk) => {
   process(chunk);
 });
 ```
@@ -612,16 +616,16 @@ In practice: use `pipe()` or async iteration. Manually managing modes is only ne
 Node.js 10+ supports `for await...of` on streams, which is the cleanest way to consume a Readable.
 
 ```javascript
-const fs = require('fs');
+const fs = require("fs");
 
 async function processFile(path) {
-  const stream = fs.createReadStream(path, { encoding: 'utf8' });
+  const stream = fs.createReadStream(path, { encoding: "utf8" });
 
   for await (const chunk of stream) {
-    console.log('Chunk:', chunk.length, 'chars');
+    console.log("Chunk:", chunk.length, "chars");
   }
 
-  console.log('Done.');
+  console.log("Done.");
 }
 ```
 
@@ -639,9 +643,9 @@ async function streamToBuffer(readable) {
 // Usage: collect an HTTP request body
 http.createServer(async (req, res) => {
   const body = await streamToBuffer(req);
-  const text = body.toString('utf8');
-  console.log('Body:', text);
-  res.end('OK');
+  const text = body.toString("utf8");
+  console.log("Body:", text);
+  res.end("OK");
 });
 ```
 
@@ -655,7 +659,7 @@ async function readFile(path) {
       process(chunk);
     }
   } catch (err) {
-    console.error('Stream error:', err);
+    console.error("Stream error:", err);
   }
 }
 ```

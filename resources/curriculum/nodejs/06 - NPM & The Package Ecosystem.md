@@ -60,24 +60,24 @@ npm init -y       # skip all questions, accept defaults
   "main": "dist/index.js",
   "type": "commonjs",
   "scripts": {
-    "dev":       "tsx watch src/index.ts",
-    "build":     "tsc",
-    "start":     "node dist/index.js",
-    "test":      "jest",
-    "lint":      "eslint src"
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "lint": "eslint src"
   },
   "keywords": ["api", "rest", "node"],
   "author": "S.C. Roshana",
   "license": "MIT",
   "dependencies": {
-    "express":   "^4.18.2",
-    "zod":       "^3.22.0"
+    "express": "^4.18.2",
+    "zod": "^3.22.0"
   },
   "devDependencies": {
     "typescript": "^5.3.0",
-    "tsx":        "^4.6.0",
+    "tsx": "^4.6.0",
     "@types/express": "^4.17.21",
-    "jest":       "^29.7.0"
+    "jest": "^29.7.0"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -316,12 +316,12 @@ For libraries you publish:
 ```json
 {
   "scripts": {
-    "dev":     "tsx watch src/index.ts",
-    "build":   "tsc --project tsconfig.build.json",
-    "start":   "node dist/index.js",
-    "test":    "jest --coverage",
-    "lint":    "eslint src --ext .ts",
-    "format":  "prettier --write src"
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc --project tsconfig.build.json",
+    "start": "node dist/index.js",
+    "test": "jest --coverage",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src"
   }
 }
 ```
@@ -343,8 +343,8 @@ npm automatically runs `pre<name>` before and `post<name>` after a script:
 ```json
 {
   "scripts": {
-    "prebuild":  "npm run lint",
-    "build":     "tsc",
+    "prebuild": "npm run lint",
+    "build": "tsc",
     "postbuild": "echo Build complete"
   }
 }

@@ -38,7 +38,7 @@ The event loop solution: never wait.
   Instead of blocking on I/O, register a callback and move on.
   When I/O completes, the callback is queued.
   The event loop picks it up when the call stack is empty.
-  
+
   One thread handles thousands of "in progress" I/O operations.
   It only executes code when there is code to execute.
   It never sits idle waiting.
@@ -54,7 +54,7 @@ The call stack is where function execution happens. It is a LIFO (Last In, First
 
 ```javascript
 function c() {
-  console.log('c');
+  console.log("c");
 }
 
 function b() {
@@ -98,7 +98,7 @@ A callback only starts when the stack is completely empty.
 
 ```javascript
 function infinite() {
-  return infinite();  // calls itself forever
+  return infinite(); // calls itself forever
 }
 infinite();
 // RangeError: Maximum call stack size exceeded
@@ -160,7 +160,7 @@ Between EVERY phase transition:
 The timers phase executes callbacks scheduled by `setTimeout()` and `setInterval()`.
 
 ```javascript
-setTimeout(() => console.log('timer'), 100);
+setTimeout(() => console.log("timer"), 100);
 ```
 
 ```
@@ -188,7 +188,7 @@ setTimeout(fn, 0):
 
 ```javascript
 setInterval(() => {
-  console.log('interval');
+  console.log("interval");
 }, 1000);
 
 // Reschedules itself automatically after each execution.
@@ -255,7 +255,7 @@ The poll phase does two things:
   This is controlled blocking — libuv asks the OS:
   "Watch these file descriptors. Wake me up when any has data,
    or after this timeout, whichever comes first."
-  
+
   The OS uses epoll/kqueue/IOCP — zero CPU used while waiting.
   Node is not spinning. It is sleeping and will be woken by the OS.
 
@@ -290,7 +290,7 @@ Is the poll queue empty?
 The check phase runs `setImmediate()` callbacks.
 
 ```javascript
-setImmediate(() => console.log('immediate'));
+setImmediate(() => console.log("immediate"));
 ```
 
 ```
@@ -306,10 +306,10 @@ Useful for: splitting long tasks across event loop iterations
 
 function processLargeArray(arr, index = 0) {
   if (index >= arr.length) return;
-  
+
   // Process one item
   doExpensiveWork(arr[index]);
-  
+
   // Yield to event loop before processing next item
   setImmediate(() => processLargeArray(arr, index + 1));
 }
@@ -324,11 +324,11 @@ function processLargeArray(arr, index = 0) {
 The final phase runs close event callbacks.
 
 ```javascript
-const net = require('net');
+const net = require("net");
 const server = net.createServer();
 
-server.on('close', () => {
-  console.log('server closed');  // runs in close callbacks phase
+server.on("close", () => {
+  console.log("server closed"); // runs in close callbacks phase
 });
 
 server.close();
@@ -368,7 +368,7 @@ Two microtask queues:
 
 ```javascript
 process.nextTick(() => {
-  console.log('nextTick callback');
+  console.log("nextTick callback");
 });
 ```
 
@@ -389,7 +389,7 @@ It means "after this synchronous chunk of code finishes."
 
 ```javascript
 Promise.resolve().then(() => {
-  console.log('promise microtask');
+  console.log("promise microtask");
 });
 ```
 
@@ -479,8 +479,8 @@ It aligns with browser behaviour and is more intuitive.
 ## 12. setTimeout vs setImmediate — Which Runs First?
 
 ```javascript
-setTimeout(() => console.log('timeout'), 0);
-setImmediate(() => console.log('immediate'));
+setTimeout(() => console.log("timeout"), 0);
+setImmediate(() => console.log("immediate"));
 ```
 
 ```
@@ -488,26 +488,26 @@ ANSWER: it depends on where this code runs.
 
 Outside an I/O callback (e.g. main module):
   Non-deterministic. Order depends on system performance.
-  
+
   Why: setTimeout(fn, 0) is scheduled with delay=1ms.
   By the time the event loop starts:
     If 1ms has passed → timers phase fires first → timeout first
     If 1ms has NOT passed → timers phase skipped → check phase → immediate first
-  
+
   The timing of process startup is not deterministic.
   Both orders are possible. Do not rely on either.
 
 Inside an I/O callback:
   setImmediate ALWAYS runs before setTimeout.
   Guaranteed.
-  
+
   const fs = require('fs');
   fs.readFile('/tmp/test', () => {
     setTimeout(() => console.log('timeout'), 0);
     setImmediate(() => console.log('immediate'));
     // immediate always first
   });
-  
+
   Why: after an I/O callback completes, the poll phase continues.
   After poll: check phase (setImmediate) runs.
   After check: timers phase (setTimeout) runs.
@@ -524,8 +524,8 @@ Practical rule:
 ## 13. process.nextTick vs Promise.then — Which Runs First?
 
 ```javascript
-Promise.resolve().then(() => console.log('promise'));
-process.nextTick(() => console.log('nextTick'));
+Promise.resolve().then(() => console.log("promise"));
+process.nextTick(() => console.log("nextTick"));
 ```
 
 ```
@@ -544,13 +544,13 @@ Nested example:
     process.nextTick(() => console.log('nextTick 2'));
   });
   Promise.resolve().then(() => console.log('promise 1'));
-  
+
   Output:
     nextTick 1
     nextTick 2           ← nextTick added during nextTick runs before promises
     promise inside nextTick
     promise 1
-  
+
   Why:
     nextTick queue: [nextTick 1]
     Run nextTick 1 → adds promise to Promise queue, adds nextTick 2 to nextTick queue
@@ -572,45 +572,47 @@ Blocking the event loop is the most common Node.js performance mistake. When the
 
 ```javascript
 // Synchronous I/O — blocks for the duration of the OS call
-const data = fs.readFileSync('/large/file');   // could be 50ms+
+const data = fs.readFileSync("/large/file"); // could be 50ms+
 
 // CPU-intensive synchronous computation
 function fibonacci(n) {
   if (n <= 1) return n;
   return fibonacci(n - 1) + fibonacci(n - 2);
 }
-fibonacci(45);  // takes seconds — event loop frozen
+fibonacci(45); // takes seconds — event loop frozen
 
 // Large synchronous operations
-const data = JSON.parse(hugeJsonString);  // parsing 10MB JSON synchronously
-const result = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512');
+const data = JSON.parse(hugeJsonString); // parsing 10MB JSON synchronously
+const result = crypto.pbkdf2Sync(password, salt, 100000, 64, "sha512");
 
 // Regex catastrophic backtracking
 const re = /^(a+)+$/;
-re.test('aaaaaaaaaaaaaaaaaaaaaaaaaab');  // exponential time
+re.test("aaaaaaaaaaaaaaaaaaaaaaaaaab"); // exponential time
 
 // Long synchronous loops
-for (let i = 0; i < 1_000_000_000; i++) { /* nothing */ }
+for (let i = 0; i < 1_000_000_000; i++) {
+  /* nothing */
+}
 ```
 
 ### What Doesn't Block
 
 ```javascript
 // Async I/O — deferred to thread pool / OS
-await fs.promises.readFile('/large/file');   // non-blocking ✓
+await fs.promises.readFile("/large/file"); // non-blocking ✓
 
 // Network requests
-await fetch('https://api.example.com');      // non-blocking ✓
+await fetch("https://api.example.com"); // non-blocking ✓
 
 // setTimeout / setImmediate
-setTimeout(() => {}, 1000);                  // non-blocking ✓
+setTimeout(() => {}, 1000); // non-blocking ✓
 
 // Properly chunked CPU work
 async function processChunked(items) {
   for (let i = 0; i < items.length; i++) {
     process(items[i]);
     if (i % 1000 === 0) {
-      await new Promise(resolve => setImmediate(resolve));
+      await new Promise((resolve) => setImmediate(resolve));
       // yield to event loop every 1000 items
     }
   }
@@ -627,7 +629,7 @@ async function processChunked(items) {
 let last = Date.now();
 setInterval(() => {
   const now = Date.now();
-  const lag = now - last - 1000;  // expected 1000ms
+  const lag = now - last - 1000; // expected 1000ms
   if (lag > 50) {
     console.warn(`Event loop lag: ${lag}ms`);
   }
@@ -635,12 +637,12 @@ setInterval(() => {
 }, 1000);
 
 // Node.js built-in: perf_hooks monitorEventLoopDelay
-const { monitorEventLoopDelay } = require('perf_hooks');
+const { monitorEventLoopDelay } = require("perf_hooks");
 const histogram = monitorEventLoopDelay({ resolution: 20 });
 histogram.enable();
 setInterval(() => {
-  console.log('mean lag:', histogram.mean / 1e6, 'ms');
-  console.log('p99  lag:', histogram.percentile(99) / 1e6, 'ms');
+  console.log("mean lag:", histogram.mean / 1e6, "ms");
+  console.log("p99  lag:", histogram.percentile(99) / 1e6, "ms");
   histogram.reset();
 }, 5000);
 ```
@@ -675,8 +677,8 @@ timer.ref();
 // but you don't want the timer alone to keep Node running.
 
 // process.exit() — force exit regardless of active handles
-process.exit(0);  // 0 = success
-process.exit(1);  // non-zero = failure
+process.exit(0); // 0 = success
+process.exit(1); // non-zero = failure
 ```
 
 ### When Node.js Exits Naturally
@@ -705,15 +707,15 @@ Work through these to solidify the mental model.
 ### Example 1 — Basic Order
 
 ```javascript
-console.log('1');
+console.log("1");
 
-setTimeout(() => console.log('2'), 0);
+setTimeout(() => console.log("2"), 0);
 
-Promise.resolve().then(() => console.log('3'));
+Promise.resolve().then(() => console.log("3"));
 
-process.nextTick(() => console.log('4'));
+process.nextTick(() => console.log("4"));
 
-console.log('5');
+console.log("5");
 ```
 
 ```
@@ -738,18 +740,18 @@ Output: 1, 5, 4, 3, 2
 
 ```javascript
 process.nextTick(() => {
-  console.log('A');
-  process.nextTick(() => console.log('B'));
+  console.log("A");
+  process.nextTick(() => console.log("B"));
 });
 
-process.nextTick(() => console.log('C'));
+process.nextTick(() => console.log("C"));
 
 Promise.resolve()
   .then(() => {
-    console.log('D');
-    process.nextTick(() => console.log('E'));
+    console.log("D");
+    process.nextTick(() => console.log("E"));
   })
-  .then(() => console.log('F'));
+  .then(() => console.log("F"));
 ```
 
 ```
@@ -768,10 +770,10 @@ nextTick queue: [A, C]
 Promise queue: [D handler]
   Run D handler → logs 'D', registers nextTick(E)
   nextTick queue: [E]   ← nextTick added during Promise callback
-  
+
   Before running next Promise callback: drain nextTick queue
   Run E → logs 'E'
-  
+
   Promise queue: [F handler]
   Run F handler → logs 'F'
 
@@ -781,17 +783,17 @@ Output: A, C, B, D, E, F
 ### Example 3 — I/O and setImmediate
 
 ```javascript
-const fs = require('fs');
+const fs = require("fs");
 
-fs.readFile('/etc/hostname', () => {
-  console.log('readFile callback');
+fs.readFile("/etc/hostname", () => {
+  console.log("readFile callback");
 
-  setTimeout(() => console.log('timeout inside I/O'), 0);
-  setImmediate(() => console.log('immediate inside I/O'));
-  process.nextTick(() => console.log('nextTick inside I/O'));
+  setTimeout(() => console.log("timeout inside I/O"), 0);
+  setImmediate(() => console.log("immediate inside I/O"));
+  process.nextTick(() => console.log("nextTick inside I/O"));
 });
 
-console.log('synchronous');
+console.log("synchronous");
 ```
 
 ```
@@ -799,20 +801,20 @@ Trace:
   'synchronous' — runs immediately
   readFile starts (async, thread pool)
   Call stack empties, event loop starts.
-  
+
   [some time later, file read completes]
-  
+
   poll phase: readFile callback fires
     logs 'readFile callback'
     registers: setTimeout, setImmediate, nextTick
-  
+
   readFile callback completes. Microtasks:
     nextTick: 'nextTick inside I/O'
-  
+
   poll phase continues (nothing else in poll queue)
   → check phase: setImmediate fires
     'immediate inside I/O'
-  
+
   → next iteration, timers phase: setTimeout fires
     'timeout inside I/O'
 
@@ -824,13 +826,13 @@ Output: synchronous, readFile callback, nextTick inside I/O,
 
 ```javascript
 async function main() {
-  console.log('1');
+  console.log("1");
   await Promise.resolve();
-  console.log('2');
+  console.log("2");
 }
 
 main();
-console.log('3');
+console.log("3");
 ```
 
 ```
@@ -844,7 +846,7 @@ Trace:
   main() returns a Promise (not yet resolved)
   '3' — synchronous (back in caller)
   Call stack empties.
-  
+
   Microtask queue: [main() continuation]
   Run continuation → '2'
 
@@ -854,26 +856,26 @@ Output: 1, 3, 2
 ### Example 5 — The Full Picture
 
 ```javascript
-console.log('start');
+console.log("start");
 
-setTimeout(() => console.log('timeout 1'), 0);
-setTimeout(() => console.log('timeout 2'), 0);
+setTimeout(() => console.log("timeout 1"), 0);
+setTimeout(() => console.log("timeout 2"), 0);
 
 Promise.resolve()
   .then(() => {
-    console.log('promise 1');
-    process.nextTick(() => console.log('nextTick inside promise'));
+    console.log("promise 1");
+    process.nextTick(() => console.log("nextTick inside promise"));
   })
-  .then(() => console.log('promise 2'));
+  .then(() => console.log("promise 2"));
 
 process.nextTick(() => {
-  console.log('nextTick 1');
-  Promise.resolve().then(() => console.log('promise inside nextTick'));
+  console.log("nextTick 1");
+  Promise.resolve().then(() => console.log("promise inside nextTick"));
 });
 
-process.nextTick(() => console.log('nextTick 2'));
+process.nextTick(() => console.log("nextTick 2"));
 
-console.log('end');
+console.log("end");
 ```
 
 ```
@@ -893,11 +895,11 @@ Promise queue: [promise1 handler, promise inside nextTick]
     'promise 1'
     registers nextTick(nextTick inside promise)
     .then chained → registers promise2 handler
-    
+
     After this callback: drain nextTick queue
     nextTick queue: [nextTick inside promise]
     Run: 'nextTick inside promise'
-  
+
   Promise queue: [promise inside nextTick, promise2 handler]
   Run promise inside nextTick:
     'promise inside nextTick'

@@ -15,6 +15,7 @@
 9. [process Signals — Graceful Shutdown]
 10. [process.cwd and process.chdir]
 11. [process.memoryUsage and process.cpuUsage]
+
 ---
 
 ## 1. What Environment Variables Are
@@ -52,15 +53,15 @@ Why they exist:
 `process` is a global object in Node.js — available without any import. It represents the currently running Node.js process.
 
 ```javascript
-process.version;          // Node.js version: 'v20.10.0'
-process.versions;         // versions of V8, libuv, OpenSSL, etc.
-process.platform;         // 'linux', 'darwin', 'win32'
-process.arch;             // 'x64', 'arm64'
-process.pid;              // process ID (integer)
-process.ppid;             // parent process ID
-process.title;            // process name (appears in task manager)
-process.uptime();         // seconds since process started
-process.hrtime.bigint();  // high-resolution time in nanoseconds (for benchmarking)
+process.version; // Node.js version: 'v20.10.0'
+process.versions; // versions of V8, libuv, OpenSSL, etc.
+process.platform; // 'linux', 'darwin', 'win32'
+process.arch; // 'x64', 'arm64'
+process.pid; // process ID (integer)
+process.ppid; // parent process ID
+process.title; // process name (appears in task manager)
+process.uptime(); // seconds since process started
+process.hrtime.bigint(); // high-resolution time in nanoseconds (for benchmarking)
 ```
 
 ---
@@ -70,10 +71,10 @@ process.hrtime.bigint();  // high-resolution time in nanoseconds (for benchmarki
 `process.env` is an object containing all environment variables as strings.
 
 ```javascript
-console.log(process.env.NODE_ENV);    // 'development', 'production', 'test'
+console.log(process.env.NODE_ENV); // 'development', 'production', 'test'
 console.log(process.env.DATABASE_URL); // 'postgresql://localhost:5432/mydb'
-console.log(process.env.PORT);        // '3000' — always a string
-console.log(process.env.MISSING);     // undefined — not set
+console.log(process.env.PORT); // '3000' — always a string
+console.log(process.env.MISSING); // undefined — not set
 ```
 
 ### Important: All Values Are Strings
@@ -81,13 +82,13 @@ console.log(process.env.MISSING);     // undefined — not set
 ```javascript
 // process.env.PORT is '3000', not 3000
 const port = process.env.PORT;
-port + 1;          // '30001' — string concatenation!
-Number(port) + 1;  // 3001    — correct
+port + 1; // '30001' — string concatenation!
+Number(port) + 1; // 3001    — correct
 
 // Convert types when reading
-const port    = Number(process.env.PORT    ?? 3000);
-const debug   = process.env.DEBUG === 'true';  // string 'true' → boolean
-const timeout = parseInt(process.env.TIMEOUT ?? '5000', 10);
+const port = Number(process.env.PORT ?? 3000);
+const debug = process.env.DEBUG === "true"; // string 'true' → boolean
+const timeout = parseInt(process.env.TIMEOUT ?? "5000", 10);
 ```
 
 ### Checking for Required Variables
@@ -100,9 +101,9 @@ function requireEnv(key) {
   return value;
 }
 
-const dbUrl   = requireEnv('DATABASE_URL');
-const apiKey  = requireEnv('STRIPE_SECRET_KEY');
-const jwtSecret = requireEnv('JWT_SECRET');
+const dbUrl = requireEnv("DATABASE_URL");
+const apiKey = requireEnv("STRIPE_SECRET_KEY");
+const jwtSecret = requireEnv("JWT_SECRET");
 ```
 
 ---
@@ -133,9 +134,9 @@ npm install --save-dev cross-env
 ```json
 {
   "scripts": {
-    "dev":   "cross-env NODE_ENV=development tsx watch src/index.ts",
+    "dev": "cross-env NODE_ENV=development tsx watch src/index.ts",
     "start": "cross-env NODE_ENV=production node dist/index.js",
-    "test":  "cross-env NODE_ENV=test jest"
+    "test": "cross-env NODE_ENV=test jest"
   }
 }
 ```
@@ -181,9 +182,9 @@ npm install dotenv
 
 ```javascript
 // At the very top of your entry file (src/index.ts or src/main.ts)
-import 'dotenv/config';
+import "dotenv/config";
 // or
-require('dotenv').config();
+require("dotenv").config();
 
 // After this line, process.env has all the values from .env
 console.log(process.env.PORT); // '3000'
@@ -248,22 +249,22 @@ function loadConfig() {
   const errors = [];
 
   const config = {
-    nodeEnv:     process.env.NODE_ENV     ?? 'development',
-    port:        Number(process.env.PORT  ?? 3000),
+    nodeEnv: process.env.NODE_ENV ?? "development",
+    port: Number(process.env.PORT ?? 3000),
     databaseUrl: process.env.DATABASE_URL,
-    jwtSecret:   process.env.JWT_SECRET,
-    redisUrl:    process.env.REDIS_URL,
-    debug:       process.env.DEBUG === 'true',
+    jwtSecret: process.env.JWT_SECRET,
+    redisUrl: process.env.REDIS_URL,
+    debug: process.env.DEBUG === "true",
   };
 
-  if (!config.databaseUrl) errors.push('DATABASE_URL is required');
-  if (!config.jwtSecret)   errors.push('JWT_SECRET is required');
-  if (isNaN(config.port))  errors.push('PORT must be a number');
+  if (!config.databaseUrl) errors.push("DATABASE_URL is required");
+  if (!config.jwtSecret) errors.push("JWT_SECRET is required");
+  if (isNaN(config.port)) errors.push("PORT must be a number");
 
   if (errors.length > 0) {
-    console.error('Invalid environment configuration:');
-    errors.forEach(e => console.error(' -', e));
-    process.exit(1);  // fail fast — don't start with bad config
+    console.error("Invalid environment configuration:");
+    errors.forEach((e) => console.error(" -", e));
+    process.exit(1); // fail fast — don't start with bad config
   }
 
   return config;
@@ -274,7 +275,7 @@ export const config = loadConfig();
 
 ```javascript
 // Everywhere in your code — import config, not process.env directly
-import { config } from './config.js';
+import { config } from "./config.js";
 
 app.listen(config.port);
 ```
@@ -284,21 +285,23 @@ app.listen(config.port);
 Zod gives you typed validation with detailed error messages:
 
 ```javascript
-import { z } from 'zod';
+import { z } from "zod";
 
 const envSchema = z.object({
-  NODE_ENV:     z.enum(['development', 'production', 'test']).default('development'),
-  PORT:         z.coerce.number().int().positive().default(3000),
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
+  PORT: z.coerce.number().int().positive().default(3000),
   DATABASE_URL: z.string().url(),
-  JWT_SECRET:   z.string().min(32),
-  REDIS_URL:    z.string().url().optional(),
-  DEBUG:        z.coerce.boolean().default(false),
+  JWT_SECRET: z.string().min(32),
+  REDIS_URL: z.string().url().optional(),
+  DEBUG: z.coerce.boolean().default(false),
 });
 
 const result = envSchema.safeParse(process.env);
 
 if (!result.success) {
-  console.error('❌ Invalid environment variables:');
+  console.error("❌ Invalid environment variables:");
   console.error(result.error.format());
   process.exit(1);
 }
@@ -340,11 +343,11 @@ const userArgs = process.argv.slice(2);
 const args = process.argv.slice(2);
 
 const port = (() => {
-  const i = args.indexOf('--port');
+  const i = args.indexOf("--port");
   return i !== -1 ? Number(args[i + 1]) : 3000;
 })();
 
-const debug = args.includes('--debug');
+const debug = args.includes("--debug");
 ```
 
 For complex CLIs with flags, subcommands, and help text, use a library like `commander` or `yargs` instead of parsing `process.argv` manually.
@@ -356,10 +359,10 @@ For complex CLIs with flags, subcommands, and help text, use a library like `com
 ```javascript
 // Exit with success (code 0)
 process.exit(0);
-process.exit();  // defaults to 0
+process.exit(); // defaults to 0
 
 // Exit with failure (any non-zero code)
-process.exit(1);  // convention: 1 = general error
+process.exit(1); // convention: 1 = general error
 
 // Exit codes
 // 0   Success
@@ -411,7 +414,7 @@ SIGKILL   Forced kill. Cannot be caught. The OS terminates the process immediate
 ```
 
 ```javascript
-const http = require('node:http');
+const http = require("node:http");
 
 const server = http.createServer(handler);
 server.listen(3000);
@@ -422,25 +425,25 @@ async function gracefulShutdown(signal) {
 
   // Stop accepting new connections
   server.close(async () => {
-    console.log('HTTP server closed.');
+    console.log("HTTP server closed.");
 
     // Close database connections, flush caches, etc.
     await db.disconnect();
     await redis.quit();
 
-    console.log('All connections closed. Exiting.');
+    console.log("All connections closed. Exiting.");
     process.exit(0);
   });
 
   // Force exit if cleanup takes too long
   setTimeout(() => {
-    console.error('Forced shutdown after timeout.');
+    console.error("Forced shutdown after timeout.");
     process.exit(1);
-  }, 10_000);  // 10 seconds
+  }, 10_000); // 10 seconds
 }
 
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-process.on('SIGINT',  () => gracefulShutdown('SIGINT'));
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
+process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 ```
 
 Graceful shutdown ensures in-flight requests finish and database connections close cleanly before the process dies. Without it, abrupt exits can leave transactions uncommitted or data corrupted.
@@ -455,7 +458,7 @@ console.log(process.cwd());
 // '/home/roshana/project'  (wherever you ran `node server.js`)
 
 // Change working directory
-process.chdir('/tmp');
+process.chdir("/tmp");
 console.log(process.cwd()); // '/tmp'
 ```
 
@@ -495,7 +498,7 @@ console.log(mem);
 // }
 
 // Human-readable
-const mb = (bytes) => (bytes / 1024 / 1024).toFixed(1) + ' MB';
+const mb = (bytes) => (bytes / 1024 / 1024).toFixed(1) + " MB";
 console.log(`Heap: ${mb(mem.heapUsed)} / ${mb(mem.heapTotal)}`);
 console.log(`RSS:  ${mb(mem.rss)}`);
 
@@ -511,16 +514,16 @@ console.log(deltaCpu);
 ### Using These for Health Checks
 
 ```javascript
-app.get('/health', (req, res) => {
+app.get("/health", (req, res) => {
   const mem = process.memoryUsage();
   const heapUsedMB = mem.heapUsed / 1024 / 1024;
 
   res.json({
-    status:      'ok',
-    uptime:      process.uptime(),
-    heapUsedMB:  Math.round(heapUsedMB),
+    status: "ok",
+    uptime: process.uptime(),
+    heapUsedMB: Math.round(heapUsedMB),
     nodeVersion: process.version,
-    pid:         process.pid,
+    pid: process.pid,
   });
 });
 ```

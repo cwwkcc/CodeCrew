@@ -64,7 +64,7 @@ Source code (text)
 Parser
     → builds AST (Abstract Syntax Tree)
     → AST is a tree representation of your code's structure
-    
+
 AST
     ↓
 Ignition (bytecode interpreter)
@@ -103,11 +103,11 @@ Garbage collector:
   Generational GC. Two spaces:
     Young generation (nursery): newly allocated objects. GC runs frequently.
     Old generation: objects that survived multiple young GCs. GC runs less often.
-  
+
   GC pauses:  V8 occasionally pauses JS execution to collect garbage.
   Minor GC:   Young generation only. Fast (~1ms).
   Major GC:   Full heap. Can cause visible pauses (10-100ms in large heaps).
-  
+
   Incremental/concurrent GC: V8 does GC work in background threads
   to reduce pause duration. Full pauses are rare in modern V8.
 ```
@@ -161,7 +161,7 @@ Network I/O (TCP, UDP):
     Linux:   epoll
     macOS:   kqueue
     Windows: IOCP (I/O Completion Ports)
-  
+
   These are OS mechanisms that can watch thousands of sockets simultaneously
   and notify when any of them have data ready.
   Zero extra threads needed.
@@ -169,11 +169,11 @@ Network I/O (TCP, UDP):
 File system I/O:
   Most OS async file APIs are inconsistent or limited.
   libuv uses a THREAD POOL for file operations.
-  
+
   Default thread pool size: 4 threads.
   Each thread can block on a file read without blocking the event loop.
   When a thread completes: result queued → callback runs in event loop.
-  
+
   Configurable: UV_THREADPOOL_SIZE=8 node server.js
 
 DNS resolution:
@@ -234,9 +234,9 @@ TRUE:
 
 FALSE (or misleading):
   The Node.js PROCESS has multiple threads.
-  
+
   When you run node server.js:
-  
+
   Thread 1: Event loop (V8 + your JS code)
   Thread 2: libuv thread pool worker
   Thread 3: libuv thread pool worker
@@ -253,7 +253,7 @@ I/O and GC happen concurrently in background threads.
 Why this matters:
   You never need mutexes or locks for your JS data structures.
   Two JS functions cannot run simultaneously → no data races in JS.
-  
+
   But: if two async operations complete at the same time,
   their callbacks run sequentially, not simultaneously.
   The event loop serialises them.
@@ -273,7 +273,7 @@ while (there is work to do) {
   2. Run pending I/O callbacks
   3. Run setImmediate callbacks
   4. Run close callbacks (socket.on('close', ...))
-  
+
   After each phase: drain the microtask queue
     → run all Promise .then() callbacks
     → run all process.nextTick() callbacks
@@ -282,7 +282,7 @@ while (there is work to do) {
 When there is no more work:
   No pending timers, no pending I/O, no active servers
   → Node.js exits.
-  
+
   As long as something is "registered" (open server, pending timer):
   → Node.js stays alive.
 ```
@@ -350,9 +350,9 @@ console.log('4 - also synchronous');
 Tracing a file read from JavaScript all the way down and back up.
 
 ```javascript
-import { readFile } from 'fs/promises';
+import { readFile } from "fs/promises";
 
-const data = await readFile('/etc/hostname', 'utf8');
+const data = await readFile("/etc/hostname", "utf8");
 console.log(data);
 ```
 
@@ -371,7 +371,7 @@ What actually happens:
 4. libuv picks a thread from the thread pool.
    That thread calls the OS:
    open("/etc/hostname", O_RDONLY)   ← blocking syscall
-   
+
    The thread BLOCKS here waiting for the OS.
    The event loop thread is FREE to do other things.
 
@@ -402,16 +402,16 @@ Total: JavaScript made one function call.
 ### Synchronous vs Asynchronous
 
 ```javascript
-import { readFileSync, readFile } from 'fs';
+import { readFileSync, readFile } from "fs";
 
 // Synchronous — BLOCKS the event loop
-const data = readFileSync('/etc/hostname', 'utf8');
+const data = readFileSync("/etc/hostname", "utf8");
 // While this runs: no other callbacks can fire, no other requests served.
 // Acceptable: startup (reading config files once).
 // Never: during request handling in a server.
 
 // Asynchronous — does NOT block
-readFile('/etc/hostname', 'utf8', (err, data) => {
+readFile("/etc/hostname", "utf8", (err, data) => {
   if (err) throw err;
   console.log(data);
 });
@@ -419,8 +419,8 @@ readFile('/etc/hostname', 'utf8', (err, data) => {
 // Event loop free to handle other things meanwhile.
 
 // Promise-based (modern — use this)
-import { readFile } from 'fs/promises';
-const data = await readFile('/etc/hostname', 'utf8');
+import { readFile } from "fs/promises";
+const data = await readFile("/etc/hostname", "utf8");
 // async/await is syntactic sugar over Promises.
 // The await pauses THIS function, not the event loop.
 // Other code can run while waiting.
@@ -523,12 +523,12 @@ setTimeout(() => {}, 1000);
 // Browser: returns a number (timer ID)
 
 // console
-console.log('hello');
+console.log("hello");
 // Node: writes to stdout (process.stdout)
 // Browser: writes to DevTools console
 
 // Buffer (Node.js only)
-const buf = Buffer.from('hello', 'utf8');
+const buf = Buffer.from("hello", "utf8");
 // Browsers have Uint8Array and ArrayBuffer but not Buffer.
 // Buffer IS a Uint8Array subclass — they're interoperable.
 ```
@@ -572,10 +572,10 @@ npm ecosystem:
 ```
 CPU-bound workloads:
   Image processing, video encoding, ML inference, complex calculations.
-  
+
   Why: a CPU-intensive operation blocks the event loop.
   While your JS is computing prime numbers, no HTTP requests can be served.
-  
+
   The event loop is a single thread. If it's busy computing, it's not I/O-ing.
 
   const primes = computePrimesUpTo(1_000_000);  // takes 500ms
