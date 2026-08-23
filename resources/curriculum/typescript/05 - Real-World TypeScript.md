@@ -79,7 +79,6 @@ my-api/
 ```json
 {
   "compilerOptions": {
-
     // ───────────────────────────────────────────
     // TARGET & MODULE
     // ───────────────────────────────────────────
@@ -284,7 +283,13 @@ my-api/
     "removeComments": true,
     "incremental": false
   },
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts", "**/*.e2e-spec.ts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.e2e-spec.ts"
+  ]
 }
 ```
 
@@ -323,12 +328,14 @@ export {}; // Makes this a module (required for global augmentation)
 // src/config/index.ts — validated config with proper types
 function requireEnv(key: keyof NodeJS.ProcessEnv): string {
   const value = process.env[key];
-  if (!value) throw new Error(`Required environment variable "${key}" is not set`);
+  if (!value)
+    throw new Error(`Required environment variable "${key}" is not set`);
   return value;
 }
 
 export const config = {
-  env: (process.env.NODE_ENV ?? "development") as "development" | "staging" | "production",
+  env: (process.env.NODE_ENV ?? "development") as
+    "development" | "staging" | "production",
   port: parseInt(process.env.PORT ?? "3000", 10),
   database: {
     url: requireEnv("DATABASE_URL"),
@@ -344,9 +351,9 @@ export const config = {
 } as const;
 
 // Now TypeScript knows the exact shape of your config
-config.jwt.secret;   // string
-config.port;         // number
-config.redis.url;    // string | undefined
+config.jwt.secret; // string
+config.port; // number
+config.redis.url; // string | undefined
 ```
 
 ---
@@ -511,7 +518,7 @@ module.exports = { calculateDiscount };
 export declare function calculateDiscount(
   price: number,
   percent: number,
-  maxDiscount?: number
+  maxDiscount?: number,
 ): number;
 ```
 
@@ -639,13 +646,16 @@ type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
 class ApiClient {
   private readonly client: AxiosInstance;
 
-  constructor(baseURL: string, private getToken?: () => string | null) {
+  constructor(
+    baseURL: string,
+    private getToken?: () => string | null,
+  ) {
     this.client = axios.create({
       baseURL,
       timeout: 10_000,
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json",
+        Accept: "application/json",
       },
     });
 
@@ -663,7 +673,7 @@ class ApiClient {
         config.headers["X-Request-ID"] = crypto.randomUUID();
         return config;
       },
-      (error: AxiosError) => Promise.reject(error)
+      (error: AxiosError) => Promise.reject(error),
     );
 
     // Response interceptor — unwrap data or handle errors
@@ -675,7 +685,7 @@ class ApiClient {
           this.handleUnauthorized();
         }
         return Promise.reject(this.transformError(error));
-      }
+      },
     );
   }
 
@@ -698,15 +708,13 @@ class ApiClient {
       return err;
     }
     if (error.code === "ECONNABORTED") return new Error("Request timed out");
-    if (!error.response) return new Error("Network error — check your connection");
+    if (!error.response)
+      return new Error("Network error — check your connection");
     return new Error(`HTTP ${error.response.status}: ${error.message}`);
   }
 
   // Generic GET — T is the type of the actual data payload
-  async get<T>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
+  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.get<ApiSuccessResponse<T>>(url, config);
     return response.data.data;
   }
@@ -714,49 +722,62 @@ class ApiClient {
   async post<TData, TResponse>(
     url: string,
     data: TData,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<TResponse> {
-    const response = await this.client.post<ApiSuccessResponse<TResponse>>(url, data, config);
+    const response = await this.client.post<ApiSuccessResponse<TResponse>>(
+      url,
+      data,
+      config,
+    );
     return response.data.data;
   }
 
   async put<TData, TResponse>(
     url: string,
     data: TData,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<TResponse> {
-    const response = await this.client.put<ApiSuccessResponse<TResponse>>(url, data, config);
+    const response = await this.client.put<ApiSuccessResponse<TResponse>>(
+      url,
+      data,
+      config,
+    );
     return response.data.data;
   }
 
   async patch<TData, TResponse>(
     url: string,
     data: TData,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<TResponse> {
-    const response = await this.client.patch<ApiSuccessResponse<TResponse>>(url, data, config);
+    const response = await this.client.patch<ApiSuccessResponse<TResponse>>(
+      url,
+      data,
+      config,
+    );
     return response.data.data;
   }
 
   async delete<TResponse = void>(
     url: string,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<TResponse> {
-    const response = await this.client.delete<ApiSuccessResponse<TResponse>>(url, config);
+    const response = await this.client.delete<ApiSuccessResponse<TResponse>>(
+      url,
+      config,
+    );
     return response.data.data;
   }
 }
 
 // Domain-specific API modules
-const apiClient = new ApiClient(
-  process.env.REACT_APP_API_URL!,
-  () => localStorage.getItem("accessToken")
+const apiClient = new ApiClient(process.env.REACT_APP_API_URL!, () =>
+  localStorage.getItem("accessToken"),
 );
 
 // Typed API modules
 const userApi = {
-  getById: (id: string) =>
-    apiClient.get<User>(`/users/${id}`),
+  getById: (id: string) => apiClient.get<User>(`/users/${id}`),
 
   list: (params?: UserQueryParams) =>
     apiClient.get<PaginatedResult<User>>("/users", { params }),
@@ -767,33 +788,34 @@ const userApi = {
   update: (id: string, data: UpdateUserDTO) =>
     apiClient.patch<UpdateUserDTO, User>(`/users/${id}`, data),
 
-  delete: (id: string) =>
-    apiClient.delete(`/users/${id}`),
+  delete: (id: string) => apiClient.delete(`/users/${id}`),
 
-  changePassword: (id: string, data: { currentPassword: string; newPassword: string }) =>
-    apiClient.post<typeof data, void>(`/users/${id}/change-password`, data),
+  changePassword: (
+    id: string,
+    data: { currentPassword: string; newPassword: string },
+  ) => apiClient.post<typeof data, void>(`/users/${id}/change-password`, data),
 };
 
 const authApi = {
   login: (credentials: { email: string; password: string }) =>
-    apiClient.post<typeof credentials, { accessToken: string; refreshToken: string }>(
-      "/auth/login",
-      credentials
-    ),
+    apiClient.post<
+      typeof credentials,
+      { accessToken: string; refreshToken: string }
+    >("/auth/login", credentials),
 
   logout: () => apiClient.post<void, void>("/auth/logout", undefined),
 
   refresh: (refreshToken: string) =>
     apiClient.post<{ refreshToken: string }, { accessToken: string }>(
       "/auth/refresh",
-      { refreshToken }
+      { refreshToken },
     ),
 };
 
 // Usage — completely type-safe
 const user = await userApi.getById("u1");
-user.name;           // string ✓
-user.unknownField;   // TS Error ✓
+user.name; // string ✓
+user.unknownField; // TS Error ✓
 
 const newUser = await userApi.create({
   name: "Alice",
@@ -801,7 +823,7 @@ const newUser = await userApi.create({
   password: "securepass123",
   role: "user",
 });
-newUser.id;          // string ✓ (server-generated, in response)
+newUser.id; // string ✓ (server-generated, in response)
 ```
 
 ### Typing Axios Errors
@@ -875,10 +897,10 @@ import { Request, Response, NextFunction } from "express";
 app.get(
   "/users/:id",
   async (
-    req: Request<{ id: string }>,  // Params
-    res: Response<User | ErrorBody>  // Response body
+    req: Request<{ id: string }>, // Params
+    res: Response<User | ErrorBody>, // Response body
   ): Promise<void> => {
-    const { id } = req.params;  // id: string ✓
+    const { id } = req.params; // id: string ✓
 
     const user = await userRepo.findById(id);
     if (!user) {
@@ -886,12 +908,12 @@ app.get(
       return;
     }
     res.json(user);
-  }
+  },
 );
 
 // GET /users?page=1&limit=20&search=alice
 interface UserQueryParams {
-  page?: string;    // query params are always strings
+  page?: string; // query params are always strings
   limit?: string;
   search?: string;
   role?: string;
@@ -900,15 +922,10 @@ interface UserQueryParams {
 app.get(
   "/users",
   async (
-    req: Request<{}, {}, {}, UserQueryParams>,  // empty params, empty body, typed query
-    res: Response<PaginatedResult<User>>
+    req: Request<{}, {}, {}, UserQueryParams>, // empty params, empty body, typed query
+    res: Response<PaginatedResult<User>>,
   ): Promise<void> => {
-    const {
-      page = "1",
-      limit = "20",
-      search,
-      role,
-    } = req.query;  // UserQueryParams ✓
+    const { page = "1", limit = "20", search, role } = req.query; // UserQueryParams ✓
 
     const result = await userRepo.findAll({
       page: parseInt(page, 10),
@@ -918,29 +935,31 @@ app.get(
     });
 
     res.json(result);
-  }
+  },
 );
 
 // POST /users
 app.post(
   "/users",
   async (
-    req: Request<{}, {}, CreateUserDTO>,  // typed request body
-    res: Response<User | ErrorBody>
+    req: Request<{}, {}, CreateUserDTO>, // typed request body
+    res: Response<User | ErrorBody>,
   ): Promise<void> => {
-    const dto: CreateUserDTO = req.body;  // ✓ typed as CreateUserDTO
+    const dto: CreateUserDTO = req.body; // ✓ typed as CreateUserDTO
 
     // But: Express doesn't validate at runtime!
     // Use Zod, Joi, or class-validator to validate dto at runtime
     const validation = CreateUserSchema.safeParse(dto);
     if (!validation.success) {
-      res.status(400).json({ error: "Validation failed", details: validation.error.issues });
+      res
+        .status(400)
+        .json({ error: "Validation failed", details: validation.error.issues });
       return;
     }
 
     const user = await userService.create(validation.data);
     res.status(201).json(user);
-  }
+  },
 );
 ```
 
@@ -953,7 +972,7 @@ import { Request, Response, NextFunction, RequestHandler } from "express";
 export const authMiddleware: RequestHandler = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const authHeader = req.headers.authorization;
 
@@ -1010,7 +1029,7 @@ const router = Router();
 
 // Type-safe route builder helper
 function asyncHandler(
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>,
 ): RequestHandler {
   return (req, res, next) => fn(req, res, next).catch(next);
 }
@@ -1028,7 +1047,7 @@ router.get(
       return;
     }
     res.json(omit(user, "passwordHash"));
-  })
+  }),
 );
 
 router.put(
@@ -1036,7 +1055,7 @@ router.put(
   asyncHandler(async (req: Request<{}, {}, UpdateProfileDTO>, res) => {
     const updated = await userRepo.update(req.user!.id, req.body);
     res.json(updated);
-  })
+  }),
 );
 ```
 
@@ -1047,10 +1066,10 @@ import { Request, Response, NextFunction } from "express";
 
 // TypeScript needs 4 parameters for error middleware — even if you don't use `next`
 function errorHandler(
-  err: unknown,  // `unknown` because useUnknownInCatchVariables is on
+  err: unknown, // `unknown` because useUnknownInCatchVariables is on
   req: Request,
   res: Response,
-  next: NextFunction  // Required for Express to recognize it as error middleware
+  next: NextFunction, // Required for Express to recognize it as error middleware
 ): void {
   // Log the error
   console.error({
@@ -1136,7 +1155,11 @@ function createApp(): Application {
 
   // Health check
   app.get("/health", (_, res) => {
-    res.json({ status: "ok", timestamp: new Date().toISOString(), version: config.version });
+    res.json({
+      status: "ok",
+      timestamp: new Date().toISOString(),
+      version: config.version,
+    });
   });
 
   // Routes
@@ -1209,18 +1232,22 @@ const config = { ... } as const;
 
 ```ts
 // ❌ Don't use any
-function process(data: any): void {}  // loses all safety
+function process(data: any): void {} // loses all safety
 
 // ✅ Use unknown instead
 function process(data: unknown): void {
-  if (typeof data === "string") { data.toUpperCase(); }
+  if (typeof data === "string") {
+    data.toUpperCase();
+  }
 }
 
 // ❌ Don't assert types you're not sure about
-const user = response as User;  // might crash at runtime if shape is wrong
+const user = response as User; // might crash at runtime if shape is wrong
 
 // ✅ Validate first, then cast
-if (isUser(response)) { const user = response; }
+if (isUser(response)) {
+  const user = response;
+}
 
 // ❌ Don't forget query params are strings
 const page = req.query.page; // string | undefined — NOT number!

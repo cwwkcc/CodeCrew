@@ -48,15 +48,15 @@ calculateTotal("99.99", 3);
 
 ### TypeScript vs JavaScript: The Key Differences
 
-|Feature|JavaScript|TypeScript|
-|---|---|---|
-|Type system|Dynamic (runtime)|Static (compile-time)|
-|Type errors|Runtime crash|Compile-time error|
-|IDE support|Basic|Excellent (full autocomplete, refactoring)|
-|Runs in browser/Node|Directly|Must compile to JS first|
-|Learning curve|Lower|Slightly higher|
-|Refactoring safety|Low|High|
-|Large codebases|Fragile|Manageable|
+| Feature              | JavaScript        | TypeScript                                 |
+| -------------------- | ----------------- | ------------------------------------------ |
+| Type system          | Dynamic (runtime) | Static (compile-time)                      |
+| Type errors          | Runtime crash     | Compile-time error                         |
+| IDE support          | Basic             | Excellent (full autocomplete, refactoring) |
+| Runs in browser/Node | Directly          | Must compile to JS first                   |
+| Learning curve       | Lower             | Slightly higher                            |
+| Refactoring safety   | Low               | High                                       |
+| Large codebases      | Fragile           | Manageable                                 |
 
 ### How TypeScript Works
 
@@ -66,7 +66,7 @@ Your .ts file
 TypeScript Compiler (tsc) — checks types, reports errors
     ↓
 Plain .js file — this is what actually runs in browser/Node
-    ↓  
+    ↓
 No type information survives at runtime
    (TypeScript types are ERASED — they're a compile-time tool only)
 ```
@@ -83,7 +83,7 @@ No type information survives at runtime
 // TypeScript function signature IS the documentation
 async function createUser(
   data: CreateUserDTO,
-  options?: { sendWelcomeEmail: boolean; role: UserRole }
+  options?: { sendWelcomeEmail: boolean; role: UserRole },
 ): Promise<User> {
   // IDE knows the exact shape of `data` and `options`
   // You can't pass the wrong thing without the compiler screaming
@@ -120,39 +120,39 @@ tsc --init
 {
   "compilerOptions": {
     // Output settings
-    "target": "ES2020",           // Which JS version to compile to
-    "module": "CommonJS",         // Module system: CommonJS (Node), ESNext (browser/bundler)
-    "outDir": "./dist",           // Where compiled JS files go
-    "rootDir": "./src",           // Where your TS source files are
+    "target": "ES2020", // Which JS version to compile to
+    "module": "CommonJS", // Module system: CommonJS (Node), ESNext (browser/bundler)
+    "outDir": "./dist", // Where compiled JS files go
+    "rootDir": "./src", // Where your TS source files are
 
     // Type checking strictness
-    "strict": true,               // Enable all strict checks (ALWAYS use this)
-    "noImplicitAny": true,        // Error on implicit `any` type
-    "strictNullChecks": true,     // null and undefined are not assignable to other types
-    "strictFunctionTypes": true,  // Strict function parameter checking
-    "noImplicitReturns": true,    // All code paths must return a value
-    "noUnusedLocals": true,       // Error on unused local variables
-    "noUnusedParameters": true,   // Error on unused function parameters
+    "strict": true, // Enable all strict checks (ALWAYS use this)
+    "noImplicitAny": true, // Error on implicit `any` type
+    "strictNullChecks": true, // null and undefined are not assignable to other types
+    "strictFunctionTypes": true, // Strict function parameter checking
+    "noImplicitReturns": true, // All code paths must return a value
+    "noUnusedLocals": true, // Error on unused local variables
+    "noUnusedParameters": true, // Error on unused function parameters
 
     // Module resolution
-    "moduleResolution": "node",   // How to resolve imports
-    "esModuleInterop": true,      // Allow default imports from CommonJS modules
-    "resolveJsonModule": true,    // Allow importing .json files
+    "moduleResolution": "node", // How to resolve imports
+    "esModuleInterop": true, // Allow default imports from CommonJS modules
+    "resolveJsonModule": true, // Allow importing .json files
 
     // Source maps (for debugging — maps compiled JS back to TS)
     "sourceMap": true,
 
     // Type definitions
-    "lib": ["ES2020", "DOM"],     // Which built-in types to include
-    "types": ["node"],            // Explicit @types packages to include
+    "lib": ["ES2020", "DOM"], // Which built-in types to include
+    "types": ["node"], // Explicit @types packages to include
 
     // Path aliases
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"]              // import from "@/services/auth" instead of "../../services/auth"
+      "@/*": ["./*"] // import from "@/services/auth" instead of "../../services/auth"
     }
   },
-  "include": ["src/**/*"],        // Which files to compile
+  "include": ["src/**/*"], // Which files to compile
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
 ```
@@ -242,7 +242,7 @@ When you declare a variable without a value, TypeScript can't infer the type —
 
 ```ts
 // ❌ Without annotation — TypeScript infers `any` (in non-strict mode) or errors
-let result;        // type is `any` — we lost all type safety
+let result; // type is `any` — we lost all type safety
 
 // ✅ With annotation — TypeScript knows what to expect
 let result: string;
@@ -294,20 +294,20 @@ TypeScript doesn't require annotations everywhere. It's smart enough to **infer
 ```ts
 // TypeScript infers `number` from the literal value
 const maxRetries = 3; // type: 3 (literal type — const gets literal type)
-let maxRetries = 3;   // type: number (let gets widened type)
+let maxRetries = 3; // type: number (let gets widened type)
 
 const greeting = "Hello"; // type: "Hello" (literal)
-let greeting = "Hello";   // type: string
+let greeting = "Hello"; // type: string
 
-const isReady = true;     // type: true (literal)
-let isReady = true;       // type: boolean
+const isReady = true; // type: true (literal)
+let isReady = true; // type: boolean
 ```
 
 ### Why `const` Gets Literal Types
 
 ```ts
 const direction = "north"; // type: "north" — can never be anything else
-let direction = "north";   // type: string — could be reassigned to "south"
+let direction = "north"; // type: string — could be reassigned to "south"
 ```
 
 This matters for discriminated unions (Part 2).
@@ -329,7 +329,7 @@ const users = [
 ];
 // TypeScript infers: { id: number; name: string }[]
 
-const names = users.map(u => u.name);
+const names = users.map((u) => u.name);
 // TypeScript infers: string[]
 
 const firstUser = users[0];
@@ -410,11 +410,11 @@ const config = {
 
 ```ts
 let value: any = "hello";
-value = 42;            // OK
-value = true;          // OK
-value = { id: 1 };    // OK
-value.anything;        // OK — no error (but crashes at runtime if value doesn't have `anything`)
-value();               // OK — no error (crashes at runtime if value is not a function)
+value = 42; // OK
+value = true; // OK
+value = { id: 1 }; // OK
+value.anything; // OK — no error (but crashes at runtime if value doesn't have `anything`)
+value(); // OK — no error (crashes at runtime if value is not a function)
 ```
 
 ### Why `any` Is Dangerous
@@ -424,16 +424,16 @@ function processInput(input: any) {
   return input.toUpperCase(); // TypeScript won't catch this
 }
 
-processInput("hello");  // ✓ works at runtime
-processInput(42);       // ✗ crashes: TypeError: input.toUpperCase is not a function
-processInput(null);     // ✗ crashes: TypeError: Cannot read properties of null
+processInput("hello"); // ✓ works at runtime
+processInput(42); // ✗ crashes: TypeError: input.toUpperCase is not a function
+processInput(null); // ✗ crashes: TypeError: Cannot read properties of null
 ```
 
 The moment you use `any`, you lose ALL TypeScript benefits for that value. It's contagious — anything derived from `any`is also `any`:
 
 ```ts
 let data: any = fetchSomething();
-const name = data.user.name;   // name is `any` — TypeScript gave up
+const name = data.user.name; // name is `any` — TypeScript gave up
 const upper = name.toUpperCase(); // also `any` — it's spreading
 ```
 
@@ -485,12 +485,14 @@ In `tsconfig.json` with `"strict": true` or `"noImplicitAny": true`, TypeSc
 
 ```ts
 // With noImplicitAny: true
-function greet(name) { // TS Error: Parameter 'name' implicitly has an 'any' type
+function greet(name) {
+  // TS Error: Parameter 'name' implicitly has an 'any' type
   return `Hello, ${name}`;
 }
 
 // Fix: annotate explicitly
-function greet(name: string) { // ✓
+function greet(name: string) {
+  // ✓
   return `Hello, ${name}`;
 }
 ```
@@ -526,7 +528,7 @@ function createApiRequest(
   endpoint: string,
   method: string,
   body: object,
-  timeout: number
+  timeout: number,
 ): Promise<Response> {
   return fetch(endpoint, {
     method,
@@ -571,12 +573,12 @@ function greet(name: string, title?: string): string {
   return `Hello, ${name}`;
 }
 
-greet("Alice");           // "Hello, Alice"
-greet("Alice", "Dr.");    // "Hello, Dr. Alice"
+greet("Alice"); // "Hello, Alice"
+greet("Alice", "Dr."); // "Hello, Dr. Alice"
 
 // Inside the function, TypeScript knows title is `string | undefined`
 function logRequest(url: string, method?: string) {
-  const m = method;       // type: string | undefined
+  const m = method; // type: string | undefined
   const m2 = method ?? "GET"; // type: string (narrowed)
   console.log(`${m2} ${url}`);
 }
@@ -629,9 +631,9 @@ function formatPrice(amount: number, currency = "USD"): string {
   return `${amount.toFixed(2)} ${currency}`;
 }
 
-formatPrice(99.99);         // "99.99 USD"
-formatPrice(99.99, "EUR");  // "99.99 EUR"
-formatPrice(99.99, 42);     // TS Error: Type 'number' is not assignable to type 'string'
+formatPrice(99.99); // "99.99 USD"
+formatPrice(99.99, "EUR"); // "99.99 EUR"
+formatPrice(99.99, 42); // TS Error: Type 'number' is not assignable to type 'string'
 ```
 
 ### Default + Explicit Annotation
@@ -647,13 +649,13 @@ function createUser(name: string, role = "user") {
 // With explicit annotation: role is restricted to the union
 function createUser(
   name: string,
-  role: "user" | "admin" | "moderator" = "user"
+  role: "user" | "admin" | "moderator" = "user",
 ): User {
   // role: "user" | "admin" | "moderator"
 }
 
-createUser("Alice");           // role = "user"
-createUser("Alice", "admin");  // role = "admin"
+createUser("Alice"); // role = "user"
+createUser("Alice", "admin"); // role = "admin"
 createUser("Alice", "hacker"); // TS Error: not assignable to "user" | "admin" | "moderator"
 ```
 
@@ -690,7 +692,7 @@ async function apiRequest(
     timeout = 10_000,
     retries = 3,
     headers = {},
-  }: RequestOptions = {}  // Default the whole options object to {} so it's optional
+  }: RequestOptions = {}, // Default the whole options object to {} so it's optional
 ): Promise<unknown> {
   // method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
   // timeout: number
@@ -783,7 +785,7 @@ function parseToken(token: string): TokenPayload { ... }
 ```ts
 // Can return either a User or null
 function findUser(id: number): User | null {
-  const user = users.find(u => u.id === id);
+  const user = users.find((u) => u.id === id);
   return user ?? null;
 }
 
@@ -851,7 +853,9 @@ These are similar but not identical:
 
 ```ts
 // `void` function — TypeScript won't let you use the return value meaningfully
-function logA(): void { console.log("a"); }
+function logA(): void {
+  console.log("a");
+}
 
 // `undefined` return — the function explicitly returns undefined
 function logB(): undefined {
@@ -873,7 +877,7 @@ const b = logB(); // b: undefined
 type ForEachCallback<T> = (item: T, index: number) => void;
 
 // This allows the caller to use a function that DOES return something
-[1, 2, 3].forEach(n => n * 2);
+[1, 2, 3].forEach((n) => n * 2);
 // forEach's callback is typed as (value: number, ...) => void
 // The returned value from `n * 2` is just ignored — this is fine with `void`
 ```
@@ -946,15 +950,21 @@ function getUser(id: number): User {
 This is the most powerful use of `never` in real code. When you have a discriminated union and want TypeScript to error if you add a new case but forget to handle it:
 
 ```ts
-type PaymentStatus = "pending" | "processing" | "completed" | "failed" | "refunded";
+type PaymentStatus =
+  "pending" | "processing" | "completed" | "failed" | "refunded";
 
 function handlePaymentStatus(status: PaymentStatus): string {
   switch (status) {
-    case "pending":     return "Awaiting payment";
-    case "processing":  return "Processing...";
-    case "completed":   return "Payment successful";
-    case "failed":      return "Payment failed";
-    case "refunded":    return "Amount refunded";
+    case "pending":
+      return "Awaiting payment";
+    case "processing":
+      return "Processing...";
+    case "completed":
+      return "Payment successful";
+    case "failed":
+      return "Payment failed";
+    case "refunded":
+      return "Amount refunded";
     default: {
       // If all cases are handled above, `status` here has type `never`
       // If you add a new status and forget to handle it,
@@ -966,7 +976,8 @@ function handlePaymentStatus(status: PaymentStatus): string {
 }
 
 // Now you add a new status:
-type PaymentStatus = "pending" | "processing" | "completed" | "failed" | "refunded" | "disputed";
+type PaymentStatus =
+  "pending" | "processing" | "completed" | "failed" | "refunded" | "disputed";
 // TS Error on the `never` line: Type '"disputed"' is not assignable to type 'never'
 // — TypeScript tells you exactly which case you forgot to handle!
 ```
@@ -1029,7 +1040,10 @@ function assert(condition: boolean, message: string): asserts condition {
   if (!condition) throw new Error(message);
 }
 
-function assertNonNull<T>(value: T, message: string): asserts value is NonNullable<T> {
+function assertNonNull<T>(
+  value: T,
+  message: string,
+): asserts value is NonNullable<T> {
   if (value == null) throw new Error(message);
 }
 

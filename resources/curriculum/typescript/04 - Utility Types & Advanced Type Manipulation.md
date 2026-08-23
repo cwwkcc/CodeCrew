@@ -34,9 +34,9 @@ type User = {
 };
 
 // Transformed types — no duplication, derived from User
-type PartialUser   = Partial<User>;        // all fields optional
-type PublicUser    = Omit<User, 'password'>; // password removed
-type UserUpdate    = Partial<Pick<User, 'name' | 'email'>>; // optional subset
+type PartialUser = Partial<User>; // all fields optional
+type PublicUser = Omit<User, "password">; // password removed
+type UserUpdate = Partial<Pick<User, "name" | "email">>; // optional subset
 ```
 
 The key value: you define a type once and derive all variants from it. When the base type changes, all derived types update automatically.
@@ -68,9 +68,9 @@ function updateUser(id: number, changes: Partial<User>): User {
   // changes can have any subset of User's fields
 }
 
-updateUser(1, { name: "Alice" });           // valid
+updateUser(1, { name: "Alice" }); // valid
 updateUser(1, { name: "Alice", email: "" }); // valid
-updateUser(1, {});                           // valid — no changes
+updateUser(1, {}); // valid — no changes
 ```
 
 Common use: PATCH endpoints where the body contains only the fields being changed.
@@ -96,8 +96,8 @@ type ResolvedConfig = Required<Config>;
 // After loading config from env/file, you've guaranteed all fields exist
 function resolveConfig(input: Config): ResolvedConfig {
   return {
-    host:    input.host    ?? 'localhost',
-    port:    input.port    ?? 3000,
+    host: input.host ?? "localhost",
+    port: input.port ?? 3000,
     timeout: input.timeout ?? 5000,
   };
 }
@@ -114,7 +114,7 @@ type Config = {
 };
 
 const config: Readonly<Config> = {
-  host: 'localhost',
+  host: "localhost",
   port: 3000,
 };
 
@@ -144,7 +144,7 @@ type User = {
 };
 
 // What you send back in an API response — no password
-type PublicUser = Pick<User, 'id' | 'name' | 'email'>;
+type PublicUser = Pick<User, "id" | "name" | "email">;
 // {
 //   id: number;
 //   name: string;
@@ -152,7 +152,7 @@ type PublicUser = Pick<User, 'id' | 'name' | 'email'>;
 // }
 
 // What you use for a preview card
-type UserCard = Pick<User, 'id' | 'name'>;
+type UserCard = Pick<User, "id" | "name">;
 ```
 
 ### Omit<T, K>
@@ -161,7 +161,7 @@ Constructs a type by removing properties `K` from `T`. The inverse of `Pick`.
 
 ```typescript
 // Remove sensitive fields
-type SafeUser = Omit<User, 'password'>;
+type SafeUser = Omit<User, "password">;
 // {
 //   id: number;
 //   name: string;
@@ -170,7 +170,7 @@ type SafeUser = Omit<User, 'password'>;
 // }
 
 // Remove auto-generated fields before inserting
-type CreateUserInput = Omit<User, 'id' | 'createdAt'>;
+type CreateUserInput = Omit<User, "id" | "createdAt">;
 // {
 //   name: string;
 //   email: string;
@@ -182,10 +182,10 @@ type CreateUserInput = Omit<User, 'id' | 'createdAt'>;
 
 ```typescript
 // Use Pick when you want a FEW fields from a large type
-type UserCard = Pick<User, 'id' | 'name'>;
+type UserCard = Pick<User, "id" | "name">;
 
 // Use Omit when you want MOST fields, removing a few
-type SafeUser = Omit<User, 'password'>;
+type SafeUser = Omit<User, "password">;
 
 // Rule of thumb:
 //   Selecting 1–3 fields from 10+ → Pick
@@ -204,19 +204,19 @@ type ScoreMap = Record<string, number>;
 const scores: ScoreMap = { alice: 95, bob: 87 };
 
 // Union keys — enforces all keys are present
-type Role = 'admin' | 'editor' | 'viewer';
+type Role = "admin" | "editor" | "viewer";
 type RolePermissions = Record<Role, string[]>;
 
 const permissions: RolePermissions = {
-  admin:  ['read', 'write', 'delete'],
-  editor: ['read', 'write'],
-  viewer: ['read'],
+  admin: ["read", "write", "delete"],
+  editor: ["read", "write"],
+  viewer: ["read"],
   // TypeScript error if any Role key is missing
 };
 
 // Mapping from one type to another
-type UserCache = Record<number, User>;   // userId → User
-type Config    = Record<string, unknown>; // arbitrary config object
+type UserCache = Record<number, User>; // userId → User
+type Config = Record<string, unknown>; // arbitrary config object
 ```
 
 `Record<string, V>` is equivalent to `{ [key: string]: V }` — an index signature. But `Record<UnionType, V>` is more powerful because it enforces that every member of the union is present.
@@ -232,9 +232,9 @@ These operate on union types rather than object types.
 Removes from union `T` all members that are assignable to `U`.
 
 ```typescript
-type Status = 'pending' | 'active' | 'suspended' | 'deleted';
+type Status = "pending" | "active" | "suspended" | "deleted";
 
-type ActiveStatus = Exclude<Status, 'deleted' | 'suspended'>;
+type ActiveStatus = Exclude<Status, "deleted" | "suspended">;
 // 'pending' | 'active'
 
 type NoStrings = Exclude<string | number | boolean, string>;
@@ -249,9 +249,9 @@ type NoNull = Exclude<string | null | undefined, null | undefined>;
 The opposite — keeps only members of `T` that are assignable to `U`.
 
 ```typescript
-type Status = 'pending' | 'active' | 'suspended' | 'deleted';
+type Status = "pending" | "active" | "suspended" | "deleted";
 
-type DangerousStatus = Extract<Status, 'suspended' | 'deleted' | 'archived'>;
+type DangerousStatus = Extract<Status, "suspended" | "deleted" | "archived">;
 // 'suspended' | 'deleted'  (archived not in Status, so excluded)
 
 type OnlyStrings = Extract<string | number | boolean, string>;
@@ -292,7 +292,7 @@ Extracts the return type of a function type.
 
 ```typescript
 function getUser() {
-  return { id: 1, name: 'Alice', email: 'alice@example.com' };
+  return { id: 1, name: "Alice", email: "alice@example.com" };
 }
 
 type User = ReturnType<typeof getUser>;
@@ -300,7 +300,7 @@ type User = ReturnType<typeof getUser>;
 
 // Useful when you don't want to define the return type separately
 async function fetchConfig() {
-  return { host: 'localhost', port: 3000, debug: false };
+  return { host: "localhost", port: 3000, debug: false };
 }
 
 type Config = Awaited<ReturnType<typeof fetchConfig>>;
@@ -318,13 +318,13 @@ type CreateUserParams = Parameters<typeof createUser>;
 // [name: string, email: string, age: number]
 
 // Access individual parameters
-type FirstParam  = Parameters<typeof createUser>[0]; // string
+type FirstParam = Parameters<typeof createUser>[0]; // string
 type SecondParam = Parameters<typeof createUser>[1]; // string
 
 // Useful for wrapping functions
 function withLogging<T extends (...args: any[]) => any>(fn: T) {
   return (...args: Parameters<T>): ReturnType<T> => {
-    console.log('Calling with:', args);
+    console.log("Calling with:", args);
     return fn(...args);
   };
 }
@@ -349,7 +349,9 @@ Extracts the instance type of a constructor.
 
 ```typescript
 class DatabaseConnection {
-  query(sql: string): Promise<unknown[]> { return Promise.resolve([]); }
+  query(sql: string): Promise<unknown[]> {
+    return Promise.resolve([]);
+  }
 }
 
 type DBConn = InstanceType<typeof DatabaseConnection>;
@@ -357,7 +359,7 @@ type DBConn = InstanceType<typeof DatabaseConnection>;
 
 // Useful with factory functions or DI containers
 function createInstance<T extends new (...args: any[]) => any>(
-  Constructor: T
+  Constructor: T,
 ): InstanceType<T> {
   return new Constructor();
 }
@@ -396,7 +398,7 @@ Mapped types let you create new types by iterating over the keys of an existing 
 
 ```typescript
 type Mapped<T> = {
-  [K in keyof T]: T[K];  // identity — same as T
+  [K in keyof T]: T[K]; // identity — same as T
 };
 ```
 
@@ -497,11 +499,11 @@ type FrozenConfig = DeepReadonly<Config>;
 Conditional types select a type based on a condition, using the same `extends` syntax used for constraints.
 
 ```typescript
-type IsString<T> = T extends string ? 'yes' : 'no';
+type IsString<T> = T extends string ? "yes" : "no";
 
-type A = IsString<string>;  // 'yes'
-type B = IsString<number>;  // 'no'
-type C = IsString<'hello'>; // 'yes' — 'hello' extends string
+type A = IsString<string>; // 'yes'
+type B = IsString<number>; // 'no'
+type C = IsString<"hello">; // 'yes' — 'hello' extends string
 ```
 
 ### Distributive Conditional Types
@@ -509,7 +511,7 @@ type C = IsString<'hello'>; // 'yes' — 'hello' extends string
 When the type being checked (`T`) is a bare type parameter and you pass a union, the conditional distributes over each member:
 
 ```typescript
-type IsString<T> = T extends string ? 'yes' : 'no';
+type IsString<T> = T extends string ? "yes" : "no";
 
 type D = IsString<string | number | boolean>;
 // 'yes' | 'no' | 'no'
@@ -521,7 +523,7 @@ This is how `Exclude` and `Extract` are implemented:
 ```typescript
 // Exclude<T, U> = T extends U ? never : T
 // When T is a union, this distributes:
-// Exclude<'a' | 'b' | 'c', 'a'> 
+// Exclude<'a' | 'b' | 'c', 'a'>
 //   = ('a' extends 'a' ? never : 'a') | ('b' extends 'a' ? never : 'b') | ('c' extends 'a' ? never : 'c')
 //   = never | 'b' | 'c'
 //   = 'b' | 'c'
@@ -545,7 +547,7 @@ type IsUnion<T> = [T] extends [T] ? true : false;
 type ReturnType<T> = T extends (...args: any[]) => infer R ? R : never;
 //                                                 ^^^^^^^ infer R captures the return type
 
-type A = ReturnType<() => string>;         // string
+type A = ReturnType<() => string>; // string
 type B = ReturnType<(x: number) => boolean>; // boolean
 ```
 
@@ -554,10 +556,10 @@ type B = ReturnType<(x: number) => boolean>; // boolean
 ```typescript
 type ElementType<T> = T extends (infer E)[] ? E : never;
 
-type A = ElementType<string[]>;          // string
-type B = ElementType<number[]>;          // number
-type C = ElementType<Array<User>>;       // User
-type D = ElementType<string>;            // never — string is not an array
+type A = ElementType<string[]>; // string
+type B = ElementType<number[]>; // number
+type C = ElementType<Array<User>>; // User
+type D = ElementType<string>; // never — string is not an array
 ```
 
 ### Extracting from Promises
@@ -566,30 +568,30 @@ type D = ElementType<string>;            // never — string is not an array
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 
 type A = UnwrapPromise<Promise<string>>; // string
-type B = UnwrapPromise<Promise<User>>;   // User
-type C = UnwrapPromise<string>;          // string — passes through
+type B = UnwrapPromise<Promise<User>>; // User
+type C = UnwrapPromise<string>; // string — passes through
 ```
 
 ### Extracting Function Parameter Types
 
 ```typescript
-type FirstParam<T> = T extends (first: infer F, ...rest: any[]) => any ? F : never;
+type FirstParam<T> = T extends (first: infer F, ...rest: any[]) => any
+  ? F
+  : never;
 
 type A = FirstParam<(name: string, age: number) => void>; // string
-type B = FirstParam<() => void>;                          // never
+type B = FirstParam<() => void>; // never
 ```
 
 ### Infer in Recursive Types
 
 ```typescript
 // Flatten a nested array to its deepest element type
-type DeepElement<T> = T extends (infer E)[]
-  ? DeepElement<E>
-  : T;
+type DeepElement<T> = T extends (infer E)[] ? DeepElement<E> : T;
 
 type A = DeepElement<string[][][]>; // string
-type B = DeepElement<number[]>;     // number
-type C = DeepElement<string>;       // string
+type B = DeepElement<number[]>; // number
+type C = DeepElement<string>; // string
 ```
 
 ---
@@ -606,12 +608,12 @@ type EventName = `on${Capitalize<string>}`;
 // "onClick", "onChange", "onSubmit", etc.
 
 // Combining literal unions
-type Direction = 'top' | 'right' | 'bottom' | 'left';
+type Direction = "top" | "right" | "bottom" | "left";
 type Edge = `border-${Direction}`;
 // 'border-top' | 'border-right' | 'border-bottom' | 'border-left'
 
-type Size = 'sm' | 'md' | 'lg';
-type Color = 'red' | 'blue' | 'green';
+type Size = "sm" | "md" | "lg";
+type Color = "red" | "blue" | "green";
 type ButtonClass = `btn-${Size}-${Color}`;
 // 'btn-sm-red' | 'btn-sm-blue' | 'btn-sm-green' | 'btn-md-red' | ...
 ```
@@ -619,16 +621,16 @@ type ButtonClass = `btn-${Size}-${Color}`;
 ### Built-in String Manipulation Types
 
 ```typescript
-type U = Uppercase<'hello'>;         // 'HELLO'
-type L = Lowercase<'WORLD'>;         // 'world'
-type C = Capitalize<'hello'>;        // 'Hello'
-type UC = Uncapitalize<'Hello'>;     // 'hello'
+type U = Uppercase<"hello">; // 'HELLO'
+type L = Lowercase<"WORLD">; // 'world'
+type C = Capitalize<"hello">; // 'Hello'
+type UC = Uncapitalize<"Hello">; // 'hello'
 ```
 
 ### Generating Getter/Setter Names
 
 ```typescript
-type Fields = 'name' | 'email' | 'age';
+type Fields = "name" | "email" | "age";
 
 type Getters = `get${Capitalize<Fields>}`;
 // 'getName' | 'getEmail' | 'getAge'
@@ -641,13 +643,15 @@ type Setters = `set${Capitalize<Fields>}`;
 
 ```typescript
 type EventMap = {
-  click:  { x: number; y: number };
-  focus:  { target: HTMLElement };
+  click: { x: number; y: number };
+  focus: { target: HTMLElement };
   change: { value: string };
 };
 
 type EventHandlers = {
-  [K in keyof EventMap as `on${Capitalize<string & K>}`]: (event: EventMap[K]) => void;
+  [K in keyof EventMap as `on${Capitalize<string & K>}`]: (
+    event: EventMap[K],
+  ) => void;
 };
 
 // {
@@ -664,15 +668,15 @@ type EventHandlers = {
 ### Type-Safe API Response Wrapper
 
 ```typescript
-type ApiSuccess<T> = { status: 'success'; data: T };
-type ApiError      = { status: 'error';   message: string };
+type ApiSuccess<T> = { status: "success"; data: T };
+type ApiError = { status: "error"; message: string };
 type ApiResponse<T> = ApiSuccess<T> | ApiError;
 
 // Extract the data type from a success response
 type ApiData<T> = T extends ApiSuccess<infer D> ? D : never;
 
 type UserResponse = ApiResponse<User>;
-type UserData     = ApiData<ApiSuccess<User>>;  // User
+type UserData = ApiData<ApiSuccess<User>>; // User
 ```
 
 ### Deep Partial
@@ -700,12 +704,12 @@ type PartialConfig = DeepPartial<Config>;
 
 ```typescript
 type BuilderState = {
-  hasName:  boolean;
+  hasName: boolean;
   hasEmail: boolean;
 };
 
 type UserBuilder<S extends BuilderState> = {
-  setName(name: string):  UserBuilder<S & { hasName: true }>;
+  setName(name: string): UserBuilder<S & { hasName: true }>;
   setEmail(email: string): UserBuilder<S & { hasEmail: true }>;
 } & (S extends { hasName: true; hasEmail: true }
   ? { build(): User }
@@ -718,27 +722,31 @@ type UserBuilder<S extends BuilderState> = {
 
 ```typescript
 type Shape =
-  | { kind: 'circle';    radius: number }
-  | { kind: 'rectangle'; width: number; height: number }
-  | { kind: 'triangle';  base: number;  height: number };
+  | { kind: "circle"; radius: number }
+  | { kind: "rectangle"; width: number; height: number }
+  | { kind: "triangle"; base: number; height: number };
 
 // Extract a specific variant by discriminant
 type ExtractVariant<T, K extends string> = Extract<T, { kind: K }>;
 
-type Circle = ExtractVariant<Shape, 'circle'>;
+type Circle = ExtractVariant<Shape, "circle">;
 // { kind: 'circle'; radius: number }
 
 // Ensure a switch is exhaustive
 function assertNever(x: never): never {
-  throw new Error('Unexpected value: ' + x);
+  throw new Error("Unexpected value: " + x);
 }
 
 function area(shape: Shape): number {
   switch (shape.kind) {
-    case 'circle':    return Math.PI * shape.radius ** 2;
-    case 'rectangle': return shape.width * shape.height;
-    case 'triangle':  return 0.5 * shape.base * shape.height;
-    default:          return assertNever(shape); // compile error if a case is missing
+    case "circle":
+      return Math.PI * shape.radius ** 2;
+    case "rectangle":
+      return shape.width * shape.height;
+    case "triangle":
+      return 0.5 * shape.base * shape.height;
+    default:
+      return assertNever(shape); // compile error if a case is missing
   }
 }
 ```
@@ -748,8 +756,8 @@ function area(shape: Shape): number {
 ```typescript
 type EnvSchema = {
   DATABASE_URL: string;
-  PORT:         number;
-  DEBUG:        boolean;
+  PORT: number;
+  DEBUG: boolean;
 };
 
 type EnvKeys = keyof EnvSchema;
@@ -758,13 +766,17 @@ function loadEnv(): EnvSchema {
   const raw = process.env;
 
   return {
-    DATABASE_URL: raw.DATABASE_URL ?? (() => { throw new Error('DATABASE_URL missing') })(),
-    PORT:         Number(raw.PORT ?? 3000),
-    DEBUG:        raw.DEBUG === 'true',
+    DATABASE_URL:
+      raw.DATABASE_URL ??
+      (() => {
+        throw new Error("DATABASE_URL missing");
+      })(),
+    PORT: Number(raw.PORT ?? 3000),
+    DEBUG: raw.DEBUG === "true",
   };
 }
 
 // The return type is fully typed — no string everywhere
 const env = loadEnv();
-env.PORT;  // number — not string
+env.PORT; // number — not string
 ```

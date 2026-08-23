@@ -56,12 +56,12 @@ import { z } from "zod";
 
 // Define the schema
 const createStudentSchema = z.object({
-  name:        z.string().min(2, "Name must be at least 2 characters"),
-  email:       z.string().email("Invalid email format"),
-  grade:       z.number().int().min(1).max(13),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email format"),
+  grade: z.number().int().min(1).max(13),
   dateOfBirth: z.string().datetime(),
   parentEmail: z.string().email().optional(),
-  subjects:    z.array(z.string()).min(1, "At least one subject required"),
+  subjects: z.array(z.string()).min(1, "At least one subject required"),
 });
 
 // TypeScript type — inferred automatically, zero duplication
@@ -99,7 +99,7 @@ const data = createStudentSchema.parse(requestBody);
 // safeParse — returns { success, data } | { success: false, error }
 const result = createStudentSchema.safeParse(requestBody);
 if (result.success) {
-  result.data;  // CreateStudentDTO
+  result.data; // CreateStudentDTO
 } else {
   result.error; // ZodError with detailed issues
 }
@@ -115,84 +115,86 @@ const result = await createStudentSchema.safeParseAsync(requestBody);
 ### String validations
 
 ```typescript
-z.string()
-z.string().min(2)
-z.string().max(100)
-z.string().length(10)
-z.string().email()
-z.string().url()
-z.string().uuid()
-z.string().cuid()
-z.string().regex(/^[A-Z]{3}-\d{4}$/, "Must match format ABC-1234")
-z.string().startsWith("https://")
-z.string().endsWith(".lk")
-z.string().includes("@")
-z.string().trim()           // transform: remove whitespace before validation
-z.string().toLowerCase()    // transform: convert to lowercase
-z.string().datetime()       // ISO 8601 datetime string
-z.string().ip()
+z.string();
+z.string().min(2);
+z.string().max(100);
+z.string().length(10);
+z.string().email();
+z.string().url();
+z.string().uuid();
+z.string().cuid();
+z.string().regex(/^[A-Z]{3}-\d{4}$/, "Must match format ABC-1234");
+z.string().startsWith("https://");
+z.string().endsWith(".lk");
+z.string().includes("@");
+z.string().trim(); // transform: remove whitespace before validation
+z.string().toLowerCase(); // transform: convert to lowercase
+z.string().datetime(); // ISO 8601 datetime string
+z.string().ip();
 ```
 
 ### Number validations
 
 ```typescript
-z.number()
-z.number().int()            // must be integer (no decimals)
-z.number().positive()       // > 0
-z.number().nonnegative()    // >= 0
-z.number().negative()       // < 0
-z.number().min(0)
-z.number().max(100)
-z.number().multipleOf(5)
-z.number().finite()
-z.number().safe()           // within Number.MAX_SAFE_INTEGER
+z.number();
+z.number().int(); // must be integer (no decimals)
+z.number().positive(); // > 0
+z.number().nonnegative(); // >= 0
+z.number().negative(); // < 0
+z.number().min(0);
+z.number().max(100);
+z.number().multipleOf(5);
+z.number().finite();
+z.number().safe(); // within Number.MAX_SAFE_INTEGER
 ```
 
 ### Optional, nullable, default
 
 ```typescript
-z.string().optional()               // string | undefined
-z.string().nullable()               // string | null
-z.string().nullish()                // string | null | undefined
-z.string().default("anonymous")     // uses default if undefined
-z.string().optional().default("")   // always has a value
+z.string().optional(); // string | undefined
+z.string().nullable(); // string | null
+z.string().nullish(); // string | null | undefined
+z.string().default("anonymous"); // uses default if undefined
+z.string().optional().default(""); // always has a value
 
 // Coerce — convert incoming type before validating
-z.coerce.number()   // "42" → 42 (useful for query params which are always strings)
-z.coerce.boolean()  // "true" → true
-z.coerce.date()     // "2026-01-15" → Date object
+z.coerce.number(); // "42" → 42 (useful for query params which are always strings)
+z.coerce.boolean(); // "true" → true
+z.coerce.date(); // "2026-01-15" → Date object
 ```
 
 ### Object schemas
 
 ```typescript
-const schema = z.object({
-  id:   z.string().uuid(),
-  name: z.string(),
-}).strict()    // reject unknown keys (throws on extra fields)
+const schema = z
+  .object({
+    id: z.string().uuid(),
+    name: z.string(),
+  })
+  .strict() // reject unknown keys (throws on extra fields)
   .passthrough() // OR: allow unknown keys through
-  .strip();      // OR: silently remove unknown keys (default)
+  .strip(); // OR: silently remove unknown keys (default)
 
 // Nested objects
 const addressSchema = z.object({
-  street:   z.string(),
-  city:     z.string(),
+  street: z.string(),
+  city: z.string(),
   district: z.string(),
   province: z.enum(["Western", "Central", "Southern", "Northern"]),
 });
 
 const studentSchema = z.object({
-  name:    z.string(),
-  address: addressSchema,  // nested — fully typed
+  name: z.string(),
+  address: addressSchema, // nested — fully typed
 });
 
 // Partial and required
-const updateSchema = studentSchema.partial();     // all fields optional
-const strictSchema = studentSchema.required();    // all fields required
+const updateSchema = studentSchema.partial(); // all fields optional
+const strictSchema = studentSchema.required(); // all fields required
 
 // Pick and omit
 const publicSchema = studentSchema.omit({ address: true });
-const miniSchema   = studentSchema.pick({ name: true });
+const miniSchema = studentSchema.pick({ name: true });
 
 // Extend
 const extendedSchema = studentSchema.extend({
@@ -208,33 +210,41 @@ const mergedSchema = schema1.merge(schema2);
 ```typescript
 // Discriminated union — Zod validates based on the discriminant
 const paymentSchema = z.discriminatedUnion("method", [
-  z.object({ method: z.literal("card"),  cardToken: z.string() }),
-  z.object({ method: z.literal("bank"),  accountNumber: z.string(), routingNumber: z.string() }),
+  z.object({ method: z.literal("card"), cardToken: z.string() }),
+  z.object({
+    method: z.literal("bank"),
+    accountNumber: z.string(),
+    routingNumber: z.string(),
+  }),
   z.object({ method: z.literal("paypal"), email: z.string().email() }),
 ]);
 
 // Cross-field validation with .refine()
-const passwordSchema = z.object({
-  password:        z.string().min(8),
-  confirmPassword: z.string(),
-}).refine(
-  data => data.password === data.confirmPassword,
-  { message: "Passwords don't match", path: ["confirmPassword"] }
-);
+const passwordSchema = z
+  .object({
+    password: z.string().min(8),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 // superRefine — for complex multi-error validation
-const dateRangeSchema = z.object({
-  startDate: z.string().datetime(),
-  endDate:   z.string().datetime(),
-}).superRefine((data, ctx) => {
-  if (new Date(data.endDate) <= new Date(data.startDate)) {
-    ctx.addIssue({
-      code:    z.ZodIssueCode.custom,
-      message: "End date must be after start date",
-      path:    ["endDate"],
-    });
-  }
-});
+const dateRangeSchema = z
+  .object({
+    startDate: z.string().datetime(),
+    endDate: z.string().datetime(),
+  })
+  .superRefine((data, ctx) => {
+    if (new Date(data.endDate) <= new Date(data.startDate)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "End date must be after start date",
+        path: ["endDate"],
+      });
+    }
+  });
 ```
 
 ---
@@ -304,12 +314,7 @@ await prisma.student.findUnique({ where: { nonExistentField: "x" } });
 Prisma generates utility types for every model and operation.
 
 ```typescript
-import type {
-  Prisma,
-  Student,
-  Course,
-  Enrollment,
-} from "@prisma/client";
+import type { Prisma, Student, Course, Enrollment } from "@prisma/client";
 
 // Get the type for a specific select/include combination
 type StudentWithCourses = Prisma.StudentGetPayload<{
@@ -337,8 +342,8 @@ function buildStudentSelect<T extends Prisma.StudentSelect>(select: T) {
 }
 
 const publicFields = buildStudentSelect({
-  id:    true,
-  name:  true,
+  id: true,
+  name: true,
   email: true,
   grade: true,
   // TS Error if you include a non-existent field
@@ -355,10 +360,10 @@ interface StudentRepository {
   findById(id: string): Promise<Student | null>;
   findByEmail(email: string): Promise<Student | null>;
   findAll(params: {
-    where?:   Prisma.StudentWhereInput;
+    where?: Prisma.StudentWhereInput;
     orderBy?: Prisma.StudentOrderByWithRelationInput;
-    skip?:    number;
-    take?:    number;
+    skip?: number;
+    take?: number;
   }): Promise<Student[]>;
   create(data: Prisma.StudentCreateInput): Promise<Student>;
   update(id: string, data: Prisma.StudentUpdateInput): Promise<Student>;
@@ -410,12 +415,14 @@ import { TRPCError } from "@trpc/server";
 export const studentRouter = router({
   // Query — read data
   list: protectedProcedure
-    .input(z.object({
-      grade:  z.number().int().min(1).max(13).optional(),
-      query:  z.string().optional(),
-      page:   z.number().int().min(1).default(1),
-      limit:  z.number().int().min(1).max(100).default(20),
-    }))
+    .input(
+      z.object({
+        grade: z.number().int().min(1).max(13).optional(),
+        query: z.string().optional(),
+        page: z.number().int().min(1).default(1),
+        limit: z.number().int().min(1).max(100).default(20),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       // ctx.user is typed (from protectedProcedure)
       // input is { grade?: number; query?: string; page: number; limit: number }
@@ -427,31 +434,43 @@ export const studentRouter = router({
             grade,
             name: query ? { contains: query, mode: "insensitive" } : undefined,
           },
-          skip:  (page - 1) * limit,
-          take:  limit,
+          skip: (page - 1) * limit,
+          take: limit,
         }),
         ctx.prisma.student.count({
           where: { grade, name: query ? { contains: query } : undefined },
         }),
       ]);
 
-      return { students, total, page, limit, totalPages: Math.ceil(total / limit) };
+      return {
+        students,
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      };
     }),
 
   // Mutation — modify data
   create: protectedProcedure
-    .input(createStudentSchema)  // reuse your Zod schema
+    .input(createStudentSchema) // reuse your Zod schema
     .mutation(async ({ ctx, input }) => {
       // Only admins can create students
       if (!ctx.user.roles.includes("admin")) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Admin access required",
+        });
       }
 
       const existing = await ctx.prisma.student.findUnique({
         where: { email: input.email },
       });
       if (existing) {
-        throw new TRPCError({ code: "CONFLICT", message: "Email already registered" });
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Email already registered",
+        });
       }
 
       return ctx.prisma.student.create({ data: input });
@@ -461,9 +480,14 @@ export const studentRouter = router({
   delete: protectedProcedure
     .input(z.object({ id: z.string().cuid() }))
     .mutation(async ({ ctx, input }) => {
-      const student = await ctx.prisma.student.findUnique({ where: { id: input.id } });
+      const student = await ctx.prisma.student.findUnique({
+        where: { id: input.id },
+      });
       if (!student) {
-        throw new TRPCError({ code: "NOT_FOUND", message: `Student ${input.id} not found` });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `Student ${input.id} not found`,
+        });
       }
 
       return ctx.prisma.student.delete({ where: { id: input.id } });
@@ -578,25 +602,25 @@ import { z } from "zod";
 
 const envSchema = z.object({
   // Server
-  NODE_ENV:    z.enum(["development", "staging", "production", "test"]),
-  PORT:        z.coerce.number().default(3000),
+  NODE_ENV: z.enum(["development", "staging", "production", "test"]),
+  PORT: z.coerce.number().default(3000),
 
   // Database
   DATABASE_URL: z.string().url(),
 
   // Auth
-  JWT_SECRET:             z.string().min(32, "JWT secret must be at least 32 chars"),
-  JWT_EXPIRES_IN:         z.string().default("15m"),
-  REFRESH_TOKEN_SECRET:   z.string().min(32),
-  REFRESH_TOKEN_EXPIRES:  z.string().default("7d"),
+  JWT_SECRET: z.string().min(32, "JWT secret must be at least 32 chars"),
+  JWT_EXPIRES_IN: z.string().default("15m"),
+  REFRESH_TOKEN_SECRET: z.string().min(32),
+  REFRESH_TOKEN_EXPIRES: z.string().default("7d"),
 
   // External services (optional)
-  RESEND_API_KEY:   z.string().optional(),
+  RESEND_API_KEY: z.string().optional(),
   CLOUDFLARE_R2_URL: z.string().url().optional(),
 
   // App
-  APP_URL:      z.string().url(),
-  CORS_ORIGINS: z.string().transform(s => s.split(",").map(u => u.trim())),
+  APP_URL: z.string().url(),
+  CORS_ORIGINS: z.string().transform((s) => s.split(",").map((u) => u.trim())),
 });
 
 // Throws at startup if any required env var is missing or invalid
@@ -604,10 +628,10 @@ const envSchema = z.object({
 export const env = envSchema.parse(process.env);
 
 // Type-safe access everywhere
-env.DATABASE_URL;  // string
-env.PORT;          // number (coerced from string)
-env.NODE_ENV;      // "development" | "staging" | "production" | "test"
-env.CORS_ORIGINS;  // string[] (transformed from comma-separated)
+env.DATABASE_URL; // string
+env.PORT; // number (coerced from string)
+env.NODE_ENV; // "development" | "staging" | "production" | "test"
+env.CORS_ORIGINS; // string[] (transformed from comma-separated)
 ```
 
 ```typescript

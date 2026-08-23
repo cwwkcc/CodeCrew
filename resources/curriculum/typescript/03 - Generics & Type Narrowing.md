@@ -62,12 +62,12 @@ function first<T>(arr: T[]): T | undefined {
   return arr[0];
 }
 
-const n = first([1, 2, 3]);       // T is inferred as number → n: number | undefined
-const s = first(["a", "b"]);      // T is inferred as string → s: string | undefined
-const u = first(users);           // T is inferred as User   → u: User | undefined
+const n = first([1, 2, 3]); // T is inferred as number → n: number | undefined
+const s = first(["a", "b"]); // T is inferred as string → s: string | undefined
+const u = first(users); // T is inferred as User   → u: User | undefined
 
-n?.toFixed(2);       // ✓ — TypeScript knows n is number | undefined
-n?.toUpperCase();    // TS Error — number doesn't have toUpperCase
+n?.toFixed(2); // ✓ — TypeScript knows n is number | undefined
+n?.toUpperCase(); // TS Error — number doesn't have toUpperCase
 ```
 
 Think of `T` as a **type variable** — a placeholder that gets filled in with a real type when the function is called.
@@ -92,7 +92,7 @@ function pair<T, U>(first: T, second: U): [T, U] {
 // Arrow function with generic
 const identity = <T>(value: T): T => value;
 // In TSX files, use <T,> to avoid ambiguity with JSX:
-const identity = <T,>(value: T): T => value;
+const identity = <T>(value: T): T => value;
 ```
 
 ### Type Inference with Generics
@@ -104,9 +104,9 @@ function wrap<T>(value: T): { value: T } {
   return { value };
 }
 
-wrap(42);          // TypeScript infers T = number → { value: number }
-wrap("hello");     // TypeScript infers T = string → { value: string }
-wrap({ id: 1 });   // TypeScript infers T = { id: number } → { value: { id: number } }
+wrap(42); // TypeScript infers T = number → { value: number }
+wrap("hello"); // TypeScript infers T = string → { value: string }
+wrap({ id: 1 }); // TypeScript infers T = { id: number } → { value: { id: number } }
 
 // Explicit type argument (when inference fails or you want to be explicit)
 wrap<string>("hello");
@@ -160,16 +160,22 @@ function createEventEmitter<Events extends Record<string, unknown>>() {
   const listeners = new Map<keyof Events, Set<Function>>();
 
   return {
-    on<E extends keyof Events>(event: E, handler: (data: Events[E]) => void): void {
+    on<E extends keyof Events>(
+      event: E,
+      handler: (data: Events[E]) => void,
+    ): void {
       if (!listeners.has(event)) listeners.set(event, new Set());
       listeners.get(event)!.add(handler);
     },
 
     emit<E extends keyof Events>(event: E, data: Events[E]): void {
-      listeners.get(event)?.forEach(handler => handler(data));
+      listeners.get(event)?.forEach((handler) => handler(data));
     },
 
-    off<E extends keyof Events>(event: E, handler: (data: Events[E]) => void): void {
+    off<E extends keyof Events>(
+      event: E,
+      handler: (data: Events[E]) => void,
+    ): void {
       listeners.get(event)?.delete(handler);
     },
   };
@@ -313,7 +319,12 @@ class DataStore<T> {
 }
 
 const userStore = new DataStore<User>();
-userStore.set("u1", { id: "u1", name: "Alice", email: "alice@example.com", role: "admin" });
+userStore.set("u1", {
+  id: "u1",
+  name: "Alice",
+  email: "alice@example.com",
+  role: "admin",
+});
 const user = userStore.get("u1"); // User | undefined — fully typed
 
 const configStore = new DataStore<string>();
@@ -370,8 +381,7 @@ type Optional<T> = T | undefined;
 
 // Result type (like Rust's Result<T, E>)
 type Result<T, E extends Error = Error> =
-  | { ok: true; value: T }
-  | { ok: false; error: E };
+  { ok: true; value: T } | { ok: false; error: E };
 
 // Usage
 async function fetchUser(id: string): Promise<Result<User>> {
@@ -411,10 +421,10 @@ function logLength<T extends { length: number }>(value: T): void {
   console.log(value.length); // ✓ — T is guaranteed to have length
 }
 
-logLength("hello");         // ✓ — string has length
-logLength([1, 2, 3]);       // ✓ — array has length
-logLength({ length: 5 });   // ✓ — has length property
-logLength(42);              // TS Error — number has no length
+logLength("hello"); // ✓ — string has length
+logLength([1, 2, 3]); // ✓ — array has length
+logLength({ length: 5 }); // ✓ — has length property
+logLength(42); // TS Error — number has no length
 ```
 
 ### `keyof` Constraint
@@ -427,8 +437,8 @@ function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
 
 const user = { id: 1, name: "Alice", email: "alice@example.com" };
 
-getProperty(user, "name");    // string — TypeScript infers return type!
-getProperty(user, "id");      // number
+getProperty(user, "name"); // string — TypeScript infers return type!
+getProperty(user, "id"); // number
 getProperty(user, "missing"); // TS Error: "missing" is not a key of user
 ```
 
@@ -443,10 +453,10 @@ function merge<T extends object, U extends object>(obj1: T, obj2: U): T & U {
 // Type-safe object transformation
 function mapValues<T extends object, V>(
   obj: T,
-  fn: (value: T[keyof T], key: keyof T) => V
+  fn: (value: T[keyof T], key: keyof T) => V,
 ): Record<keyof T, V> {
   return Object.fromEntries(
-    Object.entries(obj).map(([k, v]) => [k, fn(v, k as keyof T)])
+    Object.entries(obj).map(([k, v]) => [k, fn(v, k as keyof T)]),
   ) as Record<keyof T, V>;
 }
 
@@ -457,11 +467,16 @@ function omit<T extends object, K extends keyof T>(
 ): Omit<T, K> {
   const keysToOmit = new Set(keys);
   return Object.fromEntries(
-    Object.entries(obj).filter(([k]) => !keysToOmit.has(k as K))
+    Object.entries(obj).filter(([k]) => !keysToOmit.has(k as K)),
   ) as Omit<T, K>;
 }
 
-const user = { id: 1, name: "Alice", password: "secret", email: "alice@example.com" };
+const user = {
+  id: 1,
+  name: "Alice",
+  password: "secret",
+  email: "alice@example.com",
+};
 const safe = omit(user, "password");
 // safe: { id: number; name: string; email: string }
 safe.password; // TS Error — correctly removed from type!
@@ -480,7 +495,11 @@ interface ApiResponse<T = unknown> {
 }
 
 // Can use without specifying T
-const response: ApiResponse = { data: "anything", statusCode: 200, message: "OK" };
+const response: ApiResponse = {
+  data: "anything",
+  statusCode: 200,
+  message: "OK",
+};
 
 // Or specify T for full type safety
 const userResponse: ApiResponse<User> = {
@@ -509,8 +528,8 @@ Conditional types choose between types based on a condition:
 // T extends U ? TrueType : FalseType
 type IsString<T> = T extends string ? true : false;
 
-type A = IsString<string>;  // true
-type B = IsString<number>;  // false
+type A = IsString<string>; // true
+type B = IsString<number>; // false
 
 // NonNullable — built into TS but let's see how it works
 type NonNullable<T> = T extends null | undefined ? never : T;
@@ -617,7 +636,7 @@ TypeScript can create types from string patterns:
 
 ```ts
 type EventName = `on${string}`;
-type ClickEvent = `on${"Click" | "Tap" | "Press"}`;  // "onClick" | "onTap" | "onPress"
+type ClickEvent = `on${"Click" | "Tap" | "Press"}`; // "onClick" | "onTap" | "onPress"
 
 // Generate CRUD method names for any resource
 type Resource = "user" | "product" | "order";
@@ -671,7 +690,9 @@ type UserListItem = Pick<User, "id" | "name" | "email" | "role">;
 
 // Omit<T, Keys> — remove specific keys
 type PublicUser = Omit<User, "password">;
-type CreateUserDTO = Omit<User, "id" | "createdAt" | "updatedAt"> & { password: string };
+type CreateUserDTO = Omit<User, "id" | "createdAt" | "updatedAt"> & {
+  password: string;
+};
 
 // Readonly<T> — make all props readonly
 type ImmutableUser = Readonly<User>;
@@ -709,9 +730,9 @@ type UserInstance = InstanceType<typeof User>; // User
 type ResolvedUser = Awaited<Promise<Promise<User>>>; // User
 
 // --- STRING MANIPULATION ---
-type T1 = Uppercase<"hello">;   // "HELLO"
-type T2 = Lowercase<"HELLO">;   // "hello"
-type T3 = Capitalize<"hello">;  // "Hello"
+type T1 = Uppercase<"hello">; // "HELLO"
+type T2 = Lowercase<"HELLO">; // "hello"
+type T3 = Capitalize<"hello">; // "Hello"
 type T4 = Uncapitalize<"Hello">; // "hello"
 ```
 
@@ -755,7 +776,7 @@ function formatValue(value: string | number | boolean | null): string {
     return value.toUpperCase(); // value: string
   }
   if (typeof value === "number") {
-    return value.toFixed(2);    // value: number
+    return value.toFixed(2); // value: number
   }
   if (typeof value === "boolean") {
     return value ? "Yes" : "No"; // value: boolean
@@ -782,14 +803,20 @@ function processObject(value: unknown): void {
 
 ```ts
 class ApiError extends Error {
-  constructor(message: string, public statusCode: number) {
+  constructor(
+    message: string,
+    public statusCode: number,
+  ) {
     super(message);
     this.name = "ApiError";
   }
 }
 
 class NetworkError extends Error {
-  constructor(message: string, public url: string) {
+  constructor(
+    message: string,
+    public url: string,
+  ) {
     super(message);
     this.name = "NetworkError";
   }
@@ -942,9 +969,9 @@ The most powerful and clean narrowing pattern — a shared literal property ("di
 
 ```ts
 // Each variant has a unique `kind` (or `type`, `status`, etc.) field
-type CircleShape    = { kind: "circle";    radius: number };
+type CircleShape = { kind: "circle"; radius: number };
 type RectangleShape = { kind: "rectangle"; width: number; height: number };
-type TriangleShape  = { kind: "triangle";  base: number; height: number };
+type TriangleShape = { kind: "triangle"; base: number; height: number };
 
 type Shape = CircleShape | RectangleShape | TriangleShape;
 
@@ -985,11 +1012,11 @@ function renderComponent<T>(state: ApiState<T>): void {
 
     case "loading":
       return renderSpinner();
-      // state.data — TS Error: doesn't exist on loading state
+    // state.data — TS Error: doesn't exist on loading state
 
     case "success":
       return renderData(state.data); // ✓ — data exists here
-      // state.fetchedAt              // ✓ — fetchedAt exists here
+    // state.fetchedAt              // ✓ — fetchedAt exists here
 
     case "error":
       return renderError(state.error.message, state.retryCount); // ✓
@@ -1046,7 +1073,7 @@ const users: User[] = maybeUsers.filter(isNonNull);
 // TypeScript knows users is User[] — no null/undefined!
 
 // Without a type guard, TypeScript would give (User | null | undefined)[]
-const also: (User | null | undefined)[] = maybeUsers.filter(u => u !== null);
+const also: (User | null | undefined)[] = maybeUsers.filter((u) => u !== null);
 // filter doesn't narrow automatically — you need a type predicate function
 ```
 
@@ -1075,7 +1102,10 @@ function isCreateUserResponse(data: unknown): data is CreateUserResponse {
 }
 
 async function createUser(dto: CreateUserDTO): Promise<CreateUserResponse> {
-  const response = await fetch("/api/users", { method: "POST", body: JSON.stringify(dto) });
+  const response = await fetch("/api/users", {
+    method: "POST",
+    body: JSON.stringify(dto),
+  });
   const data: unknown = await response.json();
 
   if (!isCreateUserResponse(data)) {
@@ -1101,7 +1131,7 @@ function assert(condition: boolean, message: string): asserts condition {
 // `asserts value is T` — after this call, value is guaranteed to be T
 function assertDefined<T>(
   value: T | null | undefined,
-  message: string
+  message: string,
 ): asserts value is T {
   if (value == null) throw new Error(message);
 }

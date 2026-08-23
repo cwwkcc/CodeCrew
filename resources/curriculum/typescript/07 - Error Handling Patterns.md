@@ -26,11 +26,11 @@ try {
   doSomethingRisky();
 } catch (err) {
   // Without strict mode: err is `any` — no safety
-  err.message.toUpperCase();  // TypeScript doesn't catch this if err isn't an Error
+  err.message.toUpperCase(); // TypeScript doesn't catch this if err isn't an Error
 
   // With useUnknownInCatchVariables: true (default in strict mode)
   // err is `unknown` — must narrow before using
-  err.message;  // TS Error: Object is of type 'unknown'
+  err.message; // TS Error: Object is of type 'unknown'
 }
 ```
 
@@ -46,8 +46,8 @@ try {
   await fetchData();
 } catch (err: unknown) {
   if (err instanceof Error) {
-    console.error(err.message);    // ✓ — narrowed to Error
-    console.error(err.stack);      // ✓
+    console.error(err.message); // ✓ — narrowed to Error
+    console.error(err.stack); // ✓
   } else {
     console.error("Unknown error:", err);
   }
@@ -71,7 +71,7 @@ function getErrorMessage(error: unknown): string {
 try {
   riskyOperation();
 } catch (err) {
-  logger.error(getErrorMessage(err));  // always works
+  logger.error(getErrorMessage(err)); // always works
 }
 ```
 
@@ -162,18 +162,44 @@ class HttpError extends AppError {
   }
 }
 
-class BadRequestError   extends HttpError { constructor(msg: string)  { super(msg, 400); } }
-class UnauthorizedError extends HttpError { constructor(msg = "Auth required") { super(msg, 401); } }
-class ForbiddenError    extends HttpError { constructor(msg = "Forbidden")     { super(msg, 403); } }
-class NotFoundError     extends HttpError { constructor(msg: string)  { super(msg, 404); } }
-class ConflictError     extends HttpError { constructor(msg: string)  { super(msg, 409); } }
+class BadRequestError extends HttpError {
+  constructor(msg: string) {
+    super(msg, 400);
+  }
+}
+class UnauthorizedError extends HttpError {
+  constructor(msg = "Auth required") {
+    super(msg, 401);
+  }
+}
+class ForbiddenError extends HttpError {
+  constructor(msg = "Forbidden") {
+    super(msg, 403);
+  }
+}
+class NotFoundError extends HttpError {
+  constructor(msg: string) {
+    super(msg, 404);
+  }
+}
+class ConflictError extends HttpError {
+  constructor(msg: string) {
+    super(msg, 409);
+  }
+}
 class UnprocessableError extends HttpError {
   constructor(
     msg: string,
-    readonly fields?: Record<string, string[]>
-  ) { super(msg, 422); }
+    readonly fields?: Record<string, string[]>,
+  ) {
+    super(msg, 422);
+  }
 }
-class TooManyRequestsError extends HttpError { constructor(msg = "Rate limit exceeded") { super(msg, 429); } }
+class TooManyRequestsError extends HttpError {
+  constructor(msg = "Rate limit exceeded") {
+    super(msg, 429);
+  }
+}
 
 // Domain layer
 class DomainError extends AppError {}
@@ -232,22 +258,26 @@ Instead of throwing, return a discriminated union of success or failure. The cal
 
 ```typescript
 // Result type — success or failure, never throws
-type Ok<T>  = { ok: true;  value: T };
+type Ok<T> = { ok: true; value: T };
 type Err<E> = { ok: false; error: E };
 type Result<T, E = Error> = Ok<T> | Err<E>;
 
 // Constructors
-const ok  = <T>(value: T): Ok<T>  => ({ ok: true,  value });
+const ok = <T>(value: T): Ok<T> => ({ ok: true, value });
 const err = <E>(error: E): Err<E> => ({ ok: false, error });
 
 // Usage in a service function
-async function findStudent(id: string): Promise<Result<Student, NotFoundError | DatabaseError>> {
+async function findStudent(
+  id: string,
+): Promise<Result<Student, NotFoundError | DatabaseError>> {
   try {
     const student = await db.student.findUnique({ where: { id } });
     if (!student) return err(new NotFoundError("Student", id));
     return ok(student);
   } catch (e) {
-    return err(new DatabaseError("Query failed", e instanceof Error ? e : undefined));
+    return err(
+      new DatabaseError("Query failed", e instanceof Error ? e : undefined),
+    );
   }
 }
 
@@ -301,7 +331,7 @@ For domain errors with structured data, use a discriminated union instead of cla
 
 ```typescript
 type StudentError =
-  | { type: "NOT_FOUND";   id: string }
+  | { type: "NOT_FOUND"; id: string }
   | { type: "DUPLICATE_EMAIL"; email: string }
   | { type: "INVALID_GRADE"; grade: number; min: number; max: number }
   | { type: "ENROLLMENT_FULL"; courseId: string; capacity: number };
@@ -318,10 +348,16 @@ async function enrollStudent(
 
   const enrollmentCount = await db.enrollment.count({ where: { courseId } });
   if (enrollmentCount >= course.capacity) {
-    return err({ type: "ENROLLMENT_FULL", courseId, capacity: course.capacity });
+    return err({
+      type: "ENROLLMENT_FULL",
+      courseId,
+      capacity: course.capacity,
+    });
   }
 
-  const enrollment = await db.enrollment.create({ data: { studentId, courseId } });
+  const enrollment = await db.enrollment.create({
+    data: { studentId, courseId },
+  });
   return ok(enrollment);
 }
 
@@ -330,16 +366,18 @@ const result = await enrollStudent(studentId, courseId);
 if (!result.ok) {
   switch (result.error.type) {
     case "NOT_FOUND":
-      return res.status(404).json({ error: `Resource ${result.error.id} not found` });
+      return res
+        .status(404)
+        .json({ error: `Resource ${result.error.id} not found` });
     case "ENROLLMENT_FULL":
       return res.status(409).json({
-        error: `Course is full (capacity: ${result.error.capacity})`
+        error: `Course is full (capacity: ${result.error.capacity})`,
       });
     case "DUPLICATE_EMAIL":
     case "INVALID_GRADE":
       return res.status(422).json({ error: result.error });
     default:
-      const _exhaustive: never = result.error;  // TypeScript warns if uncovered
+      const _exhaustive: never = result.error; // TypeScript warns if uncovered
   }
 }
 ```
@@ -360,9 +398,9 @@ throw { code: "NOT_FOUND", message: "Student not found" };
 try {
   throw "Failure";
 } catch (err) {
-  err instanceof Error;  // false — plain string
-  err.stack;             // undefined — no stack trace
-  err.message;           // undefined — strings don't have .message
+  err instanceof Error; // false — plain string
+  err.stack; // undefined — no stack trace
+  err.message; // undefined — strings don't have .message
 }
 
 // ✓ Always throw an Error or Error subclass
@@ -374,11 +412,11 @@ throw new ValidationError("Invalid input", fields);
 try {
   throw new NotFoundError("Student", id);
 } catch (err) {
-  err instanceof Error;       // true
-  err instanceof AppError;    // true
+  err instanceof Error; // true
+  err instanceof AppError; // true
   err instanceof NotFoundError; // true
-  err.stack;                  // full stack trace
-  err.message;                // "Student with id "..." not found"
+  err.stack; // full stack trace
+  err.message; // "Student with id "..." not found"
 }
 ```
 
@@ -402,7 +440,9 @@ function isHttpError(value: unknown): value is HttpError {
 }
 
 // Type guard for error-like objects (for external errors)
-function isErrorLike(value: unknown): value is { message: string; stack?: string } {
+function isErrorLike(
+  value: unknown,
+): value is { message: string; stack?: string } {
   return (
     value !== null &&
     typeof value === "object" &&
@@ -436,7 +476,7 @@ function handleError(err: unknown): { statusCode: number; message: string } {
 ```typescript
 // Typed async wrapper — no try/catch boilerplate at call sites
 async function tryCatch<T>(
-  promise: Promise<T>
+  promise: Promise<T>,
 ): Promise<[T, null] | [null, Error]> {
   try {
     return [await promise, null];
@@ -473,7 +513,7 @@ async function loadDashboard(userId: string) {
   }
 
   return {
-    user:  userResult.value,
+    user: userResult.value,
     posts: postsResult.status === "fulfilled" ? postsResult.value : [],
     stats: statsResult.status === "fulfilled" ? statsResult.value : null,
   };
@@ -536,12 +576,12 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(GlobalExceptionFilter.name);
 
   catch(exception: unknown, host: ArgumentsHost) {
-    const ctx      = host.switchToHttp();
+    const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request  = ctx.getRequest<Request>();
+    const request = ctx.getRequest<Request>();
 
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-    let message    = "Internal server error";
+    let message = "Internal server error";
     let details: unknown;
 
     if (exception instanceof HttpException) {
@@ -551,7 +591,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       details = typeof body === "object" ? (body as any).details : undefined;
     } else if (exception instanceof DomainError) {
       statusCode = HttpStatus.BAD_REQUEST;
-      message    = exception.message;
+      message = exception.message;
     } else if (exception instanceof Error) {
       this.logger.error(exception.message, exception.stack);
     }

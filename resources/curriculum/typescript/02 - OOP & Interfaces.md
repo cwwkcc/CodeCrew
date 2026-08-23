@@ -78,17 +78,17 @@ class User {
     this.id = id;
     this.name = name;
     this.email = email;
-    this.role = "user";          // assigned in constructor
-    this.isActive = true;        // assigned in constructor
+    this.role = "user"; // assigned in constructor
+    this.isActive = true; // assigned in constructor
     this.createdAt = new Date(); // assigned in constructor
   }
 }
 
 const alice = new User(1, "Alice", "alice@example.com");
-alice.name;         // string
-alice.role;         // "admin" | "user"
-alice.createdAt;    // Date
-alice.salary;       // TS Error: Property 'salary' does not exist on type 'User'
+alice.name; // string
+alice.role; // "admin" | "user"
+alice.createdAt; // Date
+alice.salary; // TS Error: Property 'salary' does not exist on type 'User'
 ```
 
 ### Property Initialization Options
@@ -102,7 +102,9 @@ class Config {
 
   // Option 2: Initialized in constructor (see above)
   port: number;
-  constructor(port: number) { this.port = port; }
+  constructor(port: number) {
+    this.port = port;
+  }
 
   // Option 3: Definite assignment assertion — tell TS "I'll assign this, trust me"
   dbConnection!: DatabaseConnection; // The `!` means "definitely assigned before use"
@@ -140,14 +142,14 @@ TypeScript has three access modifiers that control visibility of class members.
 
 ```ts
 class User {
-  public name: string;  // visible everywhere — this is the default
+  public name: string; // visible everywhere — this is the default
   public greet(): string {
     return `Hello, I'm ${this.name}`;
   }
 }
 
 const user = new User("Alice");
-user.name;    // ✓ — accessible outside the class
+user.name; // ✓ — accessible outside the class
 user.greet(); // ✓
 ```
 
@@ -177,10 +179,10 @@ class UserService {
 }
 
 const service = new UserService(db);
-service.getUser("u1");      // ✓ — public method
-service.db;                 // TS Error: Property 'db' is private
-service.loadFromDb("u1");  // TS Error: Property 'loadFromDb' is private
-service.cache;              // TS Error: Property 'cache' is private
+service.getUser("u1"); // ✓ — public method
+service.db; // TS Error: Property 'db' is private
+service.loadFromDb("u1"); // TS Error: Property 'loadFromDb' is private
+service.cache; // TS Error: Property 'cache' is private
 ```
 
 ### TypeScript `private` vs JavaScript `#`
@@ -190,7 +192,7 @@ There's an important distinction:
 ```ts
 class Foo {
   private tsPrivate = "ts private"; // TypeScript private — only compile-time check
-  #jsPrivate = "js private";        // JavaScript private — true runtime private
+  #jsPrivate = "js private"; // JavaScript private — true runtime private
 }
 
 const foo = new Foo();
@@ -235,7 +237,7 @@ class UserRepository extends BaseRepository<User> {
     const result = await this.executeQuery<User[]>(
       // ✓ — protected method accessible in subclass
       `SELECT * FROM ${this.tableName} WHERE email = $1`,
-      [email]
+      [email],
     );
     return result[0] ?? null;
   }
@@ -243,8 +245,8 @@ class UserRepository extends BaseRepository<User> {
 
 const repo = new UserRepository(db);
 repo.findByEmail("alice@example.com"); // ✓ — public method
-repo.db;                               // TS Error: protected, not accessible outside
-repo.executeQuery("...", []);          // TS Error: protected
+repo.db; // TS Error: protected, not accessible outside
+repo.executeQuery("...", []); // TS Error: protected
 ```
 
 ---
@@ -270,9 +272,9 @@ class UserService {
 // With parameter properties (access modifier in constructor param):
 class UserService {
   constructor(
-    private readonly db: Database,       // declares + assigns this.db
-    private readonly logger: Logger,     // declares + assigns this.logger
-    public readonly name: string,        // declares + assigns this.name
+    private readonly db: Database, // declares + assigns this.db
+    private readonly logger: Logger, // declares + assigns this.logger
+    public readonly name: string, // declares + assigns this.name
   ) {}
   // Equivalent! No body code needed.
 }
@@ -300,16 +302,12 @@ class AuthService {
   }
 
   private generateTokens(user: User): TokenPair {
-    const access = jwt.sign(
-      { sub: user.id, role: user.role },
-      this.jwtSecret,
-      { expiresIn: this.tokenExpiry }
-    );
-    const refresh = jwt.sign(
-      { sub: user.id },
-      this.jwtSecret,
-      { expiresIn: this.refreshExpiry }
-    );
+    const access = jwt.sign({ sub: user.id, role: user.role }, this.jwtSecret, {
+      expiresIn: this.tokenExpiry,
+    });
+    const refresh = jwt.sign({ sub: user.id }, this.jwtSecret, {
+      expiresIn: this.refreshExpiry,
+    });
     return { access, refresh };
   }
 }
@@ -327,19 +325,19 @@ class Order {
   readonly createdAt: Date;
   readonly customerId: string;
   status: OrderStatus; // mutable
-  items: OrderItem[];  // mutable
+  items: OrderItem[]; // mutable
 
   constructor(customerId: string, items: OrderItem[]) {
-    this.id = generateOrderId();     // ✓ — set in constructor
-    this.createdAt = new Date();     // ✓ — set in constructor
-    this.customerId = customerId;    // ✓ — set in constructor
+    this.id = generateOrderId(); // ✓ — set in constructor
+    this.createdAt = new Date(); // ✓ — set in constructor
+    this.customerId = customerId; // ✓ — set in constructor
     this.status = OrderStatus.Draft;
     this.items = items;
   }
 
   addItem(item: OrderItem): void {
-    this.items.push(item);     // ✓ — items is not readonly
-    this.id = "new_id";        // TS Error — readonly after constructor
+    this.items.push(item); // ✓ — items is not readonly
+    this.id = "new_id"; // TS Error — readonly after constructor
     this.createdAt = new Date(); // TS Error
   }
 }
@@ -451,11 +449,11 @@ class User {
 }
 
 const user = new User("Alice", "Chen", "ALICE@EXAMPLE.COM");
-user.fullName;        // "Alice Chen"
-user.initials;        // "AC"
-user.email;           // "alice@example.com" (normalized)
+user.fullName; // "Alice Chen"
+user.initials; // "AC"
+user.email; // "alice@example.com" (normalized)
 user.email = "alice@company.com"; // ✓ — setter validates + normalizes
-user.email = "notanemail";        // throws Error
+user.email = "notanemail"; // throws Error
 ```
 
 ---
@@ -588,7 +586,7 @@ class User extends BaseEntity {
   // Override parent method
   override toJSON(): Record<string, unknown> {
     return {
-      ...super.toJSON(),  // include parent fields
+      ...super.toJSON(), // include parent fields
       name: this.name,
       email: this.email,
       role: this.role,
@@ -605,8 +603,9 @@ class AdminUser extends User {
   }
 
   can(permission: string): boolean {
-    return this.permissions.includes(permission) ||
-           this.permissions.includes("*");
+    return (
+      this.permissions.includes(permission) || this.permissions.includes("*")
+    );
   }
 
   override toJSON(): Record<string, unknown> {
@@ -618,11 +617,11 @@ class AdminUser extends User {
 }
 
 const admin = new AdminUser("Alice", "alice@example.com", ["read", "write"]);
-admin.id;         // ✓ — from BaseEntity
-admin.name;       // ✓ — from User
+admin.id; // ✓ — from BaseEntity
+admin.name; // ✓ — from User
 admin.can("read"); // ✓ — from AdminUser
 admin instanceof AdminUser; // true
-admin instanceof User;      // true
+admin instanceof User; // true
 admin instanceof BaseEntity; // true
 ```
 
@@ -632,20 +631,27 @@ TypeScript 4.3+ added `override` to make subclass method overrides explicit an
 
 ```ts
 class Animal {
-  move(): void { console.log("Moving"); }
-  speak(): void { console.log("..."); }
+  move(): void {
+    console.log("Moving");
+  }
+  speak(): void {
+    console.log("...");
+  }
 }
 
 class Dog extends Animal {
-  override move(): void {        // ✓ — explicit override
+  override move(): void {
+    // ✓ — explicit override
     console.log("Running");
   }
 
-  run(): void {                  // new method, not an override
+  run(): void {
+    // new method, not an override
     console.log("Running fast!");
   }
 
-  override fly(): void {         // TS Error! 'fly' doesn't exist in Animal
+  override fly(): void {
+    // TS Error! 'fly' doesn't exist in Animal
     console.log("Dogs can't fly");
   }
 }
@@ -835,7 +841,11 @@ A class that `implements` an interface must provide all the interface's member
 ```ts
 interface PaymentProcessor {
   name: string;
-  process(amount: number, currency: string, metadata: PaymentMetadata): Promise<PaymentResult>;
+  process(
+    amount: number,
+    currency: string,
+    metadata: PaymentMetadata,
+  ): Promise<PaymentResult>;
   refund(transactionId: string, amount?: number): Promise<RefundResult>;
   getTransaction(transactionId: string): Promise<Transaction>;
 }
@@ -849,7 +859,7 @@ class StripePaymentProcessor implements PaymentProcessor {
   async process(
     amount: number,
     currency: string,
-    metadata: PaymentMetadata
+    metadata: PaymentMetadata,
   ): Promise<PaymentResult> {
     const stripe = new Stripe(this.apiKey);
     const intent = await stripe.paymentIntents.create({
@@ -890,7 +900,7 @@ class PayPalPaymentProcessor implements PaymentProcessor {
 // Code that uses any PaymentProcessor — doesn't care which one
 async function processCheckout(
   cart: Cart,
-  processor: PaymentProcessor // ← program to the interface!
+  processor: PaymentProcessor, // ← program to the interface!
 ): Promise<Order> {
   const result = await processor.process(cart.total, cart.currency, {
     orderId: cart.id,
@@ -978,7 +988,7 @@ interface ValidationFn {
 function createValidator(
   fn: (v: unknown) => boolean,
   field: string,
-  message: string
+  message: string,
 ): ValidationFn {
   const validator = fn as ValidationFn;
   validator.errorMessage = message;
@@ -987,13 +997,13 @@ function createValidator(
 }
 
 const emailValidator = createValidator(
-  v => typeof v === "string" && v.includes("@"),
+  (v) => typeof v === "string" && v.includes("@"),
   "email",
-  "Must be a valid email"
+  "Must be a valid email",
 );
 
 emailValidator("alice@example.com"); // true
-emailValidator.errorMessage;         // "Must be a valid email"
+emailValidator.errorMessage; // "Must be a valid email"
 ```
 
 ---
@@ -1010,7 +1020,7 @@ interface StringMap {
 
 const headers: StringMap = {
   "Content-Type": "application/json",
-  "Authorization": "Bearer ...",
+  Authorization: "Bearer ...",
 };
 
 // Number index (like an array)
@@ -1020,9 +1030,9 @@ interface NumberIndexed {
 
 // Mixed — named properties with index signature
 interface FlexibleConfig {
-  version: string;            // specific named property
-  debug: boolean;             // specific named property
-  [key: string]: unknown;    // any additional keys (must be compatible supertype)
+  version: string; // specific named property
+  debug: boolean; // specific named property
+  [key: string]: unknown; // any additional keys (must be compatible supertype)
 }
 ```
 
@@ -1042,16 +1052,16 @@ interface Request {
 
 // Your extension — merged with the original
 interface Request {
-  user?: AuthenticatedUser;   // added by auth middleware
-  requestId: string;          // added by logging middleware
-  startTime: number;          // added for performance tracking
+  user?: AuthenticatedUser; // added by auth middleware
+  requestId: string; // added by logging middleware
+  startTime: number; // added for performance tracking
 }
 
 // Now Request has ALL properties from both declarations
 function handleRequest(req: Request): void {
-  req.url;         // ✓ — from first declaration
-  req.user?.id;    // ✓ — from second declaration (optional)
-  req.requestId;   // ✓ — from second declaration
+  req.url; // ✓ — from first declaration
+  req.user?.id; // ✓ — from second declaration (optional)
+  req.requestId; // ✓ — from second declaration
 }
 ```
 
@@ -1098,7 +1108,7 @@ class PostgresUserRepository implements IUserRepository {
   async findById(id: string): Promise<User | null> {
     const { rows } = await this.db.query(
       "SELECT * FROM users WHERE id = $1 AND deleted_at IS NULL",
-      [id]
+      [id],
     );
     return rows[0] ? mapRowToUser(rows[0]) : null;
   }
@@ -1106,7 +1116,7 @@ class PostgresUserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<User | null> {
     const { rows } = await this.db.query(
       "SELECT * FROM users WHERE email = $1 AND deleted_at IS NULL",
-      [email.toLowerCase()]
+      [email.toLowerCase()],
     );
     return rows[0] ? mapRowToUser(rows[0]) : null;
   }
@@ -1131,7 +1141,14 @@ class PostgresUserRepository implements IUserRepository {
     const { rows } = await this.db.query(
       `INSERT INTO users (id, name, email, password_hash, role, is_active, created_at, updated_at)
        VALUES ($1,$2,$3,$4,$5,$6,NOW(),NOW()) RETURNING *`,
-      [id, data.name, data.email.toLowerCase(), passwordHash, data.role ?? "user", true]
+      [
+        id,
+        data.name,
+        data.email.toLowerCase(),
+        passwordHash,
+        data.role ?? "user",
+        true,
+      ],
     );
     return mapRowToUser(rows[0]);
   }
@@ -1142,7 +1159,7 @@ class PostgresUserRepository implements IUserRepository {
     const { rows } = await this.db.query(
       `UPDATE users SET ${sets.sql}, updated_at = NOW()
        WHERE id = $${sets.params.length + 1} AND deleted_at IS NULL RETURNING *`,
-      [...sets.params, id]
+      [...sets.params, id],
     );
     return rows[0] ? mapRowToUser(rows[0]) : null;
   }
@@ -1150,7 +1167,7 @@ class PostgresUserRepository implements IUserRepository {
   async softDelete(id: string): Promise<boolean> {
     const { rowCount } = await this.db.query(
       "UPDATE users SET deleted_at = NOW() WHERE id = $1 AND deleted_at IS NULL",
-      [id]
+      [id],
     );
     return rowCount > 0;
   }
@@ -1158,7 +1175,7 @@ class PostgresUserRepository implements IUserRepository {
   async restore(id: string): Promise<boolean> {
     const { rowCount } = await this.db.query(
       "UPDATE users SET deleted_at = NULL WHERE id = $1 AND deleted_at IS NOT NULL",
-      [id]
+      [id],
     );
     return rowCount > 0;
   }
@@ -1179,9 +1196,9 @@ class UserService {
     const user = await this.userRepo.create(data);
 
     // Fire and forget — non-critical
-    this.emailService.sendWelcomeEmail(user).catch(err =>
-      logger.error("Welcome email failed", err)
-    );
+    this.emailService
+      .sendWelcomeEmail(user)
+      .catch((err) => logger.error("Welcome email failed", err));
     this.eventBus.emit("user.created", { userId: user.id }).catch(() => {});
 
     return omit(user, "passwordHash");

@@ -60,7 +60,7 @@ Decorators are a Stage 3 TC39 proposal. Two versions exist in TypeScript:
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true   // needed for NestJS DI
+    "emitDecoratorMetadata": true // needed for NestJS DI
   }
 }
 
@@ -82,7 +82,7 @@ A class decorator receives the constructor function and can return a new constru
 
 // Example: add metadata to a class
 function Entity(tableName: string) {
-  return function(constructor: Function) {
+  return function (constructor: Function) {
     constructor.prototype.__tableName = tableName;
     // Adds __tableName to every instance
   };
@@ -95,7 +95,7 @@ class Student {
 }
 
 const s = new Student();
-(s as any).__tableName;  // "students"
+(s as any).__tableName; // "students"
 ```
 
 ```typescript
@@ -115,7 +115,7 @@ class BankAccount {
 
 ```typescript
 // Example: replace the class entirely
-function singleton<T extends { new(...args: any[]): {} }>(constructor: T) {
+function singleton<T extends { new (...args: any[]): {} }>(constructor: T) {
   let instance: InstanceType<T>;
 
   return class extends constructor {
@@ -137,7 +137,7 @@ class Database {
 
 const db1 = new Database("postgres://...");
 const db2 = new Database("postgres://...");
-db1 === db2;  // true — same instance
+db1 === db2; // true — same instance
 ```
 
 ---
@@ -157,7 +157,7 @@ A method decorator receives the class prototype, the method name, and the proper
 function log(target: Object, key: string, descriptor: PropertyDescriptor) {
   const originalMethod = descriptor.value;
 
-  descriptor.value = function(...args: any[]) {
+  descriptor.value = function (...args: any[]) {
     console.log(`→ Calling ${key} with`, args);
     const result = originalMethod.apply(this, args);
     console.log(`← ${key} returned`, result);
@@ -186,11 +186,11 @@ math.add(2, 3);
 function measureTime(
   target: Object,
   key: string,
-  descriptor: PropertyDescriptor
+  descriptor: PropertyDescriptor,
 ): PropertyDescriptor {
   const original = descriptor.value;
 
-  descriptor.value = async function(...args: any[]) {
+  descriptor.value = async function (...args: any[]) {
     const start = performance.now();
     const result = await original.apply(this, args);
     const duration = performance.now() - start;
@@ -212,21 +212,21 @@ class StudentService {
 ```typescript
 // Useful: retry on failure
 function retry(attempts: number, delayMs = 1000) {
-  return function(
+  return function (
     target: Object,
     key: string,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) {
     const original = descriptor.value;
 
-    descriptor.value = async function(...args: any[]) {
+    descriptor.value = async function (...args: any[]) {
       for (let i = 0; i < attempts; i++) {
         try {
           return await original.apply(this, args);
         } catch (err) {
           if (i === attempts - 1) throw err;
           console.warn(`${key} attempt ${i + 1} failed, retrying...`);
-          await new Promise(r => setTimeout(r, delayMs * (i + 1)));
+          await new Promise((r) => setTimeout(r, delayMs * (i + 1)));
         }
       }
     };
@@ -253,20 +253,22 @@ Property decorators receive the class prototype and the property name. They cann
 // Signature: (target: Object, propertyKey: string) => void
 
 function validate(min: number, max: number) {
-  return function(target: Object, propertyKey: string) {
+  return function (target: Object, propertyKey: string) {
     let value: number;
 
     Object.defineProperty(target, propertyKey, {
-      get() { return value; },
+      get() {
+        return value;
+      },
       set(newValue: number) {
         if (newValue < min || newValue > max) {
           throw new RangeError(
-            `${propertyKey} must be between ${min} and ${max}, got ${newValue}`
+            `${propertyKey} must be between ${min} and ${max}, got ${newValue}`,
           );
         }
         value = newValue;
       },
-      enumerable:   true,
+      enumerable: true,
       configurable: true,
     });
   };
@@ -278,8 +280,8 @@ class StudentScore {
 }
 
 const s = new StudentScore();
-s.score = 85;   // ✓
-s.score = 105;  // RangeError: score must be between 0 and 100, got 105
+s.score = 85; // ✓
+s.score = 105; // RangeError: score must be between 0 and 100, got 105
 ```
 
 ---
@@ -327,7 +329,7 @@ class Foo {}
 // With factory — accepts configuration
 function log(level: "info" | "debug" | "warn") {
   // Returns the actual decorator
-  return function(target: Function) {
+  return function (target: Function) {
     console.log(`[${level.toUpperCase()}] Class ${target.name} loaded`);
   };
 }
@@ -342,15 +344,15 @@ class InternalService {}
 ```typescript
 // Factory with method decorator — common pattern
 function cache(ttlSeconds: number) {
-  return function(
+  return function (
     target: Object,
     key: string,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) {
     const original = descriptor.value;
     const cacheMap = new Map<string, { value: any; expiresAt: number }>();
 
-    descriptor.value = async function(...args: any[]) {
+    descriptor.value = async function (...args: any[]) {
       const cacheKey = JSON.stringify(args);
       const cached = cacheMap.get(cacheKey);
 
@@ -371,12 +373,12 @@ function cache(ttlSeconds: number) {
 }
 
 class StudentService {
-  @cache(300)  // cache for 5 minutes
+  @cache(300) // cache for 5 minutes
   async findAll(): Promise<Student[]> {
     return this.db.query("SELECT * FROM students");
   }
 
-  @cache(60)   // cache for 1 minute
+  @cache(60) // cache for 1 minute
   async findById(id: string): Promise<Student | null> {
     return this.db.query("SELECT * FROM students WHERE id = $1", [id]);
   }
@@ -425,7 +427,7 @@ class Example {}
 // A: applied   ← outer second
 
 const e = new (Example as any)();
-e.label;  // "AB"  (B ran first, set "B", then A prepended "A")
+e.label; // "AB"  (B ran first, set "B", then A prepended "A")
 ```
 
 ---
@@ -450,7 +452,7 @@ import "reflect-metadata";
 class UserService {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly cacheService:   CacheService,
+    private readonly cacheService: CacheService,
   ) {}
 }
 
@@ -472,7 +474,10 @@ const paramTypes = Reflect.getMetadata("design:paramtypes", UserService);
 function Injectable(target: Function) {
   // Read the constructor parameter types at runtime
   const deps = Reflect.getMetadata("design:paramtypes", target) || [];
-  console.log("Dependencies:", deps.map((d: Function) => d.name));
+  console.log(
+    "Dependencies:",
+    deps.map((d: Function) => d.name),
+  );
 }
 
 @Injectable
@@ -562,13 +567,18 @@ remove(@Param("id") id: string) { }
 ```typescript
 // Validates that all required fields are present on an object
 function RequiredFields(...fields: string[]) {
-  return function<T extends { new(...args: any[]): {} }>(constructor: T) {
+  return function <T extends { new (...args: any[]): {} }>(constructor: T) {
     return class extends constructor {
       constructor(...args: any[]) {
         super(...args);
         for (const field of fields) {
-          if ((this as any)[field] === undefined || (this as any)[field] === null) {
-            throw new Error(`${constructor.name}: field "${field}" is required`);
+          if (
+            (this as any)[field] === undefined ||
+            (this as any)[field] === null
+          ) {
+            throw new Error(
+              `${constructor.name}: field "${field}" is required`,
+            );
           }
         }
       }
@@ -587,15 +597,15 @@ class Student {
   }
 }
 
-new Student({ name: "Ashan", email: "a@school.lk", grade: 11 });  // ✓
-new Student({ name: "Ashan" });  // Error: Student: field "email" is required
+new Student({ name: "Ashan", email: "a@school.lk", grade: 11 }); // ✓
+new Student({ name: "Ashan" }); // Error: Student: field "email" is required
 ```
 
 ### Throttle method calls
 
 ```typescript
 function throttle(limitMs: number) {
-  return function(
+  return function (
     target: Object,
     key: string,
     descriptor: PropertyDescriptor,
@@ -603,7 +613,7 @@ function throttle(limitMs: number) {
     const original = descriptor.value;
     let lastRun = 0;
 
-    descriptor.value = function(...args: any[]) {
+    descriptor.value = function (...args: any[]) {
       const now = Date.now();
       if (now - lastRun < limitMs) return;
       lastRun = now;

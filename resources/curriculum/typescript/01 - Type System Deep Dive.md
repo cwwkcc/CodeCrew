@@ -37,9 +37,9 @@ let users: Array<{ id: number; name: string }> = [];
 
 ```ts
 // TypeScript infers array type from the initial values
-const numbers = [1, 2, 3];           // number[]
-const mixed = [1, "hello", true];    // (number | string | boolean)[]
-const empty = [];                     // never[] — will widen as you push values
+const numbers = [1, 2, 3]; // number[]
+const mixed = [1, "hello", true]; // (number | string | boolean)[]
+const empty = []; // never[] — will widen as you push values
 
 // Best practice: annotate empty arrays explicitly
 const users: User[] = [];
@@ -52,16 +52,16 @@ const errors: string[] = [];
 const scores: number[] = [88, 92, 76, 95, 84];
 
 // All array methods are fully typed
-scores.push(90);           // OK — number
-scores.push("90");         // TS Error: string not assignable to number
+scores.push(90); // OK — number
+scores.push("90"); // TS Error: string not assignable to number
 
 const highest = scores.reduce((max, s) => Math.max(max, s), 0); // number
-const passed = scores.filter(s => s >= 75);                       // number[]
-const letter = scores.map(s => s >= 90 ? "A" : "B");            // string[]
-const total = scores.reduce((sum, s) => sum + s, 0);             // number
+const passed = scores.filter((s) => s >= 75); // number[]
+const letter = scores.map((s) => (s >= 90 ? "A" : "B")); // string[]
+const total = scores.reduce((sum, s) => sum + s, 0); // number
 
 // TypeScript knows the element type
-scores.forEach(score => {
+scores.forEach((score) => {
   score.toFixed(2); // ✓ — TypeScript knows score is number
   score.toUpperCase(); // TS Error — number has no toUpperCase
 });
@@ -101,13 +101,13 @@ const ALLOWED_ROLES: readonly string[] = ["admin", "user", "moderator"];
 // OR: ReadonlyArray<string>
 const ALLOWED_ROLES: ReadonlyArray<string> = ["admin", "user", "moderator"];
 
-ALLOWED_ROLES.push("superadmin");  // TS Error: push does not exist on readonly array
-ALLOWED_ROLES[0] = "root";        // TS Error: Index signature in type 'readonly string[]' only permits reading
+ALLOWED_ROLES.push("superadmin"); // TS Error: push does not exist on readonly array
+ALLOWED_ROLES[0] = "root"; // TS Error: Index signature in type 'readonly string[]' only permits reading
 
 // Real-world: configuration arrays that should never change
 const HTTP_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"] as const;
 // type: readonly ["GET", "POST", "PUT", "PATCH", "DELETE"]
-type HttpMethod = typeof HTTP_METHODS[number]; // "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
+type HttpMethod = (typeof HTTP_METHODS)[number]; // "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 ```
 
 ### Typed Array Methods Return Types
@@ -147,12 +147,15 @@ const matrix: number[][] = [
 matrix[0][1]; // 2 — TypeScript knows this is a number
 
 // 2D array with Array<> syntax
-const grid: Array<Array<number>> = [[0, 1], [1, 0]];
+const grid: Array<Array<number>> = [
+  [0, 1],
+  [1, 0],
+];
 
 // Typed 2D array operations
 const flattened: number[] = matrix.flat(); // number[]
 const transposed: number[][] = matrix[0].map((_, colIndex) =>
-  matrix.map(row => row[colIndex])
+  matrix.map((row) => row[colIndex]),
 ); // number[][]
 ```
 
@@ -172,7 +175,7 @@ const schedule: WeeklySchedule = Array.from({ length: 7 }, () =>
   Array.from({ length: 24 }, (_, hour) => ({
     hour,
     isBooked: false,
-  }))
+  })),
 );
 
 // Access a specific time slot — fully typed
@@ -190,9 +193,7 @@ const voxelGrid: Voxel[][][] = []; // 3D space of voxels
 
 // Dashboard data: [week][day][hour] = sales
 const salesData: number[][][] = Array.from({ length: 4 }, () =>
-  Array.from({ length: 7 }, () =>
-    Array.from({ length: 24 }, () => 0)
-  )
+  Array.from({ length: 7 }, () => Array.from({ length: 24 }, () => 0)),
 );
 salesData[0][1][14]; // Week 1, Tuesday, 2pm — number ✓
 ```
@@ -219,10 +220,10 @@ let user: {
   isActive: true,
 };
 
-user.name;        // string
-user.isActive;    // boolean
-user.role;        // TS Error: Property 'role' does not exist on type '...'
-user.name = 42;   // TS Error: number not assignable to string
+user.name; // string
+user.isActive; // boolean
+user.role; // TS Error: Property 'role' does not exist on type '...'
+user.name = 42; // TS Error: number not assignable to string
 ```
 
 ### Excess Property Checking
@@ -255,8 +256,9 @@ type UserProfile = {
   id: number;
   name: string;
   email: string;
-  address: Address;         // nested object type
-  preferences: {            // inline nested type
+  address: Address; // nested object type
+  preferences: {
+    // inline nested type
     theme: "light" | "dark";
     language: string;
     notifications: boolean;
@@ -280,8 +282,8 @@ const profile: UserProfile = {
   },
 };
 
-profile.address.city;              // string
-profile.preferences.theme;         // "light" | "dark"
+profile.address.city; // string
+profile.preferences.theme; // "light" | "dark"
 profile.preferences.theme = "dark"; // ✓
 profile.preferences.theme = "blue"; // TS Error — "blue" not in union
 ```
@@ -302,13 +304,13 @@ const grades: ScoreMap = {
   science: 92,
 };
 
-grades["history"] = 88;  // ✓
-grades["math"] = "A";    // TS Error: string not assignable to number
+grades["history"] = 88; // ✓
+grades["math"] = "A"; // TS Error: string not assignable to number
 
 // Mixed: some known keys + index signature
 type Config = {
-  debug: boolean;      // specific known key
-  version: string;     // specific known key
+  debug: boolean; // specific known key
+  version: string; // specific known key
   [key: string]: unknown; // any additional keys must be unknown
   // Note: `unknown` because specific props (debug: boolean) must be
   // assignable to the index signature value type
@@ -398,15 +400,15 @@ const createUser: AsyncHandler<CreateUserDTO, User> = async (dto) => {
 
 Both can describe object shapes. Key differences:
 
-||Type Alias|Interface|
-|---|---|---|
-|Object shapes|✓|✓|
-|Primitives|✓ (`type ID = string`)|✗|
-|Unions|✓|✗|
-|Tuples|✓|✗|
-|Extends/implements|✓ (intersection `&`)|✓ (`extends`)|
-|Declaration merging|✗|✓ (can define same interface twice)|
-|Error messages|Less clear sometimes|Cleaner in errors|
+|                     | Type Alias             | Interface                           |
+| ------------------- | ---------------------- | ----------------------------------- |
+| Object shapes       | ✓                      | ✓                                   |
+| Primitives          | ✓ (`type ID = string`) | ✗                                   |
+| Unions              | ✓                      | ✗                                   |
+| Tuples              | ✓                      | ✗                                   |
+| Extends/implements  | ✓ (intersection `&`)   | ✓ (`extends`)                       |
+| Declaration merging | ✗                      | ✓ (can define same interface twice) |
+| Error messages      | Less clear sometimes   | Cleaner in errors                   |
 
 **Recommendation:**
 
@@ -471,18 +473,26 @@ type User = {
 };
 
 // Create — omit server-generated fields
-type CreateUserDTO = Omit<User, "id" | "passwordHash" | "createdAt" | "updatedAt"> & {
+type CreateUserDTO = Omit<
+  User,
+  "id" | "passwordHash" | "createdAt" | "updatedAt"
+> & {
   password: string; // plain text — will be hashed
 };
 
 // Update — all fields optional, can't change id/email
-type UpdateUserDTO = Partial<Omit<User, "id" | "email" | "createdAt" | "updatedAt" | "passwordHash">>;
+type UpdateUserDTO = Partial<
+  Omit<User, "id" | "email" | "createdAt" | "updatedAt" | "passwordHash">
+>;
 
 // Response — never expose password hash
 type UserResponseDTO = Omit<User, "passwordHash">;
 
 // List item — lighter version for list views
-type UserListItemDTO = Pick<User, "id" | "name" | "email" | "role" | "isActive">;
+type UserListItemDTO = Pick<
+  User,
+  "id" | "name" | "email" | "role" | "isActive"
+>;
 ```
 
 ---
@@ -496,10 +506,10 @@ type Product = {
   id: string;
   name: string;
   price: number;
-  description?: string;     // string | undefined
-  discount?: number;        // number | undefined
-  imageUrl?: string;        // string | undefined
-  tags?: string[];          // string[] | undefined
+  description?: string; // string | undefined
+  discount?: number; // number | undefined
+  imageUrl?: string; // string | undefined
+  tags?: string[]; // string[] | undefined
 };
 
 const product: Product = {
@@ -530,11 +540,11 @@ if (product.description) {
 These look similar but behave differently:
 
 ```ts
-type A = { x?: number };    // x can be omitted entirely
+type A = { x?: number }; // x can be omitted entirely
 type B = { x: number | undefined }; // x must be present, but can be undefined
 
-const a: A = {};             // ✓ — x not required
-const b: B = {};             // TS Error — x is required (even if value is undefined)
+const a: A = {}; // ✓ — x not required
+const b: B = {}; // TS Error — x is required (even if value is undefined)
 const b: B = { x: undefined }; // ✓
 ```
 
@@ -545,8 +555,8 @@ const b: B = { x: undefined }; // ✓
 function createUser(
   name: string,
   email: string,
-  role?: "admin" | "user",    // role?: "admin" | "user" means role is ("admin" | "user") | undefined
-  metadata?: Record<string, unknown>
+  role?: "admin" | "user", // role?: "admin" | "user" means role is ("admin" | "user") | undefined
+  metadata?: Record<string, unknown>,
 ): User {
   return {
     id: generateId(),
@@ -574,7 +584,9 @@ type UserQueryParams = {
   createdBefore?: Date;
 };
 
-async function getUsers(params: UserQueryParams = {}): Promise<PaginatedResponse<User>> {
+async function getUsers(
+  params: UserQueryParams = {},
+): Promise<PaginatedResponse<User>> {
   const {
     page = 1,
     limit = 20,
@@ -602,10 +614,10 @@ The `readonly` modifier prevents a property from being reassigned after initia
 
 ```ts
 type User = {
-  readonly id: string;        // can never be changed
-  readonly createdAt: Date;   // can never be changed
-  name: string;               // can be changed
-  email: string;              // can be changed
+  readonly id: string; // can never be changed
+  readonly createdAt: Date; // can never be changed
+  name: string; // can be changed
+  email: string; // can be changed
 };
 
 const user: User = {
@@ -615,9 +627,9 @@ const user: User = {
   email: "alice@example.com",
 };
 
-user.name = "Alice Chen";     // ✓ — not readonly
-user.id = "user_456";         // TS Error: Cannot assign to 'id' because it is a read-only property
-user.createdAt = new Date();  // TS Error: Cannot assign to 'createdAt'...
+user.name = "Alice Chen"; // ✓ — not readonly
+user.id = "user_456"; // TS Error: Cannot assign to 'id' because it is a read-only property
+user.createdAt = new Date(); // TS Error: Cannot assign to 'createdAt'...
 ```
 
 ### Important: `readonly` Is Shallow
@@ -632,9 +644,9 @@ type Order = {
 
 const order: Order = { id: "o1", items: [] };
 
-order.id = "o2";         // TS Error — can't reassign the reference
-order.items = [];        // TS Error — can't reassign the reference
-order.items.push(item);  // ✓ — mutating the ARRAY is allowed (shallow!)
+order.id = "o2"; // TS Error — can't reassign the reference
+order.items = []; // TS Error — can't reassign the reference
+order.items.push(item); // ✓ — mutating the ARRAY is allowed (shallow!)
 
 // For deep immutability, use `as const` or deep readonly:
 type DeepReadonly<T> = {
@@ -652,15 +664,15 @@ class User {
   email: string;
 
   constructor(id: string, name: string, email: string) {
-    this.id = id;             // ✓ — readonly can be set in constructor
+    this.id = id; // ✓ — readonly can be set in constructor
     this.createdAt = new Date();
     this.name = name;
     this.email = email;
   }
 
   updateEmail(newEmail: string): void {
-    this.email = newEmail;    // ✓
-    this.id = "new_id";       // TS Error — readonly after construction
+    this.email = newEmail; // ✓
+    this.id = "new_id"; // TS Error — readonly after construction
   }
 }
 ```
@@ -740,7 +752,8 @@ type UserForm = {
   name: string;
   email: string;
   password: string;
-} & Serializable & Validatable;
+} & Serializable &
+  Validatable;
 
 function processForm(form: UserForm): void {
   if (!form.validate()) {
@@ -776,9 +789,9 @@ type LoggedRequest = Request & {
 type ProcessedRequest = AuthenticatedRequest & LoggedRequest;
 
 function handleApiRoute(req: ProcessedRequest): void {
-  req.user.id;        // ✓ — from AuthenticatedRequest
-  req.requestId;      // ✓ — from LoggedRequest
-  req.method;         // ✓ — from base Request
+  req.user.id; // ✓ — from AuthenticatedRequest
+  req.requestId; // ✓ — from LoggedRequest
+  req.method; // ✓ — from base Request
 }
 ```
 
@@ -820,16 +833,16 @@ A discriminated union is a union of object types where each type has a **common
 
 ```ts
 type LoadingState = {
-  status: "loading";    // ← discriminant
+  status: "loading"; // ← discriminant
 };
 
 type SuccessState<T> = {
-  status: "success";    // ← discriminant
+  status: "success"; // ← discriminant
   data: T;
 };
 
 type ErrorState = {
-  status: "error";      // ← discriminant
+  status: "error"; // ← discriminant
   error: string;
   code: number;
 };
@@ -880,7 +893,7 @@ function processInput(input: string | number | null): string {
 ```ts
 // Every API response is either success or failure
 type ApiResponse<T> =
-  | { success: true;  data: T;       statusCode: number }
+  | { success: true; data: T; statusCode: number }
   | { success: false; error: string; statusCode: number; code: string };
 
 async function createOrder(dto: CreateOrderDTO): Promise<ApiResponse<Order>> {
@@ -901,9 +914,9 @@ async function createOrder(dto: CreateOrderDTO): Promise<ApiResponse<Order>> {
 const result = await createOrder(dto);
 
 if (result.success) {
-  console.log(result.data.id);   // ✓ — TypeScript knows data exists
+  console.log(result.data.id); // ✓ — TypeScript knows data exists
 } else {
-  console.error(result.error);   // ✓ — TypeScript knows error exists
+  console.error(result.error); // ✓ — TypeScript knows error exists
   // result.data                  — TS Error! data doesn't exist on the error type
 }
 ```
@@ -946,7 +959,8 @@ move("nroth"); // TS Error: Argument of type '"nroth"' is not assignable to...
 
 ```ts
 // HTTP method type
-type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "OPTIONS";
+type HttpMethod =
+  "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "OPTIONS";
 
 // User roles
 type UserRole = "superadmin" | "admin" | "moderator" | "user" | "guest";
@@ -993,15 +1007,15 @@ const CONFIG = {
   },
 } as const;
 
-CONFIG.env;               // type: "production"
-CONFIG.maxRetries;        // type: 3
+CONFIG.env; // type: "production"
+CONFIG.maxRetries; // type: 3
 CONFIG.features.darkMode; // type: true
 
 // Array with `as const`
 const ALLOWED_SORTS = ["name", "date", "price"] as const;
 // type: readonly ["name", "date", "price"]
 
-type AllowedSort = typeof ALLOWED_SORTS[number];
+type AllowedSort = (typeof ALLOWED_SORTS)[number];
 // type: "name" | "date" | "price"
 ```
 
@@ -1034,16 +1048,17 @@ Labels make tuples more readable (labels don't affect behavior):
 
 ```ts
 type Coordinate = [x: number, y: number, z?: number];
-type UserTuple = [id: number, name: string, email: string, role: "admin" | "user"];
-
-const coord: Coordinate = [10, 20];    // z is optional
-const coord3d: Coordinate = [10, 20, 5];
-
-function createUserEntry(
+type UserTuple = [
   id: number,
   name: string,
-  email: string
-): UserTuple {
+  email: string,
+  role: "admin" | "user",
+];
+
+const coord: Coordinate = [10, 20]; // z is optional
+const coord3d: Coordinate = [10, 20, 5];
+
+function createUserEntry(id: number, name: string, email: string): UserTuple {
   return [id, name, email, "user"];
 }
 ```
@@ -1088,8 +1103,8 @@ function createState<T>(initial: T): [T, (value: T) => void] {
 
 const [count, setCount] = createState(0);
 // count: number, setCount: (value: number) => void
-setCount(1);    // ✓
-setCount("a");  // TS Error: string not assignable to number
+setCount(1); // ✓
+setCount("a"); // TS Error: string not assignable to number
 ```
 
 ### Rest Elements in Tuples
@@ -1098,9 +1113,9 @@ setCount("a");  // TS Error: string not assignable to number
 // Tuple with variable-length tail
 type AtLeastTwo = [number, number, ...number[]];
 
-const pair: AtLeastTwo = [1, 2];          // ✓
-const triple: AtLeastTwo = [1, 2, 3];    // ✓
-const single: AtLeastTwo = [1];          // TS Error — need at least 2 elements
+const pair: AtLeastTwo = [1, 2]; // ✓
+const triple: AtLeastTwo = [1, 2, 3]; // ✓
+const single: AtLeastTwo = [1]; // TS Error — need at least 2 elements
 
 // Spread tuples in function signatures
 function first<T extends unknown[]>(arr: [T[0], ...T]): T[0] {
@@ -1118,10 +1133,10 @@ Enums define a set of named constants. TypeScript has two kinds: **numeric enum
 
 ```ts
 enum Direction {
-  North,  // 0
-  South,  // 1
-  East,   // 2
-  West,   // 3
+  North, // 0
+  South, // 1
+  East, // 2
+  West, // 3
 }
 
 Direction.North; // 0
@@ -1133,19 +1148,19 @@ Direction[3]; // "West"
 
 // Starting from a custom number
 enum Priority {
-  Low    = 1,
+  Low = 1,
   Medium = 2,
-  High   = 3,
+  High = 3,
   Critical = 10,
 }
 
 // Continued from previous member
 enum StatusCode {
   OK = 200,
-  Created,        // 201 — continues from 200
+  Created, // 201 — continues from 200
   BadRequest = 400,
-  Unauthorized,   // 401
-  Forbidden,      // 402 — wait, should be 403! This is a common trap
+  Unauthorized, // 401
+  Forbidden, // 402 — wait, should be 403! This is a common trap
 }
 ```
 
@@ -1153,10 +1168,10 @@ enum StatusCode {
 
 ```ts
 enum UserRole {
-  Admin     = "admin",
-  User      = "user",
+  Admin = "admin",
+  User = "user",
   Moderator = "moderator",
-  Guest     = "guest",
+  Guest = "guest",
 }
 
 // String enums are much better for:
@@ -1176,43 +1191,51 @@ JSON.stringify({ role: UserRole.Admin }); // '{"role":"admin"}'
 ```ts
 // Order status
 enum OrderStatus {
-  Draft            = "draft",
-  PendingPayment   = "pending_payment",
-  Processing       = "processing",
-  Paid             = "paid",
-  Shipped          = "shipped",
-  Delivered        = "delivered",
-  Cancelled        = "cancelled",
-  Refunded         = "refunded",
+  Draft = "draft",
+  PendingPayment = "pending_payment",
+  Processing = "processing",
+  Paid = "paid",
+  Shipped = "shipped",
+  Delivered = "delivered",
+  Cancelled = "cancelled",
+  Refunded = "refunded",
 }
 
 // HTTP status codes
 enum HttpStatus {
-  OK                   = 200,
-  Created              = 201,
-  NoContent            = 204,
-  BadRequest           = 400,
-  Unauthorized         = 401,
-  Forbidden            = 403,
-  NotFound             = 404,
-  Conflict             = 409,
-  UnprocessableEntity  = 422,
-  TooManyRequests      = 429,
-  InternalServerError  = 500,
-  ServiceUnavailable   = 503,
+  OK = 200,
+  Created = 201,
+  NoContent = 204,
+  BadRequest = 400,
+  Unauthorized = 401,
+  Forbidden = 403,
+  NotFound = 404,
+  Conflict = 409,
+  UnprocessableEntity = 422,
+  TooManyRequests = 429,
+  InternalServerError = 500,
+  ServiceUnavailable = 503,
 }
 
 // Using enum in switch for exhaustiveness
 function describeStatus(status: OrderStatus): string {
   switch (status) {
-    case OrderStatus.Draft:           return "Not yet submitted";
-    case OrderStatus.PendingPayment:  return "Awaiting payment";
-    case OrderStatus.Processing:      return "Processing your order";
-    case OrderStatus.Paid:            return "Payment received";
-    case OrderStatus.Shipped:         return "On its way!";
-    case OrderStatus.Delivered:       return "Delivered";
-    case OrderStatus.Cancelled:       return "Cancelled";
-    case OrderStatus.Refunded:        return "Refunded";
+    case OrderStatus.Draft:
+      return "Not yet submitted";
+    case OrderStatus.PendingPayment:
+      return "Awaiting payment";
+    case OrderStatus.Processing:
+      return "Processing your order";
+    case OrderStatus.Paid:
+      return "Payment received";
+    case OrderStatus.Shipped:
+      return "On its way!";
+    case OrderStatus.Delivered:
+      return "Delivered";
+    case OrderStatus.Cancelled:
+      return "Cancelled";
+    case OrderStatus.Refunded:
+      return "Refunded";
     default:
       const _: never = status; // exhaustiveness check
       return "Unknown status";
@@ -1227,8 +1250,8 @@ function describeStatus(status: OrderStatus): string {
 const enum Direction {
   North = "NORTH",
   South = "SOUTH",
-  East  = "EAST",
-  West  = "WEST",
+  East = "EAST",
+  West = "WEST",
 }
 
 const dir = Direction.North;
@@ -1247,7 +1270,7 @@ enum UserRole {
   User = "user",
 }
 
-// Literal union approach  
+// Literal union approach
 type UserRole = "admin" | "user";
 
 // Enum pros:
