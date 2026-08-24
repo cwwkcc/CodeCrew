@@ -245,7 +245,7 @@ CSS is render-blocking:
   The browser must fully build the CSSOM before it can render anything.
   Reason: any rule could affect any element.
   Browser can't paint until it knows all styles.
-  
+
   This is why reducing CSS size / complexity matters.
   Critical CSS (inline) → small styles for above-the-fold content.
   Load the rest asynchronously.
@@ -255,7 +255,7 @@ Specificity:
   ID selectors (#id) > Class selectors (.class) > Element selectors (p)
   Inline styles > all stylesheet rules
   !important > inline styles (use sparingly)
-  
+
   Browser computes the final "cascade" → each element gets its computed style.
 ```
 
@@ -275,20 +275,20 @@ LAYOUT (Reflow):
   Calculate the position and size of every element.
   Box model: margin, border, padding, content dimensions.
   Affected by: display, width, height, flexbox, grid, position.
-  
+
   This is expensive. Changing anything that affects element size
   or position triggers a full or partial layout recalculation.
-  
+
   Layout thrashing:
     Reading layout properties (offsetWidth, getBoundingClientRect)
     FORCES the browser to run layout synchronously (to return accurate values).
-    
+
     WRONG (layout thrash — read-write-read-write):
       for (let el of elements) {
         const width = el.offsetWidth;          // forces layout
         el.style.width = (width * 2) + 'px';  // invalidates layout
       }
-    
+
     RIGHT (batch reads then writes):
       const widths = elements.map(el => el.offsetWidth);  // one layout
       elements.forEach((el, i) => {
@@ -298,10 +298,10 @@ LAYOUT (Reflow):
 PAINT:
   Determine what to draw for each element, in which order.
   Fills in pixels: text, colors, borders, shadows, images.
-  
+
   Paint does NOT mean writing pixels to screen yet.
   It creates paint records: "draw a rectangle at x,y with color blue".
-  
+
   What triggers repaint:
     Changing color, background, visibility.
     Does NOT require re-layout (if size/position unchanged).
@@ -310,14 +310,14 @@ COMPOSITE:
   Browser may split the page into layers.
   Each layer is painted independently.
   Layers are combined (composited) by the GPU.
-  
+
   Some properties create their own compositor layer:
     transform, opacity, will-change, position:fixed, video elements.
-  
+
   Compositing is cheap and runs on the GPU thread.
   Animating transform or opacity = compositor thread only = smooth 60fps.
   Animating width or left = triggers layout → compositor thread involved → janky.
-  
+
   This is why CSS animations use transform instead of width:
     WRONG:  { width: 100px } → { width: 200px }  → triggers layout every frame
     RIGHT:  { transform: scaleX(1) } → { transform: scaleX(2) }  → GPU only
@@ -346,7 +346,7 @@ TurboFan (optimizing compiler)
   → Assumptions: "this argument is always an integer"
   → Highly optimized native code
   → Runs ~10-100× faster than bytecode
-  
+
 But:
   If an assumption breaks: "this argument is a string now"
   → Deoptimization: throw away compiled code, fall back to bytecode
@@ -406,17 +406,17 @@ Event Loop algorithm:
 ### Concrete Example
 
 ```javascript
-console.log('1');                // stack: runs immediately
+console.log("1"); // stack: runs immediately
 
 setTimeout(() => {
-  console.log('2');              // task queue: runs later
+  console.log("2"); // task queue: runs later
 }, 0);
 
 Promise.resolve()
-  .then(() => console.log('3')) // microtask queue: runs before setTimeout
-  .then(() => console.log('4')); // microtask queue: also runs before setTimeout
+  .then(() => console.log("3")) // microtask queue: runs before setTimeout
+  .then(() => console.log("4")); // microtask queue: also runs before setTimeout
 
-console.log('5');                // stack: runs immediately
+console.log("5"); // stack: runs immediately
 
 // Output: 1, 5, 3, 4, 2
 
@@ -434,15 +434,15 @@ console.log('5');                // stack: runs immediately
 ```javascript
 // React batches state updates in event handlers:
 function handleClick() {
-  setCount(c => c + 1);   // doesn't re-render immediately
-  setName('Ashan');       // doesn't re-render immediately
+  setCount((c) => c + 1); // doesn't re-render immediately
+  setName("Ashan"); // doesn't re-render immediately
 }
 // Both updates batched → single re-render after handler completes.
 
 // React 18 automatic batching even in async:
 setTimeout(() => {
-  setCount(c => c + 1);   // batched (React 18)
-  setName('Ashan');       // batched (React 18)
+  setCount((c) => c + 1); // batched (React 18)
+  setName("Ashan"); // batched (React 18)
   // single re-render
 }, 1000);
 ```
@@ -452,13 +452,13 @@ setTimeout(() => {
 ```javascript
 // Wrong: animating with setInterval (not synced with paint)
 setInterval(() => {
-  el.style.left = (x += 1) + 'px';
-}, 16);   // "16ms = 60fps" but timer is imprecise, may cause jank
+  el.style.left = (x += 1) + "px";
+}, 16); // "16ms = 60fps" but timer is imprecise, may cause jank
 
 // Right: requestAnimationFrame (runs right before browser paints)
 function animate(timestamp) {
-  el.style.left = (x += 1) + 'px';
-  requestAnimationFrame(animate);  // schedule next frame
+  el.style.left = (x += 1) + "px";
+  requestAnimationFrame(animate); // schedule next frame
 }
 requestAnimationFrame(animate);
 // Browser calls this right before painting → perfectly smooth
@@ -469,11 +469,11 @@ requestAnimationFrame(animate);
 ## 9. How fetch() Works Under the Hood
 
 ```javascript
-fetch('https://api.paideon.lk/api/students', {
-  headers: { Authorization: `Bearer ${token}` }
+fetch("https://api.paideon.lk/api/students", {
+  headers: { Authorization: `Bearer ${token}` },
 })
-.then(response => response.json())
-.then(data => console.log(data));
+  .then((response) => response.json())
+  .then((data) => console.log(data));
 ```
 
 **What actually happens:**
@@ -481,10 +481,10 @@ fetch('https://api.paideon.lk/api/students', {
 ```
 1. fetch() is called on the main thread.
    Main thread does NOT make the HTTP request.
-   
+
 2. fetch() passes the request to the browser's Network Process.
    (Separate process — doesn't affect main thread.)
-   
+
    Main thread continues executing other code immediately.
    This is why fetch is non-blocking.
 
@@ -494,7 +494,7 @@ fetch('https://api.paideon.lk/api/students', {
    TLS (or reuse existing session).
    Send HTTP request.
    Receive response headers.
-   
+
 4. Response headers received:
    A task is placed in the Task Queue: "fetch resolved with response object"
 
@@ -528,7 +528,7 @@ React RENDER phase:
   Builds a new virtual DOM tree (plain JS objects).
   Diffs against previous virtual DOM tree (reconciliation).
   Identifies what changed.
-  
+
   This runs entirely in JavaScript memory. No browser painting yet.
 
 React COMMIT phase:
@@ -540,7 +540,7 @@ React COMMIT phase:
 React 18 Concurrent Mode:
   Render phase can be interrupted.
   High-priority updates (user input) can preempt low-priority renders.
-  
+
   Example:
     Slow list re-renders 1000 items.
     User types in a search box.
@@ -555,7 +555,7 @@ React Fiber:
 
 useEffect timing:
   Component renders → DOM updated → browser paints → useEffect runs.
-  
+
   Effect runs AFTER the browser has painted.
   This is why data fetching in useEffect causes a loading flash:
   1. Render (with no data) → paint (shows spinner/empty state)
@@ -563,7 +563,7 @@ useEffect timing:
 
 useLayoutEffect:
   Component renders → DOM updated → useLayoutEffect runs → browser paints.
-  
+
   Runs synchronously BEFORE browser paint.
   Use when you need to read DOM dimensions before paint (to prevent flicker).
   Avoid heavy computation here — delays painting.
@@ -592,13 +592,13 @@ The service worker can:
 Service worker lifecycle:
   1. Registration:
      navigator.serviceWorker.register('/sw.js');
-  
+
   2. Install event (one-time):
      Pre-cache critical resources.
-     
+
   3. Activate event:
      Clean up old caches from previous versions.
-  
+
   4. Fetch event (every request):
      Intercept requests, decide: cache or network.
 

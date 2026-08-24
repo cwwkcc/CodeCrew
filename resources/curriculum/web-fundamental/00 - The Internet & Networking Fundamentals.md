@@ -311,19 +311,19 @@ Step 3 — Recursive resolver (your ISP or 8.8.8.8 or 1.1.1.1)
   Google's 8.8.8.8 is universal.
 
 Step 4 — Recursive resolution (if resolver doesn't have it cached)
-  
+
   Resolver → Root nameserver (13 root servers worldwide, operated by IANA)
     "Who handles .lk?"
   Root → "Ask 192.112.36.4 (the .lk TLD nameserver)"
-  
+
   Resolver → .lk TLD nameserver
     "Who handles paideon.lk?"
   .lk nameserver → "Ask ns1.cloudflare.com (paideon's nameserver)"
-  
+
   Resolver → Cloudflare nameserver
     "What is the A record for paideon.lk?"
   Cloudflare → "104.21.45.67" (TTL: 300 seconds)
-  
+
   Resolver caches this for 300 seconds.
   Returns answer to your OS.
   OS caches it.
@@ -583,13 +583,13 @@ Public IP:   203.45.67.89  (assigned to your router by ISP)
 
 Laptop requests paideon.lk:
   Original packet:  192.168.1.5:54321  →  104.21.45.67:443
-  
+
   Router translates:
     Rewrites source: 203.45.67.89:44921  →  104.21.45.67:443
     Records in NAT table: {44921 → 192.168.1.5:54321}
-  
+
   Response comes back to: 203.45.67.89:44921
-  
+
   Router looks up NAT table:
     44921 → 192.168.1.5:54321
   Forwards to your laptop: 192.168.1.5:54321
@@ -597,7 +597,7 @@ Laptop requests paideon.lk:
 Phone requests google.com:
   Router uses a different ephemeral port: 44922
   Records: {44922 → 192.168.1.6:55123}
-  
+
 The server sees both requests coming from 203.45.67.89
 with different source ports. It cannot tell they are different devices.
 ```

@@ -255,7 +255,7 @@ Signature:
 1. Does the domain match?
    Certificate says: paideon.lk
    We're connecting to: paideon.lk ✓
-   
+
    Wildcard: *.paideon.lk matches api.paideon.lk ✓
    But NOT: paideon.lk (wildcard doesn't match the apex)
    And NOT: sub.api.paideon.lk (wildcard only goes one level deep)
@@ -295,27 +295,27 @@ No one is born trusted. Trust is delegated.
 ```
 ROOT CA (self-signed, ultimate trust anchor)
   e.g., ISRG Root X1 (Let's Encrypt's root)
-  
+
   Stored in browser's/OS's built-in trust store.
   Root CAs are offline — they never directly sign end-entity certs.
   (If their private key leaked, all trust would be broken.)
 
 INTERMEDIATE CA (signed by root)
   e.g., Let's Encrypt R11
-  
+
   Intermediate CAs sign the actual certificates.
   They're online but their key is rotated every few years.
   If compromised, only certificates from that intermediate are affected.
 
 END-ENTITY CERTIFICATE (signed by intermediate)
   e.g., paideon.lk's certificate
-  
+
   This is what your server presents.
   Signed by Let's Encrypt R11.
 
 Chain of trust:
   paideon.lk cert  ← signed by → Let's Encrypt R11 ← signed by → ISRG Root X1
-  
+
   Browser: "Is ISRG Root X1 in my trust store? Yes. Chain is valid."
 ```
 
@@ -333,7 +333,7 @@ Why this matters:
   If a CA issues a rogue certificate for your domain,
   it will appear in CT logs.
   Monitoring CT logs can detect certificate mis-issuance.
-  
+
   CAA DNS records tell CAs which ones are allowed to issue
   certs for your domain, adding another layer of protection.
 ```
@@ -409,10 +409,10 @@ Tradeoff:
   0-RTT data is replay-vulnerable:
     An attacker could record the first packet and replay it.
     The server would process the request again.
-  
+
   Safe for: GET requests (idempotent)
   Dangerous for: POST/PUT/DELETE (not idempotent — replay = duplicate action)
-  
+
   NestJS should have 0-RTT disabled for state-changing API endpoints,
   or use replay protection (anti-replay nonces).
 ```
@@ -437,15 +437,15 @@ Problem:
 SNI (Server Name Indication):
   Client includes the hostname in the ClientHello, IN PLAINTEXT.
   Before encryption begins.
-  
+
   ClientHello includes: server_name: "paideon.lk"
-  
+
   Nginx sees this → picks paideon.lk certificate → handshake proceeds.
 
 Privacy implication:
   SNI is visible to anyone who can observe the TLS handshake.
   Your ISP sees which hostnames you connect to.
-  
+
   Solution: Encrypted Client Hello (ECH) — TLS extension being rolled out.
   Encrypts the entire ClientHello (including SNI) using a public key
   published in DNS. Your ISP only sees the CDN domain, not the real hostname.
@@ -480,13 +480,13 @@ HSTS Preload:
   Your domain gets added to a list baked into Chrome, Firefox, Safari, Edge
   From that point, browsers NEVER make HTTP requests to your domain
   Even on the absolute first visit to a fresh browser installation
-  
+
   Requirements:
     → max-age ≥ 31,536,000 (1 year)
     → includeSubDomains
     → preload directive
     → All subdomains must also serve HTTPS
-  
+
   Warning: Hard to reverse. Once preloaded, removing takes months.
   Only add Paideon to preload when you're confident all subdomains use HTTPS.
 ```
@@ -519,7 +519,7 @@ Modern approach — certificate transparency monitoring + CAA records:
 For Paideon:
   Mobile apps: pin the certificate public key in the app binary.
   Web browsers: cannot pin (user must be able to install their own certs).
-  
+
   Pinning in mobile apps prevents MITM attacks even with
   corporate proxies that install their own CA.
 
@@ -573,12 +573,12 @@ How it works:
 1. You run certbot (or Nginx plugin) on your server
 2. certbot requests a certificate for paideon.lk from Let's Encrypt
 3. Let's Encrypt challenges you to prove you control the domain:
-   
+
    HTTP-01 challenge:
    Let's Encrypt: "Place this file at http://paideon.lk/.well-known/acme-challenge/TOKEN"
    certbot: creates the file
    Let's Encrypt: fetches it → verifies → issues certificate
-   
+
    DNS-01 challenge:
    Let's Encrypt: "Create a TXT record: _acme-challenge.paideon.lk = VALUE"
    certbot: creates the DNS record via Cloudflare API
@@ -616,7 +616,7 @@ Option A: Cloudflare handles TLS (recommended for Paideon)
   Browser ↔ Cloudflare: TLS (certificate from Cloudflare)
   Cloudflare ↔ VPS Nginx: HTTPS (Cloudflare's Origin certificate, or Let's Encrypt)
   Nginx ↔ NestJS: plain HTTP on localhost (private network, safe)
-  
+
   Advantages:
     → DDoS protection, CDN, WAF
     → Free SSL certificates (Cloudflare manages them)
@@ -625,30 +625,30 @@ Option A: Cloudflare handles TLS (recommended for Paideon)
 Option B: Direct TLS on Nginx (no Cloudflare, or Cloudflare passthrough)
   Browser ↔ Nginx: TLS (Let's Encrypt certificate via certbot)
   Nginx ↔ NestJS: plain HTTP on localhost (never exposed)
-  
+
   Nginx TLS config:
   ──────────────────────────────────────────────
   server {
       listen 443 ssl http2;
       server_name paideon.lk www.paideon.lk;
-      
+
       ssl_certificate     /etc/letsencrypt/live/paideon.lk/fullchain.pem;
       ssl_certificate_key /etc/letsencrypt/live/paideon.lk/privkey.pem;
-      
+
       ssl_protocols TLSv1.2 TLSv1.3;
       ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:
                   ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:
                   ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305;
       ssl_prefer_server_ciphers off;
-      
+
       # HSTS
       add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-      
+
       # OCSP Stapling
       ssl_stapling on;
       ssl_stapling_verify on;
   }
-  
+
   server {
       listen 80;
       server_name paideon.lk www.paideon.lk;

@@ -24,7 +24,7 @@
 HTTP is fundamentally pull-based. The client asks, the server responds. The server cannot initiate contact.
 
 ```
-Scenario: Teacher marks attendance. 
+Scenario: Teacher marks attendance.
 Principal's dashboard should update immediately.
 
 HTTP approach (polling):
@@ -34,7 +34,7 @@ HTTP approach (polling):
   Server: returns same data (nothing changed)
   Principal's browser: GET /api/attendance/today?class=10A  (5 seconds later)
   Server: NOW returns updated data
-  
+
   Delay: up to 5 seconds.
   Wasted requests: many. Server processes hundreds of identical requests per minute.
   Scale: 100 teachers marking attendance + 10 admins polling = 1,200 requests/min
@@ -132,7 +132,7 @@ OPCODE:
 MASK:
   Client → Server: MUST be masked (MASK=1, masking key present)
   Server → Client: MUST NOT be masked (MASK=0)
-  
+
   Masking: each byte XOR'd with a byte from the 4-byte masking key.
   Purpose: prevents cache poisoning via malicious intermediaries.
 
@@ -150,42 +150,44 @@ In practice, you never deal with frames directly. Socket.io or ws library handle
 
 ```javascript
 // Establish connection
-const ws = new WebSocket('wss://api.paideon.lk/ws');
+const ws = new WebSocket("wss://api.paideon.lk/ws");
 
 // Connection opened
-ws.addEventListener('open', (event) => {
-  console.log('WebSocket connected');
-  
+ws.addEventListener("open", (event) => {
+  console.log("WebSocket connected");
+
   // Send a message (string)
-  ws.send(JSON.stringify({
-    type: 'SUBSCRIBE',
-    channel: 'attendance:class-10A',
-  }));
+  ws.send(
+    JSON.stringify({
+      type: "SUBSCRIBE",
+      channel: "attendance:class-10A",
+    }),
+  );
 });
 
 // Message received from server
-ws.addEventListener('message', (event) => {
+ws.addEventListener("message", (event) => {
   const data = JSON.parse(event.data);
-  
+
   switch (data.type) {
-    case 'ATTENDANCE_UPDATE':
+    case "ATTENDANCE_UPDATE":
       updateAttendanceDisplay(data.payload);
       break;
-    case 'NOTIFICATION':
+    case "NOTIFICATION":
       showNotification(data.payload);
       break;
   }
 });
 
 // Connection closed
-ws.addEventListener('close', (event) => {
-  console.log('WebSocket closed:', event.code, event.reason);
+ws.addEventListener("close", (event) => {
+  console.log("WebSocket closed:", event.code, event.reason);
   // Reconnect logic here
 });
 
 // Error occurred
-ws.addEventListener('error', (event) => {
-  console.error('WebSocket error:', event);
+ws.addEventListener("error", (event) => {
+  console.error("WebSocket error:", event);
 });
 
 // Send binary data
@@ -193,13 +195,13 @@ const buffer = new ArrayBuffer(8);
 ws.send(buffer);
 
 // Close the connection gracefully
-ws.close(1000, 'User logged out');
+ws.close(1000, "User logged out");
 
 // WebSocket ready states
-ws.readyState === WebSocket.CONNECTING  // 0 — not yet open
-ws.readyState === WebSocket.OPEN        // 1 — open, can send/receive
-ws.readyState === WebSocket.CLOSING     // 2 — in process of closing
-ws.readyState === WebSocket.CLOSED      // 3 — closed
+ws.readyState === WebSocket.CONNECTING; // 0 — not yet open
+ws.readyState === WebSocket.OPEN; // 1 — open, can send/receive
+ws.readyState === WebSocket.CLOSING; // 2 — in process of closing
+ws.readyState === WebSocket.CLOSED; // 3 — closed
 ```
 
 ### Message Format Convention
@@ -247,25 +249,25 @@ Each event:
 ### SSE in the Browser
 
 ```javascript
-const source = new EventSource('https://api.paideon.lk/api/events', {
-  withCredentials: true,  // send cookies (for auth)
+const source = new EventSource("https://api.paideon.lk/api/events", {
+  withCredentials: true, // send cookies (for auth)
 });
 
 // Default message event
-source.addEventListener('message', (event) => {
+source.addEventListener("message", (event) => {
   const data = JSON.parse(event.data);
   console.log(data);
 });
 
 // Custom event type
-source.addEventListener('attendance_update', (event) => {
+source.addEventListener("attendance_update", (event) => {
   updateAttendanceDisplay(JSON.parse(event.data));
 });
 
 // Connection error / server closed it
-source.addEventListener('error', (event) => {
+source.addEventListener("error", (event) => {
   if (source.readyState === EventSource.CLOSED) {
-    console.log('SSE connection closed');
+    console.log("SSE connection closed");
   }
 });
 
@@ -292,16 +294,16 @@ Last-Event-Id:
 ### SSE in NestJS
 
 ```typescript
-@Controller('events')
+@Controller("events")
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
-  @Sse('stream')
+  @Sse("stream")
   @UseGuards(JwtAuthGuard)
   stream(@CurrentUser() user: User): Observable<MessageEvent> {
     return this.eventsService
       .getEventsForUser(user.id, user.schoolId)
-      .pipe(map(event => ({ data: JSON.stringify(event) })));
+      .pipe(map((event) => ({ data: JSON.stringify(event) })));
   }
 }
 
@@ -316,8 +318,8 @@ export class EventsService {
 
   getEventsForUser(userId: string, schoolId: string): Observable<ServerEvent> {
     return this.subject$.pipe(
-      filter(e => e.schoolId === schoolId),
-      filter(e => this.isEventVisibleToUser(e, userId)),
+      filter((e) => e.schoolId === schoolId),
+      filter((e) => this.isEventVisibleToUser(e, userId)),
     );
   }
 }
@@ -341,14 +343,14 @@ REGULAR POLLING:
 LONG POLLING:
   Client: GET /api/events
   Server: HOLDS the request open. Doesn't respond until there's something to say.
-  
+
   [30 seconds pass, no events]
-  
+
   Server: [event happens] → responds with the event
   Client: receives event, immediately makes another request
   Client: GET /api/events
   Server: holds open again...
-  
+
   Effectively: server pushes events with minimal delay.
   One request in flight at all times.
   No timeout: server closes after ~30-60s and client reconnects (keep-alive pattern).
@@ -386,7 +388,7 @@ CHOOSE WebSocket when:
   Bidirectional communication (client also sends events to server)
   Low-latency required (real-time games, collaborative editing, chat)
   High message frequency (100+ messages/second)
-  
+
   Examples:
     Live collaborative document editing
     Real-time multiplayer features
@@ -398,7 +400,7 @@ CHOOSE SSE when:
   Simplicity is important
   You want automatic reconnect built in
   You're already in an HTTP/2 environment (SSE multiplexes well)
-  
+
   Examples:
     Live dashboard updates (attendance, grade submissions)
     Notification streams
@@ -409,7 +411,7 @@ CHOOSE Polling when:
   Updates are infrequent (hourly, daily)
   Infrastructure doesn't support persistent connections (serverless)
   Simplicity is paramount and real-time isn't critical
-  
+
   Examples:
     Checking for new announcements (poll every 5 minutes)
     Syncing data in a background tab
@@ -436,7 +438,7 @@ wss://api.paideon.lk/ws?token=eyJhbGc...
 Problems:
   Token appears in server logs, proxy logs, browser history.
   Tokens in URLs are a security risk.
-  
+
 Only acceptable if: token is short-lived (< 30 seconds), one-time use.
 
 ─────────────────────────────────────────────────────────────────
@@ -449,7 +451,7 @@ Upgrade: websocket
 
 Problem: Browser WebSocket API doesn't allow custom headers.
   new WebSocket(url)  → browser controls all headers, you can't add Authorization.
-  
+
 Works for: mobile apps (React Native), server-to-server WebSockets, custom clients.
 Doesn't work for: browser JavaScript.
 
@@ -460,11 +462,11 @@ APPROACH C: Cookie authentication (recommended for browsers)
 If the user has an HttpOnly cookie:
   Browser automatically sends it with the WebSocket upgrade request.
   (Same domain/path rules apply as HTTP cookies.)
-  
+
   Server reads the cookie to authenticate the WebSocket connection.
-  
+
   wss://api.paideon.lk/ws  (no token needed — cookie is sent automatically)
-  
+
   Server:
     Reads Cookie: access_token=... from the upgrade request headers.
     Verifies the token.
@@ -544,7 +546,7 @@ class ReconnectingWebSocket {
     this.ws.addEventListener('close', (event) => {
       if (!this.shouldReconnect) return;
       if (event.code === 1008) return;  // Policy violation — don't reconnect
-      
+
       setTimeout(() => this.connect(), this.reconnectDelay);
       this.reconnectDelay = Math.min(this.reconnectDelay * 2, this.maxDelay);
       // Add jitter to prevent reconnection storms
@@ -585,22 +587,22 @@ How does Server A push to User 2?
 SOLUTION 1: Sticky Sessions (simple, limited)
   Load balancer routes each user to the SAME server for the entire session.
   Based on: IP address, cookie, session ID.
-  
+
   Problem: if Server A dies, all its connections die.
   Problem: uneven load distribution.
   Problem: doesn't help with pub/sub across servers.
 
 SOLUTION 2: Redis Pub/Sub (correct approach for distributed systems)
-  
+
   When event occurs → publish to Redis channel.
   All server instances subscribe to relevant Redis channels.
   Each server receives the event → finds connections for relevant users → pushes.
-  
+
   Teacher marks attendance on Server B:
   → Server B publishes to Redis: "attendance:school-abc:class-10A" event
   → Server A is subscribed to "attendance:school-abc:*"
   → Server A receives it → pushes to all its connected users watching class 10A
-  
+
   Socket.io has a Redis adapter that does this automatically:
     import { createAdapter } from '@socket.io/redis-adapter';
     const pubClient = createClient({ url: 'redis://localhost:6379' });
@@ -629,16 +631,16 @@ import {
   OnGatewayDisconnect,
   MessageBody,
   ConnectedSocket,
-} from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
-import { UseGuards } from '@nestjs/common';
+} from "@nestjs/websockets";
+import { Server, Socket } from "socket.io";
+import { UseGuards } from "@nestjs/common";
 
 @WebSocketGateway({
   cors: {
-    origin: ['https://paideon.lk', 'http://localhost:3000'],
+    origin: ["https://paideon.lk", "http://localhost:3000"],
     credentials: true,
   },
-  namespace: '/ws',
+  namespace: "/ws",
 })
 export class NotificationsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
@@ -656,7 +658,7 @@ export class NotificationsGateway
       client.join(`school:${payload.schoolId}`);
       client.join(`user:${payload.sub}`);
     } catch {
-      client.disconnect(true);  // invalid token → kick
+      client.disconnect(true); // invalid token → kick
     }
   }
 
@@ -665,7 +667,7 @@ export class NotificationsGateway
   }
 
   // Client subscribes to a specific class's events
-  @SubscribeMessage('subscribe:class')
+  @SubscribeMessage("subscribe:class")
   handleClassSubscription(
     @MessageBody() data: { classId: string },
     @ConnectedSocket() client: Socket,
@@ -680,12 +682,12 @@ export class NotificationsGateway
     this.server
       .to(`school:${schoolId}`)
       .to(`class:${classId}`)
-      .emit('attendance:updated', payload);
+      .emit("attendance:updated", payload);
   }
 
   // Push notification to a specific user
   pushUserNotification(userId: string, notification: object) {
-    this.server.to(`user:${userId}`).emit('notification', notification);
+    this.server.to(`user:${userId}`).emit("notification", notification);
   }
 }
 ```
@@ -694,9 +696,9 @@ export class NotificationsGateway
 
 ```typescript
 // hooks/useWebSocket.ts
-import { useEffect, useRef } from 'react';
-import { io, Socket } from 'socket.io-client';
-import { useAuthStore } from '@/stores/auth';
+import { useEffect, useRef } from "react";
+import { io, Socket } from "socket.io-client";
+import { useAuthStore } from "@/stores/auth";
 
 export function useWebSocket() {
   const socket = useRef<Socket | null>(null);
@@ -705,17 +707,17 @@ export function useWebSocket() {
   useEffect(() => {
     if (!accessToken) return;
 
-    socket.current = io('https://api.paideon.lk/ws', {
+    socket.current = io("https://api.paideon.lk/ws", {
       auth: { token: accessToken },
       reconnectionDelayMax: 10000,
       reconnectionAttempts: Infinity,
     });
 
-    socket.current.on('attendance:updated', (data) => {
+    socket.current.on("attendance:updated", (data) => {
       // update attendance state
     });
 
-    socket.current.on('notification', (data) => {
+    socket.current.on("notification", (data) => {
       // show notification
     });
 
@@ -747,11 +749,11 @@ IMPLEMENTATION PRIORITY:
 1. Notifications (most useful, moderate complexity)
    → Socket.io gateway in NestJS
    → Push on: new assignment, grade posted, announcement, schedule change
-   
+
 2. Attendance live view (admin/principal dashboard)
    → Subscribe to class channel when admin opens attendance view
    → Unsubscribe when they navigate away
-   
+
 3. Report generation progress
    → SSE is sufficient (one-way, progress 0-100%)
    → Client subscribes, server emits progress events
@@ -767,7 +769,7 @@ NGINX CONFIGURATION for WebSocket:
       proxy_read_timeout 3600s;    # Keep alive for 1 hour
       proxy_send_timeout 3600s;
   }
-  
+
   proxy_read_timeout is critical — default is 60s.
   Without it, Nginx closes idle WebSocket connections after 1 minute.
 ```

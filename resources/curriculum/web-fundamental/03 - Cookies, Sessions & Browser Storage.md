@@ -203,7 +203,7 @@ SameSite=Strict
   Cookie is ONLY sent if the request originates from the same site.
   User on evil.com → clicks link to paideon.lk → cookie NOT sent.
   User navigating directly to paideon.lk → cookie sent.
-  
+
   Downside: breaks "log in with one click from email link" flows.
   If a user clicks a link in Gmail → new tab on paideon.lk → no cookie sent.
   They see the logged-out view even though they have a session.
@@ -213,14 +213,14 @@ SameSite=Lax  (browser default since ~2020)
   User on evil.com → clicks link to paideon.lk → cookie IS sent (top-level GET).
   User on evil.com → form POST to paideon.lk → cookie NOT sent.
   User on evil.com → AJAX fetch to paideon.lk → cookie NOT sent.
-  
+
   Good balance: allows link-clicking from external sites, blocks CSRF attacks.
 
 SameSite=None; Secure
   Cookie is sent on ALL requests, including cross-site.
   Required for: third-party embeds, OAuth flows, cross-domain API calls.
   MUST include Secure attribute.
-  
+
   Least secure — use only when cross-site requests are intentional.
 
 Default if omitted:
@@ -279,7 +279,7 @@ Without HttpOnly:
 With HttpOnly:
   document.cookie = ""  (HttpOnly cookies not exposed)
   Attacker cannot steal the cookie.
-  
+
 HttpOnly does not prevent XSS attacks — it limits their damage.
 You still must prevent XSS (see Security folder).
 ```
@@ -290,7 +290,7 @@ You still must prevent XSS (see Security folder).
 Attack: user visits evil.com while logged into paideon.lk.
 evil.com contains:
   <img src="https://paideon.lk/api/students/delete-all">
-  
+
 Without SameSite protection:
   Browser makes GET to paideon.lk → automatically sends cookie → disaster.
 
@@ -300,7 +300,7 @@ With SameSite=Strict:
 With SameSite=Lax (default):
   GET cross-site navigation → cookie sent (but still, shouldn't delete on GET).
   POST cross-site → cookie not sent → safe.
-  
+
 State-changing operations (DELETE, POST, PUT, PATCH) should never respond to GET.
 SameSite=Lax + never using GET for mutations = effective CSRF protection.
 ```
@@ -328,7 +328,7 @@ Session cookie:
   Deleted when:
     → Browser window/tab closes
     → Browser session ends
-  
+
   Some browsers restore sessions after closing (session restore feature).
   This can mean session cookies persist across browser restarts.
   Behaviour varies.
@@ -345,7 +345,7 @@ Persistent cookie:
 Paideon strategy:
   refresh_token → persistent (Max-Age=604800, 7 days)
     User stays logged in for 7 days after closing the browser.
-  
+
   access_token → NOT a cookie. Stored in JavaScript memory (not in any storage).
     Lives only as long as the page is open.
     On page refresh: silently refresh from refresh_token cookie.
@@ -371,7 +371,7 @@ Third-party cookie deprecation:
   Safari: blocked by default since 2017 (ITP — Intelligent Tracking Prevention).
   Firefox: blocked by default since 2019.
   Chrome: deprecating (was 2024, now rolling out in 2025).
-  
+
   Paideon does not need third-party cookies.
   Your auth cookies are first-party (paideon.lk setting cookies on paideon.lk).
 ```
@@ -384,15 +384,15 @@ localStorage is a key-value store in the browser, persisted to disk, per origin.
 
 ```javascript
 // Writing
-localStorage.setItem('theme', 'dark');
-localStorage.setItem('language', 'si');
+localStorage.setItem("theme", "dark");
+localStorage.setItem("language", "si");
 
 // Reading
-const theme = localStorage.getItem('theme');   // "dark"
-const missing = localStorage.getItem('x');     // null
+const theme = localStorage.getItem("theme"); // "dark"
+const missing = localStorage.getItem("x"); // null
 
 // Deleting
-localStorage.removeItem('theme');
+localStorage.removeItem("theme");
 
 // Clear all
 localStorage.clear();
@@ -449,21 +449,21 @@ NEVER store in localStorage:
 sessionStorage has the same API as localStorage but different scope.
 
 ```javascript
-sessionStorage.setItem('draft_message', 'Dear teacher...');
-const draft = sessionStorage.getItem('draft_message');
-sessionStorage.removeItem('draft_message');
+sessionStorage.setItem("draft_message", "Dear teacher...");
+const draft = sessionStorage.getItem("draft_message");
+sessionStorage.removeItem("draft_message");
 ```
 
 ### Key Difference from localStorage
 
 ```
 Scope:       Per tab AND per origin.
-             
+
              Opening a new tab → new empty sessionStorage.
              Duplicating a tab → COPIES sessionStorage to new tab.
              Closing the tab → sessionStorage destroyed.
              Refreshing the page → sessionStorage persists.
-             
+
 Persistence: Within the current tab session only.
 
 Use case:    Multi-step form data (don't want it to survive tab close).
@@ -479,29 +479,36 @@ IndexedDB is a full browser-side database — transactional, indexed, asynchrono
 
 ```javascript
 // Opening a database
-const request = indexedDB.open('paideon-cache', 1);
+const request = indexedDB.open("paideon-cache", 1);
 
 request.onupgradeneeded = (event) => {
   const db = event.target.result;
   // Create an object store (like a table)
-  const store = db.createObjectStore('students', { keyPath: 'id' });
-  store.createIndex('byClass', 'class', { unique: false });
+  const store = db.createObjectStore("students", { keyPath: "id" });
+  store.createIndex("byClass", "class", { unique: false });
 };
 
 request.onsuccess = (event) => {
   const db = event.target.result;
-  
+
   // Write
-  const tx = db.transaction('students', 'readwrite');
-  tx.objectStore('students').add({ id: 'cuid-123', name: 'Ashan', class: '10A' });
-  
+  const tx = db.transaction("students", "readwrite");
+  tx.objectStore("students").add({
+    id: "cuid-123",
+    name: "Ashan",
+    class: "10A",
+  });
+
   // Read
-  const readTx = db.transaction('students', 'readonly');
-  const getReq = readTx.objectStore('students').get('cuid-123');
+  const readTx = db.transaction("students", "readonly");
+  const getReq = readTx.objectStore("students").get("cuid-123");
   getReq.onsuccess = () => console.log(getReq.result);
-  
+
   // Query by index
-  const indexReq = readTx.objectStore('students').index('byClass').getAll('10A');
+  const indexReq = readTx
+    .objectStore("students")
+    .index("byClass")
+    .getAll("10A");
   indexReq.onsuccess = () => console.log(indexReq.result);
 };
 ```
@@ -576,26 +583,26 @@ Paideon's auth strategy:
 ACCESS TOKEN (short-lived, 15 minutes):
   Stored: JavaScript memory (a variable)
   NOT in any persistent storage.
-  
+
   const accessToken = response.data.accessToken;  // in memory only
-  
+
   Sent with API requests:
     Authorization: Bearer ${accessToken}
-  
+
   On page refresh: gone → silently fetched from refresh endpoint.
   XSS can steal it if it's in memory during an attack.
   But: 15 minute TTL limits damage.
 
 REFRESH TOKEN (long-lived, 7 days):
   Stored: HttpOnly, Secure, SameSite=Strict cookie.
-  
+
   Set-Cookie: refresh_token=eyJ...;
               HttpOnly;
               Secure;
               SameSite=Strict;
               Max-Age=604800;
               Path=/api/auth
-  
+
   JavaScript cannot read it — XSS cannot steal it.
   Automatically sent by browser to /api/auth/* endpoints only.
   Server reads it to issue new access tokens.

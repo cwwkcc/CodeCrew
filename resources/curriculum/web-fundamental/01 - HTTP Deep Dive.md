@@ -476,7 +476,7 @@ Status codes are 3-digit numbers. The first digit is the class.
   Success, but no body to return.
   DELETE → 204 (resource deleted, nothing to return)
   PUT/PATCH updates where you don't need the updated resource back.
-  
+
   Important: 204 must NOT have a body. Browser ignores any body.
 
 206 Partial Content
@@ -532,18 +532,18 @@ Status codes are 3-digit numbers. The first digit is the class.
   You need to authenticate but haven't.
   Or your credentials are invalid/expired.
   Response includes WWW-Authenticate header telling client how to auth.
-  
+
   In Paideon: no JWT token sent, or token is expired.
 
 403 Forbidden  (means "not authorized")
   You are authenticated, but you don't have permission.
-  
+
   In Paideon: authenticated as a student, trying to access admin endpoint.
 
 404 Not Found
   Resource doesn't exist at this URL.
   Used for: URL doesn't match any route, or resource not found in DB.
-  
+
   Security note: 404 vs 403. Sometimes you want to return 404
   even when a resource exists but the user lacks permission.
   This prevents leaking that the resource exists at all.
@@ -616,7 +616,7 @@ Authorization
   Carries credentials.
   Bearer eyJhbGc...   → JWT or OAuth token
   Basic dXNlcjpwYXNz  → Base64(username:password) — ONLY over HTTPS
-  
+
   NestJS extracts this in guards:
     const token = request.headers['authorization']?.split(' ')[1]
 
@@ -625,7 +625,7 @@ Accept
   application/json    → JSON only
   text/html           → HTML only
   */*                 → Anything
-  
+
   Multiple with priority:
   Accept: text/html, application/json;q=0.9, */*;q=0.8
   q= values are quality weights. Default is 1.0.
@@ -676,7 +676,7 @@ Range
 ```
 Cache-Control (response)
   Controls how clients and proxies cache the response.
-  
+
   no-store             → Never cache. Auth responses, sensitive data.
   no-cache             → Cache but revalidate with server every time.
   private              → Browser can cache, CDNs cannot.
@@ -685,7 +685,7 @@ Cache-Control (response)
   s-maxage=86400       → CDN cache for 1 day (overrides max-age for CDNs).
   immutable            → Never revalidate. Use with content-hashed filenames.
   must-revalidate      → Don't serve stale even if server is down.
-  
+
   Paideon examples:
   API responses:         Cache-Control: no-store
   Static JS/CSS bundle:  Cache-Control: public, max-age=31536000, immutable
@@ -762,7 +762,7 @@ font/woff2                        → Web font (WOFF2 format)
 ```
 application/x-www-form-urlencoded:
   name=Ashan+Silva&email=ashan%40school.lk&class=10A
-  
+
   Spaces encoded as +
   Special chars percent-encoded (%40 = @)
   & separates fields
@@ -771,15 +771,15 @@ application/x-www-form-urlencoded:
 multipart/form-data:
   --boundary-abc123
   Content-Disposition: form-data; name="name"
-  
+
   Ashan Silva
   --boundary-abc123
   Content-Disposition: form-data; name="avatar"; filename="photo.jpg"
   Content-Type: image/jpeg
-  
+
   [binary file data]
   --boundary-abc123--
-  
+
   Each field is separated by the boundary string.
   Required when uploading files — binary data can't be percent-encoded.
 ```
@@ -830,7 +830,7 @@ Without keep-alive (HTTP/1.0 behavior):
   TCP handshake → request → response → TCP teardown
   TCP handshake → request → response → TCP teardown
   TCP handshake → request → response → TCP teardown
-  
+
   3 requests = 3 TCP handshakes = 3× round trips wasted
 
 With keep-alive (HTTP/1.1 default):
@@ -839,7 +839,7 @@ With keep-alive (HTTP/1.1 default):
   → request → response
   → request → response
   → [connection closes after idle timeout or explicit Connection: close]
-  
+
   3 requests = 1 TCP handshake
 
 Headers:
@@ -860,10 +860,10 @@ To close:
 When you write a NestJS controller, here's what happens at the HTTP level:
 
 ```typescript
-@Controller('api/students')
+@Controller("api/students")
 export class StudentsController {
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(":id")
+  findOne(@Param("id") id: string) {
     return this.studentsService.findOne(id);
   }
 }
@@ -893,7 +893,7 @@ Outgoing HTTP response:
   HTTP/1.1 200 OK
   Content-Type: application/json; charset=utf-8
   Content-Length: 184
-  
+
   {"id":"cuid-123","name":"Ashan Silva","class":"10A"}
 ```
 

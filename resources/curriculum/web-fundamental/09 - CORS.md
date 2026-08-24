@@ -195,11 +195,11 @@ Without caching:
 
 With Max-Age:
   Access-Control-Max-Age: 86400   (cache preflight result for 1 day)
-  
+
   Browser caches the permission.
   Next request to same origin + same method + same headers:
   → No OPTIONS request. Just the actual request.
-  
+
   Browser limit: Chrome caps at 7200 seconds (2 hours). Firefox at 86400 (1 day).
   Set to 7200 (Chrome's max) for practical caching.
 ```
@@ -213,31 +213,31 @@ With Max-Age:
 ```
 Access-Control-Allow-Origin
   Which origin is allowed to read this response.
-  
+
   Access-Control-Allow-Origin: https://paideon.lk     → only this origin
   Access-Control-Allow-Origin: *                       → any origin (no credentials)
-  
+
   Only ONE origin can be specified per response.
   To allow multiple origins: check the request's Origin header,
   if it's in your allowed list → echo it back.
 
 Access-Control-Allow-Methods
   Used in preflight response. Which methods are allowed.
-  
+
   Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS
-  
+
   OPTIONS itself should usually be included.
 
 Access-Control-Allow-Headers
   Used in preflight response. Which request headers are allowed.
-  
+
   Access-Control-Allow-Headers: Authorization, Content-Type, X-Request-Id
 
 Access-Control-Allow-Credentials
   Whether cookies and Authorization headers can be included in cross-origin requests.
-  
+
   Access-Control-Allow-Credentials: true
-  
+
   When true: Access-Control-Allow-Origin CANNOT be *.
   Must be a specific origin. (See section 6.)
 
@@ -245,10 +245,10 @@ Access-Control-Expose-Headers
   By default, JavaScript can only read "safe" response headers:
     Cache-Control, Content-Language, Content-Length, Content-Type,
     Expires, Last-Modified, Pragma
-  
+
   To expose custom headers to JavaScript:
   Access-Control-Expose-Headers: X-Request-Id, X-RateLimit-Remaining
-  
+
   Without this: response.headers.get('X-Request-Id') returns null.
 
 Access-Control-Max-Age
@@ -262,7 +262,7 @@ Access-Control-Max-Age
 Origin
   The origin making the request. Added automatically by browser.
   Origin: https://paideon.lk
-  
+
   Note: Origin is also sent for same-origin requests in some cases.
   It's only absent for: navigation requests, <img> loads, etc.
 
@@ -299,7 +299,7 @@ For this to work, the server must respond with:
 If server has:
   Access-Control-Allow-Origin: *
   Access-Control-Allow-Credentials: true
-  
+
 Browser: IGNORES the response. Treats it as a CORS failure.
 Reason: * with credentials would allow any site to read your authenticated data.
 
@@ -315,7 +315,7 @@ Scenario A: access token in Authorization header (Paideon's approach)
     headers: { Authorization: `Bearer ${accessToken}` }
     // credentials: 'include' NOT needed for headers — they're explicit
   })
-  
+
   The Authorization header is sent explicitly.
   credentials: 'include' is for COOKIES, not explicit headers.
 
@@ -324,10 +324,10 @@ Scenario B: refresh token in HttpOnly cookie (Paideon's approach)
     method: 'POST',
     credentials: 'include'   // REQUIRED — sends the HttpOnly cookie
   })
-  
+
   The refresh_token cookie won't be sent without credentials: 'include'
   because api.paideon.lk is a different origin from paideon.lk.
-  
+
   Server must have:
     Access-Control-Allow-Origin: https://paideon.lk
     Access-Control-Allow-Credentials: true
@@ -437,33 +437,33 @@ async function bootstrap() {
 
   // Option A: Simple — single origin
   app.enableCors({
-    origin: 'https://paideon.lk',
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Authorization', 'Content-Type', 'X-Request-Id'],
+    origin: "https://paideon.lk",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Authorization", "Content-Type", "X-Request-Id"],
     credentials: true,
     maxAge: 7200,
   });
 
   // Option B: Multiple origins (dev + prod)
   const allowedOrigins = [
-    'https://paideon.lk',
-    'https://www.paideon.lk',
-    process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : null,
+    "https://paideon.lk",
+    "https://www.paideon.lk",
+    process.env.NODE_ENV === "development" ? "http://localhost:3000" : null,
   ].filter(Boolean);
 
   app.enableCors({
     origin: (requestOrigin, callback) => {
       // Allow requests with no origin (curl, Postman, server-to-server)
       if (!requestOrigin) return callback(null, true);
-      
+
       if (allowedOrigins.includes(requestOrigin)) {
         callback(null, true);
       } else {
         callback(new Error(`CORS: origin ${requestOrigin} not allowed`));
       }
     },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Authorization', 'Content-Type', 'X-Request-Id'],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Authorization", "Content-Type", "X-Request-Id"],
     credentials: true,
     maxAge: 7200,
   });
@@ -548,10 +548,10 @@ Setting ACAO: * does NOT make your API insecure for authenticated endpoints.
   Authenticated endpoint: requires Authorization header → requires user's token.
   ACAO: * means "any JavaScript can read the response IF they have the token."
   But anyone with a valid token is authenticated anyway.
-  
+
   The danger of ACAO: * is with endpoints that rely on COOKIES for auth
   and use credentials: 'include' — that's why * is blocked with credentials.
-  
+
   For explicit token auth (Authorization: Bearer): ACAO: * is often fine.
   For cookie auth: ACAO must be specific + credentials: true.
 ```
@@ -564,7 +564,7 @@ Setting ACAO: * does NOT make your API insecure for authenticated endpoints.
 Paideon architecture:
   Frontend: https://paideon.lk        (Next.js — port 3000)
   API:      https://api.paideon.lk    (NestJS — port 3001)
-  
+
   These are different origins.
   Frontend makes cross-origin requests to API.
   CORS is required.
@@ -599,7 +599,7 @@ Complete NestJS config:
   });
 
 Frontend fetch calls:
-  
+
   // Regular API call (access token in header)
   fetch('https://api.paideon.lk/api/students', {
     headers: {
@@ -608,13 +608,13 @@ Frontend fetch calls:
     }
     // credentials: 'include' NOT needed here (no cookies required for this call)
   });
-  
+
   // Refresh token call (needs cookie)
   fetch('https://api.paideon.lk/api/auth/refresh', {
     method: 'POST',
     credentials: 'include',   // REQUIRED — sends the HttpOnly refresh_token cookie
   });
-  
+
   // Logout (needs cookie to revoke)
   fetch('https://api.paideon.lk/api/auth/logout', {
     method: 'POST',
@@ -625,18 +625,18 @@ Frontend fetch calls:
 What happens if running both services on localhost (development):
   Frontend: http://localhost:3000   (Next.js dev server)
   API:      http://localhost:3001   (NestJS)
-  
+
   These are STILL different origins (different ports).
   CORS still applies.
   Add http://localhost:3000 to allowed origins in dev.
-  
+
   Alternative: use Next.js rewrites to proxy API calls:
     // next.config.ts
     rewrites: async () => [{
       source: '/api/:path*',
       destination: 'http://localhost:3001/api/:path*',
     }]
-  
+
   With rewrites: browser calls https://paideon.lk/api/... (same origin).
   No CORS needed. Next.js server proxies to NestJS server-to-server.
   This is cleaner for production too (single domain, no CORS at all).

@@ -1,6 +1,10 @@
-# Web Fundamentals Curriculum
+---
+tags: [MOC, web, curriculum]
+---
 
-A structured, progressive curriculum covering how the web actually works — the protocols, security model, performance considerations, and browser internals that underpin everything built with HTML, CSS, and JavaScript. All 12 modules are numbered `00–11` — read them in order.
+# 🌐 Web Fundamentals
+
+Core internet & web technologies: HTTP, TLS, cookies, REST, CORS, WebSockets. 11 modules.
 
 > **Location:** `resources/curriculum/web-fundamental/`
 
@@ -8,47 +12,29 @@ A structured, progressive curriculum covering how the web actually works — the
 
 ## Module Index
 
-### Part 1 — The Network
-
-|#|Topic|File|
-|---|---|---|
-|00|The Internet & Networking Fundamentals — TCP/IP, DNS, and How Data Travels|`00 - The Internet & Networking Fundamentals.md`|
-|01|HTTP Deep Dive — Methods, Headers, Status Codes, and HTTP/2|`01 - HTTP Deep Dive.md`|
-|02|TLS & HTTPS — Encryption, Certificates, and the Handshake|`02 - TLS & HTTPS.md`|
-
-### Part 2 — The Browser
-
-|#|Topic|File|
-|---|---|---|
-|03|Cookies, Sessions & Browser Storage — localStorage, sessionStorage, IndexedDB|`03 - Cookies, Sessions & Browser Storage.md`|
-|07|Browser Internals — Rendering Pipeline, Reflow, Repaint, and the Critical Path|`07 - Browser Internals.md`|
-
-### Part 3 — APIs & Data
-
-|#|Topic|File|
-|---|---|---|
-|04|REST & API Design — Resources, Verbs, Status Codes, and Versioning|`04 - REST & API Design.md`|
-|05|Authentication Flows on the Web — Sessions, Tokens, and OAuth|`05 - Authentication Flows on the Web.md`|
-|11|JSON & Data Formats — JSON, XML, FormData, and Binary|`11 - JSON & Data Formats.md`|
-
-### Part 4 — Security & Origins
-
-|#|Topic|File|
-|---|---|---|
-|08|URLs, URIs & the Origin Model — Parsing, Encoding, and Same-Origin Policy|`08 - URLs, URIs & the Origin Model.md`|
-|09|CORS — Cross-Origin Resource Sharing in Depth|`09 - CORS.md`|
-
-### Part 5 — Performance & Real-Time
-
-|#|Topic|File|
-|---|---|---|
-|06|Web Performance — Core Web Vitals, Caching, and Optimization|`06 - Web Performance.md`|
-|10|WebSockets & Real-Time Web — WS Protocol, SSE, and Long Polling|`10 - WebSockets & Real-Time Web.md`|
+| #   | Topic                                  | File                                             |
+| --- | -------------------------------------- | ------------------------------------------------ |
+| 00  | The Internet & Networking Fundamentals | `00 - The Internet & Networking Fundamentals.md` |
+| 01  | HTTP Deep Dive                         | `01 - HTTP Deep Dive.md`                         |
+| 02  | TLS & HTTPS                            | `02 - TLS & HTTPS.md`                            |
+| 03  | Cookies, Sessions & Browser Storage    | `03 - Cookies, Sessions & Browser Storage.md`    |
+| 04  | REST & API Design                      | `04 - REST & API Design.md`                      |
+| 05  | Authentication Flows on the Web        | `05 - Authentication Flows on the Web.md`        |
+| 06  | Web Performance                        | `06 - Web Performance.md`                        |
+| 07  | Browser Internals                      | `07 - Browser Internals.md`                      |
+| 08  | URLs, URIs & the Origin Model          | `08 - URLs, URIs & the Origin Model.md`          |
+| 09  | CORS                                   | `09 - CORS.md`                                   |
+| 10  | WebSockets & Real-Time Web             | `10 - WebSockets & Real-Time Web.md`             |
+| 11  | JSON & Data Formats                    | `11 - JSON & Data Formats.md`                    |
 
 ---
 
-## Notes
+## 🔗 Cross‑Curriculum Links
 
-- This curriculum is language-agnostic — it covers concepts, not code syntax.
-- Read modules 00–02 first regardless of order. They are foundational to everything else.
-- Module 05 (Authentication Flows) pairs directly with the Security curriculum's identity modules.
+| Module         | Related Topics                                                             |
+| -------------- | -------------------------------------------------------------------------- |
+| `01 - HTTP`    | → [[../security/07 - HTTP Security Headers]]                               |
+| `02 - TLS`     | → [[../security/05 - TLS Deep Dive]]                                       |
+| `03 - Storage` | → [[../javascript/13 -  Browser APIs]]                                     |
+| `04 - REST`    | → [[../react/16 - Data Fetching & TanStack Query]]                         |
+| `09 - CORS`    | → [[../react/16 - Data Fetching & TanStack Query]] (cross-origin requests) |

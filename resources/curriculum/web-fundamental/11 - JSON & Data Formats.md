@@ -98,7 +98,7 @@ This affects:
 
 Solution: send large integers as strings in JSON:
   { "id": "9007199254740993" }   // string → preserved exactly
-  
+
 PostgreSQL BIGINT → Prisma returns it as a BigInt in JS.
 JSON.stringify({ id: BigInt(9007199254740993) }) → TypeError: BigInt is not serializable
 Workaround: (BigInt).toString() before serializing.
@@ -114,7 +114,7 @@ null    → lowercase only. Null, NULL are invalid JSON.
 null semantics:
   "field": null    → field exists but has no value
   (field absent)   → field does not exist
-  
+
   These are different in many APIs.
   A PATCH request: {"email": null} might mean "clear email"
                    (no email field) might mean "don't change email"
@@ -160,17 +160,17 @@ JSON.stringify(value, replacer?, space?)
 ### Basic Usage
 
 ```javascript
-JSON.stringify({ name: 'Ashan', age: 17 })
+JSON.stringify({ name: "Ashan", age: 17 });
 // '{"name":"Ashan","age":17}'
 
 // With pretty-printing (space argument)
-JSON.stringify({ name: 'Ashan', age: 17 }, null, 2)
+JSON.stringify({ name: "Ashan", age: 17 }, null, 2);
 // '{
 //   "name": "Ashan",
 //   "age": 17
 // }'
 
-JSON.stringify({ name: 'Ashan', age: 17 }, null, '\t')
+JSON.stringify({ name: "Ashan", age: 17 }, null, "\t");
 // Tab-indented output
 ```
 
@@ -179,20 +179,20 @@ JSON.stringify({ name: 'Ashan', age: 17 }, null, '\t')
 ```javascript
 // Values that cannot be represented in JSON are dropped or replaced:
 JSON.stringify({
-  fn: function() {},          // → undefined → key dropped
-  sym: Symbol('x'),           // → undefined → key dropped
-  undef: undefined,           // → undefined → key dropped
-  inf: Infinity,              // → null
-  nan: NaN,                   // → null
-  date: new Date('2026-03-13'),// → "2026-03-13T00:00:00.000Z" (string!)
-  bigint: BigInt(123),        // → TypeError thrown!
-  regex: /pattern/,           // → {} (empty object)
-})
+  fn: function () {}, // → undefined → key dropped
+  sym: Symbol("x"), // → undefined → key dropped
+  undef: undefined, // → undefined → key dropped
+  inf: Infinity, // → null
+  nan: NaN, // → null
+  date: new Date("2026-03-13"), // → "2026-03-13T00:00:00.000Z" (string!)
+  bigint: BigInt(123), // → TypeError thrown!
+  regex: /pattern/, // → {} (empty object)
+});
 // '{"inf":null,"nan":null,"date":"2026-03-13T00:00:00.000Z","regex":{}}'
 
 // Dropped keys: fn, sym, undef (undefined values silently removed from objects)
 // Array undefined becomes null:
-JSON.stringify([1, undefined, 3])  // '[1,null,3]'
+JSON.stringify([1, undefined, 3]); // '[1,null,3]'
 ```
 
 ### The Replacer Function
@@ -202,22 +202,22 @@ JSON.stringify([1, undefined, 3])  // '[1,null,3]'
 // Return the value to include, or undefined to exclude.
 
 const data = {
-  id: 'cuid-123',
-  name: 'Ashan',
-  passwordHash: '$2b$12$...',   // should NOT be in API response
-  internalNote: 'flagged',      // should NOT be in API response
-  email: 'ashan@school.lk',
+  id: "cuid-123",
+  name: "Ashan",
+  passwordHash: "$2b$12$...", // should NOT be in API response
+  internalNote: "flagged", // should NOT be in API response
+  email: "ashan@school.lk",
 };
 
 JSON.stringify(data, (key, value) => {
-  if (key === 'passwordHash') return undefined;  // exclude
-  if (key === 'internalNote') return undefined;  // exclude
-  return value;  // include everything else
+  if (key === "passwordHash") return undefined; // exclude
+  if (key === "internalNote") return undefined; // exclude
+  return value; // include everything else
 });
 // '{"id":"cuid-123","name":"Ashan","email":"ashan@school.lk"}'
 
 // Array replacer — allowlist of keys to include:
-JSON.stringify(data, ['id', 'name', 'email'])
+JSON.stringify(data, ["id", "name", "email"]);
 // '{"id":"cuid-123","name":"Ashan","email":"ashan@school.lk"}'
 ```
 
@@ -227,7 +227,7 @@ JSON.stringify(data, ['id', 'name', 'email'])
 // If an object has a toJSON() method, stringify calls it:
 class Student {
   constructor(public id: string, public name: string, public passwordHash: string) {}
-  
+
   toJSON() {
     return {
       id: this.id,
@@ -249,14 +249,14 @@ new Date().toJSON()  // "2026-03-13T08:23:14.000Z"
 
 ```javascript
 // BigInt throws TypeError by default
-JSON.stringify({ id: BigInt(9007199254740993) })
+JSON.stringify({ id: BigInt(9007199254740993) });
 // TypeError: Do not know how to serialize a BigInt
 
 // Solution: replacer
 JSON.stringify({ id: BigInt(9007199254740993) }, (key, value) => {
-  if (typeof value === 'bigint') return value.toString();
+  if (typeof value === "bigint") return value.toString();
   return value;
-})
+});
 // '{"id":"9007199254740993"}'
 ```
 
@@ -271,19 +271,19 @@ JSON.parse(text, reviver?)
 ### Basic Usage
 
 ```javascript
-JSON.parse('{"name":"Ashan","age":17}')
+JSON.parse('{"name":"Ashan","age":17}');
 // { name: 'Ashan', age: 17 }
 
-JSON.parse('[1, 2, 3]')
+JSON.parse("[1, 2, 3]");
 // [1, 2, 3]
 
-JSON.parse('"hello"')
+JSON.parse('"hello"');
 // 'hello'
 
-JSON.parse('null')
+JSON.parse("null");
 // null
 
-JSON.parse('true')
+JSON.parse("true");
 // true
 ```
 
@@ -299,16 +299,16 @@ try {
 } catch (error) {
   if (error instanceof SyntaxError) {
     // invalid JSON — handle gracefully
-    console.error('Invalid JSON:', error.message);
+    console.error("Invalid JSON:", error.message);
   }
 }
 
 // Common parse errors:
-JSON.parse("{'key': 'value'}")   // SyntaxError: single quotes
-JSON.parse("{key: 'value'}")     // SyntaxError: unquoted key
-JSON.parse('{"a": 1,}')          // SyntaxError: trailing comma
-JSON.parse('')                    // SyntaxError: unexpected end
-JSON.parse(undefined)            // SyntaxError
+JSON.parse("{'key': 'value'}"); // SyntaxError: single quotes
+JSON.parse("{key: 'value'}"); // SyntaxError: unquoted key
+JSON.parse('{"a": 1,}'); // SyntaxError: trailing comma
+JSON.parse(""); // SyntaxError: unexpected end
+JSON.parse(undefined); // SyntaxError
 ```
 
 ### The Reviver Function
@@ -321,7 +321,7 @@ const json = '{"createdAt":"2026-03-13T08:23:14.000Z","name":"Ashan"}';
 
 JSON.parse(json, (key, value) => {
   // Revive ISO date strings back into Date objects
-  if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value)) {
+  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}T/.test(value)) {
     return new Date(value);
   }
   return value;
@@ -356,9 +356,9 @@ Or: keep them as ISO strings and only convert when formatting for display.
 ### NaN and Infinity Become null
 
 ```javascript
-JSON.stringify({ value: NaN })       // '{"value":null}'
-JSON.stringify({ value: Infinity })  // '{"value":null}'
-JSON.stringify({ value: -Infinity }) // '{"value":null}'
+JSON.stringify({ value: NaN }); // '{"value":null}'
+JSON.stringify({ value: Infinity }); // '{"value":null}'
+JSON.stringify({ value: -Infinity }); // '{"value":null}'
 
 // Caller receives null and doesn't know if the original was NaN, Infinity, or actually null.
 // Design your data model to avoid NaN/Infinity in API responses.
@@ -367,7 +367,7 @@ JSON.stringify({ value: -Infinity }) // '{"value":null}'
 ### The Empty String Key
 
 ```javascript
-JSON.stringify({ '': 'empty key is valid' })
+JSON.stringify({ "": "empty key is valid" });
 // '{"":"empty key is valid"}'
 
 // Valid JSON. Just surprising.
@@ -381,7 +381,7 @@ JSON.stringify({ '': 'empty key is valid' })
 const original = { a: { b: { c: 42 } } };
 const clone = JSON.parse(JSON.stringify(original));
 clone.a.b.c = 99;
-console.log(original.a.b.c);  // 42 (original unchanged) ✓
+console.log(original.a.b.c); // 42 (original unchanged) ✓
 
 // Limitations:
 // Drops: functions, undefined values, symbols, RegExps, BigInt
@@ -481,7 +481,13 @@ Composition:
 NestJS doesn't use JSON Schema directly — it uses class-validator decorators which compile to similar validation logic.
 
 ```typescript
-import { IsEmail, IsString, MinLength, MaxLength, IsEnum } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  MinLength,
+  MaxLength,
+  IsEnum,
+} from "class-validator";
 
 export class LoginDto {
   @IsEmail()
@@ -503,16 +509,18 @@ export class CreateStudentDto {
   @IsEmail()
   email: string;
 
-  @IsEnum(['10A', '10B', '10C', '11A', '11B'])
+  @IsEnum(["10A", "10B", "10C", "11A", "11B"])
   class: string;
 }
 
 // In main.ts:
-app.useGlobalPipes(new ValidationPipe({
-  whitelist: true,        // strip unknown properties (like additionalProperties: false)
-  forbidNonWhitelisted: true,  // throw on unknown properties
-  transform: true,        // transform string "17" to number 17 if type is number
-}));
+app.useGlobalPipes(
+  new ValidationPipe({
+    whitelist: true, // strip unknown properties (like additionalProperties: false)
+    forbidNonWhitelisted: true, // throw on unknown properties
+    transform: true, // transform string "17" to number 17 if type is number
+  }),
+);
 ```
 
 ---
@@ -538,7 +546,7 @@ Content negotiation:
   A server might support multiple response formats (JSON, XML, CSV).
   Client says: Accept: application/json, application/xml;q=0.9
   Server picks the best match and responds with the chosen format in Content-Type.
-  
+
   In practice: NestJS APIs only return JSON.
   Accept header is often ignored. Not worth implementing multi-format support
   unless required.
@@ -547,7 +555,7 @@ Line ending and encoding:
   Content-Type: application/json; charset=utf-8
   UTF-8 is the standard and recommended encoding for JSON.
   No BOM (Byte Order Mark) in JSON.
-  
+
   In practice: charset=utf-8 is often omitted.
   RFC 8259 specifies UTF-8 as the default and only standard encoding.
 ```
@@ -562,7 +570,7 @@ YAML (YAML Ain't Markup Language) is a superset of JSON optimized for human read
 # YAML uses indentation for structure, no quotes usually needed
 name: Ashan Silva
 age: 17
-class: "10A"      # quotes optional for strings without special chars
+class: "10A" # quotes optional for strings without special chars
 active: true
 grades:
   math: 85
@@ -572,7 +580,7 @@ contacts:
   - type: email
     value: ashan@school.lk
   - type: phone
-    value: "0771234567"    # quoted to prevent number parsing
+    value: "0771234567" # quoted to prevent number parsing
 
 # Comments are supported (JSON has no comments)
 # YAML is JSON-compatible: any valid JSON is valid YAML
@@ -583,7 +591,7 @@ bio: |
   who excels in mathematics.
 
 # Inline (flow) style — looks like JSON
-student: {name: Ashan, age: 17}
+student: { name: Ashan, age: 17 }
 scores: [85, 92, 78]
 ```
 
@@ -599,7 +607,7 @@ Configuration files:
 NestJS config with YAML:
   import * as yaml from 'js-yaml';
   import { readFileSync } from 'fs';
-  
+
   ConfigModule.forRoot({
     load: [() => yaml.load(readFileSync('config.yaml', 'utf8'))],
   });
@@ -607,19 +615,19 @@ NestJS config with YAML:
 YAML gotchas:
   Indentation matters (like Python).
   Tabs not allowed — spaces only.
-  
+
   Norway problem:
     countries:
       - NO     → parsed as false (NO is truthy 'no' = false in YAML 1.1)
       - SE     → "SE" (fine)
-    
+
     YAML 1.1 interprets: yes/no/on/off/true/false as boolean.
     Always quote strings that could be misinterpreted.
-    
+
   Octal numbers (YAML 1.1):
     value: 0777  → parsed as 511 (octal 777) in YAML 1.1
     Quote it: value: "0777"
-    
+
   YAML 1.2 fixed most of these. js-yaml uses YAML 1.2 by default.
 ```
 
@@ -704,7 +712,7 @@ Compared to JSON:
   Size:    ~50-80% smaller than JSON
   Speed:   ~3-10× faster to serialize/deserialize
   Types:   schema is the source of truth, generated types are always correct
-  
+
 Disadvantages:
   Requires schema file management
   Schema changes need to be handled carefully (field number compatibility)
@@ -746,7 +754,7 @@ Decision:
   Configuration files → YAML (comments, readability, industry standard)
   High-frequency WebSocket messages → MessagePack (if bandwidth matters)
   Internal microservice calls → Protobuf/gRPC (type safety + performance)
-  
+
   Always use gzip/brotli compression with JSON.
   Compressed JSON is often smaller than uncompressed MessagePack.
   The readability benefit of JSON outweighs the size disadvantage once compressed.
@@ -773,10 +781,10 @@ Matches JavaScript conventions. Prisma returns camelCase. No transformation need
 ```
 Always ISO 8601 UTC:
   "createdAt": "2026-03-13T08:23:14.123Z"
-  
+
   Z = UTC (zero offset). Always UTC in the API.
   Clients convert to local time for display.
-  
+
   Milliseconds included (123 in .123Z) or not — pick one.
   Prisma returns milliseconds. Keep them.
 
@@ -799,11 +807,11 @@ Convention B: Always include all fields, use null for empty
   GET /api/students/123
   → { "id": "...", "name": "Ashan", "middleName": null, "phone": null }
   All defined fields always present. null means empty.
-  
+
 Paideon recommendation:
   GET responses: include all fields, null for empty (Option B).
     Frontend can always access student.phone without checking if field exists.
-  
+
   PATCH requests: absent field = don't change, null field = clear
     { "phone": null }  → clear phone
     (no phone key)     → don't touch phone

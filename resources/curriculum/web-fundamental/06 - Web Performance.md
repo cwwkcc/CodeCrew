@@ -27,19 +27,19 @@ The critical rendering path is the sequence of steps from receiving HTML to disp
 1. DNS Lookup         paideon.lk → 104.21.45.67             ~20ms (cached: 0ms)
 2. TCP Handshake      SYN → SYN-ACK → ACK                   ~1 RTT (~20ms)
 3. TLS Handshake      ClientHello → ServerHello → Finished   ~1 RTT (~20ms, TLS 1.3)
-4. HTTP Request       GET /login → waiting for response       
+4. HTTP Request       GET /login → waiting for response
 5. Time to First Byte (TTFB)  server processing + network   ~50-200ms
 6. Download HTML              browser receives HTML           ~10-50ms
-7. Parse HTML         build DOM tree                         
+7. Parse HTML         build DOM tree
    → encounter <link rel="stylesheet"> → block, fetch CSS
    → encounter <script src="...">      → block, fetch+run JS
    → encounter <img src="...">         → fetch (non-blocking)
-8. Download CSS       browser fetches all stylesheets        
-9. Build CSSOM        CSS Object Model (parallel to DOM)     
-10. Build Render Tree DOM + CSSOM → what's visible and how  
+8. Download CSS       browser fetches all stylesheets
+9. Build CSSOM        CSS Object Model (parallel to DOM)
+10. Build Render Tree DOM + CSSOM → what's visible and how
 11. Layout            calculate position/size of every element
-12. Paint             fill in pixels for each element         
-13. Composite         layer GPU-composited elements           
+12. Paint             fill in pixels for each element
+13. Composite         layer GPU-composited elements
 14. First Contentful Paint (FCP) → user sees something
 
 Then: fetch JavaScript bundles → parse → execute → React hydration
@@ -56,13 +56,18 @@ The critical path is everything that BLOCKS step 11 (layout). CSS and JavaScript
 
 ```html
 <!-- These block rendering until downloaded and parsed -->
-<link rel="stylesheet" href="styles.css">   <!-- render-blocking -->
-<script src="app.js"></script>               <!-- render-blocking AND parse-blocking -->
+<link rel="stylesheet" href="styles.css" />
+<!-- render-blocking -->
+<script src="app.js"></script>
+<!-- render-blocking AND parse-blocking -->
 
 <!-- These do not block rendering -->
-<script src="analytics.js" defer></script>   <!-- downloaded parallel, executes after HTML parsed -->
-<script src="widget.js" async></script>       <!-- downloaded + executes as soon as ready -->
-<link rel="stylesheet" href="print.css" media="print"> <!-- non-blocking (print only) -->
+<script src="analytics.js" defer></script>
+<!-- downloaded parallel, executes after HTML parsed -->
+<script src="widget.js" async></script>
+<!-- downloaded + executes as soon as ready -->
+<link rel="stylesheet" href="print.css" media="print" />
+<!-- non-blocking (print only) -->
 ```
 
 **`defer` vs `async`:**
@@ -159,7 +164,7 @@ Database query cache → PostgreSQL's own buffer pool.
 
 Request flow:
   Browser → [browser cache hit? serve] → CDN → [CDN cache hit? serve] → Your server
-  
+
 Each layer that hits = a request that never reaches the next layer.
 ```
 
@@ -170,7 +175,7 @@ Cache forever (use content hashing to bust):
   JS bundles:      /static/js/main.a1b2c3d4.js   → max-age=31536000, immutable
   CSS bundles:     /static/css/main.e5f6g7h8.css  → max-age=31536000, immutable
   Images with hash /static/img/logo.i9j0k1.webp   → max-age=31536000, immutable
-  
+
   immutable: tells the browser "don't even check if this changed."
   Content hash in filename means if content changes, URL changes → fresh download.
 
@@ -225,7 +230,7 @@ Auth API response:
 CDN-cached public content, private browser cache:
   Cache-Control: private, max-age=3600
   → Browser caches 1 hour. CDN doesn't cache.
-  
+
   Cache-Control: public, s-maxage=86400, max-age=3600
   → CDN caches 24 hours. Browser caches 1 hour.
 ```
@@ -319,21 +324,21 @@ Resource hints let you instruct the browser to prepare for upcoming resources be
 
 ```html
 <!-- preconnect: establish TCP+TLS to an origin before we need it -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://api.paideon.lk" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://api.paideon.lk" crossorigin />
 
 <!-- dns-prefetch: resolve DNS for an origin (lighter than preconnect) -->
-<link rel="dns-prefetch" href="https://cdn.paideon.lk">
+<link rel="dns-prefetch" href="https://cdn.paideon.lk" />
 
 <!-- preload: download a specific resource needed for current page -->
-<link rel="preload" href="/fonts/inter.woff2" as="font" crossorigin>
-<link rel="preload" href="/critical.css" as="style">
+<link rel="preload" href="/fonts/inter.woff2" as="font" crossorigin />
+<link rel="preload" href="/critical.css" as="style" />
 
 <!-- prefetch: download a resource likely needed for NEXT page (low priority) -->
-<link rel="prefetch" href="/dashboard.js">
+<link rel="prefetch" href="/dashboard.js" />
 
 <!-- modulepreload: preload + parse a JavaScript module -->
-<link rel="modulepreload" href="/app.js">
+<link rel="modulepreload" href="/app.js" />
 ```
 
 ### When to Use Each
@@ -358,7 +363,7 @@ prefetch:
   Use for resources needed on the NEXT page.
   Browser fetches at low priority during idle time.
   Example: prefetch dashboard.js on the login page (user will likely go there next).
-  
+
   Next.js <Link> does this automatically for visible links.
 
 Don't overuse preload:
@@ -403,8 +408,8 @@ GIF:    Animated. Terrible compression. Replace with video or WebP animated.
 <img
   src="student-photo-400.jpg"
   srcset="
-    student-photo-400.jpg 400w,
-    student-photo-800.jpg 800w,
+    student-photo-400.jpg   400w,
+    student-photo-800.jpg   800w,
     student-photo-1200.jpg 1200w
   "
   sizes="
@@ -413,13 +418,13 @@ GIF:    Animated. Terrible compression. Replace with video or WebP animated.
     400px
   "
   alt="Student photo"
->
+/>
 
 <!-- picture: serve different formats by browser support -->
 <picture>
-  <source srcset="student.avif" type="image/avif">
-  <source srcset="student.webp" type="image/webp">
-  <img src="student.jpg" alt="Student photo">
+  <source srcset="student.avif" type="image/avif" />
+  <source srcset="student.webp" type="image/webp" />
+  <img src="student.jpg" alt="Student photo" />
 </picture>
 ```
 
@@ -427,10 +432,10 @@ GIF:    Animated. Terrible compression. Replace with video or WebP animated.
 
 ```html
 <!-- Native lazy loading: browser only loads when approaching viewport -->
-<img src="class-photo.jpg" loading="lazy" alt="Class photo">
+<img src="class-photo.jpg" loading="lazy" alt="Class photo" />
 
 <!-- Don't lazy load above-the-fold images -->
-<img src="hero.jpg" loading="eager" alt="School banner">
+<img src="hero.jpg" loading="eager" alt="School banner" />
 <!-- or just omit loading="" — eager is default -->
 ```
 
@@ -483,11 +488,11 @@ const HeavyChart = dynamic(() => import('../components/HeavyChart'), {
 
 ```javascript
 // WRONG: imports entire lodash library (~70KB gzipped)
-import _ from 'lodash';
+import _ from "lodash";
 _.debounce(fn, 300);
 
 // RIGHT: imports only debounce (~1KB)
-import debounce from 'lodash/debounce';
+import debounce from "lodash/debounce";
 
 // Even better: use native alternatives
 const debounce = (fn, delay) => {
@@ -506,7 +511,7 @@ const debounce = (fn, delay) => {
 
 // WRONG: synchronous heavy computation
 function processGrades(grades: Grade[]) {
-  return grades.map(g => expensiveCalculation(g));  // might take 500ms
+  return grades.map((g) => expensiveCalculation(g)); // might take 500ms
 }
 
 // BETTER: break into chunks with setTimeout
@@ -514,14 +519,14 @@ async function processGradesChunked(grades: Grade[]) {
   const results = [];
   for (let i = 0; i < grades.length; i += 100) {
     const chunk = grades.slice(i, i + 100);
-    results.push(...chunk.map(g => expensiveCalculation(g)));
-    await new Promise(resolve => setTimeout(resolve, 0));  // yield to browser
+    results.push(...chunk.map((g) => expensiveCalculation(g)));
+    await new Promise((resolve) => setTimeout(resolve, 0)); // yield to browser
   }
   return results;
 }
 
 // BEST: use Web Workers for true off-main-thread computation
-const worker = new Worker('/workers/grade-processor.js');
+const worker = new Worker("/workers/grade-processor.js");
 worker.postMessage({ grades });
 worker.onmessage = (e) => setProcessedGrades(e.data);
 ```
@@ -535,7 +540,7 @@ A CDN (Content Delivery Network) is a globally distributed network of servers th
 ```
 Without CDN:
   Student in Colombo → paideon.lk server in Frankfurt → ~150ms per request
-  
+
 With CDN (Cloudflare has edge in Singapore, ~30ms from Colombo):
   Student in Colombo → Cloudflare edge Singapore → ~30ms
   (For cached content, the Frankfurt server is not involved at all)
@@ -554,11 +559,11 @@ Cloudflare setup for Paideon:
   All traffic proxied through Cloudflare (orange cloud in DNS settings).
   Static assets (/_next/static/*): cached at edge.
   /api/*: bypassed or short TTL (user-specific data).
-  
+
   Cache rules in Cloudflare:
     URL pattern: /_next/static/*
     → Cache everything, max age 1 year
-    
+
     URL pattern: /api/*
     → Bypass cache (always forward to origin)
 ```
@@ -574,7 +579,7 @@ LCP — Largest Contentful Paint
   When does the largest visible element finish loading?
   Measures: perceived load speed
   Target: < 2.5 seconds
-  
+
   Usually: hero image, large text block, video thumbnail
   Fix slow LCP: preload LCP image, optimize image, fast TTFB, no render-blocking
 
@@ -583,7 +588,7 @@ INP — Interaction to Next Paint
   How long from user interaction to visual response?
   Measures: responsiveness
   Target: < 200ms
-  
+
   Usually blocked by: heavy JavaScript on main thread
   Fix: reduce JS, defer non-critical scripts, code split
 
@@ -591,7 +596,7 @@ CLS — Cumulative Layout Shift
   How much does the page shift unexpectedly during load?
   Measures: visual stability
   Target: < 0.1
-  
+
   Cause: images without dimensions, dynamically injected content, fonts loading
   Fix: always specify width/height on images, reserve space for dynamic content
 ```
@@ -603,7 +608,7 @@ TTFB — Time to First Byte
   Time from request to first byte of response.
   Measures: server response time + network.
   Target: < 800ms (ideally < 200ms)
-  
+
   Fix slow TTFB: optimize database queries, add caching, move server closer to users.
 
 FCP — First Contentful Paint
@@ -627,7 +632,7 @@ Chrome DevTools:
 Online tools:
   PageSpeed Insights: https://pagespeed.web.dev (uses real-world data)
   WebPageTest:        https://www.webpagetest.org (detailed waterfall)
-  
+
 Real user monitoring (RUM):
   Measure actual user experience, not just lab conditions.
   Cloudflare has built-in RUM.
@@ -652,7 +657,7 @@ Server-side rendering (SSR):
   Page is rendered on server for each request.
   User gets complete HTML immediately (no blank screen).
   React hydrates after (attaches event listeners).
-  
+
 Static site generation (SSG):
   Page is pre-built at build time.
   No server rendering on each request — just serves a file.
@@ -661,14 +666,14 @@ Static site generation (SSG):
 Incremental Static Regeneration (ISR):
   Static page, but regenerated in background every N seconds.
   Combines SSG speed with fresh data.
-  
+
   export const revalidate = 60;  // regenerate every 60 seconds
 
 React Server Components (App Router):
   Components that run on the server only.
   Can query database directly.
   No JavaScript shipped to client for server components.
-  
+
   // This component has ZERO JS on the client:
   async function StudentList() {
     const students = await prisma.student.findMany();

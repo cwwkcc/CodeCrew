@@ -122,11 +122,11 @@ Client doesn't know if it's talking to the final server or an intermediary.
 
 In Paideon:
   Browser → Cloudflare → Nginx → NestJS
-  
+
   The browser has no idea Cloudflare and Nginx exist.
   It just talks to paideon.lk:443.
   This is the layered system constraint.
-  
+
   Intermediaries can add caching, security, load balancing.
   Client and server don't need to know about them.
 ```
@@ -152,7 +152,7 @@ Use nouns, not verbs:
   WRONG:  GET /api/getStudents
   WRONG:  POST /api/createStudent
   WRONG:  DELETE /api/deleteStudent?id=123
-  
+
   RIGHT:  GET /api/students           ← list all students
   RIGHT:  POST /api/students          ← create a student
   RIGHT:  DELETE /api/students/123    ← delete student 123
@@ -248,7 +248,7 @@ When to use nesting:
   The child resource cannot exist without the parent.
   The relationship is primary (not optional).
   The nesting depth is at most 2-3.
-  
+
   /api/schools/:schoolId/students   → students belong to a school
   /api/students/:id/grades          → grades belong to a student
 
@@ -279,14 +279,14 @@ Sorting:
   ?sort=name,createdAt → multi-field sort
   ?order=asc           → ascending (default)
   ?order=desc          → descending
-  
+
   Alternative: ?sort=+name,-createdAt (+ for asc, - for desc)
   Pick one convention and stick to it.
 
 Searching:
   ?q=ashan             → search across relevant fields
   ?search=ashan        → same concept, different name
-  
+
   Be clear in documentation what fields are searched.
 
 Pagination:
@@ -321,7 +321,7 @@ Pros:
   Explicit — you can see the version in the URL.
   Easy to test in browser/curl.
   Proxies and CDNs can route by path.
-  
+
 Cons:
   "REST purists" argue the URL should identify the resource, not the version.
   Resources feel duplicated (/v1/ and /v2/ for same concept).
@@ -338,7 +338,7 @@ API-Version: 2
 Pros:
   URL stays clean.
   Resource URL is the same regardless of version.
-  
+
 Cons:
   Not visible in browser address bar.
   Harder to test without tools.
@@ -372,7 +372,7 @@ Non-breaking changes (no new version needed):
 
 NestJS versioning:
   app.enableVersioning({ type: VersioningType.URI });
-  
+
   @Controller({ path: 'students', version: '1' })
   @Controller({ path: 'students', version: '2' })
 ```
@@ -422,10 +422,10 @@ Pick a response shape and use it everywhere. Inconsistency is the number one API
 
 Wrapping allows you to add metadata alongside data:
   { "data": {...}, "meta": {...}, "links": {...} }
-  
+
 Without wrapper:
   Adding pagination metadata means changing the top-level shape → breaking change.
-  
+
 With wrapper:
   Adding meta is backwards-compatible.
   Clients reading data["data"] are unaffected by new top-level keys.
@@ -439,7 +439,7 @@ NestJS apps typically return raw objects. Wrapping is a deliberate choice.
 ```
 Always use ISO 8601 UTC:
   "createdAt": "2026-03-13T08:23:14.123Z"
-  
+
   Z means UTC (zero offset).
   Clients convert to local time if needed.
   Never return timestamps as epoch integers (harder to read, debug).
@@ -506,7 +506,7 @@ Why machine-readable codes?
   Frontend can switch on the code:
     if (error.code === 'TOKEN_EXPIRED') { await refreshToken(); retry(); }
     if (error.code === 'RATE_LIMIT_EXCEEDED') { showRateLimitMessage(); }
-  
+
   Human-readable messages can change without breaking the frontend.
   Error codes should be stable across API versions.
 
@@ -524,10 +524,10 @@ export class StudentNotFoundException extends NotFoundException {
   constructor(id: string) {
     super({
       error: {
-        code: 'STUDENT_NOT_FOUND',
+        code: "STUDENT_NOT_FOUND",
         message: `No student found with ID ${id}`,
         details: null,
-      }
+      },
     });
   }
 }
@@ -539,15 +539,20 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<FastifyReply>();
     const request = ctx.getRequest<FastifyRequest>();
-    
-    const status = exception instanceof HttpException
-      ? exception.getStatus()
-      : 500;
-    
-    const body = exception instanceof HttpException
-      ? exception.getResponse()
-      : { error: { code: 'INTERNAL_ERROR', message: 'An unexpected error occurred' } };
-    
+
+    const status =
+      exception instanceof HttpException ? exception.getStatus() : 500;
+
+    const body =
+      exception instanceof HttpException
+        ? exception.getResponse()
+        : {
+            error: {
+              code: "INTERNAL_ERROR",
+              message: "An unexpected error occurred",
+            },
+          };
+
     response.status(status).send({
       ...body,
       // Ensure requestId is always present
@@ -660,7 +665,7 @@ Server:
 Client retries (same key):
   POST /api/payments HTTP/1.1
   Idempotency-Key: 01hw4rz9kf-payment-2026-03-13  ← same key
-  
+
 Server:
   Finds key in cache → returns cached result immediately.
   Payment NOT processed again.
@@ -709,7 +714,7 @@ In practice:
   Almost nobody implements this.
   Frontend teams hardcode API URLs.
   The discovery mechanism is documentation, not hypermedia.
-  
+
 HATEOAS is conceptually important for understanding REST's intent,
 but you don't need it for a working Paideon API.
 ```
@@ -722,36 +727,36 @@ but you don't need it for a working Paideon API.
 REST:
   Resource-based. Multiple endpoints. Client asks for a resource.
   Client gets whatever the server decides to return.
-  
+
   Problem: Over-fetching (get full student object when you need just the name).
   Problem: Under-fetching (need student + grades → 2 requests).
 
 GraphQL:
   Query-based. One endpoint (/graphql). Client specifies exactly what it wants.
-  
+
   query {
     student(id: "cuid-123") {
       name
       grades { subject score }
     }
   }
-  
+
   Returns exactly: name and grades. Nothing more.
-  
+
   Pros: No over/under-fetching. Strong typing. Self-documenting schema.
   Cons: Complex caching, complex security (DDoS via deeply nested queries),
         learning curve, requires schema management.
-  
+
   Good for: Complex frontends with many views, mobile apps (minimize data).
 
 RPC (gRPC, JSON-RPC, tRPC):
   Procedure-based. Client calls a function on the server.
-  
+
   POST /rpc { method: "getStudent", params: { id: "cuid-123" } }
-  
+
   gRPC: binary (protobuf), streaming, efficient for service-to-service.
   tRPC: TypeScript-first, end-to-end type safety, great for monorepos.
-  
+
   Good for: Internal microservice communication, TypeScript monorepos.
 
 For Paideon:

@@ -26,20 +26,20 @@ These two words are often conflated. They are distinct steps.
 Authentication (AuthN):
   "Who are you?"
   Verifying identity.
-  
+
   You claim to be Ashan Silva.
   You prove it with a password, biometric, MFA code.
-  
+
   Result: a verified identity (usually a user ID and role).
 
 Authorization (AuthZ):
   "What are you allowed to do?"
   Verifying permissions.
-  
+
   Ashan is verified as a student.
   Can he access /api/grades/modify? No — that's a teacher action.
   Can he access /api/students/his-own-id? Yes.
-  
+
   Result: allow or deny the specific action.
 
 Order:
@@ -75,7 +75,7 @@ LOGOUT:
 PROS:
   Instant revocation — delete session row → user is logged out everywhere.
   Tokens are opaque → cannot be decoded to reveal user data.
-  
+
 CONS:
   Stateful — every request requires a database lookup.
   Hard to scale across multiple servers without shared session storage.
@@ -105,7 +105,7 @@ PROS:
   Stateless — any server can verify any token.
   Scalable — no shared session storage needed.
   Works well for APIs consumed by multiple clients (web, mobile, 3rd party).
-  
+
 CONS:
   No instant revocation — if a token is stolen, it's valid until expiry.
   Mitigation: short expiry (15 min) + refresh token rotation.
@@ -199,7 +199,7 @@ If the secret leaks → anyone can forge tokens → complete auth bypass.
 
 Store in environment variable, never in code or git:
   JWT_SECRET=a-very-long-random-string-at-least-256-bits
-  
+
 Generate: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 ```
 
@@ -215,7 +215,7 @@ Access Token:
   Stateless: server verifies signature only, no DB lookup
   Stored: JavaScript memory (most secure for XSS)
   Sent with: every API request (Authorization: Bearer ...)
-  
+
 Refresh Token:
   Long-lived: 7 days
   Stateful: stored in database (can be revoked)
@@ -225,7 +225,7 @@ Refresh Token:
 Why two tokens?
   If access token is stolen: attacker has 15 minutes.
   Token expires → they're locked out. No action required from user.
-  
+
   If refresh token is stolen: this is serious.
   But: it's in HttpOnly cookie → JS cannot read it → XSS cannot steal it.
   Network theft requires breaking HTTPS → very difficult.
@@ -233,21 +233,21 @@ Why two tokens?
 
 Refresh token rotation:
   Every time you use a refresh token, it's invalidated and replaced.
-  
+
   Client: POST /api/auth/refresh (sends refresh token cookie)
-  Server: 
+  Server:
     1. Verify refresh token exists in DB and is not revoked
     2. Delete old refresh token
     3. Create new refresh token, store in DB
     4. Issue new access token
     5. Set new refresh token in cookie
-  
+
   If attacker steals refresh token and uses it:
     → New token issued to attacker
     → Original token invalidated
     → Next time legitimate user tries to refresh: their token is gone → logged out
     → User notices, contacts support → all tokens revoked
-  
+
   This is "refresh token rotation with reuse detection."
 ```
 
@@ -329,7 +329,7 @@ Approach A: Proactive refresh (recommended)
   Set a timer for 14 minutes after login.
   At 14 min: silently call /api/v1/auth/refresh before token expires.
   User never hits a 401.
-  
+
   setTimeout(() => {
     silentRefresh();
   }, 14 * 60 * 1000);  // 14 minutes in ms
@@ -339,12 +339,12 @@ Approach B: Reactive refresh
   Pause the original request.
   Call /api/v1/auth/refresh.
   Retry the original request with new token.
-  
+
   // Axios interceptor example:
   axios.interceptors.response.use(
     response => response,
     async error => {
-      if (error.response?.status === 401 && 
+      if (error.response?.status === 401 &&
           error.response?.data?.error?.code === 'TOKEN_EXPIRED') {
         await refreshAccessToken();
         return axios.request(error.config);  // retry original
@@ -449,7 +449,7 @@ Each gets its own access tokens.
   UPDATE refresh_tokens SET revoked = true WHERE id = 'rt-cuid-2'
 
 "View active sessions":
-  SELECT deviceInfo, createdAt FROM refresh_tokens 
+  SELECT deviceInfo, createdAt FROM refresh_tokens
   WHERE userId = 'cuid-123' AND revoked = false AND expiresAt > NOW()
 
 Don't store the raw refresh token in the database.
@@ -497,7 +497,7 @@ OPTION C: localStorage / sessionStorage (WRONG for tokens)
 ─────────────────────────────────────────────────────────────
 XSS: IMMEDIATELY steals token. Any XSS attack reads it.
      Attacker has unlimited time to use it (no page close required).
-     
+
 DO NOT store auth tokens (access or refresh) in localStorage or sessionStorage.
 This is one of the most common security mistakes in web development.
 
@@ -505,7 +505,7 @@ This is one of the most common security mistakes in web development.
 PAIDEON RECOMMENDED APPROACH:
   Refresh token: HttpOnly, Secure, SameSite=Strict cookie
   Access token: JavaScript memory
-  
+
   Best of both worlds:
   - Refresh token (the valuable one) is fully protected from XSS
   - Access token in memory: loses it on refresh, needs silent refresh
@@ -522,7 +522,7 @@ PAIDEON RECOMMENDED APPROACH:
 WRONG — tells attacker if email exists:
   POST /api/auth/login { email: "unknown@x.com", password: "wrong" }
   → 404 Not Found ("user not found")
-  
+
   POST /api/auth/login { email: "real@user.com", password: "wrong" }
   → 401 Unauthorized ("invalid password")
 
@@ -562,16 +562,16 @@ CORRECT:
 ```
 WRONG — accepting "none" algorithm:
   Header: { "alg": "none" }
-  
+
   Some JWT libraries accept alg=none → signature is not verified.
   Attacker can forge any payload with no signature.
 
 CORRECT:
   Always specify accepted algorithms explicitly:
   jwt.verify(token, secret, { algorithms: ['HS256'] })
-  
+
   Never accept "none" or RS256 when you expect HS256.
-  
+
 Also wrong: accepting RS256 when configured for HS256.
   In RS256, the server's public key is used to verify.
   Attacker could set alg=HS256 and sign with the PUBLIC key.
@@ -595,7 +595,7 @@ JWT payload:
     "sub": "cuid-123",           User ID
     "role": "student",            Role
     "schoolId": "school-abc",     Multi-tenant isolation
-    "email": "ashan@school.lk",   
+    "email": "ashan@school.lk",
     "iat": 1741855200,
     "exp": 1741856100             15 minutes from iat
   }
@@ -603,10 +603,10 @@ JWT payload:
 GUARD HIERARCHY in NestJS:
   JwtAuthGuard     → verifies JWT signature, checks expiry
                      runs first on every protected route
-  
+
   RolesGuard       → checks role claim against @Roles() decorator
                      @Roles('teacher', 'school_admin')
-  
+
   SchoolGuard      → verifies schoolId in token matches
                      the school of the resource being accessed
                      prevents cross-school data access
@@ -631,7 +631,7 @@ RATE LIMITING on auth endpoints (prevent brute force):
   POST /api/auth/login:      5 attempts per 15 minutes per IP
   POST /api/auth/refresh:    20 attempts per minute per IP
   POST /api/auth/reset:      3 attempts per hour per email
-  
+
   After 5 failed logins: temporary account lock (5 minutes).
   Log all failed attempts with IP for security audit.
 ```
