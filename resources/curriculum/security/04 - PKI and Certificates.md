@@ -298,7 +298,7 @@ Padlock does NOT mean:
   ❌ The website is safe or trustworthy
   ❌ The website won't try to scam you
   ❌ The organization behind the website is legitimate
-  
+
 Phishers use HTTPS too. Let's Encrypt issues certs to anyone who controls a domain.
 "bank0f-america.com" can have a valid padlock.
 The padlock only guarantees you're talking to the owner of that specific domain.
@@ -506,7 +506,7 @@ const agent = new https.Agent({
       .createHash("sha256")
       .update(publicKey)
       .digest("base64");
-    
+
     if (pin !== expectedPin) {
       throw new Error(`Certificate pin mismatch for ${host}`);
     }

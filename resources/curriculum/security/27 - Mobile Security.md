@@ -63,7 +63,7 @@ Accessibility levels:
 Android Keystore: hardware-backed key storage
   Keys stored in secure hardware (TEE or StrongBox)
   Keys cannot be extracted from the device
-  
+
 EncryptedSharedPreferences: encrypted key-value store
   Encryption keys stored in Android Keystore
   Data encrypted at rest in the app's storage directory
@@ -82,12 +82,12 @@ import * as Keychain from "react-native-keychain";
 
 // Store access token
 await Keychain.setGenericPassword(
-  "accessToken",   // username/key
-  token,           // value (the actual token)
+  "accessToken", // username/key
+  token, // value (the actual token)
   {
     accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     // iOS: biometrics not required just to read (access-on-open)
-  }
+  },
 );
 
 // Retrieve
@@ -162,11 +162,15 @@ const pins = {
 };
 
 // Use this fetch everywhere instead of native fetch
-const response = await fetch("https://api.yourschool.lk/api/data", {
-  method: "GET",
-  headers: { Authorization: `Bearer ${token}` },
-  // pins are checked automatically
-}, pins);
+const response = await fetch(
+  "https://api.yourschool.lk/api/data",
+  {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+    // pins are checked automatically
+  },
+  pins,
+);
 ```
 
 ### Getting the Public Key Hash
@@ -242,7 +246,7 @@ async function authenticateWithBiometrics(): Promise<string | null> {
   // Check if biometrics are available
   const hasHardware = await LocalAuthentication.hasHardwareAsync();
   const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-  
+
   if (!hasHardware || !isEnrolled) {
     // Fall back to PIN/password
     return null;
@@ -260,7 +264,7 @@ async function authenticateWithBiometrics(): Promise<string | null> {
   const credentials = await Keychain.getGenericPassword({
     authenticationPrompt: { title: "Authenticating" },
   });
-  
+
   return credentials ? credentials.password : null;
 }
 ```

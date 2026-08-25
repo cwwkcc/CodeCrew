@@ -229,17 +229,17 @@ Components:
   Data flows:         arrows showing data movement
 
 Example (simplified school system DFD):
-  
+
   [Browser] ──HTTP──► [NestJS API] ──Prisma──► [PostgreSQL]
                              │                      │
                              └──────────────► [Redis Cache]
                              │
                       [Mobile App] ──HTTPS──► [NestJS API]
-                      
+
   [Admin Browser] ──HTTPS──► [NestJS API] ──► [Audit Log DB]
-  
+
   [Email Service] ◄──SMTP/API── [NestJS API]
-  
+
   [File Storage R2] ◄──S3 API── [NestJS API] ◄── [Browser uploads]
 ```
 
@@ -253,7 +253,7 @@ A trust boundary separates zones of different trust levels. Data crossing a trus
 
 ```
 Trust boundaries in a web app:
-  
+
   [Internet] ←─── trust boundary ───► [Your infrastructure]
                                          │
                               [DMZ / reverse proxy (Nginx)]
@@ -261,12 +261,12 @@ Trust boundaries in a web app:
                               [Application tier (NestJS)]
                                          │
                               [Data tier (PostgreSQL, Redis)]
-  
+
   Crossing internet → infrastructure:
     → All input must be validated
     → Authentication required
     → TLS required
-  
+
   Crossing application → data tier:
     → Parameterized queries
     → Least-privilege DB user

@@ -35,7 +35,7 @@ SCA (Software Composition Analysis):
   Scans dependencies for known vulnerabilities
   Finds: CVEs in npm packages, outdated library versions
   Fast, automated, integrated with package managers
-  
+
 IAST (Interactive Application Security Testing):
   Agents instrument the running app from inside
   Monitors execution during tests
@@ -92,10 +92,10 @@ eval("function " + userInput + "(){}");
 const token = Math.random().toString(36);
 
 // FLAGGED: unsafe regex (ReDoS vulnerability)
-const regex = new RegExp("(a+)+");  // exponential backtracking possible
+const regex = new RegExp("(a+)+"); // exponential backtracking possible
 
 // FLAGGED: object injection
-const data = obj[userInput];  // accessing object with user-controlled key
+const data = obj[userInput]; // accessing object with user-controlled key
 ```
 
 ### CodeQL — GitHub's SAST Engine
@@ -114,16 +114,16 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       security-events: write
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: javascript-typescript
           queries: security-and-quality
-      
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 ```
@@ -150,14 +150,14 @@ rules:
           metavariable: $X
           patterns:
             - pattern-either:
-              - pattern: $Y.password
-              - pattern: $Y.token
-              - pattern: $Y.secret
+                - pattern: $Y.password
+                - pattern: $Y.token
+                - pattern: $Y.secret
     message: "Possible sensitive data in console.log"
     severity: WARNING
 
   - id: jwt-hardcoded-secret
-    pattern: jwt.sign($P, "...")  # hardcoded string literal
+    pattern: jwt.sign($P, "...") # hardcoded string literal
     message: "JWT signed with hardcoded secret"
     severity: ERROR
 ```
@@ -187,7 +187,7 @@ on:
 jobs:
   zap-scan:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: ZAP Baseline Scan (passive only)
         uses: zaproxy/action-baseline@v0.10.0
@@ -196,7 +196,7 @@ jobs:
           rules_file_name: ".zap/rules.tsv"
           fail_action: false
           artifact_name: "zap-report"
-      
+
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
         with:
@@ -404,7 +404,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # full history for secret scanning
+          fetch-depth: 0 # full history for secret scanning
       - name: gitleaks
         uses: gitleaks/gitleaks-action@v2
         env:
@@ -479,8 +479,12 @@ describe("Authentication Security", () => {
   describe("JWT alg:none attack", () => {
     it("should reject tokens with alg: none", async () => {
       // Forge a token with algorithm set to none
-      const header = Buffer.from('{"alg":"none","typ":"JWT"}').toString("base64url");
-      const payload = Buffer.from(JSON.stringify({ sub: adminUser.id, role: "admin" })).toString("base64url");
+      const header = Buffer.from('{"alg":"none","typ":"JWT"}').toString(
+        "base64url",
+      );
+      const payload = Buffer.from(
+        JSON.stringify({ sub: adminUser.id, role: "admin" }),
+      ).toString("base64url");
       const forgedToken = `${header}.${payload}.`; // no signature
 
       const response = await request(app.getHttpServer())
@@ -522,10 +526,10 @@ describe("Authentication Security", () => {
       const attempts = Array.from({ length: 15 }, () =>
         request(app.getHttpServer())
           .post("/auth/login")
-          .send({ email: "test@test.com", password: "wrong" })
+          .send({ email: "test@test.com", password: "wrong" }),
       );
       const responses = await Promise.all(attempts);
-      const rateLimited = responses.filter(r => r.status === 429);
+      const rateLimited = responses.filter((r) => r.status === 429);
       expect(rateLimited.length).toBeGreaterThan(0);
     });
   });

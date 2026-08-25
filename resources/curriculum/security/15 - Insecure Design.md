@@ -231,7 +231,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     } else {
       // Don't expose internal errors to client
       this.logger.error(exception);
-      response.status(500).json({ statusCode: 500, message: "Internal server error" });
+      response
+        .status(500)
+        .json({ statusCode: 500, message: "Internal server error" });
     }
   }
 }
@@ -258,7 +260,7 @@ The application fetches a URL provided by the user — and the attacker provides
 Vulnerability:
   POST /api/fetch-preview
   { "url": "https://user-provided-url.com/image.jpg" }
-  
+
   Server fetches the URL and returns content.
 
 Attack:
@@ -297,16 +299,18 @@ function isSafeUrl(urlString: string): boolean {
     /^10\./,
     /^172\.(1[6-9]|2[0-9]|3[01])\./,
     /^192\.168\./,
-    /^169\.254\./,   // link-local (AWS metadata)
-    /^::1$/,         // IPv6 loopback
-    /^fd[0-9a-f]{2}:/i,  // IPv6 private
+    /^169\.254\./, // link-local (AWS metadata)
+    /^::1$/, // IPv6 loopback
+    /^fd[0-9a-f]{2}:/i, // IPv6 private
   ];
 
-  if (privateRanges.some(r => r.test(hostname))) return false;
+  if (privateRanges.some((r) => r.test(hostname))) return false;
 
   // Only allow expected domains if possible (allowlist is better than blocklist)
   const allowedDomains = ["images.example.com", "cdn.trusted.com"];
-  if (!allowedDomains.some(d => hostname === d || hostname.endsWith(`.${d}`))) {
+  if (
+    !allowedDomains.some((d) => hostname === d || hostname.endsWith(`.${d}`))
+  ) {
     return false;
   }
 
@@ -334,7 +338,7 @@ Java Deserialization:
 Node.js:
   JSON.parse() is safe — plain data, no code execution
   node-serialize (old library) was vulnerable — could execute JS on deserialize
-  
+
   Safer: only deserialize JSON. Never eval() serialized data.
   Validate structure after parse:
 ```
@@ -352,7 +356,7 @@ import { plainToClass } from "class-transformer";
 import { validateOrReject } from "class-validator";
 
 const dto = plainToClass(CreateUserDto, data);
-await validateOrReject(dto);  // validates types and constraints
+await validateOrReject(dto); // validates types and constraints
 ```
 
 ---
@@ -436,4 +440,3 @@ Sensitive data exposure:
 ```
 
 ---
-

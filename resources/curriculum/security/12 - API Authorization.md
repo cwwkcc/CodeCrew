@@ -1,4 +1,3 @@
-
 > Beyond user-facing auth, APIs need their own authorization layer — API keys for machine-to-machine access, scopes to limit what each key can do, and rate limiting as an authorization mechanism. This covers the full picture of API-level security.
 
 ---
@@ -39,7 +38,7 @@ Format: <prefix>_<random_bytes>
 
 Example: sk_live_a3b4c5d6e7f8...  (Stripe-style)
          pk_test_xyz123...
-         
+
 Benefits of prefix:
   → Immediately identifiable as an API key (helps in secret scanning)
   → Distinguishes test vs live, read vs write
@@ -74,7 +73,9 @@ function generateApiKey(prefix: string = "key"): { raw: string; hash: string } {
 await db.apiKey.create({ data: { key: rawKey, userId } });
 
 // CORRECT — store only hash (like password reset tokens)
-await db.apiKey.create({ data: { keyHash: hash, keyPrefix: rawKey.slice(0, 12), userId } });
+await db.apiKey.create({
+  data: { keyHash: hash, keyPrefix: rawKey.slice(0, 12), userId },
+});
 // Store a prefix (e.g., "sk_live_a3b4") so users can identify which key it is
 // Without being able to recover the full key
 ```
@@ -88,25 +89,25 @@ export class ApiKeyGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const apiKey = request.headers["x-api-key"];
-    
+
     if (!apiKey) return false;
-    
+
     const hash = crypto.createHash("sha256").update(apiKey).digest("hex");
-    
+
     const key = await this.db.apiKey.findUnique({
       where: { keyHash: hash },
       include: { user: true },
     });
-    
+
     if (!key || key.revokedAt) return false;
     if (key.expiresAt && key.expiresAt < new Date()) return false;
-    
+
     // Log usage
     await this.db.apiKey.update({
       where: { id: key.id },
       data: { lastUsedAt: new Date(), usageCount: { increment: 1 } },
     });
-    
+
     request.apiKey = key;
     request.user = key.user;
     return true;
@@ -184,7 +185,7 @@ Rate limits by scope:
 Rate limits can be per-endpoint:
   GET /api/students    → 100/min (read, cheaper)
   POST /api/students   → 10/min (write, more expensive)
-  
+
   POST /auth/login     → 10/hour/IP (sensitive — anti-brute-force)
   GET /api/health      → unlimited (doesn't touch DB)
 ```
@@ -284,7 +285,7 @@ Security considerations:
   → Old versions must be deprecated and removed
   → Vulnerabilities in v1 must be patched even if v2 is available (some clients won't migrate)
   → Breaking security changes are justified if the old behavior is insecure
-  
+
 Deprecation timeline:
   1. Announce deprecation (6-12 months notice)
   2. Log warnings on deprecated version usage (identify clients that haven't migrated)
@@ -350,7 +351,7 @@ async stripeWebhook(
 ) {
   const isValid = verifyWebhookSignature(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
   if (!isValid) throw new UnauthorizedException();
-  
+
   // Process event
 }
 ```

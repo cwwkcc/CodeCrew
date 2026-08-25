@@ -256,7 +256,7 @@ On next connection:
   Client sends the ticket in ClientHello
   Server decrypts ticket → recovers session state
   Skips certificate exchange, key derivation
-  
+
   0-RTT data:
     Client can even send application data in the first message (0-RTT)
     Before server has responded
@@ -479,7 +479,7 @@ Normal TLS:
 
 With corporate proxy:
   Client → [TLS to proxy's cert] → Proxy → [TLS to server's cert] → Server
-  
+
   Proxy has the corp's CA certificate installed on your device.
   Your browser trusts the corp CA.
   Proxy generates a cert for example.com, signed by the corp CA.

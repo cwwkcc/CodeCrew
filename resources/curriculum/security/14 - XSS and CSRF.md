@@ -56,7 +56,7 @@ URL: https://app.example.com/search?q=<script>alert(document.cookie)</script>
 
 Vulnerable server:
   <h2>Results for: <script>alert(document.cookie)</script></h2>
-  
+
 Browser executes the script.
 
 Attack vector: attacker crafts the URL and tricks victim into clicking it.
@@ -269,7 +269,7 @@ app.use((req, res, next) => {
   if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
     const origin = req.headers.origin;
     const allowed = ["https://app.example.com", "https://admin.example.com"];
-    
+
     if (origin && !allowed.includes(origin)) {
       return res.status(403).json({ message: "Forbidden" });
     }

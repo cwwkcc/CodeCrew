@@ -333,13 +333,13 @@ const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
 // Encrypt with public key (OAEP padding)
 const ciphertext = crypto.publicEncrypt(
   { key: publicKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING },
-  Buffer.from("hello world")
+  Buffer.from("hello world"),
 );
 
 // Decrypt with private key
 const plaintext = crypto.privateDecrypt(
   { key: privateKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING },
-  ciphertext
+  ciphertext,
 );
 ```
 

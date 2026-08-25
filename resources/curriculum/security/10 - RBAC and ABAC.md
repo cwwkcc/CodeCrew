@@ -86,7 +86,7 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   [UserRole.TEACHER]: [
     Permission.READ_OWN_PROFILE,
     Permission.WRITE_OWN_PROFILE,
-    Permission.READ_ANY_PROFILE,  // own class students
+    Permission.READ_ANY_PROFILE, // own class students
   ],
   [UserRole.ADMIN]: [
     Permission.READ_OWN_PROFILE,
@@ -95,7 +95,7 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.WRITE_ANY_PROFILE,
     Permission.MANAGE_USERS,
     Permission.VIEW_AUDIT_LOG,
-    Permission.VIEW_HEALTH_DATA,  // + step-up required
+    Permission.VIEW_HEALTH_DATA, // + step-up required
   ],
   // ...
 };
@@ -126,7 +126,7 @@ ADMIN has all USER + STAFF + ADMIN permissions automatically
 ```ts
 const ROLE_HIERARCHY: Record<UserRole, UserRole[]> = {
   [UserRole.STUDENT]: [],
-  [UserRole.TEACHER]: [UserRole.STUDENT],   // teacher inherits student permissions
+  [UserRole.TEACHER]: [UserRole.STUDENT], // teacher inherits student permissions
   [UserRole.LIBRARIAN]: [UserRole.STAFF],
   [UserRole.ADMIN]: [UserRole.LIBRARIAN, UserRole.TEACHER],
 };
@@ -438,7 +438,7 @@ RBAC:
   Users → Roles → Permissions
   Simple, scalable, easy to understand
   Hierarchical RBAC: role inheritance
-  
+
 ABAC:
   Policies over subject + resource + action + environment attributes
   More flexible, more complex
@@ -459,4 +459,3 @@ Common mistakes:
 ```
 
 ---
-

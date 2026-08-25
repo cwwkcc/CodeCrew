@@ -66,7 +66,7 @@ Account lockout:
 ```
 Access denied (403):
   timestamp, userId, requested resource, their role, required permission
-  
+
   Why: pattern of 403s from one user = they're probing for access beyond their role
 
 Privilege escalation attempts:
@@ -161,7 +161,7 @@ Request bodies often contain:
 If you log request bodies:
   Redact known sensitive fields before logging:
   const safeBody = redact(body, ["password", "token", "creditCard", "ssn"]);
-  
+
 Better: log only the shape of the request (which fields exist, not their values)
         for debugging purposes.
 ```
@@ -326,13 +326,24 @@ Complex to implement but provides strong tamper-evidence for high-security audit
 ### Redaction
 
 ```ts
-const SENSITIVE_FIELDS = ["password", "token", "refreshToken", "apiKey", "secret",
-                           "authorization", "cookie", "ssn", "creditCard"];
+const SENSITIVE_FIELDS = [
+  "password",
+  "token",
+  "refreshToken",
+  "apiKey",
+  "secret",
+  "authorization",
+  "cookie",
+  "ssn",
+  "creditCard",
+];
 
-function redactSensitive(obj: Record<string, unknown>): Record<string, unknown> {
+function redactSensitive(
+  obj: Record<string, unknown>,
+): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(obj)) {
-    if (SENSITIVE_FIELDS.some(f => key.toLowerCase().includes(f))) {
+    if (SENSITIVE_FIELDS.some((f) => key.toLowerCase().includes(f))) {
       result[key] = "[REDACTED]";
     } else if (typeof value === "object" && value !== null) {
       result[key] = redactSensitive(value as Record<string, unknown>);
@@ -348,8 +359,8 @@ logger.info({
   event: "http.request",
   method: req.method,
   path: req.path,
-  body: redactSensitive(req.body),   // safe to log
-  headers: redactSensitive(req.headers),  // Authorization header → [REDACTED]
+  body: redactSensitive(req.body), // safe to log
+  headers: redactSensitive(req.headers), // Authorization header → [REDACTED]
 });
 ```
 
@@ -361,18 +372,18 @@ For data that is useful to log partially:
 // Email: log domain only for high-volume logs
 function maskEmail(email: string): string {
   const [local, domain] = email.split("@");
-  return `${local[0]}***@${domain}`;  // "a***@school.lk"
+  return `${local[0]}***@${domain}`; // "a***@school.lk"
 }
 
 // IP: log /24 prefix for approximate location without exact identity
 function maskIp(ip: string): string {
   const parts = ip.split(".");
-  return `${parts[0]}.${parts[1]}.${parts[2]}.xxx`;  // "203.0.113.xxx"
+  return `${parts[0]}.${parts[1]}.${parts[2]}.xxx`; // "203.0.113.xxx"
 }
 
 // Token: log prefix only for identification without enabling replay
 function maskToken(token: string): string {
-  return `${token.slice(0, 12)}...`;  // "eyJhbGciOiJI..."
+  return `${token.slice(0, 12)}...`; // "eyJhbGciOiJI..."
 }
 ```
 
@@ -429,7 +440,7 @@ async function trackFailedLogin(ip: string, email: string): Promise<void> {
   ]);
 
   // Set expiry on first increment
-  if (ipCount === 1) await redis.expire(ipKey, 600);       // 10 min window
+  if (ipCount === 1) await redis.expire(ipKey, 600); // 10 min window
   if (emailCount === 1) await redis.expire(emailKey, 600);
 
   // Alert thresholds
@@ -489,7 +500,7 @@ export const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.errors({ stack: true }),
-    winston.format.json()           // structured JSON output
+    winston.format.json(), // structured JSON output
   ),
   transports: [
     new winston.transports.Console({
@@ -595,9 +606,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const req = ctx.getRequest<Request>();
     const res = ctx.getResponse<Response>();
 
-    const status = exception instanceof HttpException
-      ? exception.getStatus()
-      : 500;
+    const status =
+      exception instanceof HttpException ? exception.getStatus() : 500;
 
     if (status >= 500) {
       logger.error({
@@ -606,15 +616,20 @@ export class AllExceptionsFilter implements ExceptionFilter {
         statusCode: status,
         path: req.path,
         userId: req["user"]?.sub ?? null,
-        error: exception instanceof Error ? {
-          message: exception.message,
-          stack: exception.stack,
-          name: exception.name,
-        } : String(exception),
+        error:
+          exception instanceof Error
+            ? {
+                message: exception.message,
+                stack: exception.stack,
+                name: exception.name,
+              }
+            : String(exception),
       });
     }
 
-    res.status(status).json({ statusCode: status, message: "Internal server error" });
+    res
+      .status(status)
+      .json({ statusCode: status, message: "Internal server error" });
   }
 }
 ```
@@ -658,7 +673,11 @@ for (const student of students) {
 // CORRECT — log summary
 logger.info({ event: "batch.start", count: students.length });
 await Promise.all(students.map(processStudent));
-logger.info({ event: "batch.complete", count: students.length, duration: elapsed });
+logger.info({
+  event: "batch.complete",
+  count: students.length,
+  duration: elapsed,
+});
 ```
 
 ### Not Logging 4xx Errors

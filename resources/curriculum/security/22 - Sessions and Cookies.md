@@ -143,10 +143,10 @@ Set-Cookie: sessionId=abc123; Domain=example.com; Path=/
 Domain=example.com:
   Cookie sent to example.com AND all subdomains (api.example.com, etc.)
   Without Domain attribute: only sent to exact domain that set it
-  
+
   Warning: if you set Domain=example.com from api.example.com,
            the cookie is also sent to mail.example.com, etc.
-  
+
 Path=/:
   Cookie sent for all paths
   Path=/api: cookie only sent for /api/* paths
@@ -159,11 +159,11 @@ Path=/:
 ```
 Session cookie (no Max-Age/Expires):
   Deleted when browser closes (tab, not just window in modern browsers)
-  
+
 Persistent cookie:
   Set-Cookie: sessionId=abc123; Max-Age=86400  (1 day)
   Set-Cookie: sessionId=abc123; Expires=Thu, 01 Jan 2026 00:00:00 GMT
-  
+
   Stored on disk — survives browser close
   Deleted at the specified time
 
@@ -212,16 +212,16 @@ The attacker knew the session ID before authentication — they "fixed" it.
 
 async login(credentials: LoginDto, req: Request): Promise<LoginResponse> {
   const user = await this.verifyCredentials(credentials);
-  
+
   // Regenerate session ID to prevent session fixation
   await new Promise<void>((resolve, reject) => {
     req.session.regenerate(err => err ? reject(err) : resolve());
   });
-  
+
   // Now set user data on the new session
   req.session.userId = user.id;
   req.session.role = user.role;
-  
+
   return { success: true };
 }
 ```
@@ -261,7 +261,10 @@ session.ipAddress = req.ip;
 session.userAgent = req.headers["user-agent"];
 
 // Verify on each request
-if (session.ipAddress !== req.ip || session.userAgent !== req.headers["user-agent"]) {
+if (
+  session.ipAddress !== req.ip ||
+  session.userAgent !== req.headers["user-agent"]
+) {
   // Session may be hijacked — invalidate and force re-login
   req.session.destroy();
   throw new UnauthorizedException("Session invalidated");
@@ -359,7 +362,7 @@ Idle timeout:
 Best practice: BOTH
   Idle: 30 minutes (or role-dependent)
   Absolute: 8 hours (or role-dependent)
-  
+
   Privileged roles → shorter times:
     Admin:   idle 15 min, absolute 4 hours
     Teacher: idle 30 min, absolute 8 hours
@@ -374,8 +377,8 @@ Best practice: BOTH
 
 // Implementing idle detection on frontend:
 let lastActivity = Date.now();
-window.addEventListener("mousemove", () => lastActivity = Date.now());
-window.addEventListener("keypress", () => lastActivity = Date.now());
+window.addEventListener("mousemove", () => (lastActivity = Date.now()));
+window.addEventListener("keypress", () => (lastActivity = Date.now()));
 
 setInterval(() => {
   const idle = (Date.now() - lastActivity) / 1000 / 60; // minutes

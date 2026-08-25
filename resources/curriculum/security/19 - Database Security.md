@@ -104,7 +104,7 @@ Cloud providers: typically enabled by default
   AWS RDS: encrypted at rest using KMS (enable during creation)
   Google Cloud SQL: encrypted by default
   Supabase: encrypted at rest
-  
+
 VPS (bare metal server):
   LUKS (Linux Unified Key Setup) — encrypt the disk
   Data is encrypted when the server is off — useless to physical theft
@@ -129,17 +129,18 @@ The most sensitive fields (TOTP secrets, health data, confidential documents) ca
 import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 
 const FIELD_ENCRYPTION_KEY = Buffer.from(
-  process.env.FIELD_ENCRYPTION_KEY, "hex"  // 32-byte key, stored in secrets manager
+  process.env.FIELD_ENCRYPTION_KEY,
+  "hex", // 32-byte key, stored in secrets manager
 );
 
 function encryptField(plaintext: string): string {
   const iv = randomBytes(12);
   const cipher = createCipheriv("aes-256-gcm", FIELD_ENCRYPTION_KEY, iv);
-  
+
   let encrypted = cipher.update(plaintext, "utf8", "hex");
   encrypted += cipher.final("hex");
   const tag = cipher.getAuthTag().toString("hex");
-  
+
   // Store: iv + tag + ciphertext (all needed for decryption)
   return `${iv.toString("hex")}:${tag}:${encrypted}`;
 }
@@ -148,10 +149,10 @@ function decryptField(stored: string): string {
   const [ivHex, tagHex, encrypted] = stored.split(":");
   const iv = Buffer.from(ivHex, "hex");
   const tag = Buffer.from(tagHex, "hex");
-  
+
   const decipher = createDecipheriv("aes-256-gcm", FIELD_ENCRYPTION_KEY, iv);
   decipher.setAuthTag(tag);
-  
+
   let decrypted = decipher.update(encrypted, "hex", "utf8");
   decrypted += decipher.final("utf8");
   return decrypted;

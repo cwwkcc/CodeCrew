@@ -64,7 +64,9 @@ Acceptable for many use cases; avoid for highly sensitive connections.
 
 ```ts
 // NestJS WebSocket Gateway
-@WebSocketGateway({ cors: { origin: process.env.ALLOWED_ORIGIN, credentials: true } })
+@WebSocketGateway({
+  cors: { origin: process.env.ALLOWED_ORIGIN, credentials: true },
+})
 export class NotificationGateway {
   @WebSocketServer()
   server: Server;
@@ -80,9 +82,9 @@ export class NotificationGateway {
 
     try {
       const payload = this.jwtService.verify(token);
-      client.data.user = payload;     // attach user to socket for later use
+      client.data.user = payload; // attach user to socket for later use
       client.data.schoolId = payload.schoolId;
-      
+
       // Subscribe client to their school's room
       client.join(`school:${payload.schoolId}`);
       client.emit("connected", { userId: payload.sub });
@@ -103,7 +105,7 @@ async handleConnection(client: Socket) {
   // Cookies are in the handshake headers
   const cookies = client.handshake.headers.cookie;
   const accessToken = parseCookie(cookies)["accessToken"];  // if stored in cookie
-  
+
   // Or use the refresh token cookie to validate the session
   // (depends on your auth architecture)
 }
@@ -117,14 +119,14 @@ Connect unauthenticated → first message must be an `authenticate` message wi
 async handleConnection(client: Socket) {
   // Unauthenticated initially
   client.data.authenticated = false;
-  
+
   // Set timeout: must authenticate within 5 seconds
   const authTimeout = setTimeout(() => {
     if (!client.data.authenticated) {
       client.disconnect(true);
     }
   }, 5000);
-  
+
   client.data.authTimeout = authTimeout;
 }
 
@@ -134,7 +136,7 @@ async handleAuthenticate(
   @MessageBody() data: { token: string }
 ) {
   clearTimeout(client.data.authTimeout);
-  
+
   try {
     const payload = this.jwtService.verify(data.token);
     client.data.user = payload;
@@ -251,7 +253,10 @@ Rate limiting WebSockets requires a different approach than HTTP middleware.
 
 ```ts
 // In-memory rate limiter for connections per IP
-const connectionAttempts = new Map<string, { count: number; resetAt: number }>();
+const connectionAttempts = new Map<
+  string,
+  { count: number; resetAt: number }
+>();
 
 @WebSocketGateway()
 export class AppGateway {
@@ -262,7 +267,7 @@ export class AppGateway {
     const maxConnections = 10; // max 10 connections per minute per IP
 
     const record = connectionAttempts.get(ip);
-    
+
     if (record && record.resetAt > now) {
       if (record.count >= maxConnections) {
         client.emit("error", { message: "Too many connections" });
@@ -273,7 +278,7 @@ export class AppGateway {
     } else {
       connectionAttempts.set(ip, { count: 1, resetAt: now + windowMs });
     }
-    
+
     // ... proceed with authentication
   }
 }
@@ -289,25 +294,25 @@ const RATE_LIMIT_MAX = 20;        // 20 messages per 10 seconds
 @SubscribeMessage("*")  // intercept all messages (middleware pattern)
 async rateLimitMiddleware(client: Socket, data: any): Promise<boolean> {
   const now = Date.now();
-  
+
   if (!client.data.rateLimit) {
     client.data.rateLimit = { count: 0, windowStart: now };
   }
-  
+
   const rl = client.data.rateLimit;
-  
+
   if (now - rl.windowStart > RATE_LIMIT_WINDOW) {
     rl.count = 0;
     rl.windowStart = now;
   }
-  
+
   rl.count++;
-  
+
   if (rl.count > RATE_LIMIT_MAX) {
     client.emit("error", { message: "Rate limit exceeded" });
     return false;
   }
-  
+
   return true;
 }
 ```
@@ -392,7 +397,7 @@ Attack:
   User is logged in to yourschool.lk
   User visits evil.com (in another tab)
   evil.com's JavaScript: new WebSocket("wss://api.yourschool.lk/socket")
-  
+
   If server doesn't check Origin:
     Connection established
     evil.com's JS can send messages to your server AS the logged-in user
@@ -415,7 +420,7 @@ Attack:
 async handleConnection(client: Socket) {
   const origin = client.handshake.headers.origin;
   const allowedOrigins = [process.env.ALLOWED_ORIGIN];
-  
+
   if (!allowedOrigins.includes(origin)) {
     client.disconnect(true);
     return;
@@ -440,10 +445,12 @@ Full secure implementation example:
     credentials: true,
   },
 })
-export class NotificationsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+export class NotificationsGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
-  
+
   private connectedUsers = new Map<string, string>(); // userId → socketId
 
   afterInit(server: Server) {
@@ -460,8 +467,8 @@ export class NotificationsGateway implements OnGatewayInit, OnGatewayConnection,
   }
 
   async handleConnection(client: Socket) {
-    const token = client.handshake.auth.token as string;  // client sends: { auth: { token } }
-    
+    const token = client.handshake.auth.token as string; // client sends: { auth: { token } }
+
     if (!token) {
       client.disconnect(true);
       return;
@@ -470,13 +477,12 @@ export class NotificationsGateway implements OnGatewayInit, OnGatewayConnection,
     try {
       const payload = this.jwtService.verify<JwtPayload>(token);
       client.data.user = payload;
-      
+
       // Track user → socket mapping
       this.connectedUsers.set(payload.sub, client.id);
-      
+
       // Join school room for broadcast messages
       client.join(`school:${payload.schoolId}`);
-      
     } catch {
       client.disconnect(true);
     }
@@ -534,7 +540,7 @@ handleDisconnect(client: Socket) {
   //   Release any locks the client held
   //   Decrement active connection counters
   //   Log disconnection for analytics
-  
+
   if (client.data.user) {
     this.presenceService.setOffline(client.data.user.sub);
     this.connectedUsers.delete(client.data.user.sub);

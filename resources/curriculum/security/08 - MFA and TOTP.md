@@ -28,7 +28,7 @@ Single factor (password only):
   → Keylogger
   → Shoulder surfing
   → Brute force (weak password)
-  
+
   Result: account compromised
 
 Multi-factor (password + TOTP):
@@ -61,11 +61,11 @@ Something you ARE:
   Fingerprint, face recognition, iris scan
   Biometrics — can't be changed if compromised
   Varies in strength depending on implementation
-  
+
 Something you DO (behavioral):
   Typing patterns, mouse movements
   Used as passive authentication signals, not primary factors
-  
+
 Somewhere you ARE:
   IP geolocation, network location
   Weak — VPNs bypass it
@@ -98,7 +98,7 @@ Login:
   User enters code
   Server computes the same code from stored secret + current time
   Match → verified → tokens issued
-  
+
   No network request from the app.
   No SMS. No push notification.
   Pure offline computation.
@@ -164,8 +164,8 @@ Most implementations accept T-1, T, T+1 — a 90-second window.
 
 ```ts
 // Checking current + previous window
-const isValid = 
-  totp.check(code, secret, { step: 30 }) ||          // current window
+const isValid =
+  totp.check(code, secret, { step: 30 }) || // current window
   totp.check(code, secret, { step: 30, t: Date.now() / 1000 - 30 }); // previous
 ```
 
@@ -186,9 +186,9 @@ const secret = authenticator.generateSecret(); // base32-encoded, 160 bits
 
 // Generate QR code URI (to display as QR for scanning)
 const qrUri = authenticator.keyuri(
-  "alice@school.lk",  // user identifier (shown in app)
-  "School App",        // issuer (shown in app)
-  secret
+  "alice@school.lk", // user identifier (shown in app)
+  "School App", // issuer (shown in app)
+  secret,
 );
 // qrUri: "otpauth://totp/School%20App:alice%40school.lk?secret=JBSWY3DPEHPK3PXP&issuer=School%20App"
 // Pass this to a QR code library (qrcode package)
@@ -248,15 +248,19 @@ import bcrypt from "bcrypt";
 
 // Generate backup codes
 function generateBackupCodes(count = 10): { raw: string[]; hashed: string[] } {
-  const raw = Array.from({ length: count }, () =>
-    crypto.randomBytes(5).toString("hex").toUpperCase() // "A3B4C5D6E7"
+  const raw = Array.from(
+    { length: count },
+    () => crypto.randomBytes(5).toString("hex").toUpperCase(), // "A3B4C5D6E7"
   );
-  const hashed = await Promise.all(raw.map(code => bcrypt.hash(code, 10)));
+  const hashed = await Promise.all(raw.map((code) => bcrypt.hash(code, 10)));
   return { raw, hashed };
 }
 
 // Verify backup code
-async function verifyBackupCode(userId: string, providedCode: string): Promise<boolean> {
+async function verifyBackupCode(
+  userId: string,
+  providedCode: string,
+): Promise<boolean> {
   const codes = await db.backupCode.findMany({
     where: { userId, usedAt: null },
   });
@@ -288,10 +292,10 @@ SMS OTP sends a one-time code via text message. It's used by many banks and serv
 Attacker calls carrier pretending to be you:
   "I lost my phone, please transfer my number to this new SIM"
   Carrier verifies with: name, address, last 4 digits of SSN (available in breaches)
-  
+
   Number transferred → attacker's phone receives your SMS
   → Attacker requests password reset → gets SMS code → resets password
-  
+
 This attack has been used to steal millions from crypto accounts.
 ```
 
@@ -481,4 +485,3 @@ MFA bypass:
 ```
 
 ---
-

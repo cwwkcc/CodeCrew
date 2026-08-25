@@ -157,7 +157,10 @@ https://cdn.example.com  → specific domain
 ```html
 <!-- Server generates a random nonce for each request -->
 <!-- Never reuse nonces -->
-<meta http-equiv="Content-Security-Policy" content="script-src 'nonce-K2jdX9mP'">
+<meta
+  http-equiv="Content-Security-Policy"
+  content="script-src 'nonce-K2jdX9mP'"
+/>
 
 <script nonce="K2jdX9mP">
   // This script is allowed
@@ -478,27 +481,29 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Helmet sets sensible security headers automatically
-  app.use(helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],  // Next.js often needs this
-        imgSrc: ["'self'", "data:", "https://cdn.yourdomain.com"],
-        connectSrc: ["'self'", "https://api.yourdomain.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        objectSrc: ["'none'"],
-        frameAncestors: ["'none'"],
-        upgradeInsecureRequests: [],
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'"], // Next.js often needs this
+          imgSrc: ["'self'", "data:", "https://cdn.yourdomain.com"],
+          connectSrc: ["'self'", "https://api.yourdomain.com"],
+          fontSrc: ["'self'", "https://fonts.gstatic.com"],
+          objectSrc: ["'none'"],
+          frameAncestors: ["'none'"],
+          upgradeInsecureRequests: [],
+        },
       },
-    },
-    crossOriginEmbedderPolicy: false,  // May need to disable for some setups
-    hsts: {
-      maxAge: 31536000,
-      includeSubDomains: true,
-      preload: true,
-    },
-  }));
+      crossOriginEmbedderPolicy: false, // May need to disable for some setups
+      hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true,
+      },
+    }),
+  );
 
   await app.listen(3000);
 }
@@ -513,7 +518,10 @@ export class SecurityHeadersMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     // Add headers not covered by helmet
     res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    res.setHeader(
+      "Permissions-Policy",
+      "camera=(), microphone=(), geolocation=()",
+    );
 
     // For authenticated pages
     if (req.path.startsWith("/api/")) {
@@ -558,7 +566,9 @@ it("should have security headers", async () => {
   expect(response.headers["strict-transport-security"]).toBeDefined();
   expect(response.headers["x-content-type-options"]).toBe("nosniff");
   expect(response.headers["x-frame-options"]).toBe("DENY");
-  expect(response.headers["referrer-policy"]).toBe("strict-origin-when-cross-origin");
+  expect(response.headers["referrer-policy"]).toBe(
+    "strict-origin-when-cross-origin",
+  );
 });
 ```
 

@@ -49,11 +49,11 @@ Your company has internal packages published to a private registry:
 Attack:
   Attacker publishes a MALICIOUS package to the PUBLIC npm registry
   with the SAME name: @mycompany/internal-auth (version 9.9.0)
-  
+
   npm's default behavior:
     If the public registry has a higher version → install from public registry
     → Attacker's malicious package installed instead of your internal one
-    
+
 Affected: Apple, Microsoft, PayPal, Tesla, Uber, and many others (2021 research by Alex Birsan)
 ```
 
@@ -197,7 +197,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"  # or "daily", "monthly"
+      interval: "weekly" # or "daily", "monthly"
     open-pull-requests-limit: 10
     # Automatically opens PRs when dependencies have security updates
     # or when newer versions are available

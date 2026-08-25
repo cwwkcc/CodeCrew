@@ -121,7 +121,7 @@ Before redirect:
 When exchanging code for token:
   sends code_verifier
   server verifies: sha256(code_verifier) === stored code_challenge
-  
+
   If someone intercepts the authorization code, they can't exchange it
   because they don't have the original code_verifier.
 ```
@@ -239,17 +239,17 @@ An ID Token is a JWT issued by the authorization server that contains identity c
 
 ```json
 {
-  "iss": "https://accounts.google.com",      // issuer
-  "sub": "1234567890",                        // Google's internal user ID (stable)
-  "aud": "YOUR_CLIENT_ID",                    // your application
-  "exp": 1741694800,                          // expiry
-  "iat": 1741691200,                          // issued at
+  "iss": "https://accounts.google.com", // issuer
+  "sub": "1234567890", // Google's internal user ID (stable)
+  "aud": "YOUR_CLIENT_ID", // your application
+  "exp": 1741694800, // expiry
+  "iat": 1741691200, // issued at
   "email": "alice@gmail.com",
   "email_verified": true,
   "name": "Alice Smith",
   "picture": "https://lh3.googleusercontent.com/...",
   "locale": "en",
-  "nonce": "abc123"                           // must match what you sent
+  "nonce": "abc123" // must match what you sent
 }
 ```
 

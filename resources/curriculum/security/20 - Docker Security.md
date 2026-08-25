@@ -72,7 +72,7 @@ CMD ["node", "dist/main.js"]
 services:
   api:
     image: paideon-api
-    user: "1001:1001"  # uid:gid
+    user: "1001:1001" # uid:gid
 ```
 
 A non-root process that escapes the container has far fewer host privileges than a root process.
@@ -136,10 +136,10 @@ services:
   api:
     image: paideon-api
     env_file:
-      - .env         # loaded at runtime, not baked into image
+      - .env # loaded at runtime, not baked into image
     # OR
     environment:
-      - DATABASE_URL=${DATABASE_URL}  # from host environment
+      - DATABASE_URL=${DATABASE_URL} # from host environment
       - JWT_SECRET=${JWT_SECRET}
 ```
 
@@ -244,9 +244,9 @@ If the application doesn't need to write to its own filesystem, make it read-onl
 services:
   api:
     image: paideon-api
-    read_only: true          # container filesystem is read-only
+    read_only: true # container filesystem is read-only
     tmpfs:
-      - /tmp                 # app may need /tmp for temp files — mount as tmpfs (in-memory)
+      - /tmp # app may need /tmp for temp files — mount as tmpfs (in-memory)
     volumes:
       - uploads:/app/uploads # only this directory is writable
 ```
@@ -288,12 +288,12 @@ docker run \
 services:
   api:
     networks:
-      - frontend   # faces the internet (via Nginx reverse proxy)
-      - backend    # connects to database
-    
+      - frontend # faces the internet (via Nginx reverse proxy)
+      - backend # connects to database
+
   db:
     networks:
-      - backend    # only on backend network, not reachable from internet
+      - backend # only on backend network, not reachable from internet
     # db is NOT in frontend network → can't be accessed except by services in backend network
 
   nginx:
@@ -308,7 +308,7 @@ networks:
     driver: bridge
   backend:
     driver: bridge
-    internal: true  # no outbound internet access for backend network
+    internal: true # no outbound internet access for backend network
 ```
 
 ---

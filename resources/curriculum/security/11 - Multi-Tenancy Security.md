@@ -48,17 +48,17 @@ Scenario:
   Tenant A: School A
   Tenant B: School B
   Both have users with role ADMIN
-  
+
   Admin from School A is authenticated:
   JWT: { sub: "userA", schoolId: "school_A", role: "admin" }
-  
+
   Admin A manipulates a request:
   GET /api/students?schoolId=school_B   (putting school_B's ID in the query)
-  
+
   Without tenant isolation:
     Query: SELECT * FROM users WHERE schoolId = 'school_B' → returns School B's students
     Admin A just read School B's private student data
-  
+
   This is cross-tenant data leakage — a critical security failure.
 ```
 
@@ -125,11 +125,11 @@ export class SchoolGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest();
     const user = req.user as JwtPayload;
-    
+
     // Attach schoolId from JWT to request for use in services
     // This prevents any controller/service from using a schoolId from the request body
     req.tenantId = user.schoolId;
-    
+
     return true;
   }
 }
@@ -148,7 +148,8 @@ export abstract class TenantAwareService {
   constructor(protected readonly prisma: PrismaService) {}
 
   protected getTenantFilter(schoolId: string) {
-    if (!schoolId) throw new InternalServerErrorException("Tenant context missing");
+    if (!schoolId)
+      throw new InternalServerErrorException("Tenant context missing");
     return { schoolId };
   }
 }
@@ -159,7 +160,7 @@ export class UserService extends TenantAwareService {
   async findAll(schoolId: string): Promise<User[]> {
     return this.prisma.user.findMany({
       where: {
-        ...this.getTenantFilter(schoolId),  // ALWAYS called
+        ...this.getTenantFilter(schoolId), // ALWAYS called
         deletedAt: null,
       },
     });
@@ -185,7 +186,7 @@ export class UserService extends TenantAwareService {
 // WRONG — findUnique only looks up by primary key
 // schoolId is NOT used in the WHERE clause
 const user = await prisma.user.findUnique({
-  where: { id: targetId },  // finds user regardless of school
+  where: { id: targetId }, // finds user regardless of school
 });
 // An admin from School A can get School B's user if they know the ID!
 
@@ -193,7 +194,7 @@ const user = await prisma.user.findUnique({
 const user = await prisma.user.findFirst({
   where: {
     id: targetId,
-    schoolId: requestingUser.schoolId,  // must match requesting user's school
+    schoolId: requestingUser.schoolId, // must match requesting user's school
   },
 });
 // Returns null if user doesn't belong to the requesting user's school
@@ -242,24 +243,30 @@ describe("UserService - tenant isolation", () => {
     schoolA = await createSchool("School A");
     schoolB = await createSchool("School B");
     adminA = await createUser({ schoolId: schoolA.id, role: "admin" });
-    await createUser({ schoolId: schoolB.id, role: "student", email: "bob@b.lk" });
+    await createUser({
+      schoolId: schoolB.id,
+      role: "student",
+      email: "bob@b.lk",
+    });
   });
 
   it("should not return users from another school", async () => {
     const users = await userService.findAll(schoolA.id);
-    const schoolBUser = users.find(u => u.schoolId === schoolB.id);
+    const schoolBUser = users.find((u) => u.schoolId === schoolB.id);
     expect(schoolBUser).toBeUndefined();
   });
 
   it("should return null when fetching cross-school user by ID", async () => {
-    const schoolBUser = await db.user.findFirst({ where: { schoolId: schoolB.id } });
+    const schoolBUser = await db.user.findFirst({
+      where: { schoolId: schoolB.id },
+    });
     const result = await userService.findById(schoolBUser.id, schoolA.id);
-    expect(result).toBeNull();  // Not 403 — just null, don't reveal existence
+    expect(result).toBeNull(); // Not 403 — just null, don't reveal existence
   });
 
   it("should not leak school B users in search", async () => {
     const results = await userService.search("bob", schoolA.id);
-    expect(results).toHaveLength(0);  // bob is in school B, invisible to school A
+    expect(results).toHaveLength(0); // bob is in school B, invisible to school A
   });
 });
 ```
@@ -290,7 +297,7 @@ async getSignedUrl(fileId: string, requestingSchoolId: string): Promise<string> 
     },
   });
   if (!file) throw new NotFoundException();
-  
+
   return this.r2.getSignedUrl(file.path);
 }
 ```
@@ -325,4 +332,3 @@ File storage:
 ```
 
 ---
-

@@ -150,7 +150,7 @@ import crypto from "crypto";
 
 // Random bytes — for tokens, keys, salts
 const token = crypto.randomBytes(32).toString("hex"); // 256 bits of entropy
-const salt = crypto.randomBytes(16);                  // 128 bits
+const salt = crypto.randomBytes(16); // 128 bits
 
 // Random integer in range [0, max)
 const randomInt = crypto.randomInt(0, 100);
@@ -439,9 +439,12 @@ An initialization vector (IV) must be random and unique per encryption. Reusing 
 ```js
 // WRONG — home-grown "encryption"
 function myEncrypt(text, key) {
-  return text.split("").map((c, i) =>
-    String.fromCharCode(c.charCodeAt(0) ^ key.charCodeAt(i % key.length))
-  ).join("");
+  return text
+    .split("")
+    .map((c, i) =>
+      String.fromCharCode(c.charCodeAt(0) ^ key.charCodeAt(i % key.length)),
+    )
+    .join("");
 }
 // This is a basic XOR cipher. Broken trivially.
 ```

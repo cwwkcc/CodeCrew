@@ -50,7 +50,7 @@ SPF publishes a list of IP addresses/servers authorized to send email for your d
 ```
 1. You publish a DNS TXT record for yourschool.lk:
    "v=spf1 include:amazonses.com include:sendgrid.net ~all"
-   
+
    This says: "Only Amazon SES and Sendgrid are authorized to send email for yourschool.lk"
 
 2. An email arrives claiming: FROM: noreply@yourschool.lk
@@ -184,7 +184,7 @@ DMARC ties SPF and DKIM together and tells receiving servers what to do with fai
    → Checks DMARC alignment:
       Does the SPF "envelope from" domain align with the header From domain?
       Does the DKIM d= domain align with the header From domain?
-   
+
 3. DMARC pass requires:
    SPF passes AND is aligned (envelope from = yourschool.lk)
    OR
@@ -198,10 +198,10 @@ DMARC ties SPF and DKIM together and tells receiving servers what to do with fai
 ```
 p=none:         monitor mode — do nothing, just report
                 Use first: gather reports, understand your email landscape
-                
+
 p=quarantine:   put failing emails in spam/junk
                 Good intermediate step
-                
+
 p=reject:       reject failing emails outright — never delivered
                 Maximum protection — use when confident
 ```
@@ -274,10 +274,10 @@ Step 5: p=reject; pct=100
 2. DNS records to add (example for SES):
    # SPF
    yourschool.lk TXT "v=spf1 include:amazonses.com ~all"
-   
+
    # DKIM (4 CNAME records provided by SES)
    abc123._domainkey.yourschool.lk CNAME abc123.dkim.amazonses.com
-   
+
    # DMARC
    _dmarc.yourschool.lk TXT "v=DMARC1; p=none; rua=mailto:dmarc@yourschool.lk"
 
@@ -351,13 +351,13 @@ Invitation token:
 // Generate and send password reset link
 async sendPasswordReset(email: string): Promise<void> {
   const user = await this.findByEmail(email);
-  
+
   // Don't reveal whether email exists — always return success
   if (!user) return;
-  
+
   const rawToken = crypto.randomBytes(32).toString("hex");
   const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
-  
+
   await this.db.passwordResetToken.create({
     data: {
       userId: user.id,
@@ -365,7 +365,7 @@ async sendPasswordReset(email: string): Promise<void> {
       expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
     },
   });
-  
+
   const resetUrl = `${process.env.APP_URL}/reset-password?token=${rawToken}`;
   await this.emailService.send({
     to: email,
@@ -377,29 +377,29 @@ async sendPasswordReset(email: string): Promise<void> {
 // Verify and use the token
 async resetPassword(rawToken: string, newPassword: string): Promise<void> {
   const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
-  
+
   const record = await this.db.passwordResetToken.findUnique({
     where: { tokenHash },
     include: { user: true },
   });
-  
+
   if (!record) throw new BadRequestException("Invalid or expired token");
   if (record.usedAt) throw new BadRequestException("Token already used");
   if (record.expiresAt < new Date()) throw new BadRequestException("Token expired");
-  
+
   // Mark as used FIRST (before password update — prevents race conditions)
   await this.db.passwordResetToken.update({
     where: { id: record.id },
     data: { usedAt: new Date() },
   });
-  
+
   // Update password
   const hash = await bcrypt.hash(newPassword, 12);
   await this.db.user.update({
     where: { id: record.userId },
     data: { passwordHash: hash },
   });
-  
+
   // Revoke all existing sessions (password changed → all devices logged out)
   await this.db.refreshToken.updateMany({
     where: { userId: record.userId },
@@ -499,11 +499,11 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendPasswordReset(to: string, resetUrl: string) {
   await resend.emails.send({
-    from: "no-reply@yourschool.lk",  // must be verified domain
+    from: "no-reply@yourschool.lk", // must be verified domain
     to,
     subject: "Reset your password",
     html: `<p>Click <a href="${resetUrl}">here</a> to reset your password.</p>`,
-    text: `Reset your password: ${resetUrl}`,  // plain text fallback
+    text: `Reset your password: ${resetUrl}`, // plain text fallback
   });
 }
 ```

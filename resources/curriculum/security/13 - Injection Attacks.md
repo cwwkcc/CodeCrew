@@ -273,8 +273,8 @@ The universal defense against query injection. The query template and the data a
 // Prisma — parameterized by design, impossible to inject
 const users = await prisma.user.findMany({
   where: {
-    email: userEmail,      // becomes $1 parameter
-    schoolId: schoolId,    // becomes $2 parameter
+    email: userEmail, // becomes $1 parameter
+    schoolId: schoolId, // becomes $2 parameter
   },
 });
 
@@ -287,7 +287,7 @@ const result = await prisma.$queryRaw`
 // Raw pg driver
 const { rows } = await client.query(
   "SELECT * FROM users WHERE email = $1 AND school_id = $2",
-  [userEmail, schoolId]
+  [userEmail, schoolId],
 );
 ```
 
@@ -301,22 +301,24 @@ Not a substitute for parameterization — an additional layer. Reject bad input 
 class SearchDto {
   @IsString()
   @MaxLength(100)
-  @Matches(/^[a-zA-Z0-9 .'\-]+$/)  // only safe characters
+  @Matches(/^[a-zA-Z0-9 .'\-]+$/) // only safe characters
   query: string;
 
   @IsEnum(UserRole)
   role: UserRole;
 
-  @IsUUID("4")  // validates UUID format
+  @IsUUID("4") // validates UUID format
   schoolId: string;
 }
 
 // Global ValidationPipe
-app.useGlobalPipes(new ValidationPipe({
-  whitelist: true,              // strip undeclared properties
-  forbidNonWhitelisted: true,   // reject requests with extra properties
-  transform: true,              // auto-transform types
-}));
+app.useGlobalPipes(
+  new ValidationPipe({
+    whitelist: true, // strip undeclared properties
+    forbidNonWhitelisted: true, // reject requests with extra properties
+    transform: true, // auto-transform types
+  }),
+);
 ```
 
 `whitelist: true` also prevents mass assignment — properties not in the DTO are stripped before reaching the controller.

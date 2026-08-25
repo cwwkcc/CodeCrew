@@ -104,7 +104,8 @@ Anyone with the token can decode the payload with zero knowledge of any key.
 
 ```js
 // You can decode any JWT payload without the secret
-const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyXzEyMyIsInJvbGUiOiJhZG1pbiJ9.xxx";
+const token =
+  "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyXzEyMyIsInJvbGUiOiJhZG1pbiJ9.xxx";
 const payload = JSON.parse(atob(token.split(".")[1]));
 // { sub: "user_123", role: "admin" }
 // No secret needed. The payload is public.
@@ -564,7 +565,6 @@ Never put tokens in URLs except for single-use short-lived download links.
     }),
   ],
 })
-
 // auth.service.ts
 @Injectable()
 export class AuthService {
@@ -585,7 +585,7 @@ export class AuthService {
 
   verifyAccessToken(token: string): JwtPayload {
     return this.jwtService.verify<JwtPayload>(token, {
-      algorithms: ["HS256"],  // explicitly specify — never omit
+      algorithms: ["HS256"], // explicitly specify — never omit
       issuer: "api.yourapp.com",
       audience: "api.yourapp.com",
     });

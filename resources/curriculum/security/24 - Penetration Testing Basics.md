@@ -75,26 +75,26 @@ Phase 1: Planning
   Define scope: what systems? what methods? what's off-limits?
   Rules of engagement: can you DoS? during what hours?
   Authorization in writing
-  
+
 Phase 2: Reconnaissance
   Gather information about the target without directly interacting with it
   OSINT (open source intelligence)
 
 Phase 3: Scanning and Enumeration
   Directly interact with the target to discover services, ports, tech stack
-  
+
 Phase 4: Exploitation
   Attempt to exploit identified vulnerabilities
   Confirm impact
-  
+
 Phase 5: Post-exploitation
   What can you access from the compromised foothold?
   Escalate privileges, move laterally, access data
-  
+
 Phase 6: Reporting
   Document: vulnerabilities found, steps to reproduce, impact, recommendation
   Severity rating for each finding
-  
+
 Phase 7: Remediation verification
   After fixes are deployed: verify the vulnerabilities are actually fixed
 ```
@@ -112,7 +112,7 @@ DNS records:
   → What subdomains exist? (api.example.com, admin.example.com, staging.example.com)
   → MX records reveal email provider
   → TXT records reveal tech (SPF, DKIM, domain verification codes for Google/GitHub)
-  
+
   Tools: dig, nslookup, dnsx, subfinder, amass
 
   dig ANY example.com
@@ -122,20 +122,20 @@ DNS records:
 WHOIS:
   → Who registered the domain? Contact details?
   → Registration date, expiry (expiring domains can be hijacked)
-  
+
   whois example.com
 
 Certificate Transparency logs:
   → All certificates ever issued for *.example.com
   → Reveals subdomains you might not know about
-  
+
   curl "https://crt.sh/?q=%.example.com&output=json"
 
 Tech stack fingerprinting:
   → Response headers reveal server (Nginx/Apache), framework (Express, NestJS)
   → Wappalyzer (browser extension) detects JavaScript libraries
   → Job listings often reveal tech stack ("We use NestJS, PostgreSQL, Redis")
-  
+
   Security implication: headers can reveal versions → look up CVEs for those versions
   Defense: set "Server: " header to empty or generic value
 
@@ -143,7 +143,7 @@ GitHub/GitLab:
   → Public repositories with configuration files
   → Accidentally committed secrets (API keys, passwords)
   → Historical commits even after deletion (git log)
-  
+
   Tools: trufflehog, gitleaks (search for secrets in repos)
 
 Google dorking:
@@ -409,7 +409,7 @@ ZAP does NOT find:
   with:
     target: "https://staging.example.com"
     rules_file_name: ".zap/rules.tsv"
-    fail_action: false  # don't fail build, just report
+    fail_action: false # don't fail build, just report
 ```
 
 ---

@@ -156,7 +156,7 @@ Password reset tokens:
   When user clicks link:
     Compute: SHA-256(provided_token)
     Compare: against stored tokenHash
-    
+
   Database breach: attacker gets tokenHash
   → Cannot reverse SHA-256 to get token
   → Token is useless to attacker (it's 256 bits of randomness — not brute-forceable)
@@ -170,7 +170,7 @@ This is different from passwords — you hash the token before storing, not the 
 File storage system:
   hash = SHA-256(file_contents)
   if hash exists in storage → don't store again, just reference it
-  
+
   Two users upload the same file → stored once, referenced twice
   Hash is the identity of the content (content-addressable storage)
 ```
@@ -181,10 +181,10 @@ File storage system:
 API request signing:
   canonical_request = METHOD + "\n" + PATH + "\n" + body
   signature = HMAC-SHA256(canonical_request, secret_key)
-  
+
   Request ID in logs:
   request_id = SHA-256(ip + timestamp + random)
-  
+
   Certificate fingerprint (what browsers show in cert details):
   fingerprint = SHA-256(raw_certificate_bytes)
 ```
@@ -216,10 +216,10 @@ JWT signatures (HS256):
 
 API request signing (AWS Signature V4, Stripe webhooks):
   signature = HMAC-SHA256(canonical_request, API_SECRET)
-  
+
 Cookie integrity:
   value = data + "." + HMAC-SHA256(data, COOKIE_SECRET)
-  
+
 Refresh token storage:
   storedHash = SHA-256(rawToken)   ← this is just a hash, not HMAC
   (no key needed here — token itself has sufficient entropy)
@@ -419,7 +419,7 @@ N    → CPU/memory cost (work factor) — must be a power of 2
 r    → block size (affects memory and CPU)
 p    → parallelization factor
        Minimum memory: N × r × 128 bytes
-       
+
 OWASP recommended: N=32768 (2^15), r=8, p=1 → 32MB RAM per hash
 High security:     N=65536 (2^16), r=8, p=1 → 64MB RAM per hash
 ```
@@ -431,10 +431,16 @@ import crypto from "crypto";
 const password = "userPassword";
 const salt = crypto.randomBytes(32);
 
-crypto.scrypt(password, salt, 64, { N: 32768, r: 8, p: 1 }, (err, derivedKey) => {
-  // derivedKey is 64 bytes
-  // Store: salt + derivedKey (must store salt separately — not built into output like bcrypt)
-});
+crypto.scrypt(
+  password,
+  salt,
+  64,
+  { N: 32768, r: 8, p: 1 },
+  (err, derivedKey) => {
+    // derivedKey is 64 bytes
+    // Store: salt + derivedKey (must store salt separately — not built into output like bcrypt)
+  },
+);
 
 // Promisified version
 const { promisify } = require("util");
@@ -476,9 +482,9 @@ parallelism → threads to use
 OWASP recommended (2024):
   Argon2id, memory=19456 (19MB), time=2, parallelism=1
   → ~100ms on modern hardware
-  
+
   OR
-  
+
   Argon2id, memory=12288 (12MB), time=3, parallelism=1
 ```
 
@@ -577,8 +583,15 @@ const stored = {
 
 // Verify:
 const saltBuf = Buffer.from(stored.salt, "hex");
-const newHash = await scryptAsync(providedPassword, saltBuf, 64, { N: 32768, r: 8, p: 1 });
-const isValid = crypto.timingSafeEqual(newHash, Buffer.from(stored.hash, "hex"));
+const newHash = await scryptAsync(providedPassword, saltBuf, 64, {
+  N: 32768,
+  r: 8,
+  p: 1,
+});
+const isValid = crypto.timingSafeEqual(
+  newHash,
+  Buffer.from(stored.hash, "hex"),
+);
 ```
 
 ---

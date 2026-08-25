@@ -23,20 +23,20 @@
 Without proper controls, an attacker can upload:
   → A PHP/Node.js script disguised as an image
     If served from your domain and executed by the server → remote code execution
-    
+
   → A malicious PDF with JavaScript embedded
     Victims download it → JavaScript executes in their PDF reader
-    
+
   → An SVG file containing XSS
     SVG is XML and can contain <script> tags
     If served with Content-Type: image/svg+xml → executes in browser
-    
+
   → A ZIP bomb (1KB zip that expands to 1TB)
     Unzipping it crashes the server
-    
+
   → A file with path traversal in the filename
     "../../../../etc/passwd" → server writes outside intended directory
-    
+
   → An executable file (.exe, .sh)
     Downloaded by victim → runs on their machine
 ```
@@ -62,11 +62,11 @@ async upload(@UploadedFile() file: Express.Multer.File) {
 ```ts
 // Allowlist of permitted types and their extensions
 const ALLOWED_TYPES: Record<string, string[]> = {
-  "image/jpeg":       [".jpg", ".jpeg"],
-  "image/png":        [".png"],
-  "image/webp":       [".webp"],
-  "application/pdf":  [".pdf"],
-  "video/mp4":        [".mp4"],
+  "image/jpeg": [".jpg", ".jpeg"],
+  "image/png": [".png"],
+  "image/webp": [".webp"],
+  "application/pdf": [".pdf"],
+  "video/mp4": [".mp4"],
   // NOT allowed: .php, .js, .html, .svg, .exe, .sh, .py, .rb, etc.
 };
 
@@ -91,17 +91,17 @@ import { fileTypeFromBuffer } from "file-type";
 
 async function validateFileType(buffer: Buffer, allowedMimeTypes: string[]): Promise<string> {
   const detected = await fileTypeFromBuffer(buffer);
-  
+
   if (!detected) {
     throw new BadRequestException("Cannot determine file type");
   }
-  
+
   if (!allowedMimeTypes.includes(detected.mime)) {
     throw new BadRequestException(
       `File type ${detected.mime} is not allowed`
     );
   }
-  
+
   return detected.mime;
 }
 
@@ -129,13 +129,13 @@ import { v4 as uuidv4 } from "uuid";
 function sanitizeFilename(originalName: string): string {
   // Extract only the base name — strip any directory components
   const baseName = path.basename(originalName);
-  
+
   // Remove characters that could cause issues
   const safeName = baseName
-    .replace(/[^a-zA-Z0-9.\-_]/g, "_")  // allow only alphanumeric, ., -, _
-    .replace(/\.{2,}/g, ".")              // collapse multiple dots (../../)
-    .slice(0, 100);                        // limit length
-  
+    .replace(/[^a-zA-Z0-9.\-_]/g, "_") // allow only alphanumeric, ., -, _
+    .replace(/\.{2,}/g, ".") // collapse multiple dots (../../)
+    .slice(0, 100); // limit length
+
   // Better: generate a completely new name — don't trust the original at all
   const ext = path.extname(originalName).toLowerCase();
   const newName = `${uuidv4()}${ext}`;
@@ -199,7 +199,7 @@ BAD:
 GOOD:
   Upload stored at: /var/uploads/photo.jpg  (outside web root)
   or: Cloudflare R2 / AWS S3 (object storage — not a filesystem)
-  
+
   Files are served through your application (controlled endpoint)
   or via signed URLs from object storage
   Your application controls access checks before serving
@@ -208,7 +208,11 @@ GOOD:
 ### Using Cloudflare R2 / AWS S3
 
 ```ts
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const s3 = new S3Client({
@@ -222,18 +226,20 @@ const s3 = new S3Client({
 
 // Upload
 async function uploadFile(
-  key: string,      // e.g., "schools/school_A/vault/uuid.pdf"
+  key: string, // e.g., "schools/school_A/vault/uuid.pdf"
   buffer: Buffer,
-  contentType: string
+  contentType: string,
 ) {
-  await s3.send(new PutObjectCommand({
-    Bucket: process.env.R2_BUCKET,
-    Key: key,
-    Body: buffer,
-    ContentType: contentType,
-    // Never set ACL: "public-read" for private files
-    ServerSideEncryption: "AES256",
-  }));
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: process.env.R2_BUCKET,
+      Key: key,
+      Body: buffer,
+      ContentType: contentType,
+      // Never set ACL: "public-read" for private files
+      ServerSideEncryption: "AES256",
+    }),
+  );
 }
 
 // Generate signed URL (time-limited access)
@@ -279,7 +285,7 @@ const clamscan = await new NodeClam().init({
 async function scanFile(filePath: string): Promise<void> {
   const { isInfected, viruses } = await clamscan.isInfected(filePath);
   if (isInfected) {
-    await fs.unlink(filePath);  // delete immediately
+    await fs.unlink(filePath); // delete immediately
     throw new BadRequestException(`Malware detected: ${viruses.join(", ")}`);
   }
 }
@@ -303,21 +309,21 @@ async serveFile(
 ) {
   // 1. Verify user has access to this file
   const file = await this.fileService.findWithAuthCheck(fileId, user);
-  
+
   // 2. Read the file content
   const buffer = await this.storageService.getFile(file.storagePath);
-  
+
   // 3. Set safe headers
   res.setHeader("Content-Type", file.mimeType);
   res.setHeader("Content-Length", buffer.length);
-  
+
   // Force download — don't allow browser to render/execute
   res.setHeader("Content-Disposition", `attachment; filename="${encodeURIComponent(file.originalName)}"`);
-  
+
   // Prevent the file from running scripts even if opened in browser
   res.setHeader("Content-Security-Policy", "default-src 'none'");
   res.setHeader("X-Content-Type-Options", "nosniff");
-  
+
   res.send(buffer);
 }
 ```
@@ -340,10 +346,10 @@ async function processImage(buffer: Buffer): Promise<Buffer> {
   //   → Removes any embedded scripts or malicious payloads
   //   → Validates the image is actually parseable
   //   → Normalizes to a known-safe format
-  
+
   return sharp(buffer)
     .resize(2048, 2048, { fit: "inside", withoutEnlargement: true })
-    .jpeg({ quality: 85 })  // re-encode as JPEG — strips embedded content
+    .jpeg({ quality: 85 }) // re-encode as JPEG — strips embedded content
     .toBuffer();
 }
 ```
