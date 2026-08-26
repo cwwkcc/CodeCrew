@@ -1,4 +1,4 @@
-> **Series overview:** This is file 1 of 7. It covers what Tailwind CSS actually is, why it exists, how it generates CSS, and the mental shift from semantic class names to utility classes. Every concept is explained from first principles.
+> **Series overview:** This is file 1 of 7. It covers what Tailwind CSS actually is, why it exists, how it generates CSS, and the mental shift from semantic class names to utility classes. Every concept is explained from first principles. Updated for **Tailwind v4** (CSS-first `@theme` config, the current default as of 2026) — v3's `tailwind.config.js` approach is kept throughout as clearly-labeled legacy content, since it's still what you'll find in most existing codebases.
 
 ---
 
@@ -35,7 +35,7 @@ Tailwind IS:
 
 A Bootstrap button:
   <button class="btn btn-primary">Click</button>
-  
+
   .btn-primary {
     background-color: #0d6efd;
     border-color: #0d6efd;
@@ -44,7 +44,7 @@ A Bootstrap button:
     border-radius: 0.375rem;
     /* ...more rules */
   }
-  
+
   One class does many things. You get what Bootstrap decided.
 
 A Tailwind button:
@@ -65,11 +65,16 @@ Writing CSS means naming things. Naming things is hard.
 
 ```css
 /* What do you call this? */
-.container { }
-.wrapper { }
-.inner-wrapper { }
-.content-area { }
-.main-content { }
+.container {
+}
+.wrapper {
+}
+.inner-wrapper {
+}
+.content-area {
+}
+.main-content {
+}
 
 /* These names mean nothing. They just say "it wraps stuff". */
 /* In a large codebase you get hundreds of these. */
@@ -96,10 +101,14 @@ CSS files only ever grow. Deleting CSS is dangerous — something might still us
 
 ```css
 /* In one file */
-.card-header h2 { color: blue; }
+.card-header h2 {
+  color: blue;
+}
 
 /* In another file */
-.title { color: red; }
+.title {
+  color: red;
+}
 
 /* Which wins? Depends on file load order AND specificity. */
 /* .card-header h2 wins — it's more specific (two selectors). */
@@ -127,13 +136,13 @@ The last class wins, predictably.
 
 ```html
 <!-- Inline styles — maximum control, zero reuse, hard to maintain -->
-<div style="display: flex; align-items: center; padding: 16px; background-color: #f3f4f6;">
-</div>
+<div
+  style="display: flex; align-items: center; padding: 16px; background-color: #f3f4f6;"
+></div>
 
-Problems:
-  - Can't use :hover, :focus, media queries, or any pseudo-classes
-  - Verbose and repetitive
-  - No design constraints — every number is a freeform value
+Problems: - Can't use :hover, :focus, media queries, or any pseudo-classes -
+Verbose and repetitive - No design constraints — every number is a freeform
+value
 ```
 
 ### Semantic CSS (BEM, OOCSS)
@@ -201,7 +210,7 @@ const Title = styled.h2`
   color: #111;
 `;
 
-<Title>Hello</Title>
+<Title>Hello</Title>;
 ```
 
 ```
@@ -253,6 +262,8 @@ The JIT engine watches your files in real time.
 The CSS file only ever contains what you're actually using.
 ```
 
+> **v4 note:** the JIT model above is still exactly how Tailwind thinks — only-generate-what's-used hasn't changed. What changed is the engine underneath it: v4 replaced the v3 JavaScript/PostCSS pipeline with **Oxide**, a Rust engine that does the same scan-and-generate job several times faster, with near-instant incremental rebuilds. The mental model in this section is current; only the implementation got faster.
+
 ### Why JIT Enables Arbitrary Values
 
 Before JIT, only pre-generated classes existed. `text-[17px]` was impossible — that CSS was never generated.
@@ -261,8 +272,7 @@ With JIT, any class can be generated on demand:
 
 ```html
 <!-- Arbitrary values — any CSS value in square brackets -->
-<div class="w-[320px] top-[117px] bg-[#bada55] text-[22px]">
-</div>
+<div class="w-[320px] top-[117px] bg-[#bada55] text-[22px]"></div>
 
 <!-- Tailwind sees these during build, generates exactly: -->
 <!-- .w-\[320px\] { width: 320px; } -->
@@ -277,12 +287,12 @@ With JIT, any class can be generated on demand:
 // tailwind.config.js
 module.exports = {
   content: [
-    './src/**/*.{html,js,jsx,ts,tsx}',  // scan all these files
-    './pages/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
+    "./src/**/*.{html,js,jsx,ts,tsx}", // scan all these files
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
   ],
   // ...
-}
+};
 ```
 
 ```
@@ -298,7 +308,7 @@ This means:
     const color = "red";
     className={`bg-${color}-500`}   ← Tailwind never sees "bg-red-500"
                                       It only sees the template literal
-                                      
+
 If you need dynamic classes, safelist them in config or keep full
 class strings in a lookup object.
 ```
@@ -307,125 +317,153 @@ class strings in a lookup object.
 
 ## 5. Installing Tailwind
 
-### In a Plain HTML/CSS Project
+> **As of Tailwind v4 (current since 2025, and the default for any new project in 2026), installation is CSS-first — there's no `tailwind.config.js` and no `@tailwind` directives to remember.** The v3 workflow below is still shown because you'll run into it constantly in older codebases, tutorials, and Stack Overflow answers — but don't set up a new project this way.
+
+### v4 — Current Default
 
 ```bash
-npm install -D tailwindcss
-npx tailwindcss init
+# Vite-based projects (recommended integration)
+npm install tailwindcss @tailwindcss/vite
+```
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
+
+export default defineConfig({
+  plugins: [tailwindcss()],
+});
 ```
 
 ```css
-/* src/input.css */
-@tailwind base;       /* Preflight — Tailwind's CSS reset */
-@tailwind components; /* Where @apply component classes go */
-@tailwind utilities;  /* All utility classes */
+/* app.css — this one line replaces all three @tailwind directives */
+@import "tailwindcss";
 ```
 
 ```bash
-# Build once
-npx tailwindcss -i ./src/input.css -o ./dist/output.css
-
-# Watch mode (rebuilds on change)
-npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch
-```
-
-### In a Next.js Project
-
-```bash
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p    # -p also creates postcss.config.js
+# Framework using PostCSS instead of Vite (e.g. some Next.js setups)
+npm install tailwindcss @tailwindcss/postcss
 ```
 
 ```js
-// tailwind.config.js
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
-  theme: {
-    extend: {},
+// postcss.config.js
+export default {
+  plugins: {
+    "@tailwindcss/postcss": {},
   },
-  plugins: [],
-}
+};
+```
+
+```bash
+# No build tool at all — standalone CLI
+npx @tailwindcss/cli -i ./src/input.css -o ./dist/output.css --watch
+```
+
+There is no `content: [...]` array to maintain — v4 automatically detects which files use Tailwind classes by scanning your project (respecting `.gitignore`). For the rare case where a file lives outside the normal scan path, `@source "../some-other-folder";` in your CSS adds it explicitly.
+
+### v3 — What You'll See in Older Projects (Legacy)
+
+```bash
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
 ```
 
 ```css
-/* app/globals.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* src/input.css — the v3 way: three directives instead of one @import */
+@tailwind base; /* Preflight — Tailwind's CSS reset */
+@tailwind components; /* Where @apply component classes go */
+@tailwind utilities; /* All utility classes */
 ```
 
-```tsx
-// app/layout.tsx
-import './globals.css'  // import once at the root
+```js
+// tailwind.config.js — a whole JS file just to declare which files to scan
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ["./src/**/*.{html,js,ts,jsx,tsx}"],
+  theme: { extend: {} },
+  plugins: [],
+};
 ```
 
-### What `@tailwind base` Does — Preflight
+If you open a project and see `@tailwind base;` or a `tailwind.config.js`, it's running v3 (or v4 in compatibility mode via `@config`). That's fine — v3 is still maintained and plenty of production apps run it — but write new projects the v4 way.
 
-Tailwind includes a CSS reset called **Preflight**, built on top of `modern-normalize`. It removes all browser default styles.
+### What Preflight Does
+
+Both versions ship the same reset, called **Preflight**, built on top of `modern-normalize`. It removes browser default styles so you're styling from a blank canvas rather than fighting `<h1>`'s default size or a `<button>`'s default border:
 
 ```css
 /* What Preflight does (simplified): */
-*, *::before, *::after { box-sizing: border-box; }
-h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
-/* h1 is now the same size as p — you apply size yourself */
-a { color: inherit; text-decoration: inherit; }
-button { background-color: transparent; padding: 0; }
-/* buttons look like plain text — you style them yourself */
-```
-
-```
-This is intentional. Tailwind wants a blank canvas.
-You apply font sizes, colors, and spacing yourself.
-No fighting browser defaults.
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+button {
+  background-color: transparent;
+  padding: 0;
+}
 ```
 
 ---
 
-## 6. The Configuration File
+## 6. The Configuration File — Then and Now
 
-```js
-// tailwind.config.js — full annotated structure
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  // FILES TO SCAN for class names
-  content: ['./src/**/*.{html,js,ts,jsx,tsx}'],
+> **v4 moves configuration out of JavaScript and into CSS.** `tailwind.config.js` still works during migration (see Module 06's migration guide), but a new project doesn't need one at all.
 
-  // DARK MODE STRATEGY
-  // 'media'  → uses prefers-color-scheme media query
-  // 'class'  → uses a .dark class on <html> (more control)
-  darkMode: 'class',
+### v4 — `@theme` in CSS
 
-  theme: {
-    // theme.extend ADDS to the default theme
-    // theme.colors REPLACES the default color palette entirely
-    extend: {
-      colors: {
-        brand: {
-          50:  '#eff6ff',
-          500: '#3b82f6',
-          900: '#1e3a8a',
-        },
-      },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-      },
-      spacing: {
-        '128': '32rem',   // adds p-128, m-128, w-128, etc.
-      },
-    },
-  },
+```css
+/* app.css */
+@import "tailwindcss";
 
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-  ],
+@theme {
+  --color-brand-50: #eff6ff;
+  --color-brand-500: #3b82f6;
+  --color-brand-900: #1e3a8a;
+
+  --font-sans: "Inter", sans-serif;
+
+  --spacing-128: 32rem; /* generates p-128, m-128, w-128, etc. — same as v3 */
 }
 ```
+
+Every value defined in `@theme` automatically becomes both a Tailwind utility _and_ a real CSS custom property (`var(--color-brand-500)`), usable anywhere in your CSS — not just inside class names. That dual nature is the headline change: in v3, config values only existed at build time; in v4, they exist at runtime as inspectable CSS variables.
+
+### v3 — `tailwind.config.js` (Legacy)
+
+```js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ["./src/**/*.{html,js,ts,jsx,tsx}"],
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        brand: { 50: "#eff6ff", 500: "#3b82f6", 900: "#1e3a8a" },
+      },
+      fontFamily: { sans: ["Inter", "sans-serif"] },
+      spacing: { 128: "32rem" },
+    },
+  },
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
+};
+```
+
+Same result, different mechanism: v3 values live only inside the JS build step; v4 values are real CSS the browser can see. Module 06 covers the full `@theme` API and the v3 → v4 migration in depth, including the handful of breaking changes (renamed utilities, a changed default border colour) that trip people up on the way over.
 
 ---
 
@@ -593,8 +631,12 @@ Each Tailwind utility class has the same CSS specificity: `0,1,0` — a single c
 
 ```css
 /* Both have identical specificity */
-.bg-red-500   { background-color: rgb(239 68 68); }
-.bg-blue-500  { background-color: rgb(59 130 246); }
+.bg-red-500 {
+  background-color: rgb(239 68 68);
+}
+.bg-blue-500 {
+  background-color: rgb(59 130 246);
+}
 ```
 
 ```html
@@ -602,9 +644,9 @@ Each Tailwind utility class has the same CSS specificity: `0,1,0` — a single c
 <!-- Tailwind's stylesheet lists bg-blue before bg-red alphabetically -->
 <!-- So bg-red-500 wins here — last in the generated CSS -->
 <div class="bg-blue-500 bg-red-500">
-
-<!-- But this is undefined behaviour. Don't apply two values for
+  <!-- But this is undefined behaviour. Don't apply two values for
      the same property on the same element. Use conditional logic. -->
+</div>
 ```
 
 ### Conditional Classes in React
@@ -649,17 +691,17 @@ export function cn(...inputs: ClassValue[]) {
 
 ## 11. Tailwind vs Bootstrap vs Plain CSS
 
-|Dimension|Plain CSS|Bootstrap|Tailwind|
-|---|---|---|---|
-|Learning curve|Low (if you know CSS)|Low (learn component classes)|Medium (learn utility vocabulary)|
-|CSS file size (prod)|Depends on discipline|~30KB (with purge)|~5–15KB|
-|Design constraint|None|Bootstrap's design system|Your configured scale|
-|Custom design|Full control|Fight the framework|Full control|
-|Component look|Fully custom|Bootstrap look|Fully custom|
-|Naming required|Yes|Minimal|None|
-|Dead CSS|Common|Handled by purge|Never generated|
-|Responsive|Manual media queries|Grid classes (col-md-6)|Breakpoint prefixes (md:)|
-|Dark mode|Manual|Requires overrides|Built-in variant|
+| Dimension            | Plain CSS             | Bootstrap                     | Tailwind                          |
+| -------------------- | --------------------- | ----------------------------- | --------------------------------- |
+| Learning curve       | Low (if you know CSS) | Low (learn component classes) | Medium (learn utility vocabulary) |
+| CSS file size (prod) | Depends on discipline | ~30KB (with purge)            | ~5–15KB                           |
+| Design constraint    | None                  | Bootstrap's design system     | Your configured scale             |
+| Custom design        | Full control          | Fight the framework           | Full control                      |
+| Component look       | Fully custom          | Bootstrap look                | Fully custom                      |
+| Naming required      | Yes                   | Minimal                       | None                              |
+| Dead CSS             | Common                | Handled by purge              | Never generated                   |
+| Responsive           | Manual media queries  | Grid classes (col-md-6)       | Breakpoint prefixes (md:)         |
+| Dark mode            | Manual                | Requires overrides            | Built-in variant                  |
 
 ---
 

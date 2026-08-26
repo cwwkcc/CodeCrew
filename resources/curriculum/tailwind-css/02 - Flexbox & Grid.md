@@ -51,14 +51,24 @@ This is the most important thing to understand about flexbox.
 
 ```html
 <!-- Make an element a flex container -->
-<div class="flex">           <!-- display: flex (block-level) -->
-<div class="inline-flex">    <!-- display: inline-flex (inline-level) -->
+<div class="flex">
+  <!-- display: flex (block-level) -->
+  <div class="inline-flex">
+    <!-- display: inline-flex (inline-level) -->
 
-<!-- Flex direction — which way children flow -->
-<div class="flex flex-row">          <!-- default: left to right -->
-<div class="flex flex-row-reverse">  <!-- right to left -->
-<div class="flex flex-col">          <!-- top to bottom -->
-<div class="flex flex-col-reverse">  <!-- bottom to top -->
+    <!-- Flex direction — which way children flow -->
+    <div class="flex flex-row">
+      <!-- default: left to right -->
+      <div class="flex flex-row-reverse">
+        <!-- right to left -->
+        <div class="flex flex-col">
+          <!-- top to bottom -->
+          <div class="flex flex-col-reverse"><!-- bottom to top --></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
 ```html
@@ -80,9 +90,15 @@ This is the most important thing to understand about flexbox.
 By default, flex items never wrap — they all try to fit on one line, shrinking if necessary.
 
 ```html
-<div class="flex flex-nowrap">   <!-- default: never wrap -->
-<div class="flex flex-wrap">     <!-- wrap to next line when needed -->
-<div class="flex flex-wrap-reverse"> <!-- wrap upward instead of downward -->
+<div class="flex flex-nowrap">
+  <!-- default: never wrap -->
+  <div class="flex flex-wrap">
+    <!-- wrap to next line when needed -->
+    <div class="flex flex-wrap-reverse">
+      <!-- wrap upward instead of downward -->
+    </div>
+  </div>
+</div>
 ```
 
 ```html
@@ -103,13 +119,27 @@ By default, flex items never wrap — they all try to fit on one line, shrinking
 Controls how items are distributed along the main axis.
 
 ```html
-<div class="flex justify-start">         <!-- pack to start (default) -->
-<div class="flex justify-end">           <!-- pack to end -->
-<div class="flex justify-center">        <!-- centered -->
-<div class="flex justify-between">       <!-- first and last at edges, space between -->
-<div class="flex justify-around">        <!-- equal space around each item -->
-<div class="flex justify-evenly">        <!-- equal space between items and edges -->
-<div class="flex justify-stretch">       <!-- items stretch to fill (for grid) -->
+<div class="flex justify-start">
+  <!-- pack to start (default) -->
+  <div class="flex justify-end">
+    <!-- pack to end -->
+    <div class="flex justify-center">
+      <!-- centered -->
+      <div class="flex justify-between">
+        <!-- first and last at edges, space between -->
+        <div class="flex justify-around">
+          <!-- equal space around each item -->
+          <div class="flex justify-evenly">
+            <!-- equal space between items and edges -->
+            <div class="flex justify-stretch">
+              <!-- items stretch to fill (for grid) -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
 ```
@@ -141,11 +171,21 @@ justify-evenly:
 Controls how items are aligned on the cross axis (perpendicular to main axis).
 
 ```html
-<div class="flex items-start">    <!-- cross axis start (top for flex-row) -->
-<div class="flex items-end">      <!-- cross axis end (bottom for flex-row) -->
-<div class="flex items-center">   <!-- centered on cross axis -->
-<div class="flex items-baseline"> <!-- aligned by text baseline -->
-<div class="flex items-stretch">  <!-- stretch to fill cross axis (default) -->
+<div class="flex items-start">
+  <!-- cross axis start (top for flex-row) -->
+  <div class="flex items-end">
+    <!-- cross axis end (bottom for flex-row) -->
+    <div class="flex items-center">
+      <!-- centered on cross axis -->
+      <div class="flex items-baseline">
+        <!-- aligned by text baseline -->
+        <div class="flex items-stretch">
+          <!-- stretch to fill cross axis (default) -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
 ```html
@@ -163,12 +203,12 @@ items-stretch (default) explained:
 
   Without items-stretch:  ┌──┐ ┌────┐ ┌──────┐
   (items-start)           └──┘ └────┘ └──────┘
-  
+
   With items-stretch:     ┌──┐ ┌────┐ ┌──────┐
                           │  │ │    │ │      │
                           │  │ │    │ │      │
                           └──┘ └────┘ └──────┘
-  
+
   All items stretch to match the tallest item's height.
   Good for equal-height card columns.
 ```
@@ -181,13 +221,27 @@ When flex items wrap onto multiple lines, `align-content` controls how those lin
 
 ```html
 <!-- Only has effect when flex-wrap and multiple lines exist -->
-<div class="flex flex-wrap content-start">    <!-- lines packed to top -->
-<div class="flex flex-wrap content-end">      <!-- lines packed to bottom -->
-<div class="flex flex-wrap content-center">   <!-- lines centered vertically -->
-<div class="flex flex-wrap content-between">  <!-- space between lines -->
-<div class="flex flex-wrap content-around">   <!-- space around lines -->
-<div class="flex flex-wrap content-evenly">   <!-- even space between lines -->
-<div class="flex flex-wrap content-stretch">  <!-- lines stretch to fill (default) -->
+<div class="flex flex-wrap content-start">
+  <!-- lines packed to top -->
+  <div class="flex flex-wrap content-end">
+    <!-- lines packed to bottom -->
+    <div class="flex flex-wrap content-center">
+      <!-- lines centered vertically -->
+      <div class="flex flex-wrap content-between">
+        <!-- space between lines -->
+        <div class="flex flex-wrap content-around">
+          <!-- space around lines -->
+          <div class="flex flex-wrap content-evenly">
+            <!-- even space between lines -->
+            <div class="flex flex-wrap content-stretch">
+              <!-- lines stretch to fill (default) -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
 ---
@@ -198,21 +252,36 @@ Gap adds space **between** flex or grid items without adding space at the outer 
 
 ```html
 <!-- Same gap in both directions -->
-<div class="flex flex-wrap gap-4">   <!-- gap: 1rem between all items -->
+<div class="flex flex-wrap gap-4">
+  <!-- gap: 1rem between all items -->
 
-<!-- Different horizontal and vertical gap -->
-<div class="flex flex-wrap gap-x-6 gap-y-4">
-  <!-- column gap (horizontal): 1.5rem -->
-  <!-- row gap (vertical):      1rem    -->
+  <!-- Different horizontal and vertical gap -->
+  <div class="flex flex-wrap gap-x-6 gap-y-4">
+    <!-- column gap (horizontal): 1.5rem -->
+    <!-- row gap (vertical):      1rem    -->
 
-<!-- Shorthand reference -->
-<div class="gap-0">    <!-- gap: 0 -->
-<div class="gap-1">    <!-- gap: 0.25rem -->
-<div class="gap-2">    <!-- gap: 0.5rem -->
-<div class="gap-4">    <!-- gap: 1rem -->
-<div class="gap-6">    <!-- gap: 1.5rem -->
-<div class="gap-8">    <!-- gap: 2rem -->
-<div class="gap-px">   <!-- gap: 1px -->
+    <!-- Shorthand reference -->
+    <div class="gap-0">
+      <!-- gap: 0 -->
+      <div class="gap-1">
+        <!-- gap: 0.25rem -->
+        <div class="gap-2">
+          <!-- gap: 0.5rem -->
+          <div class="gap-4">
+            <!-- gap: 1rem -->
+            <div class="gap-6">
+              <!-- gap: 1.5rem -->
+              <div class="gap-8">
+                <!-- gap: 2rem -->
+                <div class="gap-px"><!-- gap: 1px --></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
 ---
@@ -226,12 +295,23 @@ These classes go on the flex **items** (children), not the container.
 ```html
 <!-- flex-basis sets the default size of an item before growing/shrinking -->
 <div class="flex">
-  <div class="basis-0">     <!-- flex-basis: 0 -->
-  <div class="basis-auto">  <!-- flex-basis: auto (uses width/height) -->
-  <div class="basis-full">  <!-- flex-basis: 100% -->
-  <div class="basis-1/2">   <!-- flex-basis: 50% -->
-  <div class="basis-1/3">   <!-- flex-basis: 33.333% -->
-  <div class="basis-64">    <!-- flex-basis: 16rem -->
+  <div class="basis-0">
+    <!-- flex-basis: 0 -->
+    <div class="basis-auto">
+      <!-- flex-basis: auto (uses width/height) -->
+      <div class="basis-full">
+        <!-- flex-basis: 100% -->
+        <div class="basis-1/2">
+          <!-- flex-basis: 50% -->
+          <div class="basis-1/3">
+            <!-- flex-basis: 33.333% -->
+            <div class="basis-64"><!-- flex-basis: 16rem --></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
 ### flex-grow — How Much to Grow
@@ -260,10 +340,18 @@ These classes go on the flex **items** (children), not the container.
 
 ```html
 <!-- flex shorthand — sets grow, shrink, basis together -->
-<div class="flex-1">     <!-- flex: 1 1 0% — grow and shrink equally, start at 0 -->
-<div class="flex-auto">  <!-- flex: 1 1 auto — grow and shrink, start at natural size -->
-<div class="flex-initial"><!-- flex: 0 1 auto — don't grow, can shrink (default) -->
-<div class="flex-none">  <!-- flex: none — don't grow, don't shrink -->
+<div class="flex-1">
+  <!-- flex: 1 1 0% — grow and shrink equally, start at 0 -->
+  <div class="flex-auto">
+    <!-- flex: 1 1 auto — grow and shrink, start at natural size -->
+    <div class="flex-initial">
+      <!-- flex: 0 1 auto — don't grow, can shrink (default) -->
+      <div class="flex-none">
+        <!-- flex: none — don't grow, don't shrink -->
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
 ```html
@@ -354,16 +442,30 @@ Grid terminology:
 </div>
 
 <!-- Standard presets -->
-<div class="grid grid-cols-1">  <!-- 1 column (stacked) -->
-<div class="grid grid-cols-2">  <!-- 2 equal columns -->
-<div class="grid grid-cols-3">  <!-- 3 equal columns -->
-<div class="grid grid-cols-4">  <!-- 4 equal columns -->
-<div class="grid grid-cols-6">  <!-- 6 equal columns -->
-<div class="grid grid-cols-12"> <!-- 12-column grid -->
-<div class="grid grid-cols-none"><!-- removes grid-template-columns -->
+<div class="grid grid-cols-1">
+  <!-- 1 column (stacked) -->
+  <div class="grid grid-cols-2">
+    <!-- 2 equal columns -->
+    <div class="grid grid-cols-3">
+      <!-- 3 equal columns -->
+      <div class="grid grid-cols-4">
+        <!-- 4 equal columns -->
+        <div class="grid grid-cols-6">
+          <!-- 6 equal columns -->
+          <div class="grid grid-cols-12">
+            <!-- 12-column grid -->
+            <div class="grid grid-cols-none">
+              <!-- removes grid-template-columns -->
 
-<!-- grid-cols-N generates: grid-template-columns: repeat(N, minmax(0, 1fr)) -->
-<!-- 1fr = "one fraction of the available space" — always equal columns -->
+              <!-- grid-cols-N generates: grid-template-columns: repeat(N, minmax(0, 1fr)) -->
+              <!-- 1fr = "one fraction of the available space" — always equal columns -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
 ### Custom Column Templates
@@ -384,11 +486,15 @@ Grid terminology:
 
 ```html
 <!-- Explicit row heights -->
-<div class="grid grid-rows-3">     <!-- 3 equal rows (1fr each) -->
-<div class="grid grid-rows-none">  <!-- no explicit rows -->
-<div class="grid grid-rows-[auto_1fr_auto]">
-  <!-- auto = shrinks to content, 1fr = takes remaining space -->
-  <!-- A classic header/content/footer layout -->
+<div class="grid grid-rows-3">
+  <!-- 3 equal rows (1fr each) -->
+  <div class="grid grid-rows-none">
+    <!-- no explicit rows -->
+    <div class="grid grid-rows-[auto_1fr_auto]">
+      <!-- auto = shrinks to content, 1fr = takes remaining space -->
+      <!-- A classic header/content/footer layout -->
+    </div>
+  </div>
 </div>
 ```
 
@@ -405,7 +511,7 @@ Grid items can span multiple columns or rows.
   <div class="col-span-2">Spans 2 columns</div>
 
   <div class="col-span-3">Spans all 3 columns (full width)</div>
-  
+
   <div class="col-span-full">Also spans all columns</div>
 </div>
 
@@ -439,11 +545,18 @@ Grid items can span multiple columns or rows.
 
 ```html
 <!-- grid-auto-flow controls how auto-placed items fill the grid -->
-<div class="grid grid-flow-row">    <!-- fill row by row (default) -->
-<div class="grid grid-flow-col">    <!-- fill column by column -->
-<div class="grid grid-flow-dense">  <!-- fill gaps left by large items -->
-<div class="grid grid-flow-row-dense">
-<div class="grid grid-flow-col-dense">
+<div class="grid grid-flow-row">
+  <!-- fill row by row (default) -->
+  <div class="grid grid-flow-col">
+    <!-- fill column by column -->
+    <div class="grid grid-flow-dense">
+      <!-- fill gaps left by large items -->
+      <div class="grid grid-flow-row-dense">
+        <div class="grid grid-flow-col-dense"></div>
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
 ### Auto Column/Row Sizes
@@ -475,31 +588,57 @@ Grid has more alignment options than flex because of the two-dimensional nature.
 
 ```html
 <!-- justify-content: align the grid columns within the container -->
-<div class="grid grid-cols-3 justify-center">   <!-- columns centred -->
-<div class="grid grid-cols-3 justify-between">  <!-- columns spread out -->
+<div class="grid grid-cols-3 justify-center">
+  <!-- columns centred -->
+  <div class="grid grid-cols-3 justify-between">
+    <!-- columns spread out -->
 
-<!-- align-content: align the grid rows within the container -->
-<div class="grid grid-rows-3 content-center h-screen">  <!-- rows centred -->
+    <!-- align-content: align the grid rows within the container -->
+    <div class="grid grid-rows-3 content-center h-screen">
+      <!-- rows centred -->
+    </div>
+  </div>
+</div>
 ```
 
 ### Aligning Items Within Their Cells
 
 ```html
 <!-- justify-items: align items horizontally within their grid cell -->
-<div class="grid justify-items-start">   <!-- left of cell -->
-<div class="grid justify-items-end">     <!-- right of cell -->
-<div class="grid justify-items-center">  <!-- centred horizontally -->
-<div class="grid justify-items-stretch"> <!-- fill cell width (default) -->
+<div class="grid justify-items-start">
+  <!-- left of cell -->
+  <div class="grid justify-items-end">
+    <!-- right of cell -->
+    <div class="grid justify-items-center">
+      <!-- centred horizontally -->
+      <div class="grid justify-items-stretch">
+        <!-- fill cell width (default) -->
 
-<!-- align-items: align items vertically within their grid cell -->
-<div class="grid items-start">    <!-- top of cell -->
-<div class="grid items-end">      <!-- bottom of cell -->
-<div class="grid items-center">   <!-- vertically centred -->
-<div class="grid items-stretch">  <!-- fill cell height (default) -->
+        <!-- align-items: align items vertically within their grid cell -->
+        <div class="grid items-start">
+          <!-- top of cell -->
+          <div class="grid items-end">
+            <!-- bottom of cell -->
+            <div class="grid items-center">
+              <!-- vertically centred -->
+              <div class="grid items-stretch">
+                <!-- fill cell height (default) -->
 
-<!-- place-items: shorthand for align-items + justify-items -->
-<div class="grid place-items-center">   <!-- centred in cell both ways -->
-<div class="grid place-items-start">    <!-- top-left of cell -->
+                <!-- place-items: shorthand for align-items + justify-items -->
+                <div class="grid place-items-center">
+                  <!-- centred in cell both ways -->
+                  <div class="grid place-items-start">
+                    <!-- top-left of cell -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
 ### Per-Item Overrides
@@ -562,9 +701,7 @@ Grid is structure-driven:
     <a href="#" class="mt-auto">Log out</a>
     <!-- mt-auto pushes logout to bottom of flex column -->
   </aside>
-  <main class="p-8 overflow-y-auto">
-    Main content
-  </main>
+  <main class="p-8 overflow-y-auto">Main content</main>
 </div>
 ```
 
@@ -575,12 +712,16 @@ Grid is structure-driven:
 ### Centered Hero Section
 
 ```html
-<section class="flex flex-col items-center justify-center min-h-screen text-center px-4">
+<section
+  class="flex flex-col items-center justify-center min-h-screen text-center px-4"
+>
   <h1 class="text-5xl font-bold text-gray-900">Headline</h1>
   <p class="mt-4 text-xl text-gray-500 max-w-2xl">Subtext here</p>
   <div class="mt-8 flex gap-4">
     <button class="bg-blue-600 text-white px-6 py-3 rounded-lg">Primary</button>
-    <button class="border border-gray-300 px-6 py-3 rounded-lg">Secondary</button>
+    <button class="border border-gray-300 px-6 py-3 rounded-lg">
+      Secondary
+    </button>
   </div>
 </section>
 ```
@@ -592,9 +733,7 @@ Grid is structure-driven:
   <aside class="w-64 flex-none bg-gray-900 text-white overflow-y-auto">
     Sidebar
   </aside>
-  <main class="flex-1 overflow-y-auto bg-gray-50 p-8">
-    Main content
-  </main>
+  <main class="flex-1 overflow-y-auto bg-gray-50 p-8">Main content</main>
 </div>
 ```
 

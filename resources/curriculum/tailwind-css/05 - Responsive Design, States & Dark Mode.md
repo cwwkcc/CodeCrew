@@ -67,7 +67,9 @@ Breakpoints:
 ```css
 /* What md: generates */
 @media (min-width: 768px) {
-  .md\:flex { display: flex; }
+  .md\:flex {
+    display: flex;
+  }
 }
 ```
 
@@ -114,19 +116,19 @@ module.exports = {
   theme: {
     screens: {
       // These REPLACE the defaults
-      'tablet': '640px',
-      'laptop': '1024px',
-      'desktop': '1280px',
+      tablet: "640px",
+      laptop: "1024px",
+      desktop: "1280px",
     },
     // OR extend (adds to defaults)
     extend: {
       screens: {
-        'xs': '475px',   // adds xs: variant
-        '3xl': '1920px', // adds 3xl: variant
+        xs: "475px", // adds xs: variant
+        "3xl": "1920px", // adds 3xl: variant
       },
     },
   },
-}
+};
 ```
 
 ---
@@ -141,9 +143,7 @@ module.exports = {
   <!-- 1.875rem on mobile → 2.25rem at sm → 3rem at lg → 3.75rem at xl -->
 </h1>
 
-<p class="text-base leading-relaxed md:text-lg md:leading-loose">
-  Body copy
-</p>
+<p class="text-base leading-relaxed md:text-lg md:leading-loose">Body copy</p>
 ```
 
 ### Responsive Layout Changes
@@ -190,34 +190,41 @@ module.exports = {
 <div class="opacity-80 hover:opacity-100 transition-opacity">Image</div>
 
 <!-- Focus — for keyboard and click focus -->
-<input class="border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none rounded px-3 py-2">
+<input
+  class="border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none rounded px-3 py-2"
+/>
 
 <!-- Focus-visible — ONLY when focused via keyboard (not click)
      Preferred for focus styles — avoids showing ring on mouse click -->
-<button class="focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
-
-<!-- Active — while being clicked/pressed -->
-<button class="bg-blue-600 active:bg-blue-800 active:scale-95">Press me</button>
-
-<!-- Visited — for links already visited -->
-<a class="text-blue-600 visited:text-purple-600">Link</a>
-
-<!-- Disabled — when [disabled] attribute is present -->
 <button
-  class="bg-blue-600 text-white disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
-  disabled
+  class="focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
 >
-  Disabled
+  <!-- Active — while being clicked/pressed -->
+  <button class="bg-blue-600 active:bg-blue-800 active:scale-95">
+    Press me
+  </button>
+
+  <!-- Visited — for links already visited -->
+  <a class="text-blue-600 visited:text-purple-600">Link</a>
+
+  <!-- Disabled — when [disabled] attribute is present -->
+  <button
+    class="bg-blue-600 text-white disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+    disabled
+  >
+    Disabled
+  </button>
+
+  <!-- Checked — for checkboxes and radio buttons -->
+  <input
+    type="checkbox"
+    class="appearance-none w-4 h-4 border-2 border-gray-300 rounded
+         checked:bg-blue-600 checked:border-blue-600"
+  />
+
+  <!-- Indeterminate — for partially checked states -->
+  <input type="checkbox" class="indeterminate:bg-gray-400" />
 </button>
-
-<!-- Checked — for checkboxes and radio buttons -->
-<input type="checkbox"
-  class="appearance-none w-4 h-4 border-2 border-gray-300 rounded
-         checked:bg-blue-600 checked:border-blue-600">
-
-<!-- Indeterminate — for partially checked states -->
-<input type="checkbox"
-  class="indeterminate:bg-gray-400">
 ```
 
 ---
@@ -226,16 +233,16 @@ module.exports = {
 
 ```html
 <!-- required — when [required] attribute is present -->
-<input class="required:border-red-300" required>
+<input class="required:border-red-300" required />
 
 <!-- optional — when not required -->
-<input class="optional:border-gray-200">
+<input class="optional:border-gray-200" />
 
 <!-- valid / invalid — based on HTML5 constraint validation -->
 <input
   type="email"
   class="border border-gray-300 valid:border-green-500 invalid:border-red-500"
->
+/>
 <!-- Note: invalid triggers immediately on page load before user types.
      Use :user-invalid (CSS) via arbitrary variant for better UX. -->
 
@@ -243,17 +250,24 @@ module.exports = {
 <input
   placeholder="Email"
   class="placeholder-shown:border-gray-200 not-placeholder-shown:border-blue-400"
->
+/>
 
 <!-- autofill — browser-autofilled inputs -->
-<input class="autofill:bg-yellow-100">
+<input class="autofill:bg-yellow-100" />
 
 <!-- read-only -->
-<input readonly class="read-only:bg-gray-50 read-only:text-gray-500 read-only:cursor-default">
+<input
+  readonly
+  class="read-only:bg-gray-50 read-only:text-gray-500 read-only:cursor-default"
+/>
 
 <!-- in-range / out-of-range — for number/date inputs with min/max -->
-<input type="number" min="1" max="10"
-  class="in-range:border-green-500 out-of-range:border-red-500">
+<input
+  type="number"
+  min="1"
+  max="10"
+  class="in-range:border-green-500 out-of-range:border-red-500"
+/>
 ```
 
 ---
@@ -295,17 +309,19 @@ module.exports = {
 <!-- content-[''] is required for the pseudo-element to appear -->
 
 <!-- Decorative label before an element -->
-<span class="before:content-['Required:_'] before:text-red-500 before:font-medium">
+<span
+  class="before:content-['Required:_'] before:text-red-500 before:font-medium"
+>
   Email address
 </span>
 
 <!-- Arrow after a link -->
-<a class="after:content-['_→'] after:ml-1 text-blue-600">
-  Read more
-</a>
+<a class="after:content-['_→'] after:ml-1 text-blue-600"> Read more </a>
 
 <!-- Absolute positioning pseudo-elements -->
-<div class="relative before:absolute before:inset-0 before:bg-black/20 before:content-['']">
+<div
+  class="relative before:absolute before:inset-0 before:bg-black/20 before:content-['']"
+>
   Overlay effect on parent
 </div>
 ```
@@ -320,20 +336,21 @@ When you hover a parent, you may want to change a child's style. `group` and `gr
 <!-- Step 1: mark the parent with class="group" -->
 <!-- Step 2: use group-hover:, group-focus:, etc. on children -->
 
-<a href="#" class="group flex items-center gap-3 p-4 rounded-lg hover:bg-gray-50">
+<a
+  href="#"
+  class="group flex items-center gap-3 p-4 rounded-lg hover:bg-gray-50"
+>
   <div class="text-gray-400 group-hover:text-blue-500 transition-colors">
     <!-- Icon changes colour when the whole <a> is hovered -->
     <svg>...</svg>
   </div>
   <div>
-    <p class="font-medium text-gray-900 group-hover:text-blue-600">
-      Title
-    </p>
-    <p class="text-sm text-gray-500 group-hover:text-gray-700">
-      Subtitle
-    </p>
+    <p class="font-medium text-gray-900 group-hover:text-blue-600">Title</p>
+    <p class="text-sm text-gray-500 group-hover:text-gray-700">Subtitle</p>
   </div>
-  <svg class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-blue-500">
+  <svg
+    class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-blue-500"
+  >
     <!-- Arrow appears on hover of the whole card -->
   </svg>
 </a>
@@ -372,7 +389,7 @@ When you have nested groups, you need to name them to target the right one.
     placeholder=" "
     class="peer block w-full border rounded px-3 pt-6 pb-2 text-sm
            focus:outline-none focus:ring-2 focus:ring-blue-500"
-  >
+  />
   <label
     for="email"
     class="absolute left-3 top-4 text-sm text-gray-400 transition-all duration-200
@@ -389,7 +406,7 @@ When you have nested groups, you need to name them to target the right one.
   type="email"
   class="peer border rounded px-3 py-2 focus:outline-none
          invalid:border-red-500"
->
+/>
 <p class="hidden peer-invalid:block text-sm text-red-500 mt-1">
   Please enter a valid email address.
 </p>
@@ -431,21 +448,23 @@ darkMode: 'class',  // Requires .dark on <html>
 </html>
 ```
 
+> **v4 note:** the two strategies above are unchanged in spirit, but the _mechanism_ for the class strategy moved into CSS. There's no `darkMode: 'class'` config line — instead you declare it as a variant directly: `@variant dark (&:where(.dark, .dark *));` in your CSS, right next to `@import "tailwindcss";`. The media-query strategy needs no configuration at all in either version — it's the default.
+
 ```tsx
 // Toggle dark mode with JavaScript
 function toggleDark() {
-  document.documentElement.classList.toggle('dark');
+  document.documentElement.classList.toggle("dark");
 }
 
 // Persist preference
 function applyTheme() {
-  const saved = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  
-  if (saved === 'dark' || (!saved && prefersDark)) {
-    document.documentElement.classList.add('dark');
+  const saved = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  if (saved === "dark" || (!saved && prefersDark)) {
+    document.documentElement.classList.add("dark");
   } else {
-    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.remove("dark");
   }
 }
 
@@ -457,24 +476,26 @@ function applyTheme() {
 
 ```html
 <!-- Full dark mode design for a card -->
-<div class="
+<div
+  class="
   bg-white dark:bg-gray-800
   border border-gray-200 dark:border-gray-700
   rounded-xl shadow-sm dark:shadow-none
   p-6
-">
+"
+>
   <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
     Card title
   </h2>
-  <p class="mt-2 text-gray-500 dark:text-gray-400">
-    Descriptive text
-  </p>
-  <button class="
+  <p class="mt-2 text-gray-500 dark:text-gray-400">Descriptive text</p>
+  <button
+    class="
     mt-4 px-4 py-2 rounded-md text-sm font-medium
     bg-blue-600 dark:bg-blue-500
     text-white
     hover:bg-blue-700 dark:hover:bg-blue-400
-  ">
+  "
+  >
     Action
   </button>
 </div>
@@ -515,12 +536,14 @@ Good dark mode colour pairs:
 
 ```html
 <!-- Respect prefers-reduced-motion user preference -->
-<div class="
+<div
+  class="
   transition-transform duration-300
   hover:scale-105
   motion-reduce:transition-none
   motion-reduce:hover:scale-100
-">
+"
+>
   <!-- On devices with reduced motion preference:
        No transition, no scaling — just instant change -->
 </div>
@@ -569,20 +592,26 @@ Variants can be stacked — each one adds a condition.
 
 ```html
 <!-- hover + dark mode -->
-<button class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400">
+<button
+  class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400"
+>
+  <!-- responsive + hover -->
+  <div class="opacity-70 md:hover:opacity-100">
+    <!-- opacity-70 at all sizes, but at md+ hovering makes it fully visible -->
+  </div>
 
-<!-- responsive + hover -->
-<div class="opacity-70 md:hover:opacity-100">
-  <!-- opacity-70 at all sizes, but at md+ hovering makes it fully visible -->
-</div>
-
-<!-- group-hover + dark mode -->
-<svg class="text-gray-400 group-hover:text-blue-500 dark:group-hover:text-blue-400">
-
-<!-- responsive + dark mode + hover -->
-<p class="text-gray-700 dark:text-gray-300 lg:text-gray-900 lg:dark:text-white lg:dark:hover:text-blue-100">
-  <!-- Progressive enhancement: each variant adds specificity -->
-</p>
+  <!-- group-hover + dark mode -->
+  <svg
+    class="text-gray-400 group-hover:text-blue-500 dark:group-hover:text-blue-400"
+  >
+    <!-- responsive + dark mode + hover -->
+    <p
+      class="text-gray-700 dark:text-gray-300 lg:text-gray-900 lg:dark:text-white lg:dark:hover:text-blue-100"
+    >
+      <!-- Progressive enhancement: each variant adds specificity -->
+    </p>
+  </svg>
+</button>
 ```
 
 ---
@@ -607,7 +636,7 @@ plugins: [require('@tailwindcss/container-queries')],
   <div class="flex flex-col @md:flex-row gap-4">
     <!-- Stack vertically when the container is small,
          row when the container is >= 28rem (448px) wide -->
-    <img class="w-full @md:w-48 flex-none">
+    <img class="w-full @md:w-48 flex-none" />
     <div>
       <h2 class="text-base @lg:text-xl">Title</h2>
       <p class="text-sm @lg:text-base">Description</p>

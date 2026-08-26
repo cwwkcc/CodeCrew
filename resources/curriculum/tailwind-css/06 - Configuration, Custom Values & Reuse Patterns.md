@@ -1,4 +1,6 @@
 > **Series overview:** This is file 7 of 7. It covers the full tailwind.config.js API — extending and replacing the theme, custom utilities, plugins, CSS variables integration, the @apply directive, and the component extraction patterns that keep large Tailwind codebases maintainable.
+>
+> **A note on versions:** Sections 1–10 below document `tailwind.config.js`, which is the **v3** configuration model. It's still essential to know — most existing Tailwind codebases run v3, and you'll be reading (or migrating) this exact structure regularly. Section 13 covers the **v4** `@theme` equivalent in full, including the concrete breaking changes to expect when migrating. Sections 11–12 (component extraction, `cn()`) are version-agnostic and apply identically either way.
 
 ---
 
@@ -28,9 +30,9 @@ module.exports = {
   // ── CONTENT ──────────────────────────────────────────────────────────────
   // Files to scan for class names. JIT only generates CSS for classes found here.
   content: [
-    './src/**/*.{html,js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx}',
-    './app/**/*.{js,ts,jsx,tsx}',
+    "./src/**/*.{html,js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "./app/**/*.{js,ts,jsx,tsx}",
     // You can also use arrays of file paths:
     // { raw: '<div class="bg-red-500">', extension: 'html' },
   ],
@@ -39,13 +41,13 @@ module.exports = {
   // 'media'  → prefers-color-scheme  (automatic, follows OS)
   // 'class'  → requires <html class="dark">  (manual/toggle)
   // ['class', '[data-theme="dark"]'] → custom selector
-  darkMode: 'class',
+  darkMode: "class",
 
   // ── THEME ─────────────────────────────────────────────────────────────────
   theme: {
     // Keys here REPLACE the default values for that category.
     // Use this to enforce strict design tokens.
-    
+
     // theme.extend ADDS to the defaults without replacing them.
     extend: {},
   },
@@ -62,11 +64,11 @@ module.exports = {
   // important: true,
   // Or scope to a selector:
   // important: '#app',
-  
+
   // ── SEPARATOR ────────────────────────────────────────────────────────────
   // Character used to separate variant prefix from utility.
   // separator: ':',  // default — produces hover:bg-blue-500
-}
+};
 ```
 
 ---
@@ -80,12 +82,12 @@ module.exports = {
     // Setting a key directly in theme REPLACES Tailwind's defaults entirely.
     colors: {
       // ← ALL default colours are gone. Only these exist.
-      white: '#ffffff',
-      black: '#000000',
+      white: "#ffffff",
+      black: "#000000",
       brand: {
-        50:  '#eff6ff',
-        500: '#3b82f6',
-        900: '#1e3a8a',
+        50: "#eff6ff",
+        500: "#3b82f6",
+        900: "#1e3a8a",
       },
     },
 
@@ -95,25 +97,25 @@ module.exports = {
       colors: {
         // ← All default colours still exist PLUS these new ones.
         brand: {
-          50:  '#eff6ff',
-          500: '#3b82f6',
-          900: '#1e3a8a',
+          50: "#eff6ff",
+          500: "#3b82f6",
+          900: "#1e3a8a",
         },
       },
       spacing: {
-        '13': '3.25rem',   // adds p-13, m-13, w-13, h-13, gap-13, etc.
-        '18': '4.5rem',
-        '128': '32rem',
+        13: "3.25rem", // adds p-13, m-13, w-13, h-13, gap-13, etc.
+        18: "4.5rem",
+        128: "32rem",
       },
       borderRadius: {
-        '4xl': '2rem',
+        "4xl": "2rem",
       },
       fontFamily: {
-        display: ['Playfair Display', 'serif'],
+        display: ["Playfair Display", "serif"],
       },
     },
   },
-}
+};
 ```
 
 ---
@@ -123,7 +125,7 @@ module.exports = {
 ### Option A — Extend with custom colours
 
 ```js
-const colors = require('tailwindcss/colors');
+const colors = require("tailwindcss/colors");
 
 module.exports = {
   theme: {
@@ -131,27 +133,27 @@ module.exports = {
       colors: {
         // Add a completely new colour with all shades
         brand: {
-          50:  '#fdf4ff',
-          100: '#fae8ff',
-          200: '#f5d0fe',
-          300: '#f0abfc',
-          400: '#e879f9',
-          500: '#d946ef',
-          600: '#c026d3',
-          700: '#a21caf',
-          800: '#86198f',
-          900: '#701a75',
-          950: '#4a044e',
+          50: "#fdf4ff",
+          100: "#fae8ff",
+          200: "#f5d0fe",
+          300: "#f0abfc",
+          400: "#e879f9",
+          500: "#d946ef",
+          600: "#c026d3",
+          700: "#a21caf",
+          800: "#86198f",
+          900: "#701a75",
+          950: "#4a044e",
         },
         // Alias an existing colour under a new name
         primary: colors.blue,
         danger: colors.red,
         // Single value (no shades)
-        github: '#1B1F24',
+        github: "#1B1F24",
       },
     },
   },
-}
+};
 ```
 
 ### Option B — Replace palette entirely (strict design tokens)
@@ -160,33 +162,33 @@ module.exports = {
 module.exports = {
   theme: {
     colors: {
-      transparent: 'transparent',
-      current: 'currentColor',
-      black: '#000',
-      white: '#fff',
+      transparent: "transparent",
+      current: "currentColor",
+      black: "#000",
+      white: "#fff",
       // Only the colours your design system uses
       gray: {
-        50: '#f9fafb',
-        100: '#f3f4f6',
-        200: '#e5e7eb',
-        300: '#d1d5db',
-        400: '#9ca3af',
-        500: '#6b7280',
-        600: '#4b5563',
-        700: '#374151',
-        800: '#1f2937',
-        900: '#111827',
+        50: "#f9fafb",
+        100: "#f3f4f6",
+        200: "#e5e7eb",
+        300: "#d1d5db",
+        400: "#9ca3af",
+        500: "#6b7280",
+        600: "#4b5563",
+        700: "#374151",
+        800: "#1f2937",
+        900: "#111827",
       },
       primary: {
-        50: '#eff6ff',
-        100: '#dbeafe',
-        500: '#3b82f6',
-        600: '#2563eb',
-        700: '#1d4ed8',
+        50: "#eff6ff",
+        100: "#dbeafe",
+        500: "#3b82f6",
+        600: "#2563eb",
+        700: "#1d4ed8",
       },
     },
   },
-}
+};
 ```
 
 ---
@@ -203,20 +205,20 @@ module.exports = {
     extend: {
       spacing: {
         // Add values beyond the default scale
-        '13':  '3.25rem',  // 52px
-        '15':  '3.75rem',  // 60px
-        '18':  '4.5rem',   // 72px
-        '88':  '22rem',    // 352px
-        '104': '26rem',    // 416px
-        '112': '28rem',    // 448px
-        '128': '32rem',    // 512px
+        13: "3.25rem", // 52px
+        15: "3.75rem", // 60px
+        18: "4.5rem", // 72px
+        88: "22rem", // 352px
+        104: "26rem", // 416px
+        112: "28rem", // 448px
+        128: "32rem", // 512px
         // Pixel values
-        '0.5px': '0.5px',
-        '1px': '1px',
+        "0.5px": "0.5px",
+        "1px": "1px",
       },
     },
   },
-}
+};
 ```
 
 ### Max-Width
@@ -271,35 +273,35 @@ module.exports = {
     extend: {
       // Font families
       fontFamily: {
-        sans: ['Inter var', 'ui-sans-serif', 'system-ui'],
-        serif: ['Playfair Display', 'ui-serif', 'Georgia'],
-        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular'],
-        display: ['"Cal Sans"', 'sans-serif'],
+        sans: ["Inter var", "ui-sans-serif", "system-ui"],
+        serif: ["Playfair Display", "ui-serif", "Georgia"],
+        mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular"],
+        display: ['"Cal Sans"', "sans-serif"],
       },
-      
+
       // Font sizes — each entry: [font-size, { lineHeight, letterSpacing, fontWeight }]
       fontSize: {
-        '2xs': ['0.625rem', { lineHeight: '0.75rem' }],  // 10px
+        "2xs": ["0.625rem", { lineHeight: "0.75rem" }], // 10px
         // Override default line-heights
-        'sm': ['0.875rem', { lineHeight: '1.375rem' }],  // custom leading for sm
+        sm: ["0.875rem", { lineHeight: "1.375rem" }], // custom leading for sm
         // Fluid type
-        'fluid-lg': ['clamp(1.125rem, 2.5vw, 1.5rem)', { lineHeight: '1.4' }],
+        "fluid-lg": ["clamp(1.125rem, 2.5vw, 1.5rem)", { lineHeight: "1.4" }],
       },
-      
+
       // Line heights
       lineHeight: {
-        'extra-loose': '2.5',
-        '12': '3rem',
+        "extra-loose": "2.5",
+        12: "3rem",
       },
-      
+
       // Letter spacing
       letterSpacing: {
-        'ultra-tight': '-0.075em',
-        'ultra-wide': '0.2em',
+        "ultra-tight": "-0.075em",
+        "ultra-wide": "0.2em",
       },
     },
   },
-}
+};
 ```
 
 ---
@@ -325,7 +327,7 @@ Using CSS custom properties (variables) as Tailwind values enables runtime themi
     --color-muted-foreground: 107 114 128;
     --color-border: 229 231 235;
     --color-ring: 37 99 235;
-    
+
     --radius: 0.5rem;
   }
 
@@ -349,27 +351,27 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: 'rgb(var(--color-background) / <alpha-value>)',
-        foreground: 'rgb(var(--color-foreground) / <alpha-value>)',
+        background: "rgb(var(--color-background) / <alpha-value>)",
+        foreground: "rgb(var(--color-foreground) / <alpha-value>)",
         primary: {
-          DEFAULT: 'rgb(var(--color-primary) / <alpha-value>)',
-          foreground: 'rgb(var(--color-primary-foreground) / <alpha-value>)',
+          DEFAULT: "rgb(var(--color-primary) / <alpha-value>)",
+          foreground: "rgb(var(--color-primary-foreground) / <alpha-value>)",
         },
         muted: {
-          DEFAULT: 'rgb(var(--color-muted) / <alpha-value>)',
-          foreground: 'rgb(var(--color-muted-foreground) / <alpha-value>)',
+          DEFAULT: "rgb(var(--color-muted) / <alpha-value>)",
+          foreground: "rgb(var(--color-muted-foreground) / <alpha-value>)",
         },
-        border: 'rgb(var(--color-border) / <alpha-value>)',
-        ring: 'rgb(var(--color-ring) / <alpha-value>)',
+        border: "rgb(var(--color-border) / <alpha-value>)",
+        ring: "rgb(var(--color-ring) / <alpha-value>)",
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
     },
   },
-}
+};
 ```
 
 ```html
@@ -382,8 +384,10 @@ module.exports = {
 </div>
 
 <!-- With opacity modifier — the <alpha-value> token enables this -->
-<div class="bg-primary/20">   <!-- 20% opacity primary background -->
-<div class="border border-border/50">
+<div class="bg-primary/20">
+  <!-- 20% opacity primary background -->
+  <div class="border border-border/50"></div>
+</div>
 ```
 
 ```
@@ -391,7 +395,7 @@ The <alpha-value> placeholder:
   When Tailwind processes bg-primary/20, it looks at the colour definition.
   If the definition uses <alpha-value>, Tailwind replaces it with 0.2.
   Result: rgb(var(--color-primary) / 0.2)
-  
+
   Without <alpha-value>, the / opacity modifier doesn't work.
   This is why the CSS variable pattern must use this specific syntax.
 ```
@@ -416,7 +420,8 @@ The <alpha-value> placeholder:
   padding-bottom: 0.5rem;
   border-radius: 0.375rem;
   font-weight: 500;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-property:
+    color, background-color, border-color, text-decoration-color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -436,15 +441,21 @@ The <alpha-value> placeholder:
 
 /* 2. Base element resets in @layer base */
 @layer base {
-  h1 { @apply text-2xl font-bold tracking-tight; }
-  h2 { @apply text-xl font-semibold; }
-  a  { @apply text-blue-600 hover:underline; }
+  h1 {
+    @apply text-2xl font-bold tracking-tight;
+  }
+  h2 {
+    @apply text-xl font-semibold;
+  }
+  a {
+    @apply text-blue-600 hover:underline;
+  }
 }
 
 /* 3. Complex pseudo-element styles that are painful inline */
 .fancy-underline::after {
   @apply absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 scale-x-0 transition-transform;
-  content: '';
+  content: "";
 }
 .fancy-underline:hover::after {
   @apply scale-x-100;
@@ -485,17 +496,17 @@ The <alpha-value> placeholder:
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-  
+
   /* Fluid typography utility */
   .text-fluid-xl {
     font-size: clamp(1.25rem, 3vw, 2rem);
   }
-  
+
   /* Text balance (newer CSS) */
   .text-balance {
     text-wrap: balance;
   }
-  
+
   .text-pretty {
     text-wrap: pretty;
   }
@@ -510,7 +521,7 @@ The <alpha-value> placeholder:
     @apply block w-full rounded-md border border-gray-300 px-3 py-2 text-sm
            focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500;
   }
-  
+
   .label-base {
     @apply block text-sm font-medium text-gray-700 mb-1;
   }
@@ -524,46 +535,51 @@ The <alpha-value> placeholder:
 Plugins can add utilities, components, variants, or base styles.
 
 ```js
-const plugin = require('tailwindcss/plugin');
+const plugin = require("tailwindcss/plugin");
 
 module.exports = {
   plugins: [
     // Official plugins
-    require('@tailwindcss/forms'),          // Better form element styling
-    require('@tailwindcss/typography'),     // Prose content styling
-    require('@tailwindcss/aspect-ratio'),   // Pre-v3 aspect ratio support
-    require('@tailwindcss/container-queries'), // Container queries
+    require("@tailwindcss/forms"), // Better form element styling
+    require("@tailwindcss/typography"), // Prose content styling
+    require("@tailwindcss/aspect-ratio"), // Pre-v3 aspect ratio support
+    require("@tailwindcss/container-queries"), // Container queries
 
     // Custom plugin
-    plugin(function({ addUtilities, addComponents, addBase, theme, matchUtilities }) {
-      
+    plugin(function ({
+      addUtilities,
+      addComponents,
+      addBase,
+      theme,
+      matchUtilities,
+    }) {
       // Add static utilities
       addUtilities({
-        '.scrollbar-hide': {
-          '-ms-overflow-style': 'none',
-          'scrollbar-width': 'none',
-          '&::-webkit-scrollbar': { display: 'none' },
+        ".scrollbar-hide": {
+          "-ms-overflow-style": "none",
+          "scrollbar-width": "none",
+          "&::-webkit-scrollbar": { display: "none" },
         },
-        '.no-tap-highlight': {
-          '-webkit-tap-highlight-color': 'transparent',
+        ".no-tap-highlight": {
+          "-webkit-tap-highlight-color": "transparent",
         },
       });
 
       // Add dynamic utilities (with value scale)
       matchUtilities(
         {
-          'text-shadow': (value) => ({
+          "text-shadow": (value) => ({
             textShadow: value,
           }),
         },
         {
-          values: theme('textShadow'),
+          values: theme("textShadow"),
           // Requires theme.extend.textShadow in config
         },
       );
     }),
   ],
-}
+};
 ```
 
 ---
@@ -574,24 +590,24 @@ When class names are built dynamically at runtime (e.g., from a database value),
 
 ```js
 module.exports = {
-  content: ['./src/**/*.{js,ts,jsx,tsx}'],
-  
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
+
   safelist: [
     // String — always generate these exact classes
-    'bg-red-500',
-    'bg-green-500',
-    'text-center',
-    
+    "bg-red-500",
+    "bg-green-500",
+    "text-center",
+
     // Pattern — generate all matching classes
     {
       pattern: /bg-(red|green|blue|yellow)-(100|200|500|700)/,
     },
     {
       pattern: /text-(sm|base|lg|xl)/,
-      variants: ['hover', 'md', 'lg'],  // also generate hover:text-sm, md:text-sm, etc.
+      variants: ["hover", "md", "lg"], // also generate hover:text-sm, md:text-sm, etc.
     },
   ],
-}
+};
 ```
 
 ```tsx
@@ -618,33 +634,38 @@ const statusColors = {
 ```tsx
 // Button.tsx — the utility classes live in one place
 interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
   children: React.ReactNode;
   className?: string;
 }
 
 const variantClasses = {
-  primary:   'bg-blue-600 text-white hover:bg-blue-700',
-  secondary: 'bg-white text-gray-900 border border-gray-300 hover:bg-gray-50',
-  ghost:     'text-gray-700 hover:bg-gray-100 hover:text-gray-900',
+  primary: "bg-blue-600 text-white hover:bg-blue-700",
+  secondary: "bg-white text-gray-900 border border-gray-300 hover:bg-gray-50",
+  ghost: "text-gray-700 hover:bg-gray-100 hover:text-gray-900",
 };
 
 const sizeClasses = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-3 text-base',
+  sm: "px-3 py-1.5 text-sm",
+  md: "px-4 py-2 text-sm",
+  lg: "px-6 py-3 text-base",
 };
 
-export function Button({ variant = 'primary', size = 'md', className, ...props }: ButtonProps) {
+export function Button({
+  variant = "primary",
+  size = "md",
+  className,
+  ...props
+}: ButtonProps) {
   return (
     <button
       className={cn(
         // Base styles always applied
-        'inline-flex items-center justify-center rounded-md font-medium',
-        'transition-colors focus-visible:outline-none',
-        'focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
-        'disabled:pointer-events-none disabled:opacity-50',
+        "inline-flex items-center justify-center rounded-md font-medium",
+        "transition-colors focus-visible:outline-none",
+        "focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
+        "disabled:pointer-events-none disabled:opacity-50",
         // Variant styles
         variantClasses[variant],
         // Size styles
@@ -717,8 +738,8 @@ npm install clsx tailwind-merge
 
 ```ts
 // lib/utils.ts — add this once, import everywhere
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -750,58 +771,137 @@ function Card({ className, ...props }) {
 
 ---
 
-## 13. Tailwind v4 — What's Changing
+## 13. Tailwind v4 — CSS-First Config (the Current Default)
 
-Tailwind v4 is a complete rewrite released in early 2025. The configuration moves from JS to CSS.
+Tailwind v4 is not an incremental update — it's a rewrite of the engine (from a JavaScript/PostCSS pipeline to **Oxide**, written in Rust) and a full move of configuration from JS into CSS. As of 2026, **v4 is the default for any new project**; there's no real reason to start on v3 unless you need to support very old browsers (v4 targets Safari 16.4+, Chrome 111+, Firefox 128+).
+
+### The `@theme` Directive — Full Shape
 
 ```css
-/* v4 — configuration in CSS, no tailwind.config.js needed */
+/* app.css — this file replaces tailwind.config.js entirely */
 @import "tailwindcss";
 
 @theme {
-  /* Replaces theme.extend in config */
-  --font-display: "Playfair Display", serif;
-  
+  /* Colours — every --color-* becomes both a utility AND a real CSS variable */
   --color-brand-50: #eff6ff;
   --color-brand-500: #3b82f6;
   --color-brand-900: #1e3a8a;
-  
+
+  /* Fonts */
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Playfair Display", serif;
+
+  /* Spacing — extends the default scale, same idea as theme.extend.spacing */
   --spacing-13: 3.25rem;
   --spacing-128: 32rem;
-  
+
+  /* Breakpoints — replaces theme.screens */
   --breakpoint-xs: 30rem;
   --breakpoint-3xl: 120rem;
+
+  /* Border radius, shadows, etc. all follow the same --category-name pattern */
+  --radius-4xl: 2rem;
+}
+```
+
+```css
+/* Because every @theme value is a real CSS variable, you can use it
+   directly in plain CSS too — not just inside Tailwind class names */
+.custom-element {
+  color: var(--color-brand-500);
+  font-family: var(--font-display);
+}
+```
+
+```
+Reading the pattern:
+  --color-{name}       → bg-{name}, text-{name}, border-{name}, etc.
+  --spacing-{name}     → p-{name}, m-{name}, w-{name}, gap-{name}, etc.
+  --breakpoint-{name}  → {name}: responsive prefix (e.g. xs:flex)
+  --font-{name}        → font-{name}
+  --radius-{name}      → rounded-{name}
+```
+
+### Replacing vs Extending in v4
+
+v3's extend-vs-replace distinction (Section 2) still exists, but it's controlled by _namespace_, not by a separate `extend` key:
+
+```css
+@theme {
+  /* This ADDS a new colour — the defaults (red, blue, gray, etc.) still exist */
+  --color-brand-500: #3b82f6;
 }
 
-/* Content detection is now automatic for most setups */
-/* No content: [] array needed */
+@theme {
+  /* To REPLACE the entire default palette, clear the namespace first */
+  --color-*: initial;
+  --color-brand-500: #3b82f6;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  /* Now ONLY these colours exist — same effect as v3's theme.colors (no extend) */
+}
 ```
 
-```html
-<!-- v4 uses CSS variables as the primary value system -->
-<!-- Arbitrary values use the same syntax -->
-<div class="bg-[--color-brand-500]">
-<div class="mt-[--spacing-13]">
+### Content Detection — Automatic
 
-<!-- New: 3D transform utilities -->
-<div class="rotate-x-45 rotate-y-30 perspective-500">
+```css
+/* No content: [...] array needed for standard project layouts.
+   Tailwind scans your project automatically, respecting .gitignore. */
 
-<!-- New: starting style (for enter animations with @starting-style) -->
-<div class="starting:opacity-0 transition-opacity">
-  Fades in when inserted into the DOM
-</div>
+/* For files outside the normal scan path (e.g. a shared package
+   in a monorepo), add them explicitly: */
+@source "../../packages/ui/src/**/*.tsx";
+
+/* To exclude a path Tailwind would otherwise scan: */
+@source not "./src/legacy/**";
+```
+
+### Plugins and `@apply` — Mostly Unchanged
+
+```css
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
+
+/* @apply still works exactly as in v3 */
+.prose h2 {
+  @apply text-2xl font-bold text-gray-900 mt-8 mb-4;
+}
+```
+
+### Breaking Changes to Expect When Migrating
+
+These are the ones that actually bite in a real migration — not a exhaustive changelog, just the ones worth knowing before you start:
+
+| What changed                    | v3                            | v4                                                                                                                              | Fix                                                                         |
+| ------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Gradient utilities renamed      | `bg-gradient-to-r`            | `bg-linear-to-r`                                                                                                                | Find-and-replace `gradient-to-` → `linear-to-`                              |
+| Default border colour           | `gray-200`                    | `currentColor`                                                                                                                  | Add explicit colours where borders now look wrong: `border border-gray-200` |
+| `flex-shrink-0` / `flex-grow-0` | supported                     | renamed                                                                                                                         | Use `shrink-0` / `grow-0`                                                   |
+| Default ring width/colour       | `blue-500`, 3px               | `currentColor`, 1px                                                                                                             | Set `ring-2 ring-blue-500` explicitly if you relied on the old default      |
+| Config file                     | `tailwind.config.js` required | Optional — CSS-first via `@theme`                                                                                               | Use the official upgrade tool (below) rather than hand-migrating            |
+| Default dark mode strategy      | `media` unless configured     | Still `media` by default, but the `class` strategy now needs an explicit `@variant`: `@variant dark (&:where(.dark, .dark *));` | Add that one line if you use class-based dark mode toggling                 |
+
+### Migration Path
+
+```bash
+# The official codemod handles most of the mechanical work —
+# dependency updates, config-to-CSS conversion, class renames
+npx @tailwindcss/upgrade
+
+# Manual setup, if you'd rather migrate by hand
+npm uninstall tailwindcss postcss autoprefixer
+npm install tailwindcss @tailwindcss/vite   # or @tailwindcss/postcss
 ```
 
 ```
-Key v4 changes:
-  - Config in CSS (@theme), not JS
-  - Lightning CSS instead of PostCSS (faster, built-in browser prefix handling)
-  - Content detection is automatic (no content: [...] array for standard setups)
-  - CSS variables as the value system (all theme values become CSS custom props)
-  - New utilities: 3D transforms, @starting-style, field-sizing, etc.
-  - Dark mode default changed to 'media' (OS-based) — no class needed
-  - New variant: in-* (in-[.dark]:) for ancestor-based variants
-  - Compound variants via @variant
-
-v3 config still works during migration via @config "./tailwind.config.js";
+1. Run the upgrade tool, or start replacing @tailwind directives with @import "tailwindcss"
+2. Move theme.extend values into an @theme block, one namespace at a time
+3. Fix the breaking changes above (gradient names, border colour, ring defaults)
+4. Delete tailwind.config.js once nothing references it (or keep select
+   plugins alive during transition via @config "./tailwind.config.js";)
+5. Re-check any custom plugin code — the plugin API is mostly compatible,
+   but matchUtilities-heavy plugins are worth testing carefully
 ```
+
+If you inherit or maintain a v3 codebase, none of this is urgent — v3 is still maintained and plenty of production apps run it fine. Migrate opportunistically (during an unrelated refactor) rather than as its own project, unless the build-speed gains from Oxide are actually a pain point for you day to day.
