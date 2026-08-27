@@ -186,12 +186,12 @@ After:
 
 ## 6. `reset` vs `revert`
 
-||`reset`|`revert`|
-|---|---|---|
-|How it works|Moves branch pointer backward|Creates a new undo commit|
-|History|Rewrites — old commits become unreferenced|Preserved — old commits untouched|
-|Safe for shared branches|**No** — never reset commits that are pushed|**Yes** — safe to push|
-|Use for|Local cleanup before pushing|Undoing pushed commits|
+|                          | `reset`                                      | `revert`                          |
+| ------------------------ | -------------------------------------------- | --------------------------------- |
+| How it works             | Moves branch pointer backward                | Creates a new undo commit         |
+| History                  | Rewrites — old commits become unreferenced   | Preserved — old commits untouched |
+| Safe for shared branches | **No** — never reset commits that are pushed | **Yes** — safe to push            |
+| Use for                  | Local cleanup before pushing                 | Undoing pushed commits            |
 
 ```bash
 # WRONG — never reset commits that exist on origin

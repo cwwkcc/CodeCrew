@@ -14,6 +14,7 @@ Git is not a backup tool or a "track changes" system. It is a **content-addressa
 8. [The Index in Detail]
 9. [What `.git/` Contains]
 10. [Content-Addressable Storage — Why It Matters]
+
 ---
 
 ## 1. The Object Database
@@ -83,13 +84,13 @@ git cat-file -p HEAD^{tree}
 
 File mode values:
 
-|Mode|Meaning|
-|---|---|
-|`100644`|Regular file|
-|`100755`|Executable file|
-|`120000`|Symbolic link|
-|`040000`|Directory (tree)|
-|`160000`|Gitlink (submodule)|
+| Mode     | Meaning             |
+| -------- | ------------------- |
+| `100644` | Regular file        |
+| `100755` | Executable file     |
+| `120000` | Symbolic link       |
+| `040000` | Directory (tree)    |
+| `160000` | Gitlink (submodule) |
 
 ### Commit — Snapshot + Metadata
 

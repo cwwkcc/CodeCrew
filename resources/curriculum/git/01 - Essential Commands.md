@@ -12,6 +12,7 @@ The commands you use every single day. Each one maps directly to the internals c
 6. [Comparing Changes]
 7. [Stashing]
 8. [Quick Reference]
+
 ---
 
 ## 1. Setup and Configuration

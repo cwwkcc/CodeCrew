@@ -216,11 +216,11 @@ Closes #142
 
 GitHub offers three merge strategies:
 
-|Option|Result|
-|---|---|
-|**Create a merge commit**|Three-way merge — preserves branch history, creates merge commit|
-|**Squash and merge**|All commits squashed into one — clean linear history|
-|**Rebase and merge**|Commits replayed on top of base — linear, preserves individual commits|
+| Option                    | Result                                                                 |
+| ------------------------- | ---------------------------------------------------------------------- |
+| **Create a merge commit** | Three-way merge — preserves branch history, creates merge commit       |
+| **Squash and merge**      | All commits squashed into one — clean linear history                   |
+| **Rebase and merge**      | Commits replayed on top of base — linear, preserves individual commits |
 
 Squash and merge is the most popular for feature branches — you get a single clean commit per feature in main's history.
 
@@ -243,9 +243,9 @@ On the PR's "Files changed" tab:
 - Click the `+` next to a line to add a comment
 - "Start a review" to batch comments before submitting
 - Submit as:
-    - **Comment** — general feedback, no approval/rejection
-    - **Approve** — looks good to merge
-    - **Request changes** — must be addressed before merging
+  - **Comment** — general feedback, no approval/rejection
+  - **Approve** — looks good to merge
+  - **Request changes** — must be addressed before merging
 
 Good review comments:
 
@@ -306,8 +306,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -323,13 +323,13 @@ jobs:
 
 ```yaml
 on:
-  push:                        # on every push
-  pull_request:                # on PR open/update
-  workflow_dispatch:           # manual trigger from GitHub UI
+  push: # on every push
+  pull_request: # on PR open/update
+  workflow_dispatch: # manual trigger from GitHub UI
   schedule:
-    - cron: '0 0 * * *'       # daily at midnight UTC
+    - cron: "0 0 * * *" # daily at midnight UTC
   release:
-    types: [published]         # when a release is published
+    types: [published] # when a release is published
 ```
 
 ### Status Checks
@@ -367,6 +367,7 @@ Reference issues in PR descriptions:
 
 ```markdown
 ## Related
+
 Closes #42
 Fixes #38, #39
 Related to #50

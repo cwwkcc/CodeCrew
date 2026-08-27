@@ -147,13 +147,13 @@ develop   ───────────────────────�
 
 ### Branches
 
-|Branch|Purpose|
-|---|---|
-|`main`|Tagged production releases only|
-|`develop`|Integration branch — all features merge here|
-|`feature/*`|New features — branch from develop, merge to develop|
-|`release/*`|Release preparation — branch from develop, merge to main and develop|
-|`hotfix/*`|Emergency fixes — branch from main, merge to main and develop|
+| Branch      | Purpose                                                              |
+| ----------- | -------------------------------------------------------------------- |
+| `main`      | Tagged production releases only                                      |
+| `develop`   | Integration branch — all features merge here                         |
+| `feature/*` | New features — branch from develop, merge to develop                 |
+| `release/*` | Release preparation — branch from develop, merge to main and develop |
+| `hotfix/*`  | Emergency fixes — branch from main, merge to main and develop        |
 
 ### When to Use Git Flow
 
@@ -175,14 +175,14 @@ Git Flow has largely been replaced by Feature Branch Workflow + trunk-based appr
 
 ## 4. Comparing Workflows
 
-||Feature Branch|Trunk-Based|Git Flow|
-|---|---|---|---|
-|Branch lifespan|Days|Hours (or none)|Weeks|
-|Release cadence|Continuous|Continuous|Scheduled|
-|Merge conflicts|Low|Very low|High|
-|Complexity|Low|Low|High|
-|Good for|Most web teams|High-output teams|Versioned software|
-|Requires|Code review culture|Feature flags + CI|Discipline|
+|                 | Feature Branch      | Trunk-Based        | Git Flow           |
+| --------------- | ------------------- | ------------------ | ------------------ |
+| Branch lifespan | Days                | Hours (or none)    | Weeks              |
+| Release cadence | Continuous          | Continuous         | Scheduled          |
+| Merge conflicts | Low                 | Very low           | High               |
+| Complexity      | Low                 | Low                | High               |
+| Good for        | Most web teams      | High-output teams  | Versioned software |
+| Requires        | Code review culture | Feature flags + CI | Discipline         |
 
 ---
 
@@ -279,15 +279,18 @@ Maintain a `CHANGELOG.md` at the root of the repo:
 ## [1.2.0] - 2025-11-15
 
 ### Added
+
 - User search with debounced input (#142)
 - JWT refresh token rotation (#89)
 
 ### Fixed
+
 - Null check on login response body (#156)
 
 ## [1.1.3] - 2025-10-28
 
 ### Fixed
+
 - XSS in username display (#148)
 - Incorrect redirect after password reset (#150)
 ```

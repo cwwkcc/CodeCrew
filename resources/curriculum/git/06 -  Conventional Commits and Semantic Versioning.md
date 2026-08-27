@@ -51,19 +51,19 @@ Closes #142
 
 ## 2. Type Reference
 
-|Type|When to use|Version bump|
-|---|---|---|
-|`feat`|New feature for the user|Minor (`1.0.0` → `1.1.0`)|
-|`fix`|Bug fix for the user|Patch (`1.0.0` → `1.0.1`)|
-|`docs`|Documentation only|None|
-|`style`|Formatting, whitespace — no logic change|None|
-|`refactor`|Code restructuring — no feature change, no bug fix|None|
-|`perf`|Performance improvement|Patch|
-|`test`|Adding or fixing tests|None|
-|`build`|Build system, dependencies, CI config|None|
-|`ci`|CI/CD configuration changes|None|
-|`chore`|Maintenance tasks (updating lockfile, tools)|None|
-|`revert`|Reverts a previous commit|Depends|
+| Type       | When to use                                        | Version bump              |
+| ---------- | -------------------------------------------------- | ------------------------- |
+| `feat`     | New feature for the user                           | Minor (`1.0.0` → `1.1.0`) |
+| `fix`      | Bug fix for the user                               | Patch (`1.0.0` → `1.0.1`) |
+| `docs`     | Documentation only                                 | None                      |
+| `style`    | Formatting, whitespace — no logic change           | None                      |
+| `refactor` | Code restructuring — no feature change, no bug fix | None                      |
+| `perf`     | Performance improvement                            | Patch                     |
+| `test`     | Adding or fixing tests                             | None                      |
+| `build`    | Build system, dependencies, CI config              | None                      |
+| `ci`       | CI/CD configuration changes                        | None                      |
+| `chore`    | Maintenance tasks (updating lockfile, tools)       | None                      |
+| `revert`   | Reverts a previous commit                          | Depends                   |
 
 ```bash
 # Real examples
@@ -162,11 +162,11 @@ Version numbers follow the format: `MAJOR.MINOR.PATCH`
 
 ### Rules
 
-|When to increment|What it means|
-|---|---|
-|`PATCH` (1.0.0 → 1.0.1)|Bug fixed. Safe to update.|
-|`MINOR` (1.0.0 → 1.1.0)|New feature added. Safe to update.|
-|`MAJOR` (1.0.0 → 2.0.0)|Breaking change. Check migration guide before updating.|
+| When to increment       | What it means                                           |
+| ----------------------- | ------------------------------------------------------- |
+| `PATCH` (1.0.0 → 1.0.1) | Bug fixed. Safe to update.                              |
+| `MINOR` (1.0.0 → 1.1.0) | New feature added. Safe to update.                      |
+| `MAJOR` (1.0.0 → 2.0.0) | Breaking change. Check migration guide before updating. |
 
 ### Pre-release Versions
 
@@ -236,7 +236,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
       - run: npm ci
       - run: npx semantic-release
         env:
@@ -301,15 +301,27 @@ npx husky init
 ```js
 // commitlint.config.js
 export default {
-  extends: ['@commitlint/config-conventional'],
+  extends: ["@commitlint/config-conventional"],
   rules: {
-    'type-enum': [
-      2,          // 2 = error
-      'always',
-      ['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'build', 'ci', 'chore', 'revert'],
+    "type-enum": [
+      2, // 2 = error
+      "always",
+      [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "build",
+        "ci",
+        "chore",
+        "revert",
+      ],
     ],
-    'subject-max-length': [2, 'always', 72],
-    'subject-case': [2, 'always', 'lower-case'],
+    "subject-max-length": [2, "always", 72],
+    "subject-case": [2, "always", "lower-case"],
   },
 };
 ```
