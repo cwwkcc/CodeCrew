@@ -424,10 +424,10 @@ END FUNCTION
 FUNCTION binarySearch(sortedList, target):
     SET left = 0
     SET right = length of list - 1
-    
+
     WHILE left <= right:
         SET middle = (left + right) / 2
-        
+
         IF list[middle] equals target:
             RETURN "Found at position middle"
         ELSE IF list[middle] < target:
@@ -435,7 +435,7 @@ FUNCTION binarySearch(sortedList, target):
         ELSE:
             SET right = middle - 1
     END WHILE
-    
+
     RETURN "Not found"
 END FUNCTION
 ```
@@ -465,7 +465,7 @@ END FUNCTION
 ```
 FUNCTION bubbleSort(list):
     SET n = length of list
-    
+
     FOR i from 0 to n-1:
         FOR j from 0 to n-i-1:
             IF list[j] > list[j+1]:
@@ -473,7 +473,7 @@ FUNCTION bubbleSort(list):
             END IF
         END FOR
     END FOR
-    
+
     RETURN list
 END FUNCTION
 ```
@@ -502,13 +502,13 @@ END FUNCTION
 ```
 FUNCTION findMaximum(list):
     SET max = first item in list
-    
+
     FOR each item in list:
         IF item > max:
             SET max = item
         END IF
     END FOR
-    
+
     RETURN max
 END FUNCTION
 ```
@@ -621,13 +621,13 @@ int findMaximum(int numbers[], int size) {
 
 ```javascript
 function findMaximum(numbers) {
-    let maxNum = numbers[0];
-    for (let num of numbers) {
-        if (num > maxNum) {
-            maxNum = num;
-        }
+  let maxNum = numbers[0];
+  for (let num of numbers) {
+    if (num > maxNum) {
+      maxNum = num;
     }
-    return maxNum;
+  }
+  return maxNum;
 }
 ```
 

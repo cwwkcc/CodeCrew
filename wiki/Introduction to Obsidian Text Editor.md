@@ -133,15 +133,19 @@ You'll automatically see that "Machine Learning" links here!
 
 ````markdown
 # Heading 1
+
 ## Heading 2
+
 ### Heading 3
 
 **Bold text**
-*Italic text*
+_Italic text_
 ~~Strikethrough~~
 
 - Bullet list
+
 1. Numbered list
+
 - [ ] Task list (checkbox)
 
 [External Link](https://example.com)
@@ -149,13 +153,13 @@ You'll automatically see that "Machine Learning" links here!
 
 `inline code`
 
-```code block```
+`code block`
 
 > Blockquote
 
-| Tables | Are | Supported |
-|--------|-----|-----------|
-| Data   | Here| Too       |
+| Tables | Are  | Supported |
+| ------ | ---- | --------- |
+| Data   | Here | Too       |
 ````
 
 **Live Preview**:
@@ -282,22 +286,22 @@ Combine: tag:#work path:"Projects" "important meeting"
 
 ```markdown
 ---
-date: {{date}}
+date: { { date } }
 tags: #daily-note
 ---
 
 # {{date:YYYY-MM-DD}}
 
 ## Tasks
-- [ ] 
+
+- [ ]
 
 ## Notes
 
-
 ## Reflections
 
-
 ---
+
 Previous: [[{{date-1}}]]
 Next: [[{{date+1}}]]
 ```
@@ -307,8 +311,8 @@ Next: [[{{date+1}}]]
 ```markdown
 ---
 type: meeting
-date: {{date}}
-attendees: 
+date: { { date } }
+attendees:
 tags: #meeting
 ---
 
@@ -316,12 +320,11 @@ tags: #meeting
 
 ## Agenda
 
-
 ## Discussion
 
-
 ## Action Items
-- [ ] 
+
+- [ ]
 
 ## Next Meeting
 ```
@@ -351,7 +354,7 @@ tags: #meeting
 ```
 My Vault/
 ├── 00 Inbox/           (Unsorted notes)
-├── 01 Projects/        
+├── 01 Projects/
 │   ├── Work/
 │   └── Personal/
 ├── 02 Areas/           (Ongoing responsibilities)
@@ -513,9 +516,9 @@ LIMIT 10
 1. Go to: **https://obsidian.md/**
 2. Click **"Download"**
 3. Choose your platform:
-    - Windows (Installer or Portable)
-    - macOS (Intel or Apple Silicon)
-    - Linux (AppImage, Snap, or Flatpak)
+   - Windows (Installer or Portable)
+   - macOS (Intel or Apple Silicon)
+   - Linux (AppImage, Snap, or Flatpak)
 4. Download size: ~100-150 MB
 
 **Step 2: Install**
@@ -578,11 +581,13 @@ When Obsidian opens:
 # Welcome to My Second Brain
 
 This is my personal knowledge base where I'll:
+
 - Capture ideas
 - Connect thoughts
 - Build understanding
 
 ## Getting Started
+
 I'm learning about [[Note Taking]], [[Productivity]], and [[Knowledge Management]].
 
 #getting-started
@@ -601,6 +606,7 @@ I'm learning about [[Note Taking]], [[Productivity]], and [[Knowledge Management
 I'm interested in [[Programming]].
 
 Within programming, I want to learn:
+
 - [[Python]]
 - [[JavaScript]]
 - [[C++]]
@@ -711,14 +717,17 @@ Use tags for organization:
 # [[Source]] - Book: "Deep Work" by Cal Newport
 
 ## Key Ideas
+
 - [[Focus]] is a superpower in modern economy
 - [[Distraction]] is the enemy of deep work
 - [[Deliberate Practice]] builds skills
 
 ## Quotes
+
 > "The ability to perform deep work is becoming increasingly rare..."
 
 ## My Thoughts
+
 This connects to my notes on [[Productivity]] and [[Flow State]].
 
 #research #productivity
@@ -742,21 +751,24 @@ This connects to my notes on [[Productivity]] and [[Flow State]].
 **Deadline**: 2024-03-15
 
 ## Goals
+
 - [ ] Goal 1
 - [ ] Goal 2
 
 ## Resources
+
 - [[Related Note 1]]
 - [[Related Note 2]]
 
 ## Tasks
+
 - [ ] Task 1 #task
 - [ ] Task 2 #task
 
 ## Notes
 
-
 ## Review
+
 Daily: [[2024-02-01]], [[2024-02-02]]
 Weekly: [[2024-W05]]
 ```
@@ -769,25 +781,29 @@ Weekly: [[2024-W05]]
 # {{date:dddd, MMMM Do, YYYY}}
 
 ## Morning Routine
+
 - [ ] Exercise
 - [ ] Meditation
 - [ ] Review goals
 
 ## Today's Focus
+
 [[Project Alpha]] - Complete design mockups
 
 ## Notes & Thoughts
 
-
 ## Grateful For
-1. 
-2. 
-3. 
+
+1.
+2.
+3.
 
 ## Tomorrow
-- [ ] 
+
+- [ ]
 
 ---
+
 [[{{date-1}}|← Yesterday]] | [[{{date+1}}|Tomorrow →]]
 ```
 
@@ -803,12 +819,14 @@ Weekly: [[2024-W05]]
 **Category**: #writing/blog
 
 ## Outline
+
 1. Introduction
 2. My Workflow
 3. Tips and Tricks
 4. Conclusion
 
 ## Related Notes
+
 - [[Obsidian Tips]]
 - [[Writing Process]]
 - [[Content Strategy]]
@@ -818,6 +836,7 @@ Weekly: [[2024-W05]]
 [Write here...]
 
 ## SEO
+
 - Keywords: Obsidian, note-taking, PKM
 - Meta description:
 ```
@@ -834,21 +853,24 @@ Weekly: [[2024-W05]]
 **Type**: #meeting/team
 
 ## Agenda
-1. 
-2. 
-3. 
+
+1.
+2.
+3.
 
 ## Discussion
 
-
 ## Decisions Made
-- 
+
+-
 
 ## Action Items
+
 - [ ] @person1 - Task 1 #task #due/2024-02-10
 - [ ] @person2 - Task 2 #task #due/2024-02-12
 
 ## Follow-up
+
 Next meeting: [[2024-02-15]]
 Related: [[Project Alpha]]
 ```
@@ -868,24 +890,26 @@ Related: [[Project Alpha]]
 
 ## Summary
 
-
 ## Key Takeaways
-1. 
-2. 
-3. 
+
+1.
+2.
+3.
 
 ## Quotes
+
 > "Quote here" - Page 42
 
 ## My Thoughts
 
-
 ## Related
+
 - Similar books: [[Book 1]], [[Book 2]]
 - Related topics: [[Topic 1]], [[Topic 2]]
 
 ## References
-- Website: 
+
+- Website:
 - ISBN:
 ```
 
@@ -903,19 +927,21 @@ Related: [[Project Alpha]]
 **Servings**: 4
 
 ## Ingredients
-- 
-- 
-- 
+
+-
+-
+-
 
 ## Instructions
-1. 
-2. 
-3. 
+
+1.
+2.
+3.
 
 ## Notes
 
-
 ## Related Recipes
+
 [[Recipe 1]], [[Recipe 2]]
 
 **Source**: [[Cookbook Name]] or [Website](url)
@@ -929,20 +955,24 @@ Related: [[Project Alpha]]
 # 2024 Goals
 
 ## Health #goal/health
+
 - [ ] Exercise 3x per week
 - [ ] Meditate daily
 - [ ] Read 24 books
 
 ## Career #goal/career
+
 - [ ] Learn [[Python]]
 - [ ] Complete [[Certification X]]
 - [ ] Start side project
 
 ## Personal #goal/personal
+
 - [ ] Travel to 3 new places
 - [ ] Learn to play guitar
 
 ## Progress
+
 - Q1: [[2024-Q1 Review]]
 - Q2: [[2024-Q2 Review]]
 - Q3: [[2024-Q3 Review]]
@@ -964,20 +994,24 @@ Monthly: [[2024-01]], [[2024-02]], [[2024-03]]
 **Progress**: 40%
 
 ## Modules
+
 - [x] Module 1: [[Module 1 Notes]]
 - [x] Module 2: [[Module 2 Notes]]
 - [ ] Module 3: [[Module 3 Notes]]
 
 ## Key Concepts
+
 - [[Concept 1]]
 - [[Concept 2]]
 - [[Concept 3]]
 
 ## Practice Projects
+
 - [ ] Project 1
 - [ ] Project 2
 
 ## Resources
+
 - [Course Link](url)
 - [[Related Books]]
 - [[Related Articles]]
@@ -1106,18 +1140,18 @@ git push -u origin main
 
 ### Comparison Table
 
-|Feature|Obsidian|Notion|Evernote|OneNote|Roam Research|
-|---|---|---|---|---|---|
-|**Local Files**|✓|✗|✗|✗|✗|
-|**Markdown**|✓|Partial|✗|✗|✓|
-|**Offline**|✓|Limited|Limited|Limited|✗|
-|**Bidirectional Links**|✓|✓|✗|✗|✓|
-|**Graph View**|✓|✗|✗|✗|✓|
-|**Free Version**|✓ (Full)|✓ (Limited)|✓ (Limited)|✓|✗|
-|**Plugins**|1000+|Limited|✗|✗|Limited|
-|**Price**|Free*|$4-10/mo|$8-10/mo|Free|$15/mo|
-|**Privacy**|High|Medium|Medium|Medium|Medium|
-|**Learning Curve**|Steep|Medium|Easy|Easy|Steep|
+| Feature                 | Obsidian | Notion      | Evernote    | OneNote | Roam Research |
+| ----------------------- | -------- | ----------- | ----------- | ------- | ------------- |
+| **Local Files**         | ✓        | ✗           | ✗           | ✗       | ✗             |
+| **Markdown**            | ✓        | Partial     | ✗           | ✗       | ✓             |
+| **Offline**             | ✓        | Limited     | Limited     | Limited | ✗             |
+| **Bidirectional Links** | ✓        | ✓           | ✗           | ✗       | ✓             |
+| **Graph View**          | ✓        | ✗           | ✗           | ✗       | ✓             |
+| **Free Version**        | ✓ (Full) | ✓ (Limited) | ✓ (Limited) | ✓       | ✗             |
+| **Plugins**             | 1000+    | Limited     | ✗           | ✗       | Limited       |
+| **Price**               | Free*    | $4-10/mo    | $8-10/mo    | Free    | $15/mo        |
+| **Privacy**             | High     | Medium      | Medium      | Medium  | Medium        |
+| **Learning Curve**      | Steep    | Medium      | Easy        | Easy    | Steep         |
 
 *Optional paid features: Sync ($4/mo), Publish ($8/mo)
 
@@ -1253,22 +1287,24 @@ git push -u origin main
 ### Community Resources
 
 1. **Reddit**: r/ObsidianMD
-    
+
 2. **YouTube Channels**:
-    
-    - Linking Your Thinking (Nick Milo)
-    - Bryan Jenks
-    - Nicole van der Hoeven
-    - Shu Omi
+
+   - Linking Your Thinking (Nick Milo)
+   - Bryan Jenks
+   - Nicole van der Hoeven
+   - Shu Omi
+
 3. **Courses**:
-    
-    - Linking Your Thinking
-    - The Effortless Academic
-    - Building a Second Brain (Tiago Forte)
+
+   - Linking Your Thinking
+   - The Effortless Academic
+   - Building a Second Brain (Tiago Forte)
+
 4. **Websites**:
-    
-    - obsidian.rocks
-    - obsidianroundup.org
+
+   - obsidian.rocks
+   - obsidianroundup.org
 
 ### Plugin Development
 
@@ -1339,4 +1375,3 @@ Your future self will thank you for building this external brain. 🧠
 Remember: The best time to start was yesterday. The second-best time is now! 🚀
 
 **Happy noting!** ✨
-

@@ -137,11 +137,11 @@ An annual hackathon structured around the United Nations' Sustainable Developmen
 
 Salaries in the Sri Lankan IT sector have shifted significantly due to demand for remote-ready talent. Figures below are for junior to mid-level developers at local companies, in LKR per month:
 
-|Role|Junior (0–2 yrs)|Mid-Level (3–5 yrs)|
-|---|---|---|
-|Frontend Developer|LKR 100,000 – 180,000|LKR 250,000 – 450,000|
-|Backend Developer|LKR 110,000 – 200,000|LKR 300,000 – 550,000|
-|Full Stack Developer|LKR 130,000 – 230,000|LKR 350,000 – 650,000|
+| Role                 | Junior (0–2 yrs)      | Mid-Level (3–5 yrs)   |
+| -------------------- | --------------------- | --------------------- |
+| Frontend Developer   | LKR 100,000 – 180,000 | LKR 250,000 – 450,000 |
+| Backend Developer    | LKR 110,000 – 200,000 | LKR 300,000 – 550,000 |
+| Full Stack Developer | LKR 130,000 – 230,000 | LKR 350,000 – 650,000 |
 
 Backend roles carry a 10–15% premium because they involve database architecture and server security — areas companies treat as high-risk responsibilities. A developer who can do both front and back is the most cost-effective hire for a small or mid-sized company.
 
@@ -155,20 +155,20 @@ Freelancing is where web development pays the most for a student, because you ca
 
 **Hourly rates (global market):**
 
-|Level|USD per hour|LKR equivalent|
-|---|---|---|
-|Junior (1–2 yrs experience)|$15 – $30|LKR 4,500 – 9,000|
-|Intermediate|$30 – $60|LKR 9,000 – 18,000|
-|Expert|$60 – $120+|LKR 18,000 – 36,000+|
+| Level                       | USD per hour | LKR equivalent       |
+| --------------------------- | ------------ | -------------------- |
+| Junior (1–2 yrs experience) | $15 – $30    | LKR 4,500 – 9,000    |
+| Intermediate                | $30 – $60    | LKR 9,000 – 18,000   |
+| Expert                      | $60 – $120+  | LKR 18,000 – 36,000+ |
 
 **Project-based rates (local and regional market):**
 
-|Project type|LKR range|
-|---|---|
-|Simple landing page / portfolio|50,000 – 120,000|
-|Business website (5–10 pages)|80,000 – 200,000|
-|Professional e-commerce site|150,000 – 400,000|
-|Custom management system (school, clinic, inventory)|450,000 – 1,200,000+|
+| Project type                                         | LKR range            |
+| ---------------------------------------------------- | -------------------- |
+| Simple landing page / portfolio                      | 50,000 – 120,000     |
+| Business website (5–10 pages)                        | 80,000 – 200,000     |
+| Professional e-commerce site                         | 150,000 – 400,000    |
+| Custom management system (school, clinic, inventory) | 450,000 – 1,200,000+ |
 
 The last row is the most important for a student who has already built something like a library or school management system. A client hiring for that kind of project normally needs to pay three people separately: a UI designer, a frontend developer, and a backend developer. A full-stack student who can do all three gets a higher single fee — and the experience of running a real project from requirements to delivery.
 
@@ -210,13 +210,13 @@ Option 2 wins almost every time for small and medium projects. That single devel
 
 This is not a commitment — it is a reference. Adapt it to your own pace.
 
-|Phase|What to focus on|What you can enter or ship|
-|---|---|---|
-|Months 1–3|HTML, CSS fundamentals, basic JavaScript|Personal portfolio site|
-|Months 4–6|DOM manipulation, responsive design, Git|Enter a local school hackathon|
-|Months 7–12|Node.js or a backend framework, databases, REST APIs|Build a real tool for your school|
-|Year 2|Full-stack project from scratch, deployment, version control|Enter Devthon (School Category), SLIIT Codefest|
-|Year 3+|Security fundamentals, auth, open source contributions|Freelance first clients, NASA Space Apps, BestWeb.LK|
+| Phase       | What to focus on                                             | What you can enter or ship                           |
+| ----------- | ------------------------------------------------------------ | ---------------------------------------------------- |
+| Months 1–3  | HTML, CSS fundamentals, basic JavaScript                     | Personal portfolio site                              |
+| Months 4–6  | DOM manipulation, responsive design, Git                     | Enter a local school hackathon                       |
+| Months 7–12 | Node.js or a backend framework, databases, REST APIs         | Build a real tool for your school                    |
+| Year 2      | Full-stack project from scratch, deployment, version control | Enter Devthon (School Category), SLIIT Codefest      |
+| Year 3+     | Security fundamentals, auth, open source contributions       | Freelance first clients, NASA Space Apps, BestWeb.LK |
 
 ---
 
@@ -228,4 +228,4 @@ The students who start early are the ones who enter university already employabl
 
 Web development is not a distraction from serious computer science. It is the proof that you can do it.
 
---- 
+---

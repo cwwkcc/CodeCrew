@@ -1,5 +1,5 @@
-
 ---
+
 ## The Golden Rule
 
 ```

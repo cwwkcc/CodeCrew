@@ -35,17 +35,17 @@ Markdown is everywhere in the developer world. Understanding it is not optional 
 
 You already know HTML. Markdown covers the same basic ground — but is designed for humans to write quickly, not for machines to parse precisely.
 
-|Purpose|HTML|Markdown|
-|---|---|---|
-|Heading|`<h1>Title</h1>`|`# Title`|
-|Bold|`<strong>text</strong>`|`**text**`|
-|Italic|`<em>text</em>`|`*text*`|
-|Link|`<a href="url">text</a>`|`[text](url)`|
-|List item|`<li>item</li>`|`- item`|
-|Image|`<img src="..." alt="...">`|`![alt](url)`|
-|Code|`<code>text</code>`|`` `text` ``|
-|Blockquote|`<blockquote>text</blockquote>`|`> text`|
-|Horizontal rule|`<hr>`|`---`|
+| Purpose         | HTML                            | Markdown      |
+| --------------- | ------------------------------- | ------------- |
+| Heading         | `<h1>Title</h1>`                | `# Title`     |
+| Bold            | `<strong>text</strong>`         | `**text**`    |
+| Italic          | `<em>text</em>`                 | `*text*`      |
+| Link            | `<a href="url">text</a>`        | `[text](url)` |
+| List item       | `<li>item</li>`                 | `- item`      |
+| Image           | `<img src="..." alt="...">`     | `![alt](url)` |
+| Code            | `<code>text</code>`             | `` `text` ``  |
+| Blockquote      | `<blockquote>text</blockquote>` | `> text`      |
+| Horizontal rule | `<hr>`                          | `---`         |
 
 **Markdown is not a replacement for HTML.** Markdown gets converted _into_ HTML behind the scenes. It is a shorthand for writing the most common HTML elements quickly.
 
@@ -59,10 +59,15 @@ Use `#` symbols. The number of `#` symbols matches the heading level.
 
 ```markdown
 # Heading 1
+
 ## Heading 2
+
 ### Heading 3
+
 #### Heading 4
+
 ##### Heading 5
+
 ###### Heading 6
 ```
 
@@ -78,8 +83,8 @@ Use `#` symbols. The number of `#` symbols matches the heading level.
 
 ```markdown
 **Bold text**
-*Italic text*
-***Bold and italic***
+_Italic text_
+_**Bold and italic**_
 ~~Strikethrough~~
 ```
 
@@ -177,7 +182,8 @@ The alt text in `[]` works exactly like the `alt` attribute in HTML `<img>` — 
 > They will be grouped together.
 
 > You can also nest blockquotes.
->> This is a nested blockquote.
+>
+> > This is a nested blockquote.
 ```
 
 Use blockquotes for:
@@ -238,7 +244,7 @@ Use it to separate major sections of a document. Three or more hyphens, asterisk
 
 ```markdown
 | Column 1 | Column 2 | Column 3 |
-|----------|----------|----------|
+| -------- | -------- | -------- |
 | Cell     | Cell     | Cell     |
 | Cell     | Cell     | Cell     |
 ```
@@ -246,9 +252,9 @@ Use it to separate major sections of a document. Three or more hyphens, asterisk
 **Column alignment**:
 
 ```markdown
-| Left     | Center   | Right    |
-|:---------|:--------:|---------:|
-| text     | text     | text     |
+| Left | Center | Right |
+| :--- | :----: | ----: |
+| text |  text  |  text |
 ```
 
 - `:---` — left align (default)
@@ -344,8 +350,9 @@ When writing Markdown for a specific platform, check what that platform supports
 ❌ **Missing space after `#`**
 
 ```markdown
-#Heading    ✗
-# Heading   ✓
+#Heading ✗
+
+# Heading ✓
 ```
 
 ---
@@ -354,11 +361,12 @@ When writing Markdown for a specific platform, check what that platform supports
 
 ```markdown
 Some paragraph text.
-- Item one        ✗
+
+- Item one ✗
 
 Some paragraph text.
 
-- Item one        ✓
+- Item one ✓
 ```
 
 ---
@@ -367,10 +375,12 @@ Some paragraph text.
 
 ```markdown
 # Title
-### Section    ✗
+
+### Section ✗
 
 # Title
-## Section     ✓
+
+## Section ✓
 ```
 
 ---
@@ -379,37 +389,38 @@ Some paragraph text.
 
 ```markdown
 - Item one
-* Item two     ✗ (inconsistent)
+
+* Item two ✗ (inconsistent)
 
 - Item one
-- Item two     ✓
+- Item two ✓
 ```
 
 ---
 
 ## Quick Reference Card
 
-|Element|Syntax|
-|---|---|
-|Heading 1|`# Text`|
-|Heading 2|`## Text`|
-|Heading 3|`### Text`|
-|Bold|`**Text**`|
-|Italic|`*Text*`|
-|Bold + Italic|`***Text***`|
-|Strikethrough|`~~Text~~`|
-|Unordered list|`- Item`|
-|Ordered list|`1. Item`|
-|Task list|`- [ ] Item`|
-|Link|`[Text](url)`|
-|Image|`![Alt](url)`|
-|Inline code|`` `code` ``|
-|Code block|` ```lang `|
-|Blockquote|`> Text`|
-|Horizontal rule|`---`|
-|Table|`\| Col \| Col \|`|
-|Internal link|`[[Note]]`|
-|Embed|`![[Note]]`|
+| Element         | Syntax             |
+| --------------- | ------------------ |
+| Heading 1       | `# Text`           |
+| Heading 2       | `## Text`          |
+| Heading 3       | `### Text`         |
+| Bold            | `**Text**`         |
+| Italic          | `*Text*`           |
+| Bold + Italic   | `***Text***`       |
+| Strikethrough   | `~~Text~~`         |
+| Unordered list  | `- Item`           |
+| Ordered list    | `1. Item`          |
+| Task list       | `- [ ] Item`       |
+| Link            | `[Text](url)`      |
+| Image           | `![Alt](url)`      |
+| Inline code     | `` `code` ``       |
+| Code block      | ` ```lang `        |
+| Blockquote      | `> Text`           |
+| Horizontal rule | `---`              |
+| Table           | `\| Col \| Col \|` |
+| Internal link   | `[[Note]]`         |
+| Embed           | `![[Note]]`        |
 
 ---
 
