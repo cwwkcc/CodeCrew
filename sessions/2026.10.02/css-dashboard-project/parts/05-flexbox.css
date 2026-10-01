@@ -1,0 +1,26 @@
+/* STAGE 5 — FLEXBOX (module 07)
+   Teach: the top bar, user chip, bar chart (align-items: flex-end), list rows (space-between), centering the donut text.
+   Break it: change .bars align-items to center, then to flex-start. */
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.user { display: flex; align-items: center; gap: 0.75rem; }
+.sidebar { display: flex; flex-direction: column; }
+.menu { display: flex; flex-direction: column; gap: 0.25rem; }
+
+.bars { display: flex; align-items: flex-end; gap: 0.75rem; }
+.bar { flex: 1; }
+
+.donut { display: flex; align-items: center; justify-content: center; }
+.panel-donut { display: flex; flex-direction: column; align-items: center; }
+.panel-donut h2 { align-self: flex-start; }
+
+.progress-list { display: flex; flex-direction: column; gap: 1.25rem; }
+.progress-head { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.tasks li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
+.tasks li:last-child { border-bottom: 0; }
+
+/* + FEATURES */
+.topbar .switch { margin-left: auto; }
+.check { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+.event { display: flex; flex-direction: column; justify-content: center; }
+.heat-legend { display: flex; align-items: center; gap: 0.25rem; margin-top: 0.9rem; }
+.heat-legend i { width: 0.9rem; }

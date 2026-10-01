@@ -1,0 +1,33 @@
+/* STAGE 6 — GRID (module 08)
+   Teach: grid-template-areas for the whole app shell, auto-fit + minmax for stat cards, a 12-column dashboard with span.
+   Break it: swap "sidebar topbar" for "topbar sidebar" in the areas, then change a panel's span. */
+.app {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "sidebar topbar" "sidebar content";
+  min-height: 100vh;
+}
+.sidebar { grid-area: sidebar; }
+.topbar { grid-area: topbar; }
+.content { grid-area: content; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
+.panels { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
+.stat, .panel { margin-bottom: 0; }
+
+.panel-chart { grid-column: span 7; }
+.panel-donut { grid-column: span 5; }
+.panel-subjects { grid-column: span 5; }
+.panel-tasks { grid-column: span 7; }
+.panel-table { grid-column: span 12; }
+
+/* + FEATURES: timetable with grid lines driven by custom properties, heatmap that fills column by column. */
+.panel-schedule { grid-column: span 7; }
+.panel-heat { grid-column: span 5; }
+
+.timetable { display: grid; grid-template-columns: 3.5rem 1fr; grid-template-rows: repeat(5, 3rem); gap: 0.25rem 0.75rem; }
+.hour { grid-column: 1; }
+.event { grid-column: 2; grid-row: var(--start) / span var(--span); }
+
+.heat { display: grid; grid-template-rows: repeat(7, auto); grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; }

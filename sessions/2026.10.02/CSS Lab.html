@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>CSS Lab</title>
+<style>
+:root {
+  color-scheme: light dark;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: light-dark(#f4f6fa, #0e1320);
+  --card: light-dark(#ffffff, #171f33);
+  --text: light-dark(#18202e, #e6eaf4);
+  --muted: light-dark(#5c6882, #9aa6c2);
+  --line: light-dark(#d9deea, #2a3552);
+  --accent: light-dark(#2f5bea, #6f8dff);
+  --code-bg: light-dark(#10172a, #0a0f1d);
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: inherit; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.2rem); }
+.sub { margin: 4px 0 20px; color: var(--muted); }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.tabs button { font: inherit; font-weight: 600; padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--text); cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.lab { display: grid; grid-template-columns: 280px 1fr; gap: 16px; }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+.controls { display: grid; gap: 14px; align-content: start; }
+.controls label { display: grid; gap: 4px; font-size: 0.9rem; font-weight: 600; }
+.controls output { float: right; color: var(--accent); font-family: ui-monospace, Menlo, monospace; }
+.controls .chk { display: flex; gap: 8px; align-items: center; }
+select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+.right { display: grid; gap: 16px; min-width: 0; }
+.stage { overflow: auto; min-height: 120px; }
+pre { margin: 0; padding: 14px; border-radius: 10px; background: var(--code-bg); color: #d6e2ff; font: 0.85rem/1.5 ui-monospace, Menlo, monospace; overflow-x: auto; }
+.hint { margin: 0; padding: 12px 14px; border-left: 4px solid var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); border-radius: 0 10px 10px 0; font-weight: 600; }
+.notes { margin: 0; padding-left: 1.2rem; color: var(--muted); }
+.notes li { margin-bottom: 4px; }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.8rem; margin-bottom: 10px; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+.chip { padding: 6px 10px; background: light-dark(#e7ebf4, #26304d); border-radius: 6px; font-size: 0.8rem; color: var(--muted); }
+.t-box { background: linear-gradient(#93c5fd, #93c5fd), linear-gradient(#86efac, #86efac); background-origin: content-box, padding-box; background-clip: content-box, padding-box; color: #10223f; font-weight: 700; min-height: 40px; }
+.pos-demo { position: relative; padding: 30px; border: 2px dotted var(--line); border-radius: 10px; }
+.pos-demo::before { content: "outer page box (position: relative)"; position: absolute; top: 6px; left: 10px; font-size: 0.7rem; color: var(--muted); }
+.pos-parent { height: 190px; overflow: auto; border: 2px dashed var(--accent); border-radius: 8px; padding: 10px; display: grid; gap: 8px; align-content: start; }
+.tall { height: 300px; background: repeating-linear-gradient(45deg, transparent 0 10px, var(--line) 10px 11px); border-radius: 6px; color: var(--muted); font-size: 0.8rem; padding: 6px; }
+.t-pos, .it { background: #cbd5e1; color: #10223f; border-radius: 6px; padding: 10px; font-weight: 700; text-align: center; }
+.t-pos.on, .it.target { background: #fbbf24; }
+.fx, .gx { border: 2px dashed var(--line); border-radius: 10px; padding: 8px; }
+.fx { height: 230px; }
+.fx .it { min-width: 48px; }
+.gx { grid-auto-rows: 64px; }
+@media (max-width: 760px) { .lab { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>CSS Lab</h1>
+  <p class="sub">Move a control. Watch the element. Read the CSS it writes.</p>
+  <div class="tabs" id="tabs" role="tablist"></div>
+  <div class="lab">
+    <div class="panel controls" id="controls"></div>
+    <div class="right">
+      <div class="panel stage" id="stage"></div>
+      <pre id="code"></pre>
+      <p class="hint" id="hint"></p>
+      <div class="panel"><strong>What to notice</strong><ul class="notes" id="notes"></ul></div>
+    </div>
+  </div>
+</div>
+<script>
+const R = (k, min, max, val, unit = 'px', l) => ({ k, t: 'range', min, max, val, unit, l });
+const S = (k, opts, l) => ({ k, t: 'select', opts, val: opts[0], l });
+const C = (k, l, val = false) => ({ k, t: 'check', val, l });
+
+const LABS = [
+{
+  id: 'box', name: 'Box model',
+  controls: [R('width', 80, 280, 180), R('padding', 0, 60, 20), R('border', 0, 24, 6), R('margin', 0, 48, 16), S('box-sizing', ['content-box', 'border-box'])],
+  stage: v => `<div class="legend"><span><i style="background:#93c5fd"></i>content</span><span><i style="background:#86efac"></i>padding</span><span><i style="background:#f59e0b"></i>border</span><span><i style="background:rgba(249,115,22,.35)"></i>margin</span></div>
+    <div class="chip">sibling above</div>
+    <div class="t-box" style="width:${v.width}px;padding:${v.padding}px;border:${v.border}px solid #f59e0b;margin:${v.margin}px;box-sizing:${v['box-sizing']};outline:${v.margin}px solid rgba(249,115,22,.3)">content</div>
+    <div class="chip">sibling below</div>`,
+  css: v => `.box {\n  width: ${v.width}px;\n  padding: ${v.padding}px;\n  border: ${v.border}px solid;\n  margin: ${v.margin}px;\n  box-sizing: ${v['box-sizing']};\n}`,
+  hint: v => { const b = v['box-sizing'] === 'border-box', t = b ? v.width : v.width + 2 * v.padding + 2 * v.border;
+    return `The visible box is ${t}px wide (${b ? 'width already includes padding and border' : `${v.width} + ${2 * v.padding} padding + ${2 * v.border} border`}). With margin it takes ${t + 2 * v.margin}px.`; },
+  notes: ['Switch box-sizing and watch the total width. This is why every project starts with box-sizing: border-box.', 'Margin is drawn outside the border and never has a background. It only pushes other things away.', 'Padding is inside the border and shows the background. Raise it and the content stays the same size.']
+},
+{
+  id: 'pos', name: 'Position',
+  controls: [S('position', ['static', 'relative', 'absolute', 'sticky']), R('top', 0, 120, 0), R('left', 0, 160, 0), C('parentRelative', 'Dashed parent has position: relative')],
+  stage: v => `<div class="pos-demo"><div class="pos-parent" style="position:${v.parentRelative ? 'relative' : 'static'}">
+    <div class="chip">A (normal)</div>
+    <div class="t-pos on" style="position:${v.position};top:${v.top}px;left:${v.left}px">B (target)</div>
+    <div class="chip">C (normal)</div><div class="tall">scroll inside the dashed box</div></div></div>`,
+  css: v => (v.parentRelative ? '.parent { position: relative; }\n' : '') + `.box {\n  position: ${v.position};` + (v.position === 'static' ? '\n}' : `\n  top: ${v.top}px;\n  left: ${v.left}px;\n}`),
+  hint: v => ({ static: 'static is the default. top and left are ignored completely.',
+    relative: 'relative: B shifts away from its normal spot, but its old space stays reserved. C does not move up.',
+    absolute: v.parentRelative ? 'absolute: B leaves the flow (C moves up) and top/left measure from the dashed parent.' : 'The dashed parent is not positioned, so B ignores it and measures from the outer dotted box. Tick the checkbox and watch it jump.',
+    sticky: `sticky: scroll inside the dashed box. B behaves like normal until it reaches top: ${v.top}px, then sticks.` })[v.position],
+  notes: ['absolute looks for the nearest ancestor that is positioned. That is why parents get position: relative.', 'relative is often used just to become that anchor. It does not have to move anything.', 'sticky is how the navbar in a real site stays at the top while you scroll.']
+},
+{
+  id: 'flex', name: 'Flexbox',
+  controls: [S('flex-direction', ['row', 'row-reverse', 'column', 'column-reverse']), S('justify-content', ['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly']), S('align-items', ['stretch', 'flex-start', 'center', 'flex-end', 'baseline']), S('flex-wrap', ['nowrap', 'wrap']), R('gap', 0, 32, 8), R('flex-grow', 0, 3, 0, '', 'flex-grow (item 3)'), S('align-self', ['auto', 'flex-start', 'center', 'flex-end', 'stretch'], 'align-self (item 3)')],
+  stage: v => `<div class="fx" style="display:flex;flex-direction:${v['flex-direction']};justify-content:${v['justify-content']};align-items:${v['align-items']};flex-wrap:${v['flex-wrap']};gap:${v.gap}px">${[1, 2, 2, 3, 1].map((n, i) => `<div class="it${i === 2 ? ' target' : ''}" ${i === 2 ? `style="flex-grow:${v['flex-grow']};align-self:${v['align-self']}"` : ''}>${Array(n).fill(i + 1).join('<br>')}</div>`).join('')}</div>`,
+  css: v => `.container {\n  display: flex;\n  flex-direction: ${v['flex-direction']};\n  justify-content: ${v['justify-content']};\n  align-items: ${v['align-items']};\n  flex-wrap: ${v['flex-wrap']};\n  gap: ${v.gap}px;\n}\n.item-3 {\n  flex-grow: ${v['flex-grow']};\n  align-self: ${v['align-self']};\n}`,
+  hint: v => { const row = v['flex-direction'].startsWith('row'); return `Main axis is ${row ? 'horizontal' : 'vertical'}. justify-content spreads items along it. align-items works on the ${row ? 'vertical' : 'horizontal'} cross axis.`; },
+  notes: ['Change flex-direction to column. justify-content and align-items swap roles because the axes swap.', 'Raise flex-grow on item 3 and it takes the leftover space. Items without it keep their size.', 'align-self lets one item break the container rule. Try center on item 3 while the rest stretch.']
+},
+{
+  id: 'grid', name: 'Grid',
+  controls: [S('grid-template-columns', ['repeat(3, 1fr)', '1fr 2fr 1fr', '200px 1fr', 'repeat(auto-fit, minmax(90px, 1fr))']), R('gap', 0, 32, 10), S('justify-items', ['stretch', 'start', 'center', 'end']), S('align-items', ['stretch', 'start', 'center', 'end']), R('span', 1, 3, 1, '', 'item 1 spans columns')],
+  stage: v => `<div class="gx" style="display:grid;grid-template-columns:${v['grid-template-columns']};gap:${v.gap}px;justify-items:${v['justify-items']};align-items:${v['align-items']}">${[1, 2, 3, 4, 5, 6, 7].map((n, i) => `<div class="it${i === 0 ? ' target' : ''}" ${i === 0 ? `style="grid-column:span ${v.span}"` : ''}>${n}</div>`).join('')}</div>`,
+  css: v => `.container {\n  display: grid;\n  grid-template-columns: ${v['grid-template-columns']};\n  gap: ${v.gap}px;\n  justify-items: ${v['justify-items']};\n  align-items: ${v['align-items']};\n}\n.item-1 {\n  grid-column: span ${v.span};\n}`,
+  hint: v => v['grid-template-columns'].includes('auto-fit') ? 'auto-fit makes as many 90px+ columns as fit. Resize the window and the column count changes with no media query.' : 'Grid works in rows and columns together. 1fr means one share of the free space, so 1fr 2fr 1fr gives the middle column double.',
+  notes: ['Flexbox lays things in one direction. Grid controls rows and columns at the same time.', 'Items fill the cells in order. Setting span lets one item cover several columns.', 'justify-items works along the row, align-items along the column. Both only show when items are smaller than their cell.']
+}];
+
+const state = {}; let cur = 0;
+const $ = id => document.getElementById(id);
+const tabs = $('tabs');
+LABS.forEach((L, i) => { const b = document.createElement('button'); b.textContent = L.name; b.setAttribute('role', 'tab'); b.onclick = () => { cur = i; show(); }; tabs.append(b); });
+
+function show() {
+  const L = LABS[cur];
+  state[L.id] ||= Object.fromEntries(L.controls.map(c => [c.k, c.val]));
+  [...tabs.children].forEach((b, i) => b.setAttribute('aria-selected', i === cur));
+  $('controls').innerHTML = L.controls.map(c => {
+    const l = c.l || c.k, v = state[L.id][c.k];
+    if (c.t === 'range') return `<label>${l} <output>${v}${c.unit}</output><input type="range" data-k="${c.k}" min="${c.min}" max="${c.max}" value="${v}"></label>`;
+    if (c.t === 'select') return `<label>${l}<select data-k="${c.k}">${c.opts.map(o => `<option${o === v ? ' selected' : ''}>${o}</option>`).join('')}</select></label>`;
+    return `<label class="chk"><input type="checkbox" data-k="${c.k}"${v ? ' checked' : ''}> ${l}</label>`;
+  }).join('');
+  $('notes').innerHTML = L.notes.map(n => `<li>${n}</li>`).join('');
+  draw();
+}
+function draw() {
+  const L = LABS[cur], v = state[L.id];
+  $('stage').innerHTML = L.stage(v);
+  $('code').textContent = L.css(v);
+  $('hint').textContent = L.hint(v);
+}
+$('controls').addEventListener('input', e => {
+  const el = e.target, k = el.dataset.k; if (!k) return;
+  const c = LABS[cur].controls.find(x => x.k === k);
+  const val = c.t === 'check' ? el.checked : c.t === 'range' ? +el.value : el.value;
+  state[LABS[cur].id][k] = val;
+  if (c.t === 'range') el.previousElementSibling.textContent = val + c.unit;
+  draw();
+});
+show();
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+/* STAGE 8 — PSEUDO-CLASSES & PSEUDO-ELEMENTS (module 14)
+   Teach: :hover, :focus-within, :nth-child, :last-child, ::before for the donut hole and menu dots, ::after with attr() for tooltips.
+   Break it: change the donut hole inset from 20px to 40px, or stripe every 3rd table row. */
+.menu a:hover:not(.active) { background: rgb(255 255 255 / 0.08); color: #fff; }
+.menu a::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 0.75rem; border-radius: 50%; background: currentColor; opacity: 0.6; }
+
+.search:focus-within input { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgb(15 157 122 / 0.25); }
+
+.donut::before { content: ""; position: absolute; inset: 20px; border-radius: 50%; background: var(--card-bg); }
+
+.bar::after {
+  content: attr(data-value);
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+  margin-bottom: 0.4rem; padding: 0.15rem 0.5rem; border-radius: 6px;
+  background: var(--ink); color: #fff; font-size: 0.75rem; white-space: nowrap; opacity: 0;
+}
+.bar:hover::after { opacity: 1; }
+
+.table tbody tr:nth-child(even) { background: color-mix(in srgb, var(--bg-alt) 45%, transparent); }
+.table tbody tr:hover { background: var(--bg-alt); }
+.table td:last-child { font-weight: 700; }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* + FEATURES: styled checkbox (appearance none + ::after tick), :checked, :has(), switch states. */
+.check input { appearance: none; display: grid; place-items: center; flex-shrink: 0; width: 1.25rem; height: 1.25rem; margin: 0; border: 2px solid var(--muted); border-radius: 6px; }
+.check input::after { content: ""; width: 0.6rem; height: 0.3rem; margin-top: -2px; border: solid var(--on-primary); border-width: 0 0 2px 2px; transform: rotate(-45deg) scale(0); }
+.check input:checked { background: var(--primary); border-color: var(--primary); }
+.check input:checked::after { transform: rotate(-45deg) scale(1); }
+.check input:checked + .task-name { text-decoration: line-through; color: var(--muted); }
+.tasks li:has(input:checked) .pill { opacity: 0.45; }
+
+.switch input:checked + .track { background: var(--primary); }
+.switch input:checked + .track::after { transform: translateX(20px); }
+.switch input:focus-visible + .track, .check input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }

@@ -1,0 +1,19 @@
+/* STAGE 1 — THE BOX MODEL (module 02)
+   Teach: padding / border / margin, box-sizing, why every panel is "a box inside a box". DevTools box diagram.
+   Break it: set .content padding to 0, then 100px. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+ul { list-style: none; margin: 0; padding: 0; }
+h1, h2, p { margin: 0; }
+
+.sidebar { padding: 24px; }
+.topbar { padding: 16px 32px; }
+.content { padding: 32px; }
+.menu a { display: block; padding: 12px 16px; border-radius: 10px; }
+
+.stat, .panel { padding: 24px; border: 1px solid #ddd; border-radius: 14px; margin-bottom: 24px; }
+.panel h2 { margin-bottom: 16px; }
+.search input { width: 320px; padding: 10px 16px; border: 1px solid #ccc; border-radius: 999px; }
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td { padding: 12px; }
+.pill { display: inline-block; padding: 4px 12px; border-radius: 999px; }

@@ -1,0 +1,18 @@
+/* STAGE 10 — ANIMATIONS (module 11)
+   Teach: @keyframes, animation-delay with calc(var(--i) * ...), "both" fill mode, prefers-reduced-motion.
+   One moment only: the dashboard "draws itself" on load (bars grow in sequence, progress bars fill).
+   Break it: change --i * 70ms to --i * 300ms to see the stagger clearly. */
+@keyframes grow { from { height: 0; } }
+@keyframes fill { from { width: 0; } }
+
+.bar { animation: grow 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(var(--i) * 70ms); }
+.progress-fill { animation: fill 0.9s ease-out both; animation-delay: 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* + FEATURES: @property tells the browser --p is a NUMBER, so it can animate it. The donut ring sweeps in. */
+@property --p { syntax: "<number>"; inherits: false; initial-value: 0; }
+@keyframes sweep { from { --p: 0; } }
+.donut { animation: sweep 1.2s ease-out both; }

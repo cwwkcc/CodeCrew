@@ -1,0 +1,155 @@
+/* STAGE 1 — THE BOX MODEL (module 02)
+   Teach: padding / border / margin, box-sizing, why every panel is "a box inside a box". DevTools box diagram.
+   Break it: set .content padding to 0, then 100px. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+ul { list-style: none; margin: 0; padding: 0; }
+h1, h2, p { margin: 0; }
+
+.sidebar { padding: 24px; }
+.topbar { padding: 16px 32px; }
+.content { padding: 32px; }
+.menu a { display: block; padding: 12px 16px; border-radius: 10px; }
+
+.stat, .panel { padding: 24px; border: 1px solid #ddd; border-radius: 14px; margin-bottom: 24px; }
+.panel h2 { margin-bottom: 16px; }
+.search input { width: 320px; padding: 10px 16px; border: 1px solid #ccc; border-radius: 999px; }
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td { padding: 12px; }
+.pill { display: inline-block; padding: 4px 12px; border-radius: 999px; }
+
+/* STAGE 2 — COLORS & BACKGROUNDS (module 03)
+   Teach: hex/rgb, a palette in :root (sneak peek at var()), conic-gradient for the donut, color-mix() for pills, box-shadow.
+   Break it: change --primary and watch the sidebar, bars and donut follow. */
+:root {
+  --ink: #10231f;
+  --primary: #0f9d7a;
+  --on-primary: #ffffff;
+  --accent: #f5b942;
+  --bg: #f2f6f4;
+  --bg-alt: #e4ece8;
+  --text: #16241f;
+  --muted: #5d716a;
+  --card-bg: #ffffff;
+  --border: #dbe5e0;
+  --late: #c2410c;
+  --soon: #a16207;
+  --ok: #0b7a5e;
+}
+
+body { background: var(--bg); color: var(--text); }
+.sidebar { background: var(--ink); color: #fff; }
+.topbar { background: var(--bg); border-bottom: 1px solid var(--border); }
+.menu a { color: #b6cbc4; }
+.menu a.active { background: var(--primary); color: var(--on-primary); }
+
+.stat, .panel { background: var(--card-bg); border-color: var(--border); box-shadow: 0 2px 8px rgb(16 35 31 / 0.05); }
+.stat-label, .stat-note, .subtitle { color: var(--muted); }
+.search input { background: var(--card-bg); border-color: var(--border); color: var(--text); }
+.avatar { background: var(--accent); color: var(--ink); }
+
+.bar { background: var(--primary); }
+.donut { background: conic-gradient(var(--primary) calc(var(--p) * 1%), var(--bg-alt) 0); }
+.progress { background: var(--bg-alt); }
+.progress-fill { background: var(--primary); }
+
+.pill { background: color-mix(in srgb, currentColor 14%, transparent); }
+.pill-late { color: var(--late); }
+.pill-soon { color: var(--soon); }
+.pill-ok { color: var(--ok); }
+.table th { background: var(--bg-alt); }
+
+/* + FEATURES: schedule events, streak heatmap, theme switch. color-mix() with a custom property makes 5 shades from one color. */
+.event { background: color-mix(in srgb, var(--c) 16%, var(--card-bg)); border-left: 4px solid var(--c); }
+.heat i, .heat-legend i { background: color-mix(in srgb, var(--primary) calc(var(--l) * 25%), var(--bg-alt)); }
+.track { background: var(--muted); }
+.track::after { background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 0.3); }
+
+/* STAGE 3 — TYPOGRAPHY & UNITS (modules 04 + 05)
+   Teach: font-family + fallback, rem/em/%, clamp(), font-weight, tabular-nums for numbers.
+   Break it: set html font-size to 125% and watch the whole dashboard scale. */
+html { font-size: 100%; }
+body { font-family: "DM Sans", system-ui, sans-serif; line-height: 1.5; }
+
+h1 { font-size: clamp(1.6rem, 3vw, 2.25rem); font-weight: 800; line-height: 1.15; }
+h2 { font-size: 1.125rem; font-weight: 700; }
+.subtitle { margin: 0.25rem 0 2rem; }
+.brand { font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; }
+.user-name { font-weight: 500; }
+.avatar { font-weight: 700; font-size: 0.9rem; }
+
+.stat-label { font-size: 0.9rem; }
+.stat-value { font-size: 2.25rem; font-weight: 800; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.stat-note { font-size: 0.85rem; }
+.pill { font-size: 0.8rem; font-weight: 700; }
+.table { font-size: 0.95rem; }
+.table th { text-align: left; font-weight: 700; }
+.menu a { text-decoration: none; font-weight: 500; }
+
+/* upgrade px -> rem (values from stage 1) */
+.sidebar { padding: 1.5rem; }
+.content { padding: 2rem; }
+.stat, .panel { padding: 1.5rem; margin-bottom: 1.5rem; }
+
+/* + FEATURES */
+.hour { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.event strong { font-size: 0.95rem; }
+.event span { font-size: 0.8rem; color: var(--muted); }
+.heat-legend { font-size: 0.8rem; color: var(--muted); }
+
+/* STAGE 4 — DISPLAY & POSITIONING (module 06)
+   Teach: sticky sidebar + top bar, z-index, absolute labels inside relative bars, aspect-ratio, overflow.
+   Break it: remove "position: relative" from .bar and watch the day labels escape. */
+.sidebar { position: sticky; top: 0; height: 100vh; }
+.topbar { position: sticky; top: 0; z-index: 10; }
+.brand { display: inline-block; margin-bottom: 2rem; }
+
+.avatar { width: 40px; height: 40px; border-radius: 50%; }
+
+.bars { height: 220px; margin-bottom: 2rem; }
+.bar { position: relative; height: var(--h); border-radius: 8px 8px 0 0; }
+.bar span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 0.4rem; font-size: 0.8rem; color: var(--muted); }
+
+.donut { width: 170px; aspect-ratio: 1; border-radius: 50%; position: relative; }
+.donut span { position: relative; font-size: 2rem; font-weight: 800; }
+.progress { height: 10px; border-radius: 999px; overflow: hidden; }
+.progress-fill { width: var(--w); height: 100%; }
+.table-wrap { overflow-x: auto; }
+
+/* + FEATURES: switch built from a hidden checkbox, sticky table header, aspect-ratio heat cells. */
+.switch { position: relative; display: inline-block; width: 46px; height: 26px; }
+.switch input { position: absolute; inset: 0; z-index: 1; margin: 0; opacity: 0; cursor: pointer; }
+.track { position: absolute; inset: 0; border-radius: 999px; }
+.track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; }
+
+.table-wrap { max-height: 15rem; overflow: auto; }
+.table th { position: sticky; top: 0; z-index: 1; }
+.heat i, .heat-legend i { display: block; aspect-ratio: 1; border-radius: 4px; }
+
+/* STAGE 5 — FLEXBOX (module 07)
+   Teach: the top bar, user chip, bar chart (align-items: flex-end), list rows (space-between), centering the donut text.
+   Break it: change .bars align-items to center, then to flex-start. */
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.user { display: flex; align-items: center; gap: 0.75rem; }
+.sidebar { display: flex; flex-direction: column; }
+.menu { display: flex; flex-direction: column; gap: 0.25rem; }
+
+.bars { display: flex; align-items: flex-end; gap: 0.75rem; }
+.bar { flex: 1; }
+
+.donut { display: flex; align-items: center; justify-content: center; }
+.panel-donut { display: flex; flex-direction: column; align-items: center; }
+.panel-donut h2 { align-self: flex-start; }
+
+.progress-list { display: flex; flex-direction: column; gap: 1.25rem; }
+.progress-head { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.tasks li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
+.tasks li:last-child { border-bottom: 0; }
+
+/* + FEATURES */
+.topbar .switch { margin-left: auto; }
+.check { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+.event { display: flex; flex-direction: column; justify-content: center; }
+.heat-legend { display: flex; align-items: center; gap: 0.25rem; margin-top: 0.9rem; }
+.heat-legend i { width: 0.9rem; }
+

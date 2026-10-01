@@ -1,0 +1,46 @@
+/* STAGE 2 — COLORS & BACKGROUNDS (module 03)
+   Teach: hex/rgb, a palette in :root (sneak peek at var()), conic-gradient for the donut, color-mix() for pills, box-shadow.
+   Break it: change --primary and watch the sidebar, bars and donut follow. */
+:root {
+  --ink: #10231f;
+  --primary: #0f9d7a;
+  --on-primary: #ffffff;
+  --accent: #f5b942;
+  --bg: #f2f6f4;
+  --bg-alt: #e4ece8;
+  --text: #16241f;
+  --muted: #5d716a;
+  --card-bg: #ffffff;
+  --border: #dbe5e0;
+  --late: #c2410c;
+  --soon: #a16207;
+  --ok: #0b7a5e;
+}
+
+body { background: var(--bg); color: var(--text); }
+.sidebar { background: var(--ink); color: #fff; }
+.topbar { background: var(--bg); border-bottom: 1px solid var(--border); }
+.menu a { color: #b6cbc4; }
+.menu a.active { background: var(--primary); color: var(--on-primary); }
+
+.stat, .panel { background: var(--card-bg); border-color: var(--border); box-shadow: 0 2px 8px rgb(16 35 31 / 0.05); }
+.stat-label, .stat-note, .subtitle { color: var(--muted); }
+.search input { background: var(--card-bg); border-color: var(--border); color: var(--text); }
+.avatar { background: var(--accent); color: var(--ink); }
+
+.bar { background: var(--primary); }
+.donut { background: conic-gradient(var(--primary) calc(var(--p) * 1%), var(--bg-alt) 0); }
+.progress { background: var(--bg-alt); }
+.progress-fill { background: var(--primary); }
+
+.pill { background: color-mix(in srgb, currentColor 14%, transparent); }
+.pill-late { color: var(--late); }
+.pill-soon { color: var(--soon); }
+.pill-ok { color: var(--ok); }
+.table th { background: var(--bg-alt); }
+
+/* + FEATURES: schedule events, streak heatmap, theme switch. color-mix() with a custom property makes 5 shades from one color. */
+.event { background: color-mix(in srgb, var(--c) 16%, var(--card-bg)); border-left: 4px solid var(--c); }
+.heat i, .heat-legend i { background: color-mix(in srgb, var(--primary) calc(var(--l) * 25%), var(--bg-alt)); }
+.track { background: var(--muted); }
+.track::after { background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 0.3); }

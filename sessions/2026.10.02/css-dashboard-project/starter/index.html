@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StudyFlow | Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <a class="brand" href="#">StudyFlow</a>
+      <nav>
+        <ul class="menu">
+          <li><a class="active" href="#">Overview</a></li>
+          <li><a href="#">Subjects</a></li>
+          <li><a href="#">Tasks</a></li>
+          <li><a href="#">Tests</a></li>
+          <li><a href="#">Settings</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <header class="topbar">
+      <label class="search"><input type="search" placeholder="Search subjects or tasks" /></label>
+      <label class="switch" title="Dark mode"><input type="checkbox" id="theme" aria-label="Dark mode" /><span class="track"></span></label>
+      <div class="user">
+        <span class="user-name">Your Name</span>
+        <div class="avatar">YN</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <h1>Good morning, Your Name</h1>
+      <p class="subtitle">Here is how your week is going.</p>
+
+      <section class="stats">
+        <article class="stat"><p class="stat-label">Study hours</p><p class="stat-value">18.5</p><p class="stat-note">2.5 more than last week</p></article>
+        <article class="stat"><p class="stat-label">Tasks done</p><p class="stat-value">24</p><p class="stat-note">6 still open</p></article>
+        <article class="stat"><p class="stat-label">Day streak</p><p class="stat-value">9</p><p class="stat-note">Your best so far</p></article>
+        <article class="stat"><p class="stat-label">Average score</p><p class="stat-value">82%</p><p class="stat-note">Up 4% this term</p></article>
+      </section>
+
+      <section class="panels">
+        <article class="panel panel-chart">
+          <h2>Hours per day</h2>
+          <div class="bars">
+            <div class="bar" style="--h: 45%; --i: 0" data-value="2.5h"><span>Mon</span></div>
+            <div class="bar" style="--h: 70%; --i: 1" data-value="4h"><span>Tue</span></div>
+            <div class="bar" style="--h: 55%; --i: 2" data-value="3h"><span>Wed</span></div>
+            <div class="bar" style="--h: 90%; --i: 3" data-value="5h"><span>Thu</span></div>
+            <div class="bar" style="--h: 35%; --i: 4" data-value="2h"><span>Fri</span></div>
+            <div class="bar" style="--h: 25%; --i: 5" data-value="1.5h"><span>Sat</span></div>
+            <div class="bar" style="--h: 60%; --i: 6" data-value="3.5h"><span>Sun</span></div>
+          </div>
+        </article>
+
+        <article class="panel panel-donut">
+          <h2>Syllabus covered</h2>
+          <div class="donut" style="--p: 72"><span>72%</span></div>
+        </article>
+
+        <article class="panel panel-subjects">
+          <h2>Subjects</h2>
+          <ul class="progress-list">
+            <li><div class="progress-head"><span>Mathematics</span><span>80%</span></div><div class="progress"><div class="progress-fill" style="--w: 80%"></div></div></li>
+            <li><div class="progress-head"><span>Physics</span><span>64%</span></div><div class="progress"><div class="progress-fill" style="--w: 64%"></div></div></li>
+            <li><div class="progress-head"><span>ICT</span><span>92%</span></div><div class="progress"><div class="progress-fill" style="--w: 92%"></div></div></li>
+            <li><div class="progress-head"><span>English</span><span>55%</span></div><div class="progress"><div class="progress-fill" style="--w: 55%"></div></div></li>
+          </ul>
+        </article>
+
+        <article class="panel panel-tasks">
+          <h2>Upcoming tasks</h2>
+          <ul class="tasks">
+            <li><label class="check"><input type="checkbox" /><span class="task-name">Physics worksheet</span></label><span class="pill pill-late">Due today</span></li>
+            <li><label class="check"><input type="checkbox" /><span class="task-name">ICT project demo</span></label><span class="pill pill-soon">In 2 days</span></li>
+            <li><label class="check"><input type="checkbox" /><span class="task-name">Maths past paper</span></label><span class="pill pill-soon">In 4 days</span></li>
+            <li><label class="check"><input type="checkbox" checked /><span class="task-name">English essay draft</span></label><span class="pill pill-ok">Done</span></li>
+          </ul>
+        </article>
+
+        <article class="panel panel-schedule">
+          <h2>Today's schedule</h2>
+          <div class="timetable">
+            <span class="hour">8:00</span><span class="hour">9:00</span><span class="hour">10:00</span><span class="hour">11:00</span><span class="hour">12:00</span>
+            <div class="event" style="--start: 1; --span: 2; --c: #0f9d7a"><strong>Mathematics</strong><span>8:00 to 10:00</span></div>
+            <div class="event" style="--start: 3; --span: 1; --c: #d99a1c"><strong>ICT lab</strong><span>10:00 to 11:00</span></div>
+            <div class="event" style="--start: 4; --span: 2; --c: #5b6cf0"><strong>Physics revision</strong><span>11:00 to 1:00</span></div>
+          </div>
+        </article>
+
+        <article class="panel panel-heat">
+          <h2>Study streak</h2>
+          <div class="heat"><i style="--l:2"></i><i style="--l:1"></i><i style="--l:3"></i><i style="--l:0"></i><i style="--l:0"></i><i style="--l:0"></i><i style="--l:2"></i><i style="--l:0"></i><i style="--l:1"></i><i style="--l:0"></i><i style="--l:0"></i><i style="--l:3"></i><i style="--l:3"></i><i style="--l:0"></i><i style="--l:1"></i><i style="--l:0"></i><i style="--l:3"></i><i style="--l:0"></i><i style="--l:0"></i><i style="--l:1"></i><i style="--l:0"></i><i style="--l:3"></i><i style="--l:0"></i><i style="--l:1"></i><i style="--l:0"></i><i style="--l:1"></i><i style="--l:2"></i><i style="--l:3"></i><i style="--l:1"></i><i style="--l:0"></i><i style="--l:2"></i><i style="--l:1"></i><i style="--l:0"></i><i style="--l:1"></i><i style="--l:2"></i><i style="--l:0"></i><i style="--l:0"></i><i style="--l:0"></i><i style="--l:1"></i><i style="--l:4"></i><i style="--l:3"></i><i style="--l:2"></i><i style="--l:4"></i><i style="--l:4"></i><i style="--l:2"></i><i style="--l:2"></i><i style="--l:1"></i><i style="--l:1"></i><i style="--l:1"></i><i style="--l:0"></i><i style="--l:2"></i><i style="--l:4"></i><i style="--l:2"></i><i style="--l:4"></i><i style="--l:2"></i><i style="--l:0"></i></div>
+          <div class="heat-legend"><span>Less</span><i style="--l:0"></i><i style="--l:1"></i><i style="--l:2"></i><i style="--l:3"></i><i style="--l:4"></i><span>More</span></div>
+        </article>
+
+        <article class="panel panel-table">
+          <h2>Recent tests</h2>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Subject</th><th>Test</th><th>Date</th><th>Score</th></tr></thead>
+              <tbody>
+                <tr><td>Mathematics</td><td>Calculus quiz</td><td>12 Sep</td><td>88%</td></tr>
+                <tr><td>Physics</td><td>Mechanics test</td><td>15 Sep</td><td>71%</td></tr>
+                <tr><td>ICT</td><td>Databases test</td><td>19 Sep</td><td>94%</td></tr>
+                <tr><td>English</td><td>Essay writing</td><td>24 Sep</td><td>76%</td></tr>
+              <tr><td>Mathematics</td><td>Algebra quiz</td><td>28 Sep</td><td>85%</td></tr>
+                <tr><td>Physics</td><td>Waves test</td><td>30 Sep</td><td>79%</td></tr>
+                <tr><td>ICT</td><td>Networks quiz</td><td>1 Oct</td><td>90%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

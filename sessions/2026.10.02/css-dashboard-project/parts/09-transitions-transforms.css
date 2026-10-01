@@ -1,0 +1,20 @@
+/* STAGE 9 — TRANSITIONS & TRANSFORMS (modules 10 + 12)
+   Teach: put the transition on the base state, translate/scale, why transform is smoother than top/left.
+   Break it: change 0.2s to 2s. Then try "transition: all" and discuss why it is risky. */
+.menu a { transition: background-color 0.2s, color 0.2s; }
+.table tbody tr { transition: background-color 0.15s; }
+.bar { transition: filter 0.2s; }
+.bar::after { transition: opacity 0.2s, transform 0.2s; transform: translate(-50%, 4px); }
+.bar:hover::after { transform: translate(-50%, 0); }
+.bar:hover { filter: brightness(1.12); }
+
+.stat { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.stat:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgb(16 35 31 / 0.12); }
+.avatar { transition: transform 0.2s; }
+.avatar:hover { transform: scale(1.1) rotate(-6deg); }
+
+/* + FEATURES */
+.track, .check input { transition: background-color 0.2s, border-color 0.2s; }
+.track::after, .check input::after { transition: transform 0.2s ease; }
+.heat i { transition: transform 0.15s; }
+.heat i:hover { transform: scale(1.35); }

@@ -1,0 +1,26 @@
+/* STAGE 11 — CUSTOM PROPERTIES & DARK MODE (module 13)
+   Teach: var() with fallback, scoping (override on one element), data-* themes. Chart data is already driven by --h, --p, --w, --i in the HTML.
+   Try it: flip the switch in the top bar. It is CSS only: html:has(#theme:checked) matches when the checkbox is on.
+   Also works with <html data-theme="dark">.
+   Next class (JS): a button that toggles data-theme and a script that fills the chart from real data. */
+html[data-theme="dark"],
+html:has(#theme:checked) {
+  --ink: #07100e;
+  --primary: #2fd3a4;
+  --on-primary: #06110e;
+  --bg: #0c1311;
+  --bg-alt: #17211e;
+  --text: #e5efeb;
+  --muted: #8fa39c;
+  --card-bg: #121c19;
+  --border: #22312d;
+  --late: #f87171;
+  --soon: #fbbf24;
+  --ok: #34d399;
+}
+
+/* scoped variable with fallback: each bar can override its own color */
+.bar { background: var(--bar-color, var(--primary)); }
+.bar:last-child { --bar-color: var(--accent); }
+
+body, .topbar, .stat, .panel, .search input { transition: background-color 0.3s, color 0.3s, border-color 0.3s; }

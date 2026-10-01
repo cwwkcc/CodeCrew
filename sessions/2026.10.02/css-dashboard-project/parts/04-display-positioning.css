@@ -1,0 +1,28 @@
+/* STAGE 4 — DISPLAY & POSITIONING (module 06)
+   Teach: sticky sidebar + top bar, z-index, absolute labels inside relative bars, aspect-ratio, overflow.
+   Break it: remove "position: relative" from .bar and watch the day labels escape. */
+.sidebar { position: sticky; top: 0; height: 100vh; }
+.topbar { position: sticky; top: 0; z-index: 10; }
+.brand { display: inline-block; margin-bottom: 2rem; }
+
+.avatar { width: 40px; height: 40px; border-radius: 50%; }
+
+.bars { height: 220px; margin-bottom: 2rem; }
+.bar { position: relative; height: var(--h); border-radius: 8px 8px 0 0; }
+.bar span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 0.4rem; font-size: 0.8rem; color: var(--muted); }
+
+.donut { width: 170px; aspect-ratio: 1; border-radius: 50%; position: relative; }
+.donut span { position: relative; font-size: 2rem; font-weight: 800; }
+.progress { height: 10px; border-radius: 999px; overflow: hidden; }
+.progress-fill { width: var(--w); height: 100%; }
+.table-wrap { overflow-x: auto; }
+
+/* + FEATURES: switch built from a hidden checkbox, sticky table header, aspect-ratio heat cells. */
+.switch { position: relative; display: inline-block; width: 46px; height: 26px; }
+.switch input { position: absolute; inset: 0; z-index: 1; margin: 0; opacity: 0; cursor: pointer; }
+.track { position: absolute; inset: 0; border-radius: 999px; }
+.track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; }
+
+.table-wrap { max-height: 15rem; overflow: auto; }
+.table th { position: sticky; top: 0; z-index: 1; }
+.heat i, .heat-legend i { display: block; aspect-ratio: 1; border-radius: 4px; }

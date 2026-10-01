@@ -1,0 +1,27 @@
+/* STAGE 7 — RESPONSIVE (module 09)
+   Teach: breakpoints, re-defining grid-template-areas, a sidebar that becomes a bottom bar on phones.
+   Break it: use DevTools device mode and move 800px to 1100px. */
+@media (max-width: 1000px) {
+  .panel-chart, .panel-donut, .panel-subjects, .panel-tasks { grid-column: span 12; }
+}
+
+@media (max-width: 800px) {
+  .app { grid-template-columns: 1fr; grid-template-areas: "topbar" "content"; }
+  .sidebar { position: fixed; inset: auto 0 0 0; height: auto; z-index: 20; padding: 0.5rem; }
+  .brand { display: none; }
+  .menu { flex-direction: row; justify-content: space-around; }
+  .menu a { padding: 0.6rem 0.75rem; font-size: 0.85rem; }
+  .content { padding: 1.25rem 1.25rem 6rem; }
+  .topbar { padding: 0.75rem 1.25rem; }
+  .search input { width: 100%; }
+  .user-name { display: none; }
+}
+
+/* + FEATURES: container query. The task list reacts to its OWN width, not the screen. */
+@media (max-width: 1000px) { .panel-schedule, .panel-heat { grid-column: span 12; } }
+
+.panel { container-type: inline-size; }
+@container (max-width: 380px) {
+  .tasks li { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+  .progress-head { font-size: 0.85rem; }
+}
