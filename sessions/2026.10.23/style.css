@@ -1,0 +1,147 @@
+/* =====================================================
+   PORTFOLIO WEBSITE: finished CSS, grouped by teaching stage
+
+   Stage 1  Page-wide colours, fonts, headings
+   Stage 2  Box model, display, container and spacing
+   Stage 3  Nav bar (flexbox), sticky header, hover
+   Stage 4  Hero and about (backgrounds, borders, photo)
+   Stage 5  Skills and projects (grid, cards, hover lift)
+   Stage 6  Badge (positioning), form, pseudo-elements, footer
+   Stage 7  Responsive design, then variables
+
+   ===================================================== */
+
+/* ----- Stage 7 (refactor): variables ----- */
+:root {
+  --color-primary: #1a4a2e;
+  --color-primary-dark: #133523;
+  --color-accent: #c9973a;
+  --color-bg: #f6faf7;
+  --color-surface: #ffffff;
+  --color-text: #1f2933;
+  --color-muted: #5b6770;
+  --radius: 12px;
+}
+
+/* =====================================================
+   STAGE 1: colours, fonts, headings
+   ===================================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+h1,
+h2,
+h3 {
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: clamp(
+    2rem,
+    5vw,
+    3.5rem
+  ); /* clamp() is added in stage 7; use 2.5rem before that */
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* =====================================================
+   STAGE 2: box model, display, container, spacing
+   ===================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img {
+  display: block; /* removes the small gap under inline images */
+  max-width: 100%;
+}
+
+.container {
+  width: min(100% - 2rem, 1100px);
+  margin-inline: auto;
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+.section-title {
+  text-align: center;
+  margin: 0 0 2rem;
+  font-size: 2rem;
+}
+
+section[id] {
+  scroll-margin-top: 70px; /* so the sticky nav does not cover the heading */
+}
+
+/* =====================================================
+   STAGE 3: nav bar (flexbox), sticky, hover
+   ===================================================== */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-surface);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: var(--color-text);
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease;
+}
+
+.nav-links a:hover {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-accent);
+}
