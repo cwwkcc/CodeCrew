@@ -1,0 +1,253 @@
+/* =====================================================
+   PORTFOLIO WEBSITE: finished CSS, grouped by teaching stage
+
+   Stage 1  Page-wide colours, fonts, headings
+   Stage 2  Box model, display, container and spacing
+   Stage 3  Nav bar (flexbox), sticky header, hover
+   Stage 4  Hero and about (backgrounds, borders, photo)
+   Stage 5  Skills and projects (grid, cards, hover lift)
+   Stage 6  Badge (positioning), form, pseudo-elements, footer
+   Stage 7  Responsive design, then variables
+
+   ===================================================== */
+
+/* ----- Stage 7 (refactor): variables ----- */
+:root {
+  --color-primary: #1a4a2e;
+  --color-primary-dark: #133523;
+  --color-accent: #c9973a;
+  --color-bg: #f6faf7;
+  --color-surface: #ffffff;
+  --color-text: #1f2933;
+  --color-muted: #5b6770;
+  --radius: 12px;
+}
+
+/* =====================================================
+   STAGE 1: colours, fonts, headings
+   ===================================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+h1,
+h2,
+h3 {
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: clamp(
+    2rem,
+    5vw,
+    3.5rem
+  ); /* clamp() is added in stage 7; use 2.5rem before that */
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* =====================================================
+   STAGE 2: box model, display, container, spacing
+   ===================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img {
+  display: block; /* removes the small gap under inline images */
+  max-width: 100%;
+}
+
+.container {
+  width: min(100% - 2rem, 1100px);
+  margin-inline: auto;
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+.section-title {
+  text-align: center;
+  margin: 0 0 2rem;
+  font-size: 2rem;
+}
+
+section[id] {
+  scroll-margin-top: 70px; /* so the sticky nav does not cover the heading */
+}
+
+/* =====================================================
+   STAGE 3: nav bar (flexbox), sticky, hover
+   ===================================================== */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-surface);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: var(--color-text);
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease;
+}
+
+.nav-links a:hover {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-accent);
+}
+
+/* =====================================================
+   STAGE 4: hero and about (backgrounds, borders, photo)
+   ===================================================== */
+
+.hero {
+  padding: 6rem 0;
+  background-image: linear-gradient(135deg, #e6f2ea, #ffffff);
+}
+
+.eyebrow {
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.hero h1 {
+  max-width: 650px;
+  margin: 0 0 1rem;
+}
+
+.hero-text {
+  max-width: 560px;
+  font-size: 1.15rem;
+  color: var(--color-muted);
+}
+
+/* Button: used in the hero, project cards and the form */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--color-primary);
+  color: #ffffff; /* a class beats the plain "a" rule above */
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 200ms ease,
+    background-color 200ms ease;
+}
+
+.btn:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.btn-small {
+  padding: 0.5rem 1.1rem;
+  font-size: 0.9rem;
+}
+
+.about-grid {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.avatar {
+  width: 220px;
+  height: 220px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 4px solid var(--color-accent);
+  object-fit: cover;
+  background-color: #e5e7eb; /* placeholder color while the image loads */
+}
+
+.about h2 {
+  margin-top: 0;
+}
+
+/* =====================================================
+   STAGE 5: skills and projects (grid, cards, hover lift)
+   ===================================================== */
+
+.skills {
+  background-color: var(--color-surface);
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.skill-card {
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius);
+  background-color: var(--color-bg);
+  text-align: center;
+}
+
+.skill-card h3 {
+  margin-top: 0;
+}
